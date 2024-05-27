@@ -83,7 +83,9 @@
 <h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Migrating tables&#x2F;table data&#x2F;indexes from Oracle to MogDB normally has no issue, but for views&#x2F;procedures&#x2F;functions&#x2F;packages, we still have to made some modification to the source code.<img src="https://s2.loli.net/2022/09/24/RDKmsNFvroWTPgZ.png"></p>
 ]]></content>
       <tags>
-        <tag>MogDB, Oracle, Migration</tag>
+        <tag>MogDB</tag>
+        <tag>Oracle</tag>
+        <tag>Database Migration</tag>
       </tags>
   </entry>
   <entry>
@@ -136,7 +138,9 @@
 <p><a href="https://gist.github.com/btfak/18938572f5df000ebe06fbd1872e4e39">https://gist.github.com/btfak/18938572f5df000ebe06fbd1872e4e39</a></p>
 ]]></content>
       <tags>
-        <tag>Hexo, Github Pages, WSL</tag>
+        <tag>Hexo</tag>
+        <tag>Github Pages</tag>
+        <tag>WSL</tag>
       </tags>
   </entry>
   <entry>
@@ -254,7 +258,8 @@
 
 ]]></content>
       <tags>
-        <tag>Windows, WSL</tag>
+        <tag>WSL</tag>
+        <tag>Windows</tag>
       </tags>
   </entry>
   <entry>
