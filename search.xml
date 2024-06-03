@@ -368,8 +368,8 @@
 </ul>
 <h3 id="How-MogDB-Handles-Partial-Writes"><a href="#How-MogDB-Handles-Partial-Writes" class="headerlink" title="How MogDB Handles Partial Writes"></a>How MogDB Handles Partial Writes</h3><p>MogDB (the enterprise edition of openGauss) combines strategies from MySQL and PostgreSQL:</p>
 <ol>
-<li><strong>Double Write Buffer</strong>: Similar to MySQL, MogDB uses a double write buffer (<code>enable_double_write=on</code>).</li>
-<li><strong>Full Page Writes</strong>: MogDB retains PostgreSQL’s full page write mechanism (<code>full_page_writes=on</code>).</li>
+<li><strong>Double Write Buffer</strong>: Similar to MySQL, MogDB uses a double write buffer by setting <code>enable_double_write=on</code>.</li>
+<li><strong>Full Page Writes</strong>: MogDB retains PostgreSQL’s full page write mechanism by setting <code>full_page_writes=on</code>.</li>
 </ol>
 <p>Depending on the configuration of incremental checkpoints (enable_incremental_checkpoint):</p>
 <ul>
