@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Kamus&#39; Notes</title>
+  <icon>http://kamusis.github.io/icon.png</icon>
+  <subtitle>面朝大海，春暖花开</subtitle>
+  <link href="http://kamusis.github.io/atom.xml" rel="self"/>
+  
+  <link href="http://kamusis.github.io/"/>
+  <updated>2024-06-05T02:09:43.089Z</updated>
+  <id>http://kamusis.github.io/</id>
+  
+  <author>
+    <name>Kamus</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Working Mechanism of synchronous_standby_names in MogDB</title>
+    <link href="http://kamusis.github.io/2024/06/05/Working-Mechanism-of-synchronous-standby-names-in-MogDB/"/>
+    <id>http://kamusis.github.io/2024/06/05/Working-Mechanism-of-synchronous-standby-names-in-MogDB/</id>
+    <published>2024-06-05T02:05:50.000Z</published>
+    <updated>2024-06-05T02:09:43.089Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;In MogDB, the parameter &lt;code&gt;synchronous_standby_names&lt;/code&gt; is used to configure synchronous replication settings. When this</summary>
+        
+      
+    
+    
+    
+    
+    <category term="MogDB" scheme="http://kamusis.github.io/tags/MogDB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MTK: The Ultimate Tool for Seamlessly Migrating Oracle Databases to MogDB</title>
+    <link href="http://kamusis.github.io/2024/06/03/MTK-The-Ultimate-Tool-for-Seamlessly-Migrating-Oracle-Databases-to-MogDB/"/>
+    <id>http://kamusis.github.io/2024/06/03/MTK-The-Ultimate-Tool-for-Seamlessly-Migrating-Oracle-Databases-to-MogDB/</id>
+    <published>2024-06-03T03:57:19.000Z</published>
+    <updated>2024-06-03T03:58:00.096Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;Get-the-latest-version-MTK&quot;&gt;&lt;a href=&quot;#Get-the-latest-version-MTK&quot; class=&quot;headerlink&quot; title=&quot;Get the latest version MTK.&quot;&gt;&lt;/a&gt;Get</summary>
+        
+      
+    
+    
+    
+    
+    <category term="MogDB" scheme="http://kamusis.github.io/tags/MogDB/"/>
+    
+    <category term="Oracle" scheme="http://kamusis.github.io/tags/Oracle/"/>
+    
+    <category term="Database Migration" scheme="http://kamusis.github.io/tags/Database-Migration/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Ensuring Data Integrity: How Major Databases Handle Partial Writes and Atomic Operations</title>
+    <link href="http://kamusis.github.io/2024/05/30/Ensuring-Data-Integrity-How-Major-Databases-Handle-Partial-Writes-and-Atomic-Operations/"/>
+    <id>http://kamusis.github.io/2024/05/30/Ensuring-Data-Integrity-How-Major-Databases-Handle-Partial-Writes-and-Atomic-Operations/</id>
+    <published>2024-05-30T10:22:37.000Z</published>
+    <updated>2024-05-31T16:21:32.132Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;In the world of databases, ensuring atomicity in write operations is crucial. This post explores the importance of atomic writes and how</summary>
+        
+      
+    
+    
+    
+    
+    <category term="MogDB" scheme="http://kamusis.github.io/tags/MogDB/"/>
+    
+    <category term="Oracle" scheme="http://kamusis.github.io/tags/Oracle/"/>
+    
+    <category term="openGauss" scheme="http://kamusis.github.io/tags/openGauss/"/>
+    
+    <category term="PostgreSQL" scheme="http://kamusis.github.io/tags/PostgreSQL/"/>
+    
+    <category term="MySQL" scheme="http://kamusis.github.io/tags/MySQL/"/>
+    
+    <category term="Partial Writes" scheme="http://kamusis.github.io/tags/Partial-Writes/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>How to build blog site by using Hexo in Windows WSL and deploy to GitHub Pages</title>
+    <link href="http://kamusis.github.io/2024/05/27/How-to-build-blog-site-by-using-Hexo-in-Windows-WSL-and-deploy-to-GitHub-Pages/"/>
+    <id>http://kamusis.github.io/2024/05/27/How-to-build-blog-site-by-using-Hexo-in-Windows-WSL-and-deploy-to-GitHub-Pages/</id>
+    <published>2024-05-27T07:10:17.000Z</published>
+    <updated>2024-05-27T09:50:19.586Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;Why-use-WSL&quot;&gt;&lt;a href=&quot;#Why-use-WSL&quot; class=&quot;headerlink&quot; title=&quot;Why use WSL&quot;&gt;&lt;/a&gt;Why use WSL&lt;/h2&gt;&lt;p&gt;Using Windows Subsystem for Linux</summary>
+        
+      
+    
+    
+    
+    
+    <category term="Hexo" scheme="http://kamusis.github.io/tags/Hexo/"/>
+    
+    <category term="Github Pages" scheme="http://kamusis.github.io/tags/Github-Pages/"/>
+    
+    <category term="WSL" scheme="http://kamusis.github.io/tags/WSL/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>How to Find the Corresponding Session in MogDB/openGauss from OS Thread ID</title>
+    <link href="http://kamusis.github.io/2024/05/27/How-to-Find-the-Corresponding-Session-in-MogDB-openGauss-from-OS-Thread-ID/"/>
+    <id>http://kamusis.github.io/2024/05/27/How-to-Find-the-Corresponding-Session-in-MogDB-openGauss-from-OS-Thread-ID/</id>
+    <published>2024-05-27T06:55:48.000Z</published>
+    <updated>2024-05-27T07:01:07.248Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;Diagnostic-Needs&quot;&gt;&lt;a href=&quot;#Diagnostic-Needs&quot; class=&quot;headerlink&quot; title=&quot;Diagnostic Needs&quot;&gt;&lt;/a&gt;Diagnostic Needs&lt;/h3&gt;&lt;p&gt;When the</summary>
+        
+      
+    
+    
+    
+    
+    <category term="MogDB" scheme="http://kamusis.github.io/tags/MogDB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MogDB ASH: Unveiling the Active Session History for Powerful Database Performance Tuning</title>
+    <link href="http://kamusis.github.io/2024/05/27/MogDB-ASH-Unveiling-the-Active-Session-History-for-Powerful-Database-Performance-Tuning/"/>
+    <id>http://kamusis.github.io/2024/05/27/MogDB-ASH-Unveiling-the-Active-Session-History-for-Powerful-Database-Performance-Tuning/</id>
+    <published>2024-05-27T06:48:34.000Z</published>
+    <updated>2024-05-27T07:01:32.325Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h4 id=&quot;What-is-ASH&quot;&gt;&lt;a href=&quot;#What-is-ASH&quot; class=&quot;headerlink&quot; title=&quot;What is ASH?&quot;&gt;&lt;/a&gt;What is ASH?&lt;/h4&gt;&lt;p&gt;ASH, or Active Session History,</summary>
+        
+      
+    
+    
+    
+    
+    <category term="MogDB" scheme="http://kamusis.github.io/tags/MogDB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>How to move WSL distro in Windows 11 to another drive</title>
+    <link href="http://kamusis.github.io/2024/05/27/How-to-move-WSL-distro-in-Windows-11-to-another-drive/"/>
+    <id>http://kamusis.github.io/2024/05/27/How-to-move-WSL-distro-in-Windows-11-to-another-drive/</id>
+    <published>2024-05-27T06:17:24.000Z</published>
+    <updated>2024-05-27T09:45:08.699Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;Introduction&quot;&gt;&lt;a href=&quot;#Introduction&quot; class=&quot;headerlink&quot; title=&quot;Introduction:&quot;&gt;&lt;/a&gt;Introduction:&lt;/h2&gt;&lt;p&gt;In the world of development</summary>
+        
+      
+    
+    
+    
+    
+    <category term="WSL" scheme="http://kamusis.github.io/tags/WSL/"/>
+    
+    <category term="Windows" scheme="http://kamusis.github.io/tags/Windows/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Unlocking the Power: Key Features of MogDB</title>
+    <link href="http://kamusis.github.io/2024/05/27/Unlocking-the-Power-Key-Features-of-MogDB/"/>
+    <id>http://kamusis.github.io/2024/05/27/Unlocking-the-Power-Key-Features-of-MogDB/</id>
+    <published>2024-05-27T06:16:11.000Z</published>
+    <updated>2024-05-27T06:16:59.322Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;Introduction-to-MogDB&quot;&gt;&lt;a href=&quot;#Introduction-to-MogDB&quot; class=&quot;headerlink&quot; title=&quot;Introduction to MogDB&quot;&gt;&lt;/a&gt;Introduction to</summary>
+        
+      
+    
+    
+    
+    
+    <category term="MogDB" scheme="http://kamusis.github.io/tags/MogDB/"/>
+    
+  </entry>
+  
+</feed>
