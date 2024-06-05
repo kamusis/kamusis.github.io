@@ -396,4 +396,59 @@
         <tag>Database Migration</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Working Mechanism of synchronous_standby_names in MogDB</title>
+    <url>/2024/06/05/Working-Mechanism-of-synchronous-standby-names-in-MogDB/</url>
+    <content><![CDATA[<p>In MogDB, the parameter <code>synchronous_standby_names</code> is used to configure synchronous replication settings. When this parameter is set to <code>&#39;*&#39;</code>（default setting）, it indicates that any available standby server can be used as a synchronous standby. This configuration allows any currently connected standby to be utilized as a synchronous standby without explicitly specifying the standby’s name.</p>
+<h3 id="Working-Mechanism"><a href="#Working-Mechanism" class="headerlink" title="Working Mechanism"></a>Working Mechanism</h3><p>When <code>synchronous_standby_names</code> is set to <code>&#39;*&#39;</code>, MogDB’s synchronous replication mechanism selects the synchronous standby through the following steps:</p>
+<ol>
+<li><p><strong>Initial Connection</strong>: When the primary server starts or the parameter is changed, the primary server accepts all connected standby servers.</p>
+</li>
+<li><p><strong>Synchronous Standby Confirmation</strong>:</p>
+<ul>
+<li>The primary server sends a synchronization request to all connected standby servers.</li>
+<li>Each standby server, upon receiving the request, confirms it and reports its status back to the primary server.</li>
+</ul>
+</li>
+<li><p><strong>Selecting the Synchronous Standby</strong>:</p>
+<ul>
+<li>The primary server selects the earliest responding standby server(s) as the synchronous standby.</li>
+<li>This selection process is dynamic, meaning that if new standbys connect or current synchronous standbys disconnect, the primary server will reselect the synchronous standby.</li>
+</ul>
+</li>
+</ol>
+<h3 id="Priority-and-Behavior"><a href="#Priority-and-Behavior" class="headerlink" title="Priority and Behavior"></a>Priority and Behavior</h3><ul>
+<li><strong>No Priority Order</strong>: Since <code>&#39;*&#39;</code> denotes any standby, all standbys have the same priority. The primary server simply selects the earliest responding standby as the synchronous standby.</li>
+<li><strong>Dynamic Adjustment</strong>: If a synchronous standby disconnects, the primary server automatically selects the next responding standby as the new synchronous standby, ensuring the continuity and reliability of synchronous replication.</li>
+<li><strong>Concurrent Management</strong>: If multiple standbys connect simultaneously, the primary server can handle these concurrent connections and select the synchronous standby based on the confirmation of synchronization requests.</li>
+</ul>
+<h3 id="Configuration-Example-and-Usage"><a href="#Configuration-Example-and-Usage" class="headerlink" title="Configuration Example and Usage"></a>Configuration Example and Usage</h3><p>Suppose we have one primary server and three standby servers (<code>standby1</code>, <code>standby2</code>, and <code>standby3</code>). In the configuration file <code>postgresql.conf</code>, set <code>synchronous_standby_names</code> to <code>&#39;*&#39;</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">synchronous_standby_names = &#x27;*&#x27;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Scenario-Analysis"><a href="#Scenario-Analysis" class="headerlink" title="Scenario Analysis"></a>Scenario Analysis</h4><ol>
+<li><p><strong>Selection at Startup</strong>:</p>
+<ul>
+<li>When the primary server starts, all connected standby servers send heartbeat signals and wait for the primary server’s synchronization request.</li>
+<li>The primary server selects the earliest responding standby as the synchronous standby.</li>
+</ul>
+</li>
+<li><p><strong>Runtime Changes</strong>:</p>
+<ul>
+<li>If the current synchronous standby <code>standby1</code> disconnects, the primary server automatically selects the next responding standby <code>standby2</code> as the new synchronous standby.</li>
+<li>If a new standby <code>standby3</code> connects to the primary server and there is no current synchronous standby, the primary server selects <code>standby3</code> as the synchronous standby.</li>
+</ul>
+</li>
+</ol>
+<h4 id="Dynamic-Adjustment"><a href="#Dynamic-Adjustment" class="headerlink" title="Dynamic Adjustment"></a>Dynamic Adjustment</h4><p>If we start the primary server and three standby servers, setting <code>synchronous_standby_names = &#39;*&#39;</code>, the following state transitions are possible:</p>
+<ul>
+<li><strong>Initial State</strong>: All standbys (<code>standby1</code>, <code>standby2</code>, and <code>standby3</code>) connect, and the primary server selects the earliest responding standby <code>standby1</code> as the synchronous standby.</li>
+<li><strong><code>standby1</code> Disconnects</strong>: The primary server automatically selects the next responding standby <code>standby2</code> as the new synchronous standby.</li>
+<li><strong>New Standby Connection</strong>: A new standby <code>standby4</code> connects; the primary server will not change the current synchronous standby unless <code>standby2</code> disconnects.</li>
+</ul>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p>When <code>synchronous_standby_names</code> is set to <code>&#39;*&#39;</code>, MogDB dynamically selects any currently available standby as the synchronous standby. This provides a flexible and highly available synchronous replication mechanism without requiring administrators to manually specify the standby names. The selection process is based on standby response times and automatically adjusts during runtime to ensure the continuity and reliability of synchronous replication.</p>
+]]></content>
+      <tags>
+        <tag>MogDB</tag>
+      </tags>
+  </entry>
 </search>
