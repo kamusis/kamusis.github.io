@@ -251,6 +251,105 @@
       </tags>
   </entry>
   <entry>
+    <title>How to move WSL distro in Windows 11 to another drive</title>
+    <url>/2024/05/27/How-to-move-WSL-distro-in-Windows-11-to-another-drive/</url>
+    <content><![CDATA[<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction:"></a>Introduction:</h2><p>In the world of development and system administration, Windows Subsystem for Linux (WSL) has become a valuable tool. It allows users to run a Linux distribution alongside their Windows environment, opening up a world of possibilities for developers and administrators. In this article, we’ll guide you through the process of migrating a WSL instance, using a real-world example, step by step.</p>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites:"></a>Prerequisites:</h2><p>Before we begin, ensure that you have the following prerequisites in place:</p>
+<ul>
+<li>Windows 10 or later with WSL installed.</li>
+<li>An existing WSL instance (in our case, Ubuntu).</li>
+<li>Sufficient storage space for the migration.</li>
+</ul>
+<h2 id="Step-1-Create-a-Target-Directory"><a href="#Step-1-Create-a-Target-Directory" class="headerlink" title="Step 1: Create a Target Directory"></a>Step 1: Create a Target Directory</h2><p>To start the migration process, we need a target directory to store the migrated WSL instance. In PowerShell, use the ‘mkdir’ command to create this directory. In our example, we create a directory named ‘D:\WSL\Ubuntu’:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">mkdir <span class="literal">-p</span> D:\WSL\Ubuntu</span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-2-List-All-Running-WSL-Instances"><a href="#Step-2-List-All-Running-WSL-Instances" class="headerlink" title="Step 2: List All Running WSL Instances"></a>Step 2: List All Running WSL Instances</h2><p>Before we proceed further, let’s list all the running WSL instances. The following command will display a list of all WSL instances, including their state and version:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-3-Export-the-Source-WSL-Instance"><a href="#Step-3-Export-the-Source-WSL-Instance" class="headerlink" title="Step 3: Export the Source WSL Instance"></a>Step 3: Export the Source WSL Instance</h2><p>Now, let’s export the source WSL instance (in our case, ‘Ubuntu’) into a tar file. This step automatically shuts down the WSL instance and restarts it after the export:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--export</span> Ubuntu D:\WSL\Ubuntu.tar</span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-4-Unregister-the-Source-WSL-Instance"><a href="#Step-4-Unregister-the-Source-WSL-Instance" class="headerlink" title="Step 4: Unregister the Source WSL Instance"></a>Step 4: Unregister the Source WSL Instance</h2><p>Once the export is complete, we need to unregister the source WSL instance to avoid conflicts. Use the following command:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--unregister</span> Ubuntu</span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-5-Confirm-Unregistration"><a href="#Step-5-Confirm-Unregistration" class="headerlink" title="Step 5: Confirm Unregistration"></a>Step 5: Confirm Unregistration</h2><p>To confirm that the source WSL instance has been successfully unregistered, run the following command:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-6-Import-into-the-Target-Directory"><a href="#Step-6-Import-into-the-Target-Directory" class="headerlink" title="Step 6: Import into the Target Directory"></a>Step 6: Import into the Target Directory</h2><p>Now it’s time to import the previously exported WSL instance into the target directory. In this step, we specify the target directory and version (in our case, version 2):</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--import</span> Ubuntu D:\WSL\Ubuntu D:\WSL\Ubuntu.tar <span class="literal">--version</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-7-Verify-the-Migration"><a href="#Step-7-Verify-the-Migration" class="headerlink" title="Step 7: Verify the Migration"></a>Step 7: Verify the Migration</h2><p>To ensure that the migration was successful, list all WSL instances once again:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-8-Access-the-Migrated-WSL-Instance"><a href="#Step-8-Access-the-Migrated-WSL-Instance" class="headerlink" title="Step 8: Access the Migrated WSL Instance"></a>Step 8: Access the Migrated WSL Instance</h2><p>Now, you can access the migrated WSL instance by using the following command:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-d</span> Ubuntu</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion:"></a>Conclusion:</h2><p>Migrating WSL instances is a powerful way to manage and organize your development environments. By following these steps, you can seamlessly move your WSL instances to different directories or machines, ensuring flexibility and efficiency in your development workflow. Keep in mind that WSL provides a bridge between Windows and Linux, allowing you to enjoy the best of both worlds.</p>
+<p>Check the all steps screenshot as below.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># create target directory</span><br><span class="line">PS C:\Users\kamus&gt; mkdir -p D:\WSL\Ubuntu</span><br><span class="line"></span><br><span class="line"># List all the wsl running</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* Ubuntu                 Running         2</span><br><span class="line">  docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Export source wsl</span><br><span class="line">PS C:\Users\kamus&gt; wsl --export Ubuntu D:\WSL\Ubuntu.tar</span><br><span class="line"></span><br><span class="line"># When doing export, wsl will be shutdown automatically and restart after exporting</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* Ubuntu                 Running         2</span><br><span class="line">  docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Unregister the source wsl</span><br><span class="line">PS C:\Users\kamus&gt; wsl --unregister Ubuntu</span><br><span class="line">正在注销...</span><br><span class="line"></span><br><span class="line"># Check unregister is successful</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Import into the target directory</span><br><span class="line">PS C:\Users\kamus&gt; wsl --import Ubuntu D:\WSL\Ubuntu D:\WSL\Ubuntu.tar --version 2</span><br><span class="line"></span><br><span class="line"># Check results</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* docker-desktop         Stopped         2</span><br><span class="line">  Ubuntu                 Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">PS C:\Users\kamus&gt; wsl -d Ubuntu</span><br><span class="line">Welcome to Ubuntu 20.04.5 LTS (GNU/Linux 5.10.102.1-microsoft-standard-WSL2 x86_64)</span><br><span class="line"></span><br><span class="line"> * Documentation:  https://help.ubuntu.com</span><br><span class="line"> * Management:     https://landscape.canonical.com</span><br><span class="line"> * Support:        https://ubuntu.com/advantage</span><br><span class="line"></span><br><span class="line">  System information as of Fri Jan  5 14:40:25 JST 2024</span><br><span class="line"></span><br><span class="line">  System load:  0.68               Processes:             8</span><br><span class="line">  Usage of /:   2.0% of 250.98GB   Users logged in:       0</span><br><span class="line">  Memory usage: 4%                 IPv4 address for eth0: 172.28.208.11</span><br><span class="line">  Swap usage:   0%</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">0 updates can be applied immediately.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">The list of available updates is more than a week old.</span><br><span class="line">To check for new updates run: sudo apt update</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">This message is shown once a day. To disable it please create the</span><br><span class="line">/root/.hushlogin file.</span><br><span class="line">root@Kamus-Trident:/mnt/c/Users/kamus# cat /etc/os-release</span><br><span class="line">NAME=&quot;Ubuntu&quot;</span><br><span class="line">VERSION=&quot;20.04.5 LTS (Focal Fossa)&quot;</span><br><span class="line">ID=ubuntu</span><br><span class="line">ID_LIKE=debian</span><br><span class="line">PRETTY_NAME=&quot;Ubuntu 20.04.5 LTS&quot;</span><br><span class="line">VERSION_ID=&quot;20.04&quot;</span><br><span class="line">HOME_URL=&quot;https://www.ubuntu.com/&quot;</span><br><span class="line">SUPPORT_URL=&quot;https://help.ubuntu.com/&quot;</span><br><span class="line">BUG_REPORT_URL=&quot;https://bugs.launchpad.net/ubuntu/&quot;</span><br><span class="line">PRIVACY_POLICY_URL=&quot;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&quot;</span><br><span class="line">VERSION_CODENAME=focal</span><br><span class="line">UBUNTU_CODENAME=focal</span><br><span class="line">root@Kamus-Trident:/mnt/c/Users/kamus#</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>Windows</tag>
+        <tag>WSL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to build blog site by using Hexo in Windows WSL and deploy to GitHub Pages</title>
+    <url>/2024/05/27/How-to-build-blog-site-by-using-Hexo-in-Windows-WSL-and-deploy-to-GitHub-Pages/</url>
+    <content><![CDATA[<h2 id="Why-use-WSL"><a href="#Why-use-WSL" class="headerlink" title="Why use WSL"></a>Why use WSL</h2><p>Using Windows Subsystem for Linux (WSL) instead of relying solely on Windows can offer several advantages, particularly for developers and IT professionals. WSL allows users to run a GNU&#x2F;Linux environment directly on Windows, without the overhead of a traditional virtual machine or dual-boot setup. This enables seamless access to a wide range of Linux tools and utilities, which are often preferred for development tasks, scripting, and system administration. Additionally, WSL provides a more consistent and familiar environment for those accustomed to Unix-based systems, facilitating smoother workflows and integration with cloud-based services. By leveraging WSL, professionals can enjoy the best of both worlds: the robust software ecosystem of Windows and the powerful command-line capabilities of Linux.</p>
+<h2 id="Why-use-Hexo"><a href="#Why-use-Hexo" class="headerlink" title="Why use Hexo"></a>Why use Hexo</h2><p>Hexo offers several advantages over WordPress, particularly for developers and tech-savvy users. As a static site generator, Hexo provides faster load times and improved security since it does not rely on a database or server-side processing, which are common vulnerabilities in WordPress. Additionally, Hexo allows for greater customization through its use of Markdown and extensive plugin ecosystem, enabling users to tailor their sites to specific needs without the overhead of a complex content management system. Furthermore, Hexo’s deployment process is streamlined, often integrating seamlessly with version control systems like Git, making it an excellent choice for those who prioritize efficiency and performance in their web development projects.</p>
+<h2 id="Why-use-Github-Pages"><a href="#Why-use-Github-Pages" class="headerlink" title="Why use Github Pages"></a>Why use Github Pages</h2><p>Using GitHub Pages instead of a traditional hosting server offers several distinct advantages. Firstly, GitHub Pages provides a seamless integration with GitHub repositories, enabling automatic deployment of websites directly from your codebase. This integration ensures that updates and changes to your site are effortlessly managed through version control, promoting a streamlined workflow. Additionally, GitHub Pages is cost-effective, offering free hosting with custom domain support, which can significantly reduce overhead costs for personal projects or small businesses. The platform also boasts robust security features, leveraging GitHub’s infrastructure to protect your site from common vulnerabilities. Furthermore, the simplicity and ease of use make GitHub Pages an attractive option for developers who want to focus on writing code rather than managing server configurations and maintenance. Overall, GitHub Pages combines efficiency, cost savings, and security, making it an excellent choice for hosting static websites and project documentation.</p>
+<h2 id="GO"><a href="#GO" class="headerlink" title="GO!"></a>GO!</h2><h3 id="Assume-already-has-a-WSL-environment-running"><a href="#Assume-already-has-a-WSL-environment-running" class="headerlink" title="Assume already has a WSL environment running"></a>Assume already has a WSL environment running</h3><p>If not, refer to “<a href="https://learn.microsoft.com/en-us/windows/wsl/install">How to install Linux on Windows with WSL</a>“.</p>
+<p>To say we are running WSL distro - Ubuntu 22.04</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ cat /etc/os-release</span><br><span class="line">PRETTY_NAME=&quot;Ubuntu 22.04.4 LTS&quot;</span><br><span class="line">NAME=&quot;Ubuntu&quot;</span><br><span class="line">VERSION_ID=&quot;22.04&quot;</span><br><span class="line">VERSION=&quot;22.04.4 LTS (Jammy Jellyfish)&quot;</span><br><span class="line">VERSION_CODENAME=jammy</span><br><span class="line">ID=ubuntu</span><br><span class="line">ID_LIKE=debian</span><br><span class="line">HOME_URL=&quot;https://www.ubuntu.com/&quot;</span><br><span class="line">SUPPORT_URL=&quot;https://help.ubuntu.com/&quot;</span><br><span class="line">BUG_REPORT_URL=&quot;https://bugs.launchpad.net/ubuntu/&quot;</span><br><span class="line">PRIVACY_POLICY_URL=&quot;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&quot;</span><br><span class="line">UBUNTU_CODENAME=jammy</span><br></pre></td></tr></table></figure>
+
+<h3 id="Install-Node-js"><a href="#Install-Node-js" class="headerlink" title="Install Node.js"></a>Install Node.js</h3><p>Since Hexo is written by Node.js, nodejs must be installed.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install nodejs npm</span><br></pre></td></tr></table></figure>
+
+<h3 id="Install-GIT"><a href="#Install-GIT" class="headerlink" title="Install GIT"></a>Install GIT</h3><p>Since Hexo uses Git to publish pages on GitHub, Git must be installed.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install git</span><br></pre></td></tr></table></figure>
+
+<h3 id="Install-Hexo"><a href="#Install-Hexo" class="headerlink" title="Install Hexo"></a>Install Hexo</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<h3 id="Init-Hexo-project"><a href="#Init-Hexo-project" class="headerlink" title="Init Hexo project"></a>Init Hexo project</h3><p>Our goal is to deploy the static HTML file generated by Hexo to GitHub Pages. To achieve this, we need to create a repository named “[username].github.io” on GitHub. Therefore, we will initialize this directory directly using Hexo.  Note: Be sure to replace [username] with your actual GitHub username.</p>
+ <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo init kamusis.github.io</span><br></pre></td></tr></table></figure>
+
+<h3 id="Create-Github-pages"><a href="#Create-Github-pages" class="headerlink" title="Create Github pages"></a>Create Github pages</h3><p>Creating GitHub Pages is very simple, reference: <a href="https://pages.github.com/">https://pages.github.com/</a></p>
+<h3 id="Connecting-to-Github-with-SSH"><a href="#Connecting-to-Github-with-SSH" class="headerlink" title="Connecting to Github with SSH"></a>Connecting to Github with SSH</h3><p>Reference: <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh">https://docs.github.com/en/authentication/connecting-to-github-with-ssh</a></p>
+<p>Basically, generate a key using the ssh-keygen command and upload the public key to the GitHub.</p>
+<p>Once the SSH connection is established, use the following command to verify it:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ssh -T git@github.com</span><br><span class="line">Hi kamusis! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+
+<h3 id="Set-URL-for-your-new-blog"><a href="#Set-URL-for-your-new-blog" class="headerlink" title="Set URL for your new blog"></a>Set URL for your new blog</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ vi _config.yml</span><br><span class="line"></span><br><span class="line">~~~~~~~~~~~~~~~~~~ _config.yml ~~~~~~~~~~~~~~~~~~</span><br><span class="line"># URL</span><br><span class="line">## Set your site url here. For example, if you use GitHub Page, set url as &#x27;https://username.github.io/project&#x27;</span><br><span class="line">url: http://kamusis.github.io</span><br></pre></td></tr></table></figure>
+
+<h3 id="Set-Git-information-to-let-hexo-can-push-contents-into-Github-Pages"><a href="#Set-Git-information-to-let-hexo-can-push-contents-into-Github-Pages" class="headerlink" title="Set Git information to let hexo can push contents into Github Pages"></a>Set Git information to let hexo can push contents into Github Pages</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br><span class="line">$ vi _config.yml</span><br><span class="line"></span><br><span class="line">~~~~~~~~~~~~~~~~~~ _config.yml ~~~~~~~~~~~~~~~~~~</span><br><span class="line"># Deployment</span><br><span class="line">## Docs: https://hexo.io/docs/one-command-deployment</span><br><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:kamusis/kamusis.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+
+<h3 id="Generate-the-site-and-push-to-Github-pages"><a href="#Generate-the-site-and-push-to-Github-pages" class="headerlink" title="Generate the site and push to Github pages"></a>Generate the site and push to Github pages</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>Assuming everything has been set up correctly, you can now view a hello-world article on a website by navigating to https:&#x2F;&#x2F;[username].github.io.</p>
+<h3 id="Write-your-articles-and-publish"><a href="#Write-your-articles-and-publish" class="headerlink" title="Write your articles and publish"></a>Write your articles and publish</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo new &quot;My first post&quot;</span><br></pre></td></tr></table></figure>
+
+<p>A markdown file will automatically be created and placed in the source&#x2F;_posts directory. It can then be edited and saved using your preferred text or markdown editor.</p>
+<p>Of course, you can also clean up the initial hello-world article.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rm source/_posts/hello-world.md</span><br></pre></td></tr></table></figure>
+
+<p>Publish the articles.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Reference:</p>
+<p><a href="https://hexo.io/docs/github-pages#One-command-deployment">https://hexo.io/docs/github-pages#One-command-deployment</a></p>
+<p><a href="https://gist.github.com/btfak/18938572f5df000ebe06fbd1872e4e39">https://gist.github.com/btfak/18938572f5df000ebe06fbd1872e4e39</a></p>
+]]></content>
+      <tags>
+        <tag>WSL</tag>
+        <tag>Hexo</tag>
+        <tag>Github Pages</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>How to Generate a VSIX File from VS Code Extension Source Code</title>
     <url>/2024/12/12/How-to-Generate-a-VSIX-File-from-VS-Code-Extension-Source-Code/</url>
     <content><![CDATA[<p>As I’ve been using Windsurf as my primary code editor, I encountered a situation where the vs-picgo extension wasn’t available in the Windsurf marketplace. This necessitated the need to manually package the extension from its source code. This guide documents the process of generating a VSIX file for VS Code extensions, which can then be installed manually in compatible editors like Windsurf.</p>
@@ -364,148 +463,6 @@
       </tags>
   </entry>
   <entry>
-    <title>How to move WSL distro in Windows 11 to another drive</title>
-    <url>/2024/05/27/How-to-move-WSL-distro-in-Windows-11-to-another-drive/</url>
-    <content><![CDATA[<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction:"></a>Introduction:</h2><p>In the world of development and system administration, Windows Subsystem for Linux (WSL) has become a valuable tool. It allows users to run a Linux distribution alongside their Windows environment, opening up a world of possibilities for developers and administrators. In this article, we’ll guide you through the process of migrating a WSL instance, using a real-world example, step by step.</p>
-<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites:"></a>Prerequisites:</h2><p>Before we begin, ensure that you have the following prerequisites in place:</p>
-<ul>
-<li>Windows 10 or later with WSL installed.</li>
-<li>An existing WSL instance (in our case, Ubuntu).</li>
-<li>Sufficient storage space for the migration.</li>
-</ul>
-<h2 id="Step-1-Create-a-Target-Directory"><a href="#Step-1-Create-a-Target-Directory" class="headerlink" title="Step 1: Create a Target Directory"></a>Step 1: Create a Target Directory</h2><p>To start the migration process, we need a target directory to store the migrated WSL instance. In PowerShell, use the ‘mkdir’ command to create this directory. In our example, we create a directory named ‘D:\WSL\Ubuntu’:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">mkdir <span class="literal">-p</span> D:\WSL\Ubuntu</span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-2-List-All-Running-WSL-Instances"><a href="#Step-2-List-All-Running-WSL-Instances" class="headerlink" title="Step 2: List All Running WSL Instances"></a>Step 2: List All Running WSL Instances</h2><p>Before we proceed further, let’s list all the running WSL instances. The following command will display a list of all WSL instances, including their state and version:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-3-Export-the-Source-WSL-Instance"><a href="#Step-3-Export-the-Source-WSL-Instance" class="headerlink" title="Step 3: Export the Source WSL Instance"></a>Step 3: Export the Source WSL Instance</h2><p>Now, let’s export the source WSL instance (in our case, ‘Ubuntu’) into a tar file. This step automatically shuts down the WSL instance and restarts it after the export:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--export</span> Ubuntu D:\WSL\Ubuntu.tar</span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-4-Unregister-the-Source-WSL-Instance"><a href="#Step-4-Unregister-the-Source-WSL-Instance" class="headerlink" title="Step 4: Unregister the Source WSL Instance"></a>Step 4: Unregister the Source WSL Instance</h2><p>Once the export is complete, we need to unregister the source WSL instance to avoid conflicts. Use the following command:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--unregister</span> Ubuntu</span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-5-Confirm-Unregistration"><a href="#Step-5-Confirm-Unregistration" class="headerlink" title="Step 5: Confirm Unregistration"></a>Step 5: Confirm Unregistration</h2><p>To confirm that the source WSL instance has been successfully unregistered, run the following command:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-6-Import-into-the-Target-Directory"><a href="#Step-6-Import-into-the-Target-Directory" class="headerlink" title="Step 6: Import into the Target Directory"></a>Step 6: Import into the Target Directory</h2><p>Now it’s time to import the previously exported WSL instance into the target directory. In this step, we specify the target directory and version (in our case, version 2):</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--import</span> Ubuntu D:\WSL\Ubuntu D:\WSL\Ubuntu.tar <span class="literal">--version</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-7-Verify-the-Migration"><a href="#Step-7-Verify-the-Migration" class="headerlink" title="Step 7: Verify the Migration"></a>Step 7: Verify the Migration</h2><p>To ensure that the migration was successful, list all WSL instances once again:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-8-Access-the-Migrated-WSL-Instance"><a href="#Step-8-Access-the-Migrated-WSL-Instance" class="headerlink" title="Step 8: Access the Migrated WSL Instance"></a>Step 8: Access the Migrated WSL Instance</h2><p>Now, you can access the migrated WSL instance by using the following command:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-d</span> Ubuntu</span><br></pre></td></tr></table></figure>
-
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion:"></a>Conclusion:</h2><p>Migrating WSL instances is a powerful way to manage and organize your development environments. By following these steps, you can seamlessly move your WSL instances to different directories or machines, ensuring flexibility and efficiency in your development workflow. Keep in mind that WSL provides a bridge between Windows and Linux, allowing you to enjoy the best of both worlds.</p>
-<p>Check the all steps screenshot as below.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># create target directory</span><br><span class="line">PS C:\Users\kamus&gt; mkdir -p D:\WSL\Ubuntu</span><br><span class="line"></span><br><span class="line"># List all the wsl running</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* Ubuntu                 Running         2</span><br><span class="line">  docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Export source wsl</span><br><span class="line">PS C:\Users\kamus&gt; wsl --export Ubuntu D:\WSL\Ubuntu.tar</span><br><span class="line"></span><br><span class="line"># When doing export, wsl will be shutdown automatically and restart after exporting</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* Ubuntu                 Running         2</span><br><span class="line">  docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Unregister the source wsl</span><br><span class="line">PS C:\Users\kamus&gt; wsl --unregister Ubuntu</span><br><span class="line">正在注销...</span><br><span class="line"></span><br><span class="line"># Check unregister is successful</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Import into the target directory</span><br><span class="line">PS C:\Users\kamus&gt; wsl --import Ubuntu D:\WSL\Ubuntu D:\WSL\Ubuntu.tar --version 2</span><br><span class="line"></span><br><span class="line"># Check results</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* docker-desktop         Stopped         2</span><br><span class="line">  Ubuntu                 Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">PS C:\Users\kamus&gt; wsl -d Ubuntu</span><br><span class="line">Welcome to Ubuntu 20.04.5 LTS (GNU/Linux 5.10.102.1-microsoft-standard-WSL2 x86_64)</span><br><span class="line"></span><br><span class="line"> * Documentation:  https://help.ubuntu.com</span><br><span class="line"> * Management:     https://landscape.canonical.com</span><br><span class="line"> * Support:        https://ubuntu.com/advantage</span><br><span class="line"></span><br><span class="line">  System information as of Fri Jan  5 14:40:25 JST 2024</span><br><span class="line"></span><br><span class="line">  System load:  0.68               Processes:             8</span><br><span class="line">  Usage of /:   2.0% of 250.98GB   Users logged in:       0</span><br><span class="line">  Memory usage: 4%                 IPv4 address for eth0: 172.28.208.11</span><br><span class="line">  Swap usage:   0%</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">0 updates can be applied immediately.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">The list of available updates is more than a week old.</span><br><span class="line">To check for new updates run: sudo apt update</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">This message is shown once a day. To disable it please create the</span><br><span class="line">/root/.hushlogin file.</span><br><span class="line">root@Kamus-Trident:/mnt/c/Users/kamus# cat /etc/os-release</span><br><span class="line">NAME=&quot;Ubuntu&quot;</span><br><span class="line">VERSION=&quot;20.04.5 LTS (Focal Fossa)&quot;</span><br><span class="line">ID=ubuntu</span><br><span class="line">ID_LIKE=debian</span><br><span class="line">PRETTY_NAME=&quot;Ubuntu 20.04.5 LTS&quot;</span><br><span class="line">VERSION_ID=&quot;20.04&quot;</span><br><span class="line">HOME_URL=&quot;https://www.ubuntu.com/&quot;</span><br><span class="line">SUPPORT_URL=&quot;https://help.ubuntu.com/&quot;</span><br><span class="line">BUG_REPORT_URL=&quot;https://bugs.launchpad.net/ubuntu/&quot;</span><br><span class="line">PRIVACY_POLICY_URL=&quot;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&quot;</span><br><span class="line">VERSION_CODENAME=focal</span><br><span class="line">UBUNTU_CODENAME=focal</span><br><span class="line">root@Kamus-Trident:/mnt/c/Users/kamus#</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <tags>
-        <tag>Windows</tag>
-        <tag>WSL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>How to build blog site by using Hexo in Windows WSL and deploy to GitHub Pages</title>
-    <url>/2024/05/27/How-to-build-blog-site-by-using-Hexo-in-Windows-WSL-and-deploy-to-GitHub-Pages/</url>
-    <content><![CDATA[<h2 id="Why-use-WSL"><a href="#Why-use-WSL" class="headerlink" title="Why use WSL"></a>Why use WSL</h2><p>Using Windows Subsystem for Linux (WSL) instead of relying solely on Windows can offer several advantages, particularly for developers and IT professionals. WSL allows users to run a GNU&#x2F;Linux environment directly on Windows, without the overhead of a traditional virtual machine or dual-boot setup. This enables seamless access to a wide range of Linux tools and utilities, which are often preferred for development tasks, scripting, and system administration. Additionally, WSL provides a more consistent and familiar environment for those accustomed to Unix-based systems, facilitating smoother workflows and integration with cloud-based services. By leveraging WSL, professionals can enjoy the best of both worlds: the robust software ecosystem of Windows and the powerful command-line capabilities of Linux.</p>
-<h2 id="Why-use-Hexo"><a href="#Why-use-Hexo" class="headerlink" title="Why use Hexo"></a>Why use Hexo</h2><p>Hexo offers several advantages over WordPress, particularly for developers and tech-savvy users. As a static site generator, Hexo provides faster load times and improved security since it does not rely on a database or server-side processing, which are common vulnerabilities in WordPress. Additionally, Hexo allows for greater customization through its use of Markdown and extensive plugin ecosystem, enabling users to tailor their sites to specific needs without the overhead of a complex content management system. Furthermore, Hexo’s deployment process is streamlined, often integrating seamlessly with version control systems like Git, making it an excellent choice for those who prioritize efficiency and performance in their web development projects.</p>
-<h2 id="Why-use-Github-Pages"><a href="#Why-use-Github-Pages" class="headerlink" title="Why use Github Pages"></a>Why use Github Pages</h2><p>Using GitHub Pages instead of a traditional hosting server offers several distinct advantages. Firstly, GitHub Pages provides a seamless integration with GitHub repositories, enabling automatic deployment of websites directly from your codebase. This integration ensures that updates and changes to your site are effortlessly managed through version control, promoting a streamlined workflow. Additionally, GitHub Pages is cost-effective, offering free hosting with custom domain support, which can significantly reduce overhead costs for personal projects or small businesses. The platform also boasts robust security features, leveraging GitHub’s infrastructure to protect your site from common vulnerabilities. Furthermore, the simplicity and ease of use make GitHub Pages an attractive option for developers who want to focus on writing code rather than managing server configurations and maintenance. Overall, GitHub Pages combines efficiency, cost savings, and security, making it an excellent choice for hosting static websites and project documentation.</p>
-<h2 id="GO"><a href="#GO" class="headerlink" title="GO!"></a>GO!</h2><h3 id="Assume-already-has-a-WSL-environment-running"><a href="#Assume-already-has-a-WSL-environment-running" class="headerlink" title="Assume already has a WSL environment running"></a>Assume already has a WSL environment running</h3><p>If not, refer to “<a href="https://learn.microsoft.com/en-us/windows/wsl/install">How to install Linux on Windows with WSL</a>“.</p>
-<p>To say we are running WSL distro - Ubuntu 22.04</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ cat /etc/os-release</span><br><span class="line">PRETTY_NAME=&quot;Ubuntu 22.04.4 LTS&quot;</span><br><span class="line">NAME=&quot;Ubuntu&quot;</span><br><span class="line">VERSION_ID=&quot;22.04&quot;</span><br><span class="line">VERSION=&quot;22.04.4 LTS (Jammy Jellyfish)&quot;</span><br><span class="line">VERSION_CODENAME=jammy</span><br><span class="line">ID=ubuntu</span><br><span class="line">ID_LIKE=debian</span><br><span class="line">HOME_URL=&quot;https://www.ubuntu.com/&quot;</span><br><span class="line">SUPPORT_URL=&quot;https://help.ubuntu.com/&quot;</span><br><span class="line">BUG_REPORT_URL=&quot;https://bugs.launchpad.net/ubuntu/&quot;</span><br><span class="line">PRIVACY_POLICY_URL=&quot;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&quot;</span><br><span class="line">UBUNTU_CODENAME=jammy</span><br></pre></td></tr></table></figure>
-
-<h3 id="Install-Node-js"><a href="#Install-Node-js" class="headerlink" title="Install Node.js"></a>Install Node.js</h3><p>Since Hexo is written by Node.js, nodejs must be installed.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install nodejs npm</span><br></pre></td></tr></table></figure>
-
-<h3 id="Install-GIT"><a href="#Install-GIT" class="headerlink" title="Install GIT"></a>Install GIT</h3><p>Since Hexo uses Git to publish pages on GitHub, Git must be installed.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install git</span><br></pre></td></tr></table></figure>
-
-<h3 id="Install-Hexo"><a href="#Install-Hexo" class="headerlink" title="Install Hexo"></a>Install Hexo</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-
-<h3 id="Init-Hexo-project"><a href="#Init-Hexo-project" class="headerlink" title="Init Hexo project"></a>Init Hexo project</h3><p>Our goal is to deploy the static HTML file generated by Hexo to GitHub Pages. To achieve this, we need to create a repository named “[username].github.io” on GitHub. Therefore, we will initialize this directory directly using Hexo.  Note: Be sure to replace [username] with your actual GitHub username.</p>
- <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo init kamusis.github.io</span><br></pre></td></tr></table></figure>
-
-<h3 id="Create-Github-pages"><a href="#Create-Github-pages" class="headerlink" title="Create Github pages"></a>Create Github pages</h3><p>Creating GitHub Pages is very simple, reference: <a href="https://pages.github.com/">https://pages.github.com/</a></p>
-<h3 id="Connecting-to-Github-with-SSH"><a href="#Connecting-to-Github-with-SSH" class="headerlink" title="Connecting to Github with SSH"></a>Connecting to Github with SSH</h3><p>Reference: <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh">https://docs.github.com/en/authentication/connecting-to-github-with-ssh</a></p>
-<p>Basically, generate a key using the ssh-keygen command and upload the public key to the GitHub.</p>
-<p>Once the SSH connection is established, use the following command to verify it:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ssh -T git@github.com</span><br><span class="line">Hi kamusis! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
-
-<h3 id="Set-URL-for-your-new-blog"><a href="#Set-URL-for-your-new-blog" class="headerlink" title="Set URL for your new blog"></a>Set URL for your new blog</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ vi _config.yml</span><br><span class="line"></span><br><span class="line">~~~~~~~~~~~~~~~~~~ _config.yml ~~~~~~~~~~~~~~~~~~</span><br><span class="line"># URL</span><br><span class="line">## Set your site url here. For example, if you use GitHub Page, set url as &#x27;https://username.github.io/project&#x27;</span><br><span class="line">url: http://kamusis.github.io</span><br></pre></td></tr></table></figure>
-
-<h3 id="Set-Git-information-to-let-hexo-can-push-contents-into-Github-Pages"><a href="#Set-Git-information-to-let-hexo-can-push-contents-into-Github-Pages" class="headerlink" title="Set Git information to let hexo can push contents into Github Pages"></a>Set Git information to let hexo can push contents into Github Pages</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br><span class="line">$ vi _config.yml</span><br><span class="line"></span><br><span class="line">~~~~~~~~~~~~~~~~~~ _config.yml ~~~~~~~~~~~~~~~~~~</span><br><span class="line"># Deployment</span><br><span class="line">## Docs: https://hexo.io/docs/one-command-deployment</span><br><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:kamusis/kamusis.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
-
-<h3 id="Generate-the-site-and-push-to-Github-pages"><a href="#Generate-the-site-and-push-to-Github-pages" class="headerlink" title="Generate the site and push to Github pages"></a>Generate the site and push to Github pages</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>Assuming everything has been set up correctly, you can now view a hello-world article on a website by navigating to https:&#x2F;&#x2F;[username].github.io.</p>
-<h3 id="Write-your-articles-and-publish"><a href="#Write-your-articles-and-publish" class="headerlink" title="Write your articles and publish"></a>Write your articles and publish</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo new &quot;My first post&quot;</span><br></pre></td></tr></table></figure>
-
-<p>A markdown file will automatically be created and placed in the source&#x2F;_posts directory. It can then be edited and saved using your preferred text or markdown editor.</p>
-<p>Of course, you can also clean up the initial hello-world article.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rm source/_posts/hello-world.md</span><br></pre></td></tr></table></figure>
-
-<p>Publish the articles.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-
-
-<p>Reference:</p>
-<p><a href="https://hexo.io/docs/github-pages#One-command-deployment">https://hexo.io/docs/github-pages#One-command-deployment</a></p>
-<p><a href="https://gist.github.com/btfak/18938572f5df000ebe06fbd1872e4e39">https://gist.github.com/btfak/18938572f5df000ebe06fbd1872e4e39</a></p>
-]]></content>
-      <tags>
-        <tag>WSL</tag>
-        <tag>Hexo</tag>
-        <tag>Github Pages</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MogDB ASH: Unveiling the Active Session History for Powerful Database Performance Tuning</title>
-    <url>/2024/05/27/MogDB-ASH-Unveiling-the-Active-Session-History-for-Powerful-Database-Performance-Tuning/</url>
-    <content><![CDATA[<h4 id="What-is-ASH"><a href="#What-is-ASH" class="headerlink" title="What is ASH?"></a>What is ASH?</h4><p>ASH, or Active Session History, is a feature in Oracle databases that records information about active sessions at regular intervals in both the database memory and persistent system tables. Data in memory is cleared after a database restart, but data in the persistent system tables is retained for a longer period. ASH is extremely useful for diagnosing issues when the database encounters problems or performance issues by allowing retrospective analysis to identify the root cause.</p>
-<p>In MogDB, a similar ASH capability is implemented.</p>
-<h4 id="ASH-Capability-in-MogDB"><a href="#ASH-Capability-in-MogDB" class="headerlink" title="ASH Capability in MogDB"></a>ASH Capability in MogDB</h4><p>The ASH capability in MogDB is divided into two parts: the open-source community version (openGauss) and the enhanced enterprise version.</p>
-<p><strong>1. openGauss Community Version:</strong><br>MogDB inherits the ASH capability from openGauss. The database provides two main views: <code>dbe_perf.LOCAL_ACTIVE_SESSION</code> and <code>GS_ASP</code>. The <code>LOCAL_ACTIVE_SESSION</code> view is an in-memory table, while <code>GS_ASP</code> is a persistent table. These views contain sampling information about current active sessions.</p>
-<p>Key parameters affecting ASH functionality:</p>
-<ul>
-<li><strong>enable_asp:</strong> Set to <code>on</code> or <code>off</code> to enable or disable ASH functionality. Default is <code>on</code>.</li>
-<li><strong>asp_sample_interval:</strong> Specifies the interval between each sample. Default is 1 second. To reduce sampling pressure, this can be set to a longer interval, up to a maximum of 10 seconds.</li>
-<li><strong>asp_sample_num:</strong> Specifies the total number of samples retained in the <code>LOCAL_ACTIVE_SESSION</code> in-memory table. Exceeding this number triggers a flush of in-memory samples to the <code>GS_ASP</code> system table and clears the in-memory table. Default is 100,000 samples.</li>
-<li><strong>asp_flush_rate:</strong> Determines which in-memory samples are flushed to the <code>GS_ASP</code> table. Samples with <code>sampleid % asp_flush_rate == 0</code> are marked as <code>need_flush_sample=true</code> and are persisted. Default is 10, meaning 1&#x2F;10 of samples are persisted.</li>
-<li><strong>asp_retention_days:</strong> Specifies the retention period for data in the <code>GS_ASP</code> table. Default is 2 days, with a maximum of 7 days.</li>
-</ul>
-<p><strong>2. MogDB Enterprise Version:</strong><br>The enterprise version enhances ASH capability, termed “SQL Execution State Observation,” by adding sampling of SQL execution operators. The <code>plan_node_id</code> field is added to views to record the execution operator during each sample, allowing identification of which step in the execution plan is causing performance issues.</p>
-<p>Key parameters affecting enterprise ASH functionality:</p>
-<ul>
-<li><strong>resource_track_level:</strong> Set to <code>operator</code> to enable operator sampling capability. Default is <code>query</code>, which records only SQL-level sampling.</li>
-</ul>
-<h4 id="LOCAL-ACTIVE-SESSION-View"><a href="#LOCAL-ACTIVE-SESSION-View" class="headerlink" title="LOCAL_ACTIVE_SESSION View"></a>LOCAL_ACTIVE_SESSION View</h4><p>This view records extensive information, including session ID, wait events, and SQL query ID (which can be linked to <code>dbe_perf.statement_history</code> or <code>dbe_perf.statement_complex_runtime</code> to retrieve SQL text and execution plans). </p>
-<p><img src="https://s2.loli.net/2022/10/24/UZR4wcX8lyeDHS7.png" alt="image-20221024155531233"></p>
-<p>Note: The <code>plan_node_id</code> field exists only in the enterprise version.</p>
-<h4 id="Recording-SQL-Execution-Plans"><a href="#Recording-SQL-Execution-Plans" class="headerlink" title="Recording SQL Execution Plans"></a>Recording SQL Execution Plans</h4><p>Querying the execution plans of past or currently executing SQL is a common requirement in database maintenance. In MogDB, the following views record SQL execution plans:</p>
-<ul>
-<li><strong>dbe_perf.STATEMENT_HISTORY:</strong> Records information about completed SQL, including execution plans (<code>query_plan</code> field).</li>
-<li><strong>dbe_perf.STATEMENT_COMPLEX_RUNTIME:</strong> Records information about currently executing SQL, including execution plans (<code>query_plan</code> field).</li>
-</ul>
-<p>Parameters affecting recording of SQL execution plans:</p>
-<ul>
-<li><strong>enable_resource_track:</strong> Enables or disables resource tracking. Default is <code>on</code>. If set to <code>off</code>, no user SQL execution information, including execution plans, is tracked.</li>
-<li><strong>resource_track_cost:</strong> Sets the minimum execution cost for SQL statements to be tracked. Only SQL with a cost above this value will have its execution plan recorded.</li>
-</ul>
-<h4 id="Comprehensive-Query-Example"><a href="#Comprehensive-Query-Example" class="headerlink" title="Comprehensive Query Example"></a>Comprehensive Query Example</h4><p>The following query retrieves all information about ongoing SQL executions, including historical samples:</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> las.sample_time, las.application_name, las.unique_query_id, las.event, scr.query, scr.query_plan</span><br><span class="line"><span class="keyword">FROM</span> dbe_perf.local_active_session las, dbe_perf.statement_complex_runtime scr</span><br><span class="line"><span class="keyword">WHERE</span> las.thread_id <span class="operator">=</span> scr.pid <span class="keyword">AND</span> scr.pid <span class="operator">&lt;&gt;</span> pg_backend_pid();</span><br></pre></td></tr></table></figure>
-
-<p>Example output shows a frequently executed full table scan query, including SQL text, execution plan, and client information, providing valuable data for performance diagnosis.</p>
-<p><img src="https://s2.loli.net/2022/10/24/MxBW7629sCSaGKp.png" alt="image-20221024183300024"></p>
-]]></content>
-      <tags>
-        <tag>MogDB</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>MTK: The Ultimate Tool for Seamlessly Migrating Oracle Databases to MogDB</title>
     <url>/2024/06/03/MTK-The-Ultimate-Tool-for-Seamlessly-Migrating-Oracle-Databases-to-MogDB/</url>
     <content><![CDATA[<h2 id="Get-the-latest-version-MTK"><a href="#Get-the-latest-version-MTK" class="headerlink" title="Get the latest version MTK."></a>Get the latest version MTK.</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wget https://cdn-mogdb.enmotech.com/mtk/v2.6.3/mtk_2.6.3_linux_amd64.tar.gz</span><br><span class="line">tar -xvf mtk_2.6.3_linux_amd64.tar.gz</span><br></pre></td></tr></table></figure>
@@ -595,50 +552,6 @@
       </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/1970/01/01/The%20best%20practices%20for%20using%20partition%20table%20in%20PostgreSQL/</url>
-    <content><![CDATA[<h1 id="The-best-practices-for-using-partition-table-in-PostgreSQL"><a href="#The-best-practices-for-using-partition-table-in-PostgreSQL" class="headerlink" title="The best practices for using partition table in PostgreSQL"></a>The best practices for using partition table in PostgreSQL</h1><h2 id="What-is-partition-table"><a href="#What-is-partition-table" class="headerlink" title="What is partition table?"></a>What is partition table?</h2><p>Partition table is a table that is divided into smaller parts. Each part is called a partition.</p>
-<p>Why use partition table?</p>
-<ol>
-<li><strong>Performance</strong>: Partition table can improve the performance of the table. Because each partition can be stored in a separate file, the query can be executed faster.</li>
-<li><strong>Maintenance</strong>: Partition table can make the maintenance of the table easier. Because each partition can be maintained separately, the maintenance of the table can be done faster.</li>
-</ol>
-<h2 id="How-to-create-a-partition-table"><a href="#How-to-create-a-partition-table" class="headerlink" title="How to create a partition table?"></a>How to create a partition table?</h2><ol>
-<li><strong>Create a partition table</strong>:</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement (</span><br><span class="line">    city_id         <span class="type">int</span> <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    logdate         <span class="type">date</span> <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    peaktemp        <span class="type">int</span>,</span><br><span class="line">    unitsales       <span class="type">int</span></span><br><span class="line">) <span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">RANGE</span> (logdate);</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li><strong>Create a partition table for each partition</strong>:</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement_y2006m02 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> measurement</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2006-02-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2006-03-01&#x27;</span>);</span><br><span class="line">...</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement_y2007m11 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> measurement</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2007-11-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2007-12-01&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="Partition-table-types"><a href="#Partition-table-types" class="headerlink" title="Partition table types"></a>Partition table types</h2><p>There are 3 basic types of partition table in PostgreSQL:</p>
-<ol>
-<li><strong>List Partition</strong>: The table is partitioned by explicitly listing which key value(s) appear in each partition.</li>
-<li><strong>Range Partition</strong>: The table is partitioned into “ranges” defined by a key column or set of columns, with no overlap between the ranges of values assigned to different partitions.</li>
-<li><strong>Hash Partition</strong>: The table is partitioned by specifying a modulus and a remainder for each partition.</li>
-</ol>
-<p>Combine these 3 basic types of partition table, we can create more complex partition table. This is called <strong>Composite Partitioning</strong>.</p>
-<p>There are 4 types of composite partitioning:</p>
-<ol>
-<li><strong>List-Range Partition</strong>: The partition is divided into several ranges.<br>The step is: create table A partition by list, then create table A1 partition of A partition by range, then create table A1-1 partition of A1</li>
-<li><strong>Range-List Partition</strong>: The partition is divided into several ranges.<br>The step is: create table A partition by range, then create table B of table A but partition by list.</li>
-<li><strong>Range-Hash Partition</strong>: The partition is divided into several ranges.</li>
-<li><strong>Hash-Range Partition</strong>: The partition is divided into several ranges.</li>
-</ol>
-<h2 id="Data-dictionary-about-partition-table"><a href="#Data-dictionary-about-partition-table" class="headerlink" title="Data dictionary about partition table"></a>Data dictionary about partition table</h2><ol>
-<li><strong>pg_partitioned_table</strong>: This table stores the information about the partitioned table.</li>
-<li><strong>pg_partition_rule</strong>: This table stores the information about the partition rule.</li>
-<li><strong>pg_partition_column</strong>: This table stores the information about the partition column.</li>
-<li><strong>pg_partition_index</strong>: This table stores the information about the partition index.</li>
-<li><strong>pg_partition_constraint</strong>: This table stores the information about the partition constraint.</li>
-<li><strong>pg_partition_constraint_column</strong>: This table stores the information about the partition constraint column.</li>
-<li><strong>pg_partition_constraint_index</strong>: This table stores the information about the partition constraint index.</li>
-</ol>
-]]></content>
-  </entry>
-  <entry>
     <title>Some Misconceptions About Database Performance - Application Concurrent Requests, Database Connections, and Database Connection Pools</title>
     <url>/2024/08/21/Some-Misconceptions-About-Database-Performance-Application-Concurrent-Requests-Database-Connections-and-Database-Connection-Pools/</url>
     <content><![CDATA[<p>Let’s start with a chart from a database stress test result.</p>
@@ -678,6 +591,49 @@
         <tag>PostgreSQL</tag>
         <tag>Database</tag>
         <tag>Performance</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MogDB ASH: Unveiling the Active Session History for Powerful Database Performance Tuning</title>
+    <url>/2024/05/27/MogDB-ASH-Unveiling-the-Active-Session-History-for-Powerful-Database-Performance-Tuning/</url>
+    <content><![CDATA[<h4 id="What-is-ASH"><a href="#What-is-ASH" class="headerlink" title="What is ASH?"></a>What is ASH?</h4><p>ASH, or Active Session History, is a feature in Oracle databases that records information about active sessions at regular intervals in both the database memory and persistent system tables. Data in memory is cleared after a database restart, but data in the persistent system tables is retained for a longer period. ASH is extremely useful for diagnosing issues when the database encounters problems or performance issues by allowing retrospective analysis to identify the root cause.</p>
+<p>In MogDB, a similar ASH capability is implemented.</p>
+<h4 id="ASH-Capability-in-MogDB"><a href="#ASH-Capability-in-MogDB" class="headerlink" title="ASH Capability in MogDB"></a>ASH Capability in MogDB</h4><p>The ASH capability in MogDB is divided into two parts: the open-source community version (openGauss) and the enhanced enterprise version.</p>
+<p><strong>1. openGauss Community Version:</strong><br>MogDB inherits the ASH capability from openGauss. The database provides two main views: <code>dbe_perf.LOCAL_ACTIVE_SESSION</code> and <code>GS_ASP</code>. The <code>LOCAL_ACTIVE_SESSION</code> view is an in-memory table, while <code>GS_ASP</code> is a persistent table. These views contain sampling information about current active sessions.</p>
+<p>Key parameters affecting ASH functionality:</p>
+<ul>
+<li><strong>enable_asp:</strong> Set to <code>on</code> or <code>off</code> to enable or disable ASH functionality. Default is <code>on</code>.</li>
+<li><strong>asp_sample_interval:</strong> Specifies the interval between each sample. Default is 1 second. To reduce sampling pressure, this can be set to a longer interval, up to a maximum of 10 seconds.</li>
+<li><strong>asp_sample_num:</strong> Specifies the total number of samples retained in the <code>LOCAL_ACTIVE_SESSION</code> in-memory table. Exceeding this number triggers a flush of in-memory samples to the <code>GS_ASP</code> system table and clears the in-memory table. Default is 100,000 samples.</li>
+<li><strong>asp_flush_rate:</strong> Determines which in-memory samples are flushed to the <code>GS_ASP</code> table. Samples with <code>sampleid % asp_flush_rate == 0</code> are marked as <code>need_flush_sample=true</code> and are persisted. Default is 10, meaning 1&#x2F;10 of samples are persisted.</li>
+<li><strong>asp_retention_days:</strong> Specifies the retention period for data in the <code>GS_ASP</code> table. Default is 2 days, with a maximum of 7 days.</li>
+</ul>
+<p><strong>2. MogDB Enterprise Version:</strong><br>The enterprise version enhances ASH capability, termed “SQL Execution State Observation,” by adding sampling of SQL execution operators. The <code>plan_node_id</code> field is added to views to record the execution operator during each sample, allowing identification of which step in the execution plan is causing performance issues.</p>
+<p>Key parameters affecting enterprise ASH functionality:</p>
+<ul>
+<li><strong>resource_track_level:</strong> Set to <code>operator</code> to enable operator sampling capability. Default is <code>query</code>, which records only SQL-level sampling.</li>
+</ul>
+<h4 id="LOCAL-ACTIVE-SESSION-View"><a href="#LOCAL-ACTIVE-SESSION-View" class="headerlink" title="LOCAL_ACTIVE_SESSION View"></a>LOCAL_ACTIVE_SESSION View</h4><p>This view records extensive information, including session ID, wait events, and SQL query ID (which can be linked to <code>dbe_perf.statement_history</code> or <code>dbe_perf.statement_complex_runtime</code> to retrieve SQL text and execution plans). </p>
+<p><img src="https://s2.loli.net/2022/10/24/UZR4wcX8lyeDHS7.png" alt="image-20221024155531233"></p>
+<p>Note: The <code>plan_node_id</code> field exists only in the enterprise version.</p>
+<h4 id="Recording-SQL-Execution-Plans"><a href="#Recording-SQL-Execution-Plans" class="headerlink" title="Recording SQL Execution Plans"></a>Recording SQL Execution Plans</h4><p>Querying the execution plans of past or currently executing SQL is a common requirement in database maintenance. In MogDB, the following views record SQL execution plans:</p>
+<ul>
+<li><strong>dbe_perf.STATEMENT_HISTORY:</strong> Records information about completed SQL, including execution plans (<code>query_plan</code> field).</li>
+<li><strong>dbe_perf.STATEMENT_COMPLEX_RUNTIME:</strong> Records information about currently executing SQL, including execution plans (<code>query_plan</code> field).</li>
+</ul>
+<p>Parameters affecting recording of SQL execution plans:</p>
+<ul>
+<li><strong>enable_resource_track:</strong> Enables or disables resource tracking. Default is <code>on</code>. If set to <code>off</code>, no user SQL execution information, including execution plans, is tracked.</li>
+<li><strong>resource_track_cost:</strong> Sets the minimum execution cost for SQL statements to be tracked. Only SQL with a cost above this value will have its execution plan recorded.</li>
+</ul>
+<h4 id="Comprehensive-Query-Example"><a href="#Comprehensive-Query-Example" class="headerlink" title="Comprehensive Query Example"></a>Comprehensive Query Example</h4><p>The following query retrieves all information about ongoing SQL executions, including historical samples:</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> las.sample_time, las.application_name, las.unique_query_id, las.event, scr.query, scr.query_plan</span><br><span class="line"><span class="keyword">FROM</span> dbe_perf.local_active_session las, dbe_perf.statement_complex_runtime scr</span><br><span class="line"><span class="keyword">WHERE</span> las.thread_id <span class="operator">=</span> scr.pid <span class="keyword">AND</span> scr.pid <span class="operator">&lt;&gt;</span> pg_backend_pid();</span><br></pre></td></tr></table></figure>
+
+<p>Example output shows a frequently executed full table scan query, including SQL text, execution plan, and client information, providing valuable data for performance diagnosis.</p>
+<p><img src="https://s2.loli.net/2022/10/24/MxBW7629sCSaGKp.png" alt="image-20221024183300024"></p>
+]]></content>
+      <tags>
+        <tag>MogDB</tag>
       </tags>
   </entry>
   <entry>
@@ -882,6 +838,50 @@
       <tags>
         <tag>MogDB</tag>
       </tags>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/1970/01/01/The%20best%20practices%20for%20using%20partition%20table%20in%20PostgreSQL/</url>
+    <content><![CDATA[<h1 id="The-best-practices-for-using-partition-table-in-PostgreSQL"><a href="#The-best-practices-for-using-partition-table-in-PostgreSQL" class="headerlink" title="The best practices for using partition table in PostgreSQL"></a>The best practices for using partition table in PostgreSQL</h1><h2 id="What-is-partition-table"><a href="#What-is-partition-table" class="headerlink" title="What is partition table?"></a>What is partition table?</h2><p>Partition table is a table that is divided into smaller parts. Each part is called a partition.</p>
+<p>Why use partition table?</p>
+<ol>
+<li><strong>Performance</strong>: Partition table can improve the performance of the table. Because each partition can be stored in a separate file, the query can be executed faster.</li>
+<li><strong>Maintenance</strong>: Partition table can make the maintenance of the table easier. Because each partition can be maintained separately, the maintenance of the table can be done faster.</li>
+</ol>
+<h2 id="How-to-create-a-partition-table"><a href="#How-to-create-a-partition-table" class="headerlink" title="How to create a partition table?"></a>How to create a partition table?</h2><ol>
+<li><strong>Create a partition table</strong>:</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement (</span><br><span class="line">    city_id         <span class="type">int</span> <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    logdate         <span class="type">date</span> <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    peaktemp        <span class="type">int</span>,</span><br><span class="line">    unitsales       <span class="type">int</span></span><br><span class="line">) <span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">RANGE</span> (logdate);</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>Create a partition table for each partition</strong>:</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement_y2006m02 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> measurement</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2006-02-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2006-03-01&#x27;</span>);</span><br><span class="line">...</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement_y2007m11 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> measurement</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2007-11-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2007-12-01&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Partition-table-types"><a href="#Partition-table-types" class="headerlink" title="Partition table types"></a>Partition table types</h2><p>There are 3 basic types of partition table in PostgreSQL:</p>
+<ol>
+<li><strong>List Partition</strong>: The table is partitioned by explicitly listing which key value(s) appear in each partition.</li>
+<li><strong>Range Partition</strong>: The table is partitioned into “ranges” defined by a key column or set of columns, with no overlap between the ranges of values assigned to different partitions.</li>
+<li><strong>Hash Partition</strong>: The table is partitioned by specifying a modulus and a remainder for each partition.</li>
+</ol>
+<p>Combine these 3 basic types of partition table, we can create more complex partition table. This is called <strong>Composite Partitioning</strong>.</p>
+<p>There are 4 types of composite partitioning:</p>
+<ol>
+<li><strong>List-Range Partition</strong>: The partition is divided into several ranges.<br>The step is: create table A partition by list, then create table A1 partition of A partition by range, then create table A1-1 partition of A1</li>
+<li><strong>Range-List Partition</strong>: The partition is divided into several ranges.<br>The step is: create table A partition by range, then create table B of table A but partition by list.</li>
+<li><strong>Range-Hash Partition</strong>: The partition is divided into several ranges.</li>
+<li><strong>Hash-Range Partition</strong>: The partition is divided into several ranges.</li>
+</ol>
+<h2 id="Data-dictionary-about-partition-table"><a href="#Data-dictionary-about-partition-table" class="headerlink" title="Data dictionary about partition table"></a>Data dictionary about partition table</h2><ol>
+<li><strong>pg_partitioned_table</strong>: This table stores the information about the partitioned table.</li>
+<li><strong>pg_partition_rule</strong>: This table stores the information about the partition rule.</li>
+<li><strong>pg_partition_column</strong>: This table stores the information about the partition column.</li>
+<li><strong>pg_partition_index</strong>: This table stores the information about the partition index.</li>
+<li><strong>pg_partition_constraint</strong>: This table stores the information about the partition constraint.</li>
+<li><strong>pg_partition_constraint_column</strong>: This table stores the information about the partition constraint column.</li>
+<li><strong>pg_partition_constraint_index</strong>: This table stores the information about the partition constraint index.</li>
+</ol>
+]]></content>
   </entry>
   <entry>
     <title>Unlocking the Power: Key Features of MogDB</title>
