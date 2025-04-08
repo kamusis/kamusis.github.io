@@ -108,6 +108,76 @@
 
   <div class="lx-entry padding">
     <div>
+      <h2 class="title"><a href="/2024/05/30/Ensuring-Data-Integrity-How-Major-Databases-Handle-Partial-Writes-and-Atomic-Operations/">Ensuring Data Integrity: How Major Databases Handle Partial Writes and Atomic Operations</a></h2>
+      <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2024-05-30</span>
+      <p><p>In the world of databases, ensuring atomicity in write operations is crucial. This post explores the importance of atomic writes and how various databases handle potential issues like partial writes.</p>
+<h4 id="Understanding-Partial-Writes"><a href="#Understanding-Partial-Writes" class="headerlink" title="Understanding Partial Writes"></a>Understanding Partial Writes</h4><p>In the I&#x2F;O write chain, the size of atomic operations can vary. An operation at a higher level may be split into multiple operations at a lower level, leading to scenarios where some operations succeed while others fail. This phenomenon is known as a partial write.</p>
+<ul>
+<li><strong>Legacy Disk Drives</strong>: Default sector size is 512 bytes.</li>
+<li><strong>Modern Disk Drives</strong>: Advanced format sector size is 4k.</li>
+<li><strong>Filesystem Page Size</strong>: For example, ext4 has a default page size of 4k.</li>
+<li><strong>Database Page Sizes</strong>:<ul>
+<li>Oracle: 8K</li>
+<li>MySQL: 16K</li>
+<li>PostgreSQL: 8K</li>
+<li>openGauss: 8K</li>
+</ul>
+</li>
+</ul>
+<h3 id="The-Reality-of-Partial-Writes"><a href="#The-Reality-of-Partial-Writes" class="headerlink" title="The Reality of Partial Writes"></a>The Reality of Partial Writes</h3><p>While theoretically, databases must handle partial writes, in practice, such events are quite rare. The critical aspect is not just preventing partial writes but ensuring robust mechanisms for data integrity checks (checksums) and recovery when issues do arise.</p>
+<h3 id="How-Oracle-Handles-Partial-Writes"><a href="#How-Oracle-Handles-Partial-Writes" class="headerlink" title="How Oracle Handles Partial Writes"></a>How Oracle Handles Partial Writes</h3><p>Oracle’s approach to partial writes is pragmatic:</p>
+<ol>
+<li><strong>Automatic Repair</strong>: If a fractured block is detected, Oracle tries to repair it using the corresponding block from Active Data Guard (ADG) or the flashback log.</li>
+<li><strong>Error Reporting</strong>: If automatic repair fails, an ORA-01578 error is logged, prompting the DBA to perform a media recovery.</li>
+<li><strong>Block-Level Recovery</strong>: Oracle supports block-level recovery, making the process less cumbersome and time-consuming.</li>
+</ol>
+<p>Oracle’s backup sets are designed to handle partial writes:</p>
+<ul>
+<li><strong>Using OS Commands</strong>: When backing up data files using OS commands, Oracle requires the tablespace to be in backup mode. Any changes to data blocks are logged in the redo log, ensuring a clean block can be restored during recovery.</li>
+<li><strong>Using RMAN</strong>: RMAN handles partial writes by ensuring that each backup block is clean, eliminating the need to worry about fractured blocks.</li>
+<li><strong>Block Checking</strong>: Oracle provides mechanisms like DB_BLOCK_CHECKING for comprehensive checksums.</li>
+</ul>
+<h3 id="How-MySQL-Handles-Partial-Writes"><a href="#How-MySQL-Handles-Partial-Writes" class="headerlink" title="How MySQL Handles Partial Writes"></a>How MySQL Handles Partial Writes</h3><p>MySQL employs a <strong>double write buffer</strong> to safeguard against partial writes. </p>
+<ol>
+<li><strong>Double Write Buffer</strong>: Despite its name, the double write buffer is not stored in memory; instead, it consists of persistent files on disk. The mechanism works as follows: before writing a data block to its final location on disk, MySQL first writes it to the double write buffer.</li>
+<li><strong>Data Integrity</strong>: This approach ensures that there is always a clean copy of the block available—either in the double write buffer or in the data files—allowing for safe redo operations.</li>
+</ol>
+<p>However, this method is not without its challenges. One of the primary concerns is its efficiency, as it effectively doubles the I&#x2F;O workload for redo logging. This has sparked ongoing discussions about the trade-offs and effectiveness of using a double write buffer to address partial writes.</p>
+<h3 id="How-PostgreSQL-Handles-Partial-Writes"><a href="#How-PostgreSQL-Handles-Partial-Writes" class="headerlink" title="How PostgreSQL Handles Partial Writes"></a>How PostgreSQL Handles Partial Writes</h3><p>PostgreSQL employs <strong>full page writes</strong> to manage partial writes effectively:</p>
+<ol>
+<li><strong>Full Page Writes</strong>: When a data block is updated for the first time after a checkpoint, the entire block is written to the WAL (Write-Ahead Logging) log. This is akin to the database always being in “Backup status,” similar to issuing the <code>alter tablespace x begin backup</code> command in an Oracle database.</li>
+<li><strong>Data Integrity</strong>: This mechanism ensures that even if a partial write occurs, the database remains consistent because the original page can be used for redo operations.</li>
+</ol>
+<p>There has been community discussion about adopting a double write buffer mechanism, but it remains an area of interest rather than active development. For more details, you can check out these discussions:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.postgresql.org/message-id/1962493974.656458.1327703514780.JavaMail.root@zimbra-prod-mbox-4.vmware.com">Discussion on Double Write Buffer Mechanism (Post 1)</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.postgresql.org/message-id/20180418062240.GJ18178%40paquier.xyz">Discussion on Double Write Buffer Mechanism (Post 2)</a></li>
+</ul>
+<h3 id="How-MogDB-Handles-Partial-Writes"><a href="#How-MogDB-Handles-Partial-Writes" class="headerlink" title="How MogDB Handles Partial Writes"></a>How MogDB Handles Partial Writes</h3><p>MogDB (the enterprise edition of openGauss) combines strategies from MySQL and PostgreSQL:</p>
+<ol>
+<li><strong>Double Write Buffer</strong>: Similar to MySQL, MogDB uses a double write buffer by setting <code>enable_double_write=on</code>.</li>
+<li><strong>Full Page Writes</strong>: MogDB retains PostgreSQL’s full page write mechanism by setting <code>full_page_writes=on</code>.</li>
+</ol>
+<p>Depending on the configuration of incremental checkpoints (enable_incremental_checkpoint):</p>
+<ul>
+<li><strong>Incremental Checkpoints Off</strong>:<ul>
+<li>With <code>full_page_writes=on</code>, full page writes are used.</li>
+<li>With <code>full_page_writes=off</code>, partial writes are not a concern.</li>
+</ul>
+</li>
+<li><strong>Incremental Checkpoints On</strong>:<ul>
+<li>With <code>enable_double_write=on</code>, double writes are used.</li>
+<li>With <code>enable_double_write=off</code>, the behavior depends on full_page_writes settings.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>Ensuring atomic writes in databases is essential for data integrity and consistency. While partial writes are rare, robust mechanisms for detection and recovery are vital. Oracle, MySQL, PostgreSQL, and MogDB&#x2F;openGauss each have unique approaches to handling these scenarios, ensuring that data remains reliable and recoverable.</p>
+</p>
+      <div class="post-button"><a class="btn" href="/2024/05/30/Ensuring-Data-Integrity-How-Major-Databases-Handle-Partial-Writes-and-Atomic-Operations/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
+    </div>
+  </div>
+  <div class="lx-entry padding">
+    <div>
       <h2 class="title"><a href="/2024/05/27/How-to-build-blog-site-by-using-Hexo-in-Windows-WSL-and-deploy-to-GitHub-Pages/">How to build blog site by using Hexo in Windows WSL and deploy to GitHub Pages</a></h2>
       <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2024-05-27</span>
       <p><h2 id="Why-use-WSL"><a href="#Why-use-WSL" class="headerlink" title="Why use WSL"></a>Why use WSL</h2><p>Using Windows Subsystem for Linux (WSL) instead of relying solely on Windows can offer several advantages, particularly for developers and IT professionals. WSL allows users to run a GNU&#x2F;Linux environment directly on Windows, without the overhead of a traditional virtual machine or dual-boot setup. This enables seamless access to a wide range of Linux tools and utilities, which are often preferred for development tasks, scripting, and system administration. Additionally, WSL provides a more consistent and familiar environment for those accustomed to Unix-based systems, facilitating smoother workflows and integration with cloud-based services. By leveraging WSL, professionals can enjoy the best of both worlds: the robust software ecosystem of Windows and the powerful command-line capabilities of Linux.</p>
