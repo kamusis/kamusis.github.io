@@ -62,81 +62,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Ensuring Data Integrity: How Major Databases Handle Partial Writes and Atomic Operations</title>
-    <url>/2024/05/30/Ensuring-Data-Integrity-How-Major-Databases-Handle-Partial-Writes-and-Atomic-Operations/</url>
-    <content><![CDATA[<p>In the world of databases, ensuring atomicity in write operations is crucial. This post explores the importance of atomic writes and how various databases handle potential issues like partial writes.</p>
-<h4 id="Understanding-Partial-Writes"><a href="#Understanding-Partial-Writes" class="headerlink" title="Understanding Partial Writes"></a>Understanding Partial Writes</h4><p>In the I&#x2F;O write chain, the size of atomic operations can vary. An operation at a higher level may be split into multiple operations at a lower level, leading to scenarios where some operations succeed while others fail. This phenomenon is known as a partial write.</p>
-<ul>
-<li><strong>Legacy Disk Drives</strong>: Default sector size is 512 bytes.</li>
-<li><strong>Modern Disk Drives</strong>: Advanced format sector size is 4k.</li>
-<li><strong>Filesystem Page Size</strong>: For example, ext4 has a default page size of 4k.</li>
-<li><strong>Database Page Sizes</strong>:<ul>
-<li>Oracle: 8K</li>
-<li>MySQL: 16K</li>
-<li>PostgreSQL: 8K</li>
-<li>openGauss: 8K</li>
-</ul>
-</li>
-</ul>
-<h3 id="The-Reality-of-Partial-Writes"><a href="#The-Reality-of-Partial-Writes" class="headerlink" title="The Reality of Partial Writes"></a>The Reality of Partial Writes</h3><p>While theoretically, databases must handle partial writes, in practice, such events are quite rare. The critical aspect is not just preventing partial writes but ensuring robust mechanisms for data integrity checks (checksums) and recovery when issues do arise.</p>
-<h3 id="How-Oracle-Handles-Partial-Writes"><a href="#How-Oracle-Handles-Partial-Writes" class="headerlink" title="How Oracle Handles Partial Writes"></a>How Oracle Handles Partial Writes</h3><p>Oracle’s approach to partial writes is pragmatic:</p>
-<ol>
-<li><strong>Automatic Repair</strong>: If a fractured block is detected, Oracle tries to repair it using the corresponding block from Active Data Guard (ADG) or the flashback log.</li>
-<li><strong>Error Reporting</strong>: If automatic repair fails, an ORA-01578 error is logged, prompting the DBA to perform a media recovery.</li>
-<li><strong>Block-Level Recovery</strong>: Oracle supports block-level recovery, making the process less cumbersome and time-consuming.</li>
-</ol>
-<p>Oracle’s backup sets are designed to handle partial writes:</p>
-<ul>
-<li><strong>Using OS Commands</strong>: When backing up data files using OS commands, Oracle requires the tablespace to be in backup mode. Any changes to data blocks are logged in the redo log, ensuring a clean block can be restored during recovery.</li>
-<li><strong>Using RMAN</strong>: RMAN handles partial writes by ensuring that each backup block is clean, eliminating the need to worry about fractured blocks.</li>
-<li><strong>Block Checking</strong>: Oracle provides mechanisms like DB_BLOCK_CHECKING for comprehensive checksums.</li>
-</ul>
-<h3 id="How-MySQL-Handles-Partial-Writes"><a href="#How-MySQL-Handles-Partial-Writes" class="headerlink" title="How MySQL Handles Partial Writes"></a>How MySQL Handles Partial Writes</h3><p>MySQL employs a <strong>double write buffer</strong> to safeguard against partial writes. </p>
-<ol>
-<li><strong>Double Write Buffer</strong>: Despite its name, the double write buffer is not stored in memory; instead, it consists of persistent files on disk. The mechanism works as follows: before writing a data block to its final location on disk, MySQL first writes it to the double write buffer.</li>
-<li><strong>Data Integrity</strong>: This approach ensures that there is always a clean copy of the block available—either in the double write buffer or in the data files—allowing for safe redo operations.</li>
-</ol>
-<p>However, this method is not without its challenges. One of the primary concerns is its efficiency, as it effectively doubles the I&#x2F;O workload for redo logging. This has sparked ongoing discussions about the trade-offs and effectiveness of using a double write buffer to address partial writes.</p>
-<h3 id="How-PostgreSQL-Handles-Partial-Writes"><a href="#How-PostgreSQL-Handles-Partial-Writes" class="headerlink" title="How PostgreSQL Handles Partial Writes"></a>How PostgreSQL Handles Partial Writes</h3><p>PostgreSQL employs <strong>full page writes</strong> to manage partial writes effectively:</p>
-<ol>
-<li><strong>Full Page Writes</strong>: When a data block is updated for the first time after a checkpoint, the entire block is written to the WAL (Write-Ahead Logging) log. This is akin to the database always being in “Backup status,” similar to issuing the <code>alter tablespace x begin backup</code> command in an Oracle database.</li>
-<li><strong>Data Integrity</strong>: This mechanism ensures that even if a partial write occurs, the database remains consistent because the original page can be used for redo operations.</li>
-</ol>
-<p>There has been community discussion about adopting a double write buffer mechanism, but it remains an area of interest rather than active development. For more details, you can check out these discussions:</p>
-<ul>
-<li><a href="https://www.postgresql.org/message-id/1962493974.656458.1327703514780.JavaMail.root@zimbra-prod-mbox-4.vmware.com">Discussion on Double Write Buffer Mechanism (Post 1)</a></li>
-<li><a href="https://www.postgresql.org/message-id/20180418062240.GJ18178%40paquier.xyz">Discussion on Double Write Buffer Mechanism (Post 2)</a></li>
-</ul>
-<h3 id="How-MogDB-Handles-Partial-Writes"><a href="#How-MogDB-Handles-Partial-Writes" class="headerlink" title="How MogDB Handles Partial Writes"></a>How MogDB Handles Partial Writes</h3><p>MogDB (the enterprise edition of openGauss) combines strategies from MySQL and PostgreSQL:</p>
-<ol>
-<li><strong>Double Write Buffer</strong>: Similar to MySQL, MogDB uses a double write buffer by setting <code>enable_double_write=on</code>.</li>
-<li><strong>Full Page Writes</strong>: MogDB retains PostgreSQL’s full page write mechanism by setting <code>full_page_writes=on</code>.</li>
-</ol>
-<p>Depending on the configuration of incremental checkpoints (enable_incremental_checkpoint):</p>
-<ul>
-<li><strong>Incremental Checkpoints Off</strong>:<ul>
-<li>With <code>full_page_writes=on</code>, full page writes are used.</li>
-<li>With <code>full_page_writes=off</code>, partial writes are not a concern.</li>
-</ul>
-</li>
-<li><strong>Incremental Checkpoints On</strong>:<ul>
-<li>With <code>enable_double_write=on</code>, double writes are used.</li>
-<li>With <code>enable_double_write=off</code>, the behavior depends on full_page_writes settings.</li>
-</ul>
-</li>
-</ul>
-<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>Ensuring atomic writes in databases is essential for data integrity and consistency. While partial writes are rare, robust mechanisms for detection and recovery are vital. Oracle, MySQL, PostgreSQL, and MogDB&#x2F;openGauss each have unique approaches to handling these scenarios, ensuring that data remains reliable and recoverable.</p>
-]]></content>
-      <tags>
-        <tag>MogDB</tag>
-        <tag>openGauss</tag>
-        <tag>Oracle</tag>
-        <tag>PostgreSQL</tag>
-        <tag>MySQL</tag>
-        <tag>Partial Writes</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Flashback Features in MogDB</title>
     <url>/2024/06/15/Flashback-Features-in-MogDB/</url>
     <content><![CDATA[<h2 id="What-is-Database-Flashback"><a href="#What-is-Database-Flashback" class="headerlink" title="What is Database Flashback"></a>What is Database Flashback</h2><p>The flashback capability of a database allows users to query the contents of a table at a specific point in the past or quickly restore a table or even the entire database to a time before an erroneous operation. This feature can be extremely useful, and sometimes even a lifesaver.</p>
@@ -219,6 +144,93 @@
       </tags>
   </entry>
   <entry>
+    <title>Getting Started with Deno: A Modern Twist on JavaScript Runtimes</title>
+    <url>/2025/03/28/Getting-Started-with-Deno-A-Modern-Twist-on-JavaScript-Runtimes/</url>
+    <content><![CDATA[<p>If you’ve been in the JavaScript world for a while, you’ve probably heard of Deno—the runtime that’s been making waves as a “better Node.js.” Built by Ryan Dahl (the original creator of Node.js), Deno takes a fresh approach to running JavaScript and TypeScript, aiming to fix some of Node’s pain points while embracing modern standards. In this post, I’ll walk you through what Deno is, how it works, and how it stacks up against Node.js—especially based on my recent dive into it while tinkering with a Supabase integration.</p>
+<h2 id="What-is-Deno"><a href="#What-is-Deno" class="headerlink" title="What is Deno?"></a>What is Deno?</h2><p>Deno is a secure, modern runtime for JavaScript and TypeScript, launched in 2020. It’s designed to be simple, safe, and developer-friendly, with built-in support for TypeScript, ES Modules, and a standard library—no extra tools required. Think of it as Node.js reimagined with lessons learned from the past decade.</p>
+<p>Here’s a quick taste of Deno in action:</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// main.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; serve &#125; <span class="keyword">from</span> <span class="string">&quot;https://deno.land/std@0.224.0/http/server.ts&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">serve</span>(<span class="function">(<span class="params">req</span>) =&gt;</span> <span class="keyword">new</span> <span class="title class_">Response</span>(<span class="string">&quot;Hello, Deno!&quot;</span>), &#123; <span class="attr">port</span>: <span class="number">8000</span> &#125;);</span><br></pre></td></tr></table></figure>
+<p>Run it with:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">deno run --allow-net main.ts</span><br></pre></td></tr></table></figure>
+<p>Boom—a web server in three lines, no <code>npm install</code> or <code>node_modules</code> in sight.</p>
+<h2 id="Key-Features-of-Deno"><a href="#Key-Features-of-Deno" class="headerlink" title="Key Features of Deno"></a>Key Features of Deno</h2><h3 id="1-TypeScript-Out-of-the-Box"><a href="#1-TypeScript-Out-of-the-Box" class="headerlink" title="1. TypeScript Out of the Box"></a>1. TypeScript Out of the Box</h3><p>Deno runs TypeScript natively—no <code>tsconfig.json</code> or <code>tsc</code> needed. Write your <code>.ts</code> file, run it with <code>deno run</code>, and Deno compiles it in memory. Compare that to Node.js, where you’d need <code>typescript</code> installed and a build step (or <code>ts-node</code> for a quicker dev loop).</p>
+<h3 id="2-URL-Based-Imports"><a href="#2-URL-Based-Imports" class="headerlink" title="2. URL-Based Imports"></a>2. URL-Based Imports</h3><p>Forget <code>node_modules</code>. Deno fetches dependencies from URLs:</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; load &#125; <span class="keyword">from</span> <span class="string">&quot;https://deno.land/std@0.224.0/dotenv/mod.ts&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>It caches them globally (more on that later) and skips the package manager entirely.</p>
+<h3 id="3-Security-by-Default"><a href="#3-Security-by-Default" class="headerlink" title="3. Security by Default"></a>3. Security by Default</h3><p>Deno won’t let your script touch the network, filesystem, or environment unless you explicitly allow it:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">deno run --allow-env --allow-read main.ts</span><br></pre></td></tr></table></figure>
+<p>This is a stark contrast to Node.js, where scripts have free rein unless you sandbox them yourself.</p>
+<h3 id="4-Centralized-Dependency-Cache"><a href="#4-Centralized-Dependency-Cache" class="headerlink" title="4. Centralized Dependency Cache"></a>4. Centralized Dependency Cache</h3><p>Deno stores all dependencies in a single global cache (e.g., <code>~/.cache/deno/deps</code> on Unix). Run <code>deno info</code> to see where:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">deno info</span><br><span class="line"><span class="comment"># Outputs: Modules cache: &quot;/home/username/.cache/deno/deps&quot;</span></span><br></pre></td></tr></table></figure>
+<p>No per-project <code>node_modules</code> bloating your disk.</p>
+<h3 id="5-Standard-Library"><a href="#5-Standard-Library" class="headerlink" title="5. Standard Library"></a>5. Standard Library</h3><p>Deno ships with a curated <code>std</code> library (e.g., <code>https://deno.land/std@0.224.0</code>), covering HTTP servers, file I&#x2F;O, and even a <code>dotenv</code> module for <code>.env</code> files—stuff you’d normally grab from npm in Node.js.</p>
+<h2 id="Deno-vs-Node-js-A-Head-to-Head-Comparison"><a href="#Deno-vs-Node-js-A-Head-to-Head-Comparison" class="headerlink" title="Deno vs. Node.js: A Head-to-Head Comparison"></a>Deno vs. Node.js: A Head-to-Head Comparison</h2><p>I recently played with Deno to connect to Supabase, and it highlighted some big differences from Node.js. Here’s how they stack up:</p>
+<h3 id="Dependency-Management"><a href="#Dependency-Management" class="headerlink" title="Dependency Management"></a>Dependency Management</h3><ul>
+<li><strong>Node.js</strong>: Uses <code>npm</code> and <code>package.json</code> to install dependencies into a local <code>node_modules</code> folder per project. Cloning a repo? Run <code>npm install</code> every time.<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install @supabase/supabase-js</span><br></pre></td></tr></table></figure></li>
+<li><strong>Deno</strong>: Imports modules via URLs, cached globally at <code>~/.cache/deno/deps</code>. Clone a Deno repo, and you’re ready to run—no install step.<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createClient &#125; <span class="keyword">from</span> <span class="string">&quot;https://esm.sh/@supabase/supabase-js@2.49.3&quot;</span>;</span><br></pre></td></tr></table></figure></li>
+<li><strong>Winner?</strong>: Deno for simplicity, Node.js for isolation (different projects can use different versions of the same module without URL juggling).</li>
+</ul>
+<h3 id="TypeScript-Support"><a href="#TypeScript-Support" class="headerlink" title="TypeScript Support"></a>TypeScript Support</h3><ul>
+<li><strong>Node.js</strong>: Requires setup—install <code>typescript</code>, configure <code>tsconfig.json</code>, and compile to JavaScript (or use <code>ts-node</code>). It’s mature but clunky.</li>
+<li><strong>Deno</strong>: TypeScript runs natively. No config, no build step. Write <code>.ts</code> and go.</li>
+<li><strong>Winner</strong>: Deno, hands down, unless you’re stuck on a legacy Node.js workflow.</li>
+</ul>
+<h3 id="Configuration-Files"><a href="#Configuration-Files" class="headerlink" title="Configuration Files"></a>Configuration Files</h3><ul>
+<li><strong>Node.js</strong>: Relies on <code>package.json</code> for dependencies and scripts, often paired with <code>tsconfig.json</code> for TypeScript.</li>
+<li><strong>Deno</strong>: Optional <code>deno.json</code> for imports and settings, but not required. My Supabase script didn’t need one—just a <code>.env</code> file and <code>std/dotenv</code>.</li>
+<li><strong>Winner</strong>: Deno for minimalism.</li>
+</ul>
+<h3 id="Security"><a href="#Security" class="headerlink" title="Security"></a>Security</h3><ul>
+<li><strong>Node.js</strong>: Open by default. Your script can read files or hit the network without warning.</li>
+<li><strong>Deno</strong>: Locked down. Want to read <code>.env</code>? Add <code>--allow-read</code>. Network access? <code>--allow-net</code>. It forced me to think about permissions when connecting to Supabase.</li>
+<li><strong>Winner</strong>: Deno for safety.</li>
+</ul>
+<h3 id="Ecosystem"><a href="#Ecosystem" class="headerlink" title="Ecosystem"></a>Ecosystem</h3><ul>
+<li><strong>Node.js</strong>: Massive npm ecosystem—hundreds of thousands of packages. Whatever you need, it’s there.</li>
+<li><strong>Deno</strong>: Smaller but growing ecosystem via <code>deno.land/x</code> and CDNs like <code>esm.sh</code>. It worked fine for Supabase, but niche libraries might be missing.</li>
+<li><strong>Winner</strong>: Node.js for sheer volume.</li>
+</ul>
+<h3 id="Learning-Curve"><a href="#Learning-Curve" class="headerlink" title="Learning Curve"></a>Learning Curve</h3><ul>
+<li><strong>Node.js</strong>: Familiar to most JavaScript devs, but the setup (npm, TypeScript, etc.) can overwhelm beginners.</li>
+<li><strong>Deno</strong>: Fresh approach, but URL imports and permissions might feel alien if you’re Node.js-native.</li>
+<li><strong>Winner</strong>: Tie—depends on your background.</li>
+</ul>
+<h2 id="A-Real-World-Example-Supabase-with-Deno"><a href="#A-Real-World-Example-Supabase-with-Deno" class="headerlink" title="A Real-World Example: Supabase with Deno"></a>A Real-World Example: Supabase with Deno</h2><p>Here’s how I set up a Supabase client in Deno:</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createClient &#125; <span class="keyword">from</span> <span class="string">&quot;https://esm.sh/@supabase/supabase-js@2.49.3&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; load &#125; <span class="keyword">from</span> <span class="string">&quot;https://deno.land/std@0.224.0/dotenv/mod.ts&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> env = <span class="keyword">await</span> <span class="title function_">load</span>(&#123; <span class="attr">envPath</span>: <span class="string">&quot;./.env&quot;</span> &#125;);</span><br><span class="line"><span class="keyword">const</span> supabaseUrl = env[<span class="string">&quot;SUPABASE_URL&quot;</span>] || <span class="title class_">Deno</span>.<span class="property">env</span>.<span class="title function_">get</span>(<span class="string">&quot;SUPABASE_URL&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> supabaseKey = env[<span class="string">&quot;SUPABASE_ANON_KEY&quot;</span>] || <span class="title class_">Deno</span>.<span class="property">env</span>.<span class="title function_">get</span>(<span class="string">&quot;SUPABASE_ANON_KEY&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!supabaseUrl || !supabaseKey) &#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&quot;Missing SUPABASE_URL or SUPABASE_ANON_KEY&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> supabase = <span class="title function_">createClient</span>(supabaseUrl, supabaseKey);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Supabase client created! Attributes:&quot;</span>, <span class="title class_">Object</span>.<span class="title function_">keys</span>(supabase));</span><br></pre></td></tr></table></figure>
+<p>Run it:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">deno run --allow-env --allow-read main.ts</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>.env</code> file: <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> (grabbed from Supabase’s dashboard—<em>not</em> my database password!).</li>
+<li>VS Code linting needed the Deno extension and a <code>deno cache main.ts</code> to quiet TypeScript errors.</li>
+</ul>
+<p>In Node.js, I’d have installed <code>@supabase/supabase-js</code> via npm, set up a <code>dotenv</code> package, and skipped the permissions flags. Deno’s way felt leaner but required tweaking for editor support.</p>
+<h2 id="Should-You-Use-Deno"><a href="#Should-You-Use-Deno" class="headerlink" title="Should You Use Deno?"></a>Should You Use Deno?</h2><ul>
+<li><strong>Use Deno if</strong>:<ul>
+<li>You love TypeScript and hate build steps.</li>
+<li>You want a secure, minimal setup for small projects or experiments.</li>
+<li>You’re intrigued by a modern take on JavaScript runtimes.</li>
+</ul>
+</li>
+<li><strong>Stick with Node.js if</strong>:<ul>
+<li>You need the npm ecosystem’s depth.</li>
+<li>You’re working on a legacy project or with a team entrenched in Node.</li>
+<li>You prefer per-project dependency isolation.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Wrapping-Up"><a href="#Wrapping-Up" class="headerlink" title="Wrapping Up"></a>Wrapping Up</h2><p>Deno’s not here to kill Node.js—it’s a different flavor of the same JavaScript pie. After messing with it for Supabase, I’m hooked on its simplicity and TypeScript support, but I’d still reach for Node.js on bigger, ecosystem-heavy projects. Try it yourself—spin up a Deno script, check your cache with <code>deno info</code>, and see if it clicks for you.</p>
+<p>What’s your take? Node.js veteran or Deno newbie? Let me know in the comments!</p>
+<hr>
+<p>This post covers Deno’s core concepts, contrasts it with Node.js, and ties in our Supabase example for a practical angle. Feel free to tweak the tone or add more details if you’re aiming for a specific audience! Want me to adjust anything?</p>
+]]></content>
+      <tags>
+        <tag>Deno</tag>
+        <tag>JavaScript</tag>
+        <tag>TypeScript</tag>
+        <tag>Node.js</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>How to Find the Corresponding Session in MogDB/openGauss from OS Thread ID</title>
     <url>/2024/05/27/How-to-Find-the-Corresponding-Session-in-MogDB-openGauss-from-OS-Thread-ID/</url>
     <content><![CDATA[<h3 id="Diagnostic-Needs"><a href="#Diagnostic-Needs" class="headerlink" title="Diagnostic Needs"></a>Diagnostic Needs</h3><p>When the MogDB database consumes a significant amount of system resources, such as nearly 100% CPU usage, how can we determine which session(s) in the database are using these resources?</p>
@@ -248,105 +260,6 @@
 ]]></content>
       <tags>
         <tag>MogDB</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>How to move WSL distro in Windows 11 to another drive</title>
-    <url>/2024/05/27/How-to-move-WSL-distro-in-Windows-11-to-another-drive/</url>
-    <content><![CDATA[<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction:"></a>Introduction:</h2><p>In the world of development and system administration, Windows Subsystem for Linux (WSL) has become a valuable tool. It allows users to run a Linux distribution alongside their Windows environment, opening up a world of possibilities for developers and administrators. In this article, we’ll guide you through the process of migrating a WSL instance, using a real-world example, step by step.</p>
-<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites:"></a>Prerequisites:</h2><p>Before we begin, ensure that you have the following prerequisites in place:</p>
-<ul>
-<li>Windows 10 or later with WSL installed.</li>
-<li>An existing WSL instance (in our case, Ubuntu).</li>
-<li>Sufficient storage space for the migration.</li>
-</ul>
-<h2 id="Step-1-Create-a-Target-Directory"><a href="#Step-1-Create-a-Target-Directory" class="headerlink" title="Step 1: Create a Target Directory"></a>Step 1: Create a Target Directory</h2><p>To start the migration process, we need a target directory to store the migrated WSL instance. In PowerShell, use the ‘mkdir’ command to create this directory. In our example, we create a directory named ‘D:\WSL\Ubuntu’:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">mkdir <span class="literal">-p</span> D:\WSL\Ubuntu</span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-2-List-All-Running-WSL-Instances"><a href="#Step-2-List-All-Running-WSL-Instances" class="headerlink" title="Step 2: List All Running WSL Instances"></a>Step 2: List All Running WSL Instances</h2><p>Before we proceed further, let’s list all the running WSL instances. The following command will display a list of all WSL instances, including their state and version:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-3-Export-the-Source-WSL-Instance"><a href="#Step-3-Export-the-Source-WSL-Instance" class="headerlink" title="Step 3: Export the Source WSL Instance"></a>Step 3: Export the Source WSL Instance</h2><p>Now, let’s export the source WSL instance (in our case, ‘Ubuntu’) into a tar file. This step automatically shuts down the WSL instance and restarts it after the export:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--export</span> Ubuntu D:\WSL\Ubuntu.tar</span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-4-Unregister-the-Source-WSL-Instance"><a href="#Step-4-Unregister-the-Source-WSL-Instance" class="headerlink" title="Step 4: Unregister the Source WSL Instance"></a>Step 4: Unregister the Source WSL Instance</h2><p>Once the export is complete, we need to unregister the source WSL instance to avoid conflicts. Use the following command:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--unregister</span> Ubuntu</span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-5-Confirm-Unregistration"><a href="#Step-5-Confirm-Unregistration" class="headerlink" title="Step 5: Confirm Unregistration"></a>Step 5: Confirm Unregistration</h2><p>To confirm that the source WSL instance has been successfully unregistered, run the following command:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-6-Import-into-the-Target-Directory"><a href="#Step-6-Import-into-the-Target-Directory" class="headerlink" title="Step 6: Import into the Target Directory"></a>Step 6: Import into the Target Directory</h2><p>Now it’s time to import the previously exported WSL instance into the target directory. In this step, we specify the target directory and version (in our case, version 2):</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--import</span> Ubuntu D:\WSL\Ubuntu D:\WSL\Ubuntu.tar <span class="literal">--version</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-7-Verify-the-Migration"><a href="#Step-7-Verify-the-Migration" class="headerlink" title="Step 7: Verify the Migration"></a>Step 7: Verify the Migration</h2><p>To ensure that the migration was successful, list all WSL instances once again:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-8-Access-the-Migrated-WSL-Instance"><a href="#Step-8-Access-the-Migrated-WSL-Instance" class="headerlink" title="Step 8: Access the Migrated WSL Instance"></a>Step 8: Access the Migrated WSL Instance</h2><p>Now, you can access the migrated WSL instance by using the following command:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-d</span> Ubuntu</span><br></pre></td></tr></table></figure>
-
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion:"></a>Conclusion:</h2><p>Migrating WSL instances is a powerful way to manage and organize your development environments. By following these steps, you can seamlessly move your WSL instances to different directories or machines, ensuring flexibility and efficiency in your development workflow. Keep in mind that WSL provides a bridge between Windows and Linux, allowing you to enjoy the best of both worlds.</p>
-<p>Check the all steps screenshot as below.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># create target directory</span><br><span class="line">PS C:\Users\kamus&gt; mkdir -p D:\WSL\Ubuntu</span><br><span class="line"></span><br><span class="line"># List all the wsl running</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* Ubuntu                 Running         2</span><br><span class="line">  docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Export source wsl</span><br><span class="line">PS C:\Users\kamus&gt; wsl --export Ubuntu D:\WSL\Ubuntu.tar</span><br><span class="line"></span><br><span class="line"># When doing export, wsl will be shutdown automatically and restart after exporting</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* Ubuntu                 Running         2</span><br><span class="line">  docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Unregister the source wsl</span><br><span class="line">PS C:\Users\kamus&gt; wsl --unregister Ubuntu</span><br><span class="line">正在注销...</span><br><span class="line"></span><br><span class="line"># Check unregister is successful</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Import into the target directory</span><br><span class="line">PS C:\Users\kamus&gt; wsl --import Ubuntu D:\WSL\Ubuntu D:\WSL\Ubuntu.tar --version 2</span><br><span class="line"></span><br><span class="line"># Check results</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* docker-desktop         Stopped         2</span><br><span class="line">  Ubuntu                 Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">PS C:\Users\kamus&gt; wsl -d Ubuntu</span><br><span class="line">Welcome to Ubuntu 20.04.5 LTS (GNU/Linux 5.10.102.1-microsoft-standard-WSL2 x86_64)</span><br><span class="line"></span><br><span class="line"> * Documentation:  https://help.ubuntu.com</span><br><span class="line"> * Management:     https://landscape.canonical.com</span><br><span class="line"> * Support:        https://ubuntu.com/advantage</span><br><span class="line"></span><br><span class="line">  System information as of Fri Jan  5 14:40:25 JST 2024</span><br><span class="line"></span><br><span class="line">  System load:  0.68               Processes:             8</span><br><span class="line">  Usage of /:   2.0% of 250.98GB   Users logged in:       0</span><br><span class="line">  Memory usage: 4%                 IPv4 address for eth0: 172.28.208.11</span><br><span class="line">  Swap usage:   0%</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">0 updates can be applied immediately.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">The list of available updates is more than a week old.</span><br><span class="line">To check for new updates run: sudo apt update</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">This message is shown once a day. To disable it please create the</span><br><span class="line">/root/.hushlogin file.</span><br><span class="line">root@Kamus-Trident:/mnt/c/Users/kamus# cat /etc/os-release</span><br><span class="line">NAME=&quot;Ubuntu&quot;</span><br><span class="line">VERSION=&quot;20.04.5 LTS (Focal Fossa)&quot;</span><br><span class="line">ID=ubuntu</span><br><span class="line">ID_LIKE=debian</span><br><span class="line">PRETTY_NAME=&quot;Ubuntu 20.04.5 LTS&quot;</span><br><span class="line">VERSION_ID=&quot;20.04&quot;</span><br><span class="line">HOME_URL=&quot;https://www.ubuntu.com/&quot;</span><br><span class="line">SUPPORT_URL=&quot;https://help.ubuntu.com/&quot;</span><br><span class="line">BUG_REPORT_URL=&quot;https://bugs.launchpad.net/ubuntu/&quot;</span><br><span class="line">PRIVACY_POLICY_URL=&quot;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&quot;</span><br><span class="line">VERSION_CODENAME=focal</span><br><span class="line">UBUNTU_CODENAME=focal</span><br><span class="line">root@Kamus-Trident:/mnt/c/Users/kamus#</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <tags>
-        <tag>Windows</tag>
-        <tag>WSL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>How to build blog site by using Hexo in Windows WSL and deploy to GitHub Pages</title>
-    <url>/2024/05/27/How-to-build-blog-site-by-using-Hexo-in-Windows-WSL-and-deploy-to-GitHub-Pages/</url>
-    <content><![CDATA[<h2 id="Why-use-WSL"><a href="#Why-use-WSL" class="headerlink" title="Why use WSL"></a>Why use WSL</h2><p>Using Windows Subsystem for Linux (WSL) instead of relying solely on Windows can offer several advantages, particularly for developers and IT professionals. WSL allows users to run a GNU&#x2F;Linux environment directly on Windows, without the overhead of a traditional virtual machine or dual-boot setup. This enables seamless access to a wide range of Linux tools and utilities, which are often preferred for development tasks, scripting, and system administration. Additionally, WSL provides a more consistent and familiar environment for those accustomed to Unix-based systems, facilitating smoother workflows and integration with cloud-based services. By leveraging WSL, professionals can enjoy the best of both worlds: the robust software ecosystem of Windows and the powerful command-line capabilities of Linux.</p>
-<h2 id="Why-use-Hexo"><a href="#Why-use-Hexo" class="headerlink" title="Why use Hexo"></a>Why use Hexo</h2><p>Hexo offers several advantages over WordPress, particularly for developers and tech-savvy users. As a static site generator, Hexo provides faster load times and improved security since it does not rely on a database or server-side processing, which are common vulnerabilities in WordPress. Additionally, Hexo allows for greater customization through its use of Markdown and extensive plugin ecosystem, enabling users to tailor their sites to specific needs without the overhead of a complex content management system. Furthermore, Hexo’s deployment process is streamlined, often integrating seamlessly with version control systems like Git, making it an excellent choice for those who prioritize efficiency and performance in their web development projects.</p>
-<h2 id="Why-use-Github-Pages"><a href="#Why-use-Github-Pages" class="headerlink" title="Why use Github Pages"></a>Why use Github Pages</h2><p>Using GitHub Pages instead of a traditional hosting server offers several distinct advantages. Firstly, GitHub Pages provides a seamless integration with GitHub repositories, enabling automatic deployment of websites directly from your codebase. This integration ensures that updates and changes to your site are effortlessly managed through version control, promoting a streamlined workflow. Additionally, GitHub Pages is cost-effective, offering free hosting with custom domain support, which can significantly reduce overhead costs for personal projects or small businesses. The platform also boasts robust security features, leveraging GitHub’s infrastructure to protect your site from common vulnerabilities. Furthermore, the simplicity and ease of use make GitHub Pages an attractive option for developers who want to focus on writing code rather than managing server configurations and maintenance. Overall, GitHub Pages combines efficiency, cost savings, and security, making it an excellent choice for hosting static websites and project documentation.</p>
-<h2 id="GO"><a href="#GO" class="headerlink" title="GO!"></a>GO!</h2><h3 id="Assume-already-has-a-WSL-environment-running"><a href="#Assume-already-has-a-WSL-environment-running" class="headerlink" title="Assume already has a WSL environment running"></a>Assume already has a WSL environment running</h3><p>If not, refer to “<a href="https://learn.microsoft.com/en-us/windows/wsl/install">How to install Linux on Windows with WSL</a>“.</p>
-<p>To say we are running WSL distro - Ubuntu 22.04</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ cat /etc/os-release</span><br><span class="line">PRETTY_NAME=&quot;Ubuntu 22.04.4 LTS&quot;</span><br><span class="line">NAME=&quot;Ubuntu&quot;</span><br><span class="line">VERSION_ID=&quot;22.04&quot;</span><br><span class="line">VERSION=&quot;22.04.4 LTS (Jammy Jellyfish)&quot;</span><br><span class="line">VERSION_CODENAME=jammy</span><br><span class="line">ID=ubuntu</span><br><span class="line">ID_LIKE=debian</span><br><span class="line">HOME_URL=&quot;https://www.ubuntu.com/&quot;</span><br><span class="line">SUPPORT_URL=&quot;https://help.ubuntu.com/&quot;</span><br><span class="line">BUG_REPORT_URL=&quot;https://bugs.launchpad.net/ubuntu/&quot;</span><br><span class="line">PRIVACY_POLICY_URL=&quot;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&quot;</span><br><span class="line">UBUNTU_CODENAME=jammy</span><br></pre></td></tr></table></figure>
-
-<h3 id="Install-Node-js"><a href="#Install-Node-js" class="headerlink" title="Install Node.js"></a>Install Node.js</h3><p>Since Hexo is written by Node.js, nodejs must be installed.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install nodejs npm</span><br></pre></td></tr></table></figure>
-
-<h3 id="Install-GIT"><a href="#Install-GIT" class="headerlink" title="Install GIT"></a>Install GIT</h3><p>Since Hexo uses Git to publish pages on GitHub, Git must be installed.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install git</span><br></pre></td></tr></table></figure>
-
-<h3 id="Install-Hexo"><a href="#Install-Hexo" class="headerlink" title="Install Hexo"></a>Install Hexo</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-
-<h3 id="Init-Hexo-project"><a href="#Init-Hexo-project" class="headerlink" title="Init Hexo project"></a>Init Hexo project</h3><p>Our goal is to deploy the static HTML file generated by Hexo to GitHub Pages. To achieve this, we need to create a repository named “[username].github.io” on GitHub. Therefore, we will initialize this directory directly using Hexo.  Note: Be sure to replace [username] with your actual GitHub username.</p>
- <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo init kamusis.github.io</span><br></pre></td></tr></table></figure>
-
-<h3 id="Create-Github-pages"><a href="#Create-Github-pages" class="headerlink" title="Create Github pages"></a>Create Github pages</h3><p>Creating GitHub Pages is very simple, reference: <a href="https://pages.github.com/">https://pages.github.com/</a></p>
-<h3 id="Connecting-to-Github-with-SSH"><a href="#Connecting-to-Github-with-SSH" class="headerlink" title="Connecting to Github with SSH"></a>Connecting to Github with SSH</h3><p>Reference: <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh">https://docs.github.com/en/authentication/connecting-to-github-with-ssh</a></p>
-<p>Basically, generate a key using the ssh-keygen command and upload the public key to the GitHub.</p>
-<p>Once the SSH connection is established, use the following command to verify it:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ssh -T git@github.com</span><br><span class="line">Hi kamusis! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
-
-<h3 id="Set-URL-for-your-new-blog"><a href="#Set-URL-for-your-new-blog" class="headerlink" title="Set URL for your new blog"></a>Set URL for your new blog</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ vi _config.yml</span><br><span class="line"></span><br><span class="line">~~~~~~~~~~~~~~~~~~ _config.yml ~~~~~~~~~~~~~~~~~~</span><br><span class="line"># URL</span><br><span class="line">## Set your site url here. For example, if you use GitHub Page, set url as &#x27;https://username.github.io/project&#x27;</span><br><span class="line">url: http://kamusis.github.io</span><br></pre></td></tr></table></figure>
-
-<h3 id="Set-Git-information-to-let-hexo-can-push-contents-into-Github-Pages"><a href="#Set-Git-information-to-let-hexo-can-push-contents-into-Github-Pages" class="headerlink" title="Set Git information to let hexo can push contents into Github Pages"></a>Set Git information to let hexo can push contents into Github Pages</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br><span class="line">$ vi _config.yml</span><br><span class="line"></span><br><span class="line">~~~~~~~~~~~~~~~~~~ _config.yml ~~~~~~~~~~~~~~~~~~</span><br><span class="line"># Deployment</span><br><span class="line">## Docs: https://hexo.io/docs/one-command-deployment</span><br><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:kamusis/kamusis.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
-
-<h3 id="Generate-the-site-and-push-to-Github-pages"><a href="#Generate-the-site-and-push-to-Github-pages" class="headerlink" title="Generate the site and push to Github pages"></a>Generate the site and push to Github pages</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>Assuming everything has been set up correctly, you can now view a hello-world article on a website by navigating to https:&#x2F;&#x2F;[username].github.io.</p>
-<h3 id="Write-your-articles-and-publish"><a href="#Write-your-articles-and-publish" class="headerlink" title="Write your articles and publish"></a>Write your articles and publish</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo new &quot;My first post&quot;</span><br></pre></td></tr></table></figure>
-
-<p>A markdown file will automatically be created and placed in the source&#x2F;_posts directory. It can then be edited and saved using your preferred text or markdown editor.</p>
-<p>Of course, you can also clean up the initial hello-world article.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rm source/_posts/hello-world.md</span><br></pre></td></tr></table></figure>
-
-<p>Publish the articles.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-
-
-<p>Reference:</p>
-<p><a href="https://hexo.io/docs/github-pages#One-command-deployment">https://hexo.io/docs/github-pages#One-command-deployment</a></p>
-<p><a href="https://gist.github.com/btfak/18938572f5df000ebe06fbd1872e4e39">https://gist.github.com/btfak/18938572f5df000ebe06fbd1872e4e39</a></p>
-]]></content>
-      <tags>
-        <tag>WSL</tag>
-        <tag>Hexo</tag>
-        <tag>Github Pages</tag>
       </tags>
   </entry>
   <entry>
@@ -463,6 +376,105 @@
       </tags>
   </entry>
   <entry>
+    <title>How to build blog site by using Hexo in Windows WSL and deploy to GitHub Pages</title>
+    <url>/2024/05/27/How-to-build-blog-site-by-using-Hexo-in-Windows-WSL-and-deploy-to-GitHub-Pages/</url>
+    <content><![CDATA[<h2 id="Why-use-WSL"><a href="#Why-use-WSL" class="headerlink" title="Why use WSL"></a>Why use WSL</h2><p>Using Windows Subsystem for Linux (WSL) instead of relying solely on Windows can offer several advantages, particularly for developers and IT professionals. WSL allows users to run a GNU&#x2F;Linux environment directly on Windows, without the overhead of a traditional virtual machine or dual-boot setup. This enables seamless access to a wide range of Linux tools and utilities, which are often preferred for development tasks, scripting, and system administration. Additionally, WSL provides a more consistent and familiar environment for those accustomed to Unix-based systems, facilitating smoother workflows and integration with cloud-based services. By leveraging WSL, professionals can enjoy the best of both worlds: the robust software ecosystem of Windows and the powerful command-line capabilities of Linux.</p>
+<h2 id="Why-use-Hexo"><a href="#Why-use-Hexo" class="headerlink" title="Why use Hexo"></a>Why use Hexo</h2><p>Hexo offers several advantages over WordPress, particularly for developers and tech-savvy users. As a static site generator, Hexo provides faster load times and improved security since it does not rely on a database or server-side processing, which are common vulnerabilities in WordPress. Additionally, Hexo allows for greater customization through its use of Markdown and extensive plugin ecosystem, enabling users to tailor their sites to specific needs without the overhead of a complex content management system. Furthermore, Hexo’s deployment process is streamlined, often integrating seamlessly with version control systems like Git, making it an excellent choice for those who prioritize efficiency and performance in their web development projects.</p>
+<h2 id="Why-use-Github-Pages"><a href="#Why-use-Github-Pages" class="headerlink" title="Why use Github Pages"></a>Why use Github Pages</h2><p>Using GitHub Pages instead of a traditional hosting server offers several distinct advantages. Firstly, GitHub Pages provides a seamless integration with GitHub repositories, enabling automatic deployment of websites directly from your codebase. This integration ensures that updates and changes to your site are effortlessly managed through version control, promoting a streamlined workflow. Additionally, GitHub Pages is cost-effective, offering free hosting with custom domain support, which can significantly reduce overhead costs for personal projects or small businesses. The platform also boasts robust security features, leveraging GitHub’s infrastructure to protect your site from common vulnerabilities. Furthermore, the simplicity and ease of use make GitHub Pages an attractive option for developers who want to focus on writing code rather than managing server configurations and maintenance. Overall, GitHub Pages combines efficiency, cost savings, and security, making it an excellent choice for hosting static websites and project documentation.</p>
+<h2 id="GO"><a href="#GO" class="headerlink" title="GO!"></a>GO!</h2><h3 id="Assume-already-has-a-WSL-environment-running"><a href="#Assume-already-has-a-WSL-environment-running" class="headerlink" title="Assume already has a WSL environment running"></a>Assume already has a WSL environment running</h3><p>If not, refer to “<a href="https://learn.microsoft.com/en-us/windows/wsl/install">How to install Linux on Windows with WSL</a>“.</p>
+<p>To say we are running WSL distro - Ubuntu 22.04</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ cat /etc/os-release</span><br><span class="line">PRETTY_NAME=&quot;Ubuntu 22.04.4 LTS&quot;</span><br><span class="line">NAME=&quot;Ubuntu&quot;</span><br><span class="line">VERSION_ID=&quot;22.04&quot;</span><br><span class="line">VERSION=&quot;22.04.4 LTS (Jammy Jellyfish)&quot;</span><br><span class="line">VERSION_CODENAME=jammy</span><br><span class="line">ID=ubuntu</span><br><span class="line">ID_LIKE=debian</span><br><span class="line">HOME_URL=&quot;https://www.ubuntu.com/&quot;</span><br><span class="line">SUPPORT_URL=&quot;https://help.ubuntu.com/&quot;</span><br><span class="line">BUG_REPORT_URL=&quot;https://bugs.launchpad.net/ubuntu/&quot;</span><br><span class="line">PRIVACY_POLICY_URL=&quot;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&quot;</span><br><span class="line">UBUNTU_CODENAME=jammy</span><br></pre></td></tr></table></figure>
+
+<h3 id="Install-Node-js"><a href="#Install-Node-js" class="headerlink" title="Install Node.js"></a>Install Node.js</h3><p>Since Hexo is written by Node.js, nodejs must be installed.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install nodejs npm</span><br></pre></td></tr></table></figure>
+
+<h3 id="Install-GIT"><a href="#Install-GIT" class="headerlink" title="Install GIT"></a>Install GIT</h3><p>Since Hexo uses Git to publish pages on GitHub, Git must be installed.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install git</span><br></pre></td></tr></table></figure>
+
+<h3 id="Install-Hexo"><a href="#Install-Hexo" class="headerlink" title="Install Hexo"></a>Install Hexo</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<h3 id="Init-Hexo-project"><a href="#Init-Hexo-project" class="headerlink" title="Init Hexo project"></a>Init Hexo project</h3><p>Our goal is to deploy the static HTML file generated by Hexo to GitHub Pages. To achieve this, we need to create a repository named “[username].github.io” on GitHub. Therefore, we will initialize this directory directly using Hexo.  Note: Be sure to replace [username] with your actual GitHub username.</p>
+ <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo init kamusis.github.io</span><br></pre></td></tr></table></figure>
+
+<h3 id="Create-Github-pages"><a href="#Create-Github-pages" class="headerlink" title="Create Github pages"></a>Create Github pages</h3><p>Creating GitHub Pages is very simple, reference: <a href="https://pages.github.com/">https://pages.github.com/</a></p>
+<h3 id="Connecting-to-Github-with-SSH"><a href="#Connecting-to-Github-with-SSH" class="headerlink" title="Connecting to Github with SSH"></a>Connecting to Github with SSH</h3><p>Reference: <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh">https://docs.github.com/en/authentication/connecting-to-github-with-ssh</a></p>
+<p>Basically, generate a key using the ssh-keygen command and upload the public key to the GitHub.</p>
+<p>Once the SSH connection is established, use the following command to verify it:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ssh -T git@github.com</span><br><span class="line">Hi kamusis! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+
+<h3 id="Set-URL-for-your-new-blog"><a href="#Set-URL-for-your-new-blog" class="headerlink" title="Set URL for your new blog"></a>Set URL for your new blog</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ vi _config.yml</span><br><span class="line"></span><br><span class="line">~~~~~~~~~~~~~~~~~~ _config.yml ~~~~~~~~~~~~~~~~~~</span><br><span class="line"># URL</span><br><span class="line">## Set your site url here. For example, if you use GitHub Page, set url as &#x27;https://username.github.io/project&#x27;</span><br><span class="line">url: http://kamusis.github.io</span><br></pre></td></tr></table></figure>
+
+<h3 id="Set-Git-information-to-let-hexo-can-push-contents-into-Github-Pages"><a href="#Set-Git-information-to-let-hexo-can-push-contents-into-Github-Pages" class="headerlink" title="Set Git information to let hexo can push contents into Github Pages"></a>Set Git information to let hexo can push contents into Github Pages</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br><span class="line">$ vi _config.yml</span><br><span class="line"></span><br><span class="line">~~~~~~~~~~~~~~~~~~ _config.yml ~~~~~~~~~~~~~~~~~~</span><br><span class="line"># Deployment</span><br><span class="line">## Docs: https://hexo.io/docs/one-command-deployment</span><br><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:kamusis/kamusis.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+
+<h3 id="Generate-the-site-and-push-to-Github-pages"><a href="#Generate-the-site-and-push-to-Github-pages" class="headerlink" title="Generate the site and push to Github pages"></a>Generate the site and push to Github pages</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>Assuming everything has been set up correctly, you can now view a hello-world article on a website by navigating to https:&#x2F;&#x2F;[username].github.io.</p>
+<h3 id="Write-your-articles-and-publish"><a href="#Write-your-articles-and-publish" class="headerlink" title="Write your articles and publish"></a>Write your articles and publish</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo new &quot;My first post&quot;</span><br></pre></td></tr></table></figure>
+
+<p>A markdown file will automatically be created and placed in the source&#x2F;_posts directory. It can then be edited and saved using your preferred text or markdown editor.</p>
+<p>Of course, you can also clean up the initial hello-world article.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rm source/_posts/hello-world.md</span><br></pre></td></tr></table></figure>
+
+<p>Publish the articles.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Reference:</p>
+<p><a href="https://hexo.io/docs/github-pages#One-command-deployment">https://hexo.io/docs/github-pages#One-command-deployment</a></p>
+<p><a href="https://gist.github.com/btfak/18938572f5df000ebe06fbd1872e4e39">https://gist.github.com/btfak/18938572f5df000ebe06fbd1872e4e39</a></p>
+]]></content>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Github Pages</tag>
+        <tag>WSL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to move WSL distro in Windows 11 to another drive</title>
+    <url>/2024/05/27/How-to-move-WSL-distro-in-Windows-11-to-another-drive/</url>
+    <content><![CDATA[<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction:"></a>Introduction:</h2><p>In the world of development and system administration, Windows Subsystem for Linux (WSL) has become a valuable tool. It allows users to run a Linux distribution alongside their Windows environment, opening up a world of possibilities for developers and administrators. In this article, we’ll guide you through the process of migrating a WSL instance, using a real-world example, step by step.</p>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites:"></a>Prerequisites:</h2><p>Before we begin, ensure that you have the following prerequisites in place:</p>
+<ul>
+<li>Windows 10 or later with WSL installed.</li>
+<li>An existing WSL instance (in our case, Ubuntu).</li>
+<li>Sufficient storage space for the migration.</li>
+</ul>
+<h2 id="Step-1-Create-a-Target-Directory"><a href="#Step-1-Create-a-Target-Directory" class="headerlink" title="Step 1: Create a Target Directory"></a>Step 1: Create a Target Directory</h2><p>To start the migration process, we need a target directory to store the migrated WSL instance. In PowerShell, use the ‘mkdir’ command to create this directory. In our example, we create a directory named ‘D:\WSL\Ubuntu’:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">mkdir <span class="literal">-p</span> D:\WSL\Ubuntu</span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-2-List-All-Running-WSL-Instances"><a href="#Step-2-List-All-Running-WSL-Instances" class="headerlink" title="Step 2: List All Running WSL Instances"></a>Step 2: List All Running WSL Instances</h2><p>Before we proceed further, let’s list all the running WSL instances. The following command will display a list of all WSL instances, including their state and version:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-3-Export-the-Source-WSL-Instance"><a href="#Step-3-Export-the-Source-WSL-Instance" class="headerlink" title="Step 3: Export the Source WSL Instance"></a>Step 3: Export the Source WSL Instance</h2><p>Now, let’s export the source WSL instance (in our case, ‘Ubuntu’) into a tar file. This step automatically shuts down the WSL instance and restarts it after the export:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--export</span> Ubuntu D:\WSL\Ubuntu.tar</span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-4-Unregister-the-Source-WSL-Instance"><a href="#Step-4-Unregister-the-Source-WSL-Instance" class="headerlink" title="Step 4: Unregister the Source WSL Instance"></a>Step 4: Unregister the Source WSL Instance</h2><p>Once the export is complete, we need to unregister the source WSL instance to avoid conflicts. Use the following command:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--unregister</span> Ubuntu</span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-5-Confirm-Unregistration"><a href="#Step-5-Confirm-Unregistration" class="headerlink" title="Step 5: Confirm Unregistration"></a>Step 5: Confirm Unregistration</h2><p>To confirm that the source WSL instance has been successfully unregistered, run the following command:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-6-Import-into-the-Target-Directory"><a href="#Step-6-Import-into-the-Target-Directory" class="headerlink" title="Step 6: Import into the Target Directory"></a>Step 6: Import into the Target Directory</h2><p>Now it’s time to import the previously exported WSL instance into the target directory. In this step, we specify the target directory and version (in our case, version 2):</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--import</span> Ubuntu D:\WSL\Ubuntu D:\WSL\Ubuntu.tar <span class="literal">--version</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-7-Verify-the-Migration"><a href="#Step-7-Verify-the-Migration" class="headerlink" title="Step 7: Verify the Migration"></a>Step 7: Verify the Migration</h2><p>To ensure that the migration was successful, list all WSL instances once again:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-8-Access-the-Migrated-WSL-Instance"><a href="#Step-8-Access-the-Migrated-WSL-Instance" class="headerlink" title="Step 8: Access the Migrated WSL Instance"></a>Step 8: Access the Migrated WSL Instance</h2><p>Now, you can access the migrated WSL instance by using the following command:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-d</span> Ubuntu</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion:"></a>Conclusion:</h2><p>Migrating WSL instances is a powerful way to manage and organize your development environments. By following these steps, you can seamlessly move your WSL instances to different directories or machines, ensuring flexibility and efficiency in your development workflow. Keep in mind that WSL provides a bridge between Windows and Linux, allowing you to enjoy the best of both worlds.</p>
+<p>Check the all steps screenshot as below.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># create target directory</span><br><span class="line">PS C:\Users\kamus&gt; mkdir -p D:\WSL\Ubuntu</span><br><span class="line"></span><br><span class="line"># List all the wsl running</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* Ubuntu                 Running         2</span><br><span class="line">  docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Export source wsl</span><br><span class="line">PS C:\Users\kamus&gt; wsl --export Ubuntu D:\WSL\Ubuntu.tar</span><br><span class="line"></span><br><span class="line"># When doing export, wsl will be shutdown automatically and restart after exporting</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* Ubuntu                 Running         2</span><br><span class="line">  docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Unregister the source wsl</span><br><span class="line">PS C:\Users\kamus&gt; wsl --unregister Ubuntu</span><br><span class="line">正在注销...</span><br><span class="line"></span><br><span class="line"># Check unregister is successful</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Import into the target directory</span><br><span class="line">PS C:\Users\kamus&gt; wsl --import Ubuntu D:\WSL\Ubuntu D:\WSL\Ubuntu.tar --version 2</span><br><span class="line"></span><br><span class="line"># Check results</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* docker-desktop         Stopped         2</span><br><span class="line">  Ubuntu                 Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">PS C:\Users\kamus&gt; wsl -d Ubuntu</span><br><span class="line">Welcome to Ubuntu 20.04.5 LTS (GNU/Linux 5.10.102.1-microsoft-standard-WSL2 x86_64)</span><br><span class="line"></span><br><span class="line"> * Documentation:  https://help.ubuntu.com</span><br><span class="line"> * Management:     https://landscape.canonical.com</span><br><span class="line"> * Support:        https://ubuntu.com/advantage</span><br><span class="line"></span><br><span class="line">  System information as of Fri Jan  5 14:40:25 JST 2024</span><br><span class="line"></span><br><span class="line">  System load:  0.68               Processes:             8</span><br><span class="line">  Usage of /:   2.0% of 250.98GB   Users logged in:       0</span><br><span class="line">  Memory usage: 4%                 IPv4 address for eth0: 172.28.208.11</span><br><span class="line">  Swap usage:   0%</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">0 updates can be applied immediately.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">The list of available updates is more than a week old.</span><br><span class="line">To check for new updates run: sudo apt update</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">This message is shown once a day. To disable it please create the</span><br><span class="line">/root/.hushlogin file.</span><br><span class="line">root@Kamus-Trident:/mnt/c/Users/kamus# cat /etc/os-release</span><br><span class="line">NAME=&quot;Ubuntu&quot;</span><br><span class="line">VERSION=&quot;20.04.5 LTS (Focal Fossa)&quot;</span><br><span class="line">ID=ubuntu</span><br><span class="line">ID_LIKE=debian</span><br><span class="line">PRETTY_NAME=&quot;Ubuntu 20.04.5 LTS&quot;</span><br><span class="line">VERSION_ID=&quot;20.04&quot;</span><br><span class="line">HOME_URL=&quot;https://www.ubuntu.com/&quot;</span><br><span class="line">SUPPORT_URL=&quot;https://help.ubuntu.com/&quot;</span><br><span class="line">BUG_REPORT_URL=&quot;https://bugs.launchpad.net/ubuntu/&quot;</span><br><span class="line">PRIVACY_POLICY_URL=&quot;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&quot;</span><br><span class="line">VERSION_CODENAME=focal</span><br><span class="line">UBUNTU_CODENAME=focal</span><br><span class="line">root@Kamus-Trident:/mnt/c/Users/kamus#</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>WSL</tag>
+        <tag>Windows</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MTK: The Ultimate Tool for Seamlessly Migrating Oracle Databases to MogDB</title>
     <url>/2024/06/03/MTK-The-Ultimate-Tool-for-Seamlessly-Migrating-Oracle-Databases-to-MogDB/</url>
     <content><![CDATA[<h2 id="Get-the-latest-version-MTK"><a href="#Get-the-latest-version-MTK" class="headerlink" title="Get the latest version MTK."></a>Get the latest version MTK.</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wget https://cdn-mogdb.enmotech.com/mtk/v2.6.3/mtk_2.6.3_linux_amd64.tar.gz</span><br><span class="line">tar -xvf mtk_2.6.3_linux_amd64.tar.gz</span><br></pre></td></tr></table></figure>
@@ -552,6 +564,49 @@
       </tags>
   </entry>
   <entry>
+    <title>MogDB ASH: Unveiling the Active Session History for Powerful Database Performance Tuning</title>
+    <url>/2024/05/27/MogDB-ASH-Unveiling-the-Active-Session-History-for-Powerful-Database-Performance-Tuning/</url>
+    <content><![CDATA[<h4 id="What-is-ASH"><a href="#What-is-ASH" class="headerlink" title="What is ASH?"></a>What is ASH?</h4><p>ASH, or Active Session History, is a feature in Oracle databases that records information about active sessions at regular intervals in both the database memory and persistent system tables. Data in memory is cleared after a database restart, but data in the persistent system tables is retained for a longer period. ASH is extremely useful for diagnosing issues when the database encounters problems or performance issues by allowing retrospective analysis to identify the root cause.</p>
+<p>In MogDB, a similar ASH capability is implemented.</p>
+<h4 id="ASH-Capability-in-MogDB"><a href="#ASH-Capability-in-MogDB" class="headerlink" title="ASH Capability in MogDB"></a>ASH Capability in MogDB</h4><p>The ASH capability in MogDB is divided into two parts: the open-source community version (openGauss) and the enhanced enterprise version.</p>
+<p><strong>1. openGauss Community Version:</strong><br>MogDB inherits the ASH capability from openGauss. The database provides two main views: <code>dbe_perf.LOCAL_ACTIVE_SESSION</code> and <code>GS_ASP</code>. The <code>LOCAL_ACTIVE_SESSION</code> view is an in-memory table, while <code>GS_ASP</code> is a persistent table. These views contain sampling information about current active sessions.</p>
+<p>Key parameters affecting ASH functionality:</p>
+<ul>
+<li><strong>enable_asp:</strong> Set to <code>on</code> or <code>off</code> to enable or disable ASH functionality. Default is <code>on</code>.</li>
+<li><strong>asp_sample_interval:</strong> Specifies the interval between each sample. Default is 1 second. To reduce sampling pressure, this can be set to a longer interval, up to a maximum of 10 seconds.</li>
+<li><strong>asp_sample_num:</strong> Specifies the total number of samples retained in the <code>LOCAL_ACTIVE_SESSION</code> in-memory table. Exceeding this number triggers a flush of in-memory samples to the <code>GS_ASP</code> system table and clears the in-memory table. Default is 100,000 samples.</li>
+<li><strong>asp_flush_rate:</strong> Determines which in-memory samples are flushed to the <code>GS_ASP</code> table. Samples with <code>sampleid % asp_flush_rate == 0</code> are marked as <code>need_flush_sample=true</code> and are persisted. Default is 10, meaning 1&#x2F;10 of samples are persisted.</li>
+<li><strong>asp_retention_days:</strong> Specifies the retention period for data in the <code>GS_ASP</code> table. Default is 2 days, with a maximum of 7 days.</li>
+</ul>
+<p><strong>2. MogDB Enterprise Version:</strong><br>The enterprise version enhances ASH capability, termed “SQL Execution State Observation,” by adding sampling of SQL execution operators. The <code>plan_node_id</code> field is added to views to record the execution operator during each sample, allowing identification of which step in the execution plan is causing performance issues.</p>
+<p>Key parameters affecting enterprise ASH functionality:</p>
+<ul>
+<li><strong>resource_track_level:</strong> Set to <code>operator</code> to enable operator sampling capability. Default is <code>query</code>, which records only SQL-level sampling.</li>
+</ul>
+<h4 id="LOCAL-ACTIVE-SESSION-View"><a href="#LOCAL-ACTIVE-SESSION-View" class="headerlink" title="LOCAL_ACTIVE_SESSION View"></a>LOCAL_ACTIVE_SESSION View</h4><p>This view records extensive information, including session ID, wait events, and SQL query ID (which can be linked to <code>dbe_perf.statement_history</code> or <code>dbe_perf.statement_complex_runtime</code> to retrieve SQL text and execution plans). </p>
+<p><img src="https://s2.loli.net/2022/10/24/UZR4wcX8lyeDHS7.png" alt="image-20221024155531233"></p>
+<p>Note: The <code>plan_node_id</code> field exists only in the enterprise version.</p>
+<h4 id="Recording-SQL-Execution-Plans"><a href="#Recording-SQL-Execution-Plans" class="headerlink" title="Recording SQL Execution Plans"></a>Recording SQL Execution Plans</h4><p>Querying the execution plans of past or currently executing SQL is a common requirement in database maintenance. In MogDB, the following views record SQL execution plans:</p>
+<ul>
+<li><strong>dbe_perf.STATEMENT_HISTORY:</strong> Records information about completed SQL, including execution plans (<code>query_plan</code> field).</li>
+<li><strong>dbe_perf.STATEMENT_COMPLEX_RUNTIME:</strong> Records information about currently executing SQL, including execution plans (<code>query_plan</code> field).</li>
+</ul>
+<p>Parameters affecting recording of SQL execution plans:</p>
+<ul>
+<li><strong>enable_resource_track:</strong> Enables or disables resource tracking. Default is <code>on</code>. If set to <code>off</code>, no user SQL execution information, including execution plans, is tracked.</li>
+<li><strong>resource_track_cost:</strong> Sets the minimum execution cost for SQL statements to be tracked. Only SQL with a cost above this value will have its execution plan recorded.</li>
+</ul>
+<h4 id="Comprehensive-Query-Example"><a href="#Comprehensive-Query-Example" class="headerlink" title="Comprehensive Query Example"></a>Comprehensive Query Example</h4><p>The following query retrieves all information about ongoing SQL executions, including historical samples:</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> las.sample_time, las.application_name, las.unique_query_id, las.event, scr.query, scr.query_plan</span><br><span class="line"><span class="keyword">FROM</span> dbe_perf.local_active_session las, dbe_perf.statement_complex_runtime scr</span><br><span class="line"><span class="keyword">WHERE</span> las.thread_id <span class="operator">=</span> scr.pid <span class="keyword">AND</span> scr.pid <span class="operator">&lt;&gt;</span> pg_backend_pid();</span><br></pre></td></tr></table></figure>
+
+<p>Example output shows a frequently executed full table scan query, including SQL text, execution plan, and client information, providing valuable data for performance diagnosis.</p>
+<p><img src="https://s2.loli.net/2022/10/24/MxBW7629sCSaGKp.png" alt="image-20221024183300024"></p>
+]]></content>
+      <tags>
+        <tag>MogDB</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Some Misconceptions About Database Performance - Application Concurrent Requests, Database Connections, and Database Connection Pools</title>
     <url>/2024/08/21/Some-Misconceptions-About-Database-Performance-Application-Concurrent-Requests-Database-Connections-and-Database-Connection-Pools/</url>
     <content><![CDATA[<p>Let’s start with a chart from a database stress test result.</p>
@@ -594,43 +649,102 @@
       </tags>
   </entry>
   <entry>
-    <title>MogDB ASH: Unveiling the Active Session History for Powerful Database Performance Tuning</title>
-    <url>/2024/05/27/MogDB-ASH-Unveiling-the-Active-Session-History-for-Powerful-Database-Performance-Tuning/</url>
-    <content><![CDATA[<h4 id="What-is-ASH"><a href="#What-is-ASH" class="headerlink" title="What is ASH?"></a>What is ASH?</h4><p>ASH, or Active Session History, is a feature in Oracle databases that records information about active sessions at regular intervals in both the database memory and persistent system tables. Data in memory is cleared after a database restart, but data in the persistent system tables is retained for a longer period. ASH is extremely useful for diagnosing issues when the database encounters problems or performance issues by allowing retrospective analysis to identify the root cause.</p>
-<p>In MogDB, a similar ASH capability is implemented.</p>
-<h4 id="ASH-Capability-in-MogDB"><a href="#ASH-Capability-in-MogDB" class="headerlink" title="ASH Capability in MogDB"></a>ASH Capability in MogDB</h4><p>The ASH capability in MogDB is divided into two parts: the open-source community version (openGauss) and the enhanced enterprise version.</p>
-<p><strong>1. openGauss Community Version:</strong><br>MogDB inherits the ASH capability from openGauss. The database provides two main views: <code>dbe_perf.LOCAL_ACTIVE_SESSION</code> and <code>GS_ASP</code>. The <code>LOCAL_ACTIVE_SESSION</code> view is an in-memory table, while <code>GS_ASP</code> is a persistent table. These views contain sampling information about current active sessions.</p>
-<p>Key parameters affecting ASH functionality:</p>
-<ul>
-<li><strong>enable_asp:</strong> Set to <code>on</code> or <code>off</code> to enable or disable ASH functionality. Default is <code>on</code>.</li>
-<li><strong>asp_sample_interval:</strong> Specifies the interval between each sample. Default is 1 second. To reduce sampling pressure, this can be set to a longer interval, up to a maximum of 10 seconds.</li>
-<li><strong>asp_sample_num:</strong> Specifies the total number of samples retained in the <code>LOCAL_ACTIVE_SESSION</code> in-memory table. Exceeding this number triggers a flush of in-memory samples to the <code>GS_ASP</code> system table and clears the in-memory table. Default is 100,000 samples.</li>
-<li><strong>asp_flush_rate:</strong> Determines which in-memory samples are flushed to the <code>GS_ASP</code> table. Samples with <code>sampleid % asp_flush_rate == 0</code> are marked as <code>need_flush_sample=true</code> and are persisted. Default is 10, meaning 1&#x2F;10 of samples are persisted.</li>
-<li><strong>asp_retention_days:</strong> Specifies the retention period for data in the <code>GS_ASP</code> table. Default is 2 days, with a maximum of 7 days.</li>
-</ul>
-<p><strong>2. MogDB Enterprise Version:</strong><br>The enterprise version enhances ASH capability, termed “SQL Execution State Observation,” by adding sampling of SQL execution operators. The <code>plan_node_id</code> field is added to views to record the execution operator during each sample, allowing identification of which step in the execution plan is causing performance issues.</p>
-<p>Key parameters affecting enterprise ASH functionality:</p>
-<ul>
-<li><strong>resource_track_level:</strong> Set to <code>operator</code> to enable operator sampling capability. Default is <code>query</code>, which records only SQL-level sampling.</li>
-</ul>
-<h4 id="LOCAL-ACTIVE-SESSION-View"><a href="#LOCAL-ACTIVE-SESSION-View" class="headerlink" title="LOCAL_ACTIVE_SESSION View"></a>LOCAL_ACTIVE_SESSION View</h4><p>This view records extensive information, including session ID, wait events, and SQL query ID (which can be linked to <code>dbe_perf.statement_history</code> or <code>dbe_perf.statement_complex_runtime</code> to retrieve SQL text and execution plans). </p>
-<p><img src="https://s2.loli.net/2022/10/24/UZR4wcX8lyeDHS7.png" alt="image-20221024155531233"></p>
-<p>Note: The <code>plan_node_id</code> field exists only in the enterprise version.</p>
-<h4 id="Recording-SQL-Execution-Plans"><a href="#Recording-SQL-Execution-Plans" class="headerlink" title="Recording SQL Execution Plans"></a>Recording SQL Execution Plans</h4><p>Querying the execution plans of past or currently executing SQL is a common requirement in database maintenance. In MogDB, the following views record SQL execution plans:</p>
-<ul>
-<li><strong>dbe_perf.STATEMENT_HISTORY:</strong> Records information about completed SQL, including execution plans (<code>query_plan</code> field).</li>
-<li><strong>dbe_perf.STATEMENT_COMPLEX_RUNTIME:</strong> Records information about currently executing SQL, including execution plans (<code>query_plan</code> field).</li>
-</ul>
-<p>Parameters affecting recording of SQL execution plans:</p>
-<ul>
-<li><strong>enable_resource_track:</strong> Enables or disables resource tracking. Default is <code>on</code>. If set to <code>off</code>, no user SQL execution information, including execution plans, is tracked.</li>
-<li><strong>resource_track_cost:</strong> Sets the minimum execution cost for SQL statements to be tracked. Only SQL with a cost above this value will have its execution plan recorded.</li>
-</ul>
-<h4 id="Comprehensive-Query-Example"><a href="#Comprehensive-Query-Example" class="headerlink" title="Comprehensive Query Example"></a>Comprehensive Query Example</h4><p>The following query retrieves all information about ongoing SQL executions, including historical samples:</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> las.sample_time, las.application_name, las.unique_query_id, las.event, scr.query, scr.query_plan</span><br><span class="line"><span class="keyword">FROM</span> dbe_perf.local_active_session las, dbe_perf.statement_complex_runtime scr</span><br><span class="line"><span class="keyword">WHERE</span> las.thread_id <span class="operator">=</span> scr.pid <span class="keyword">AND</span> scr.pid <span class="operator">&lt;&gt;</span> pg_backend_pid();</span><br></pre></td></tr></table></figure>
+    <title></title>
+    <url>/2024/10/05/The%20best%20practices%20for%20using%20partition%20table%20in%20PostgreSQL/</url>
+    <content><![CDATA[<h1 id="The-best-practices-for-using-partition-table-in-PostgreSQL"><a href="#The-best-practices-for-using-partition-table-in-PostgreSQL" class="headerlink" title="The best practices for using partition table in PostgreSQL"></a>The best practices for using partition table in PostgreSQL</h1><h2 id="What-is-partition-table"><a href="#What-is-partition-table" class="headerlink" title="What is partition table?"></a>What is partition table?</h2><p>Partition table is a table that is divided into smaller parts. Each part is called a partition.</p>
+<p>Why use partition table?</p>
+<ol>
+<li><strong>Performance</strong>: Partition table can improve the performance of the table. Because each partition can be stored in a separate file, the query can be executed faster.</li>
+<li><strong>Maintenance</strong>: Partition table can make the maintenance of the table easier. Because each partition can be maintained separately, the maintenance of the table can be done faster.</li>
+</ol>
+<h2 id="How-to-create-a-partition-table"><a href="#How-to-create-a-partition-table" class="headerlink" title="How to create a partition table?"></a>How to create a partition table?</h2><ol>
+<li><strong>Create a partition table</strong>:</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement (</span><br><span class="line">    city_id         <span class="type">int</span> <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    logdate         <span class="type">date</span> <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    peaktemp        <span class="type">int</span>,</span><br><span class="line">    unitsales       <span class="type">int</span></span><br><span class="line">) <span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">RANGE</span> (logdate);</span><br></pre></td></tr></table></figure>
 
-<p>Example output shows a frequently executed full table scan query, including SQL text, execution plan, and client information, providing valuable data for performance diagnosis.</p>
-<p><img src="https://s2.loli.net/2022/10/24/MxBW7629sCSaGKp.png" alt="image-20221024183300024"></p>
+<ol start="2">
+<li><strong>Create a partition table for each partition</strong>:</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement_y2006m02 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> measurement</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2006-02-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2006-03-01&#x27;</span>);</span><br><span class="line">...</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement_y2007m11 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> measurement</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2007-11-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2007-12-01&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Partition-table-types"><a href="#Partition-table-types" class="headerlink" title="Partition table types"></a>Partition table types</h2><p>There are 3 basic types of partition table in PostgreSQL:</p>
+<ol>
+<li><strong>List Partition</strong>: The table is partitioned by explicitly listing which key value(s) appear in each partition.</li>
+<li><strong>Range Partition</strong>: The table is partitioned into “ranges” defined by a key column or set of columns, with no overlap between the ranges of values assigned to different partitions.</li>
+<li><strong>Hash Partition</strong>: The table is partitioned by specifying a modulus and a remainder for each partition.</li>
+</ol>
+<p>Combine these 3 basic types of partition table, we can create more complex partition table. This is called <strong>Composite Partitioning</strong>.</p>
+<p>There are 4 types of composite partitioning:</p>
+<ol>
+<li><strong>List-Range Partition</strong>: The partition is divided into several ranges.<br>The step is: create table A partition by list, then create table A1 partition of A partition by range, then create table A1-1 partition of A1</li>
+<li><strong>Range-List Partition</strong>: The partition is divided into several ranges.<br>The step is: create table A partition by range, then create table B of table A but partition by list.</li>
+<li><strong>Range-Hash Partition</strong>: The partition is divided into several ranges.</li>
+<li><strong>Hash-Range Partition</strong>: The partition is divided into several ranges.</li>
+</ol>
+<h2 id="Data-dictionary-about-partition-table"><a href="#Data-dictionary-about-partition-table" class="headerlink" title="Data dictionary about partition table"></a>Data dictionary about partition table</h2><ol>
+<li><strong>pg_partitioned_table</strong>: This table stores the information about the partitioned table.</li>
+<li><strong>pg_partition_rule</strong>: This table stores the information about the partition rule.</li>
+<li><strong>pg_partition_column</strong>: This table stores the information about the partition column.</li>
+<li><strong>pg_partition_index</strong>: This table stores the information about the partition index.</li>
+<li><strong>pg_partition_constraint</strong>: This table stores the information about the partition constraint.</li>
+<li><strong>pg_partition_constraint_column</strong>: This table stores the information about the partition constraint column.</li>
+<li><strong>pg_partition_constraint_index</strong>: This table stores the information about the partition constraint index.</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
+    <title>Unlocking the Power: Key Features of MogDB</title>
+    <url>/2024/05/27/Unlocking-the-Power-Key-Features-of-MogDB/</url>
+    <content><![CDATA[<h2 id="Introduction-to-MogDB"><a href="#Introduction-to-MogDB" class="headerlink" title="Introduction to MogDB"></a>Introduction to MogDB</h2><p><a href="https://www.mogdb.io/">MogDB</a> is a cutting-edge distributed relational database management system that offers an array of powerful features designed to meet the needs of modern businesses. With its high performance, availability, maintainability, compatibility, and AI capabilities, MogDB stands out as a top choice for database administrators, developers, and IT professionals.</p>
+<p>One of the key selling points of MogDB is its ability to deliver exceptional performance. This is achieved through various innovative features such as the <a href="https://docs.mogdb.io/en/mogdb/v2.0/2-optimizer-cost-constants/">Cost-Based Optimizer</a> (CBO) optimizer, which intelligently chooses the most efficient execution plans for queries. Additionally, MogDB utilizes a <a href="https://docs.mogdb.io/en/mogdb/v3.1/3-vectorized-engine/">vectorized engine</a> that processes data in batches instead of row by row, resulting in significant performance improvements. The <a href="https://docs.mogdb.io/en/mogdb/v3.0/5-adaptive-compression">adaptive compression</a> feature further enhances performance by reducing storage requirements and minimizing I&#x2F;O operations.</p>
+<p>In terms of availability, MogDB offers robust solutions to ensure uninterrupted access to critical data. It supports <a href="https://en.wikipedia.org/wiki/Master-slave_replication">master-slave replication</a>, allowing for automatic failover in case of primary node failure. <a href="https://docs.mogdb.io/en/mogdb/v2.1/2-logical-replication">Logical replication</a> enables real-time data synchronization across multiple databases, while <a href="https://docs.mogdb.io/en/mogdb/v2.1/5-physical-backup">physical backup</a> provides reliable data protection. <a href="https://docs.mogdb.io/en/mogdb/v3.0/9-delayed-replay">Delayed replay</a> allows for easy recovery from accidental data corruption or deletion.</p>
+<p>Maintaining a database can be complex and time-consuming. However, MogDB simplifies this process with its advanced maintainability features. The <a href="https://docs.mogdb.io/en/mogdb/v3.0/upgrade-guide/">grey upgrade</a> feature allows for seamless upgrades without interrupting service availability. <a href="https://docs.mogdb.io/en/mogdb/v3.1/3-slow-sql-diagnosis">Slow SQL diagnosis</a> helps identify and optimize poorly performing queries, improving overall system efficiency. <a href="https://docs.mogdb.io/en/mogdb/v2.1/5-system-kpi-aided-diagnosis/">System KPI diagnosis</a> provides insights into system health and performance metrics, enabling proactive maintenance and troubleshooting. Fault diagnosis helps pinpoint issues quickly and accurately.</p>
+<p>Compatibility is another area where MogDB excels. It supports various SQL features and ensures compatibility with popular database systems such as Oracle and MySQL. This makes it easier for organizations to migrate their existing applications or leverage their existing SQL knowledge without major modifications.</p>
+<p>MogDB also boasts impressive AI capabilities that set it apart from traditional databases. The AI4DB feature enables autonomous database operations, automating routine tasks and optimizing performance based on machine learning algorithms. DB4AI allows for database-driven AI, empowering organizations to leverage their data for advanced analytics and machine learning applications. Additionally, the ABO optimizer intelligently adapts query execution plans based on real-time data statistics, further enhancing performance.</p>
+<h2 id="High-Performance-Features"><a href="#High-Performance-Features" class="headerlink" title="High Performance Features"></a>High Performance Features</h2><p>MogDB is designed to deliver exceptional performance, ensuring that your database operations run smoothly and efficiently. With its cutting-edge features, MogDB offers unparalleled speed and optimization capabilities.</p>
+<p>One of the key high-performance features of MogDB is the Cost-Based Optimizer (CBO). This optimizer leverages advanced algorithms and statistical models to determine the most efficient execution plan for queries. By analyzing query statistics and data distribution, the CBO can make intelligent decisions on how to execute queries in the most optimal way. This results in faster query processing times and improved overall performance.</p>
+<p>In addition to the CBO optimizer, MogDB also utilizes a vectorized engine. This engine takes advantage of modern CPU architectures by performing operations on entire vectors of data at once, rather than processing individual elements sequentially. As a result, complex queries that involve large datasets can be executed more quickly and efficiently.</p>
+<p>Another feature that contributes to MogDB’s high performance is adaptive compression. This feature dynamically adjusts the level of compression applied to data based on its characteristics and usage patterns. By compressing data when it is not actively being accessed or modified, MogDB can reduce storage requirements and improve I&#x2F;O performance. When data needs to be accessed or modified, it is decompressed on-the-fly for seamless operations.</p>
+<p>Parallel query optimization is yet another powerful feature offered by MogDB. This feature allows queries to be divided into smaller tasks that can be executed simultaneously across multiple cores or nodes in a distributed environment. By leveraging parallelism, MogDB can significantly speed up query processing times for large datasets or complex queries.</p>
+<p>With these high-performance features combined, MogDB ensures that your database operations are lightning-fast and efficient. Whether you’re running simple CRUD operations or complex analytical queries, you can rely on MogDB to deliver exceptional performance every time.</p>
+<p>It’s worth noting that while these high-performance features greatly enhance the speed and efficiency of MogDB, they do not compromise on data integrity or reliability. MogDB is built with a strong focus on ACID (Atomicity, Consistency, Isolation, Durability) principles, ensuring that your data remains consistent and reliable even under high-performance workloads.</p>
+<h2 id="High-Availability-Features"><a href="#High-Availability-Features" class="headerlink" title="High Availability Features"></a>High Availability Features</h2><p>Ensuring high availability is crucial for any database management system, and MogDB excels in this aspect with its robust set of features. Let’s dive into the key high availability features that make MogDB a reliable choice for businesses.</p>
+<p><strong>Master-slave replication for data redundancy</strong></p>
+<p>MogDB offers master-slave replication, a powerful feature that enhances data redundancy and fault tolerance. With this feature, changes made to the master node are automatically replicated to one or more slave nodes. In the event of a failure or outage on the master node, one of the slave nodes can seamlessly take over as the new master, ensuring uninterrupted service availability. This replication mechanism not only provides data redundancy but also improves read scalability by allowing read operations to be distributed across multiple nodes.</p>
+<p><strong>Logical replication for real-time data synchronization</strong></p>
+<p>In addition to master-slave replication, MogDB supports logical replication, enabling real-time data synchronization between databases. This feature allows specific tables or even subsets of tables to be replicated from one database instance to another. By capturing and propagating changes at the logical level rather than replicating entire physical blocks, logical replication minimizes network traffic and reduces latency. It enables businesses to maintain up-to-date replicas of their databases for reporting purposes or offloading read-intensive workloads without impacting the performance of the primary database.</p>
+<p><strong>Physical backup for data protection</strong></p>
+<p>Data protection is paramount in any database system, and MogDB addresses this need through its physical backup feature. With physical backups, administrators can create full copies of their databases at a specific point in time. These backups capture both the schema and data files, ensuring comprehensive recovery options in case of hardware failures, user errors, or other catastrophic events. MogDB’s physical backup mechanism provides flexibility by allowing backups to be stored on different storage devices or even transferred to remote locations for disaster recovery purposes.</p>
+<p><strong>Delayed replay for data recovery</strong></p>
+<p>MogDB includes a delayed replay feature that allows administrators to recover data from a specific point in time. This feature is particularly useful in scenarios where accidental data deletions or modifications occur and need to be rolled back. By leveraging the transaction log, MogDB can replay changes up until a certain point, effectively restoring the database to its state prior to the incident. The delayed replay feature provides an additional layer of protection against human errors or malicious activities, ensuring that businesses can quickly recover from data-related incidents.</p>
+<p>In summary, MogDB offers a comprehensive set of high availability features that guarantee reliability and continuous operation for businesses. The master-slave replication ensures data redundancy and read scalability, while logical replication enables real-time data synchronization for reporting or offloading purposes. Physical backups and delayed replay provide robust data protection mechanisms, allowing administrators to recover from hardware failures or user errors effectively. With these high availability features, MogDB empowers organizations with the confidence that their critical databases will remain accessible and resilient even in the face of unexpected challenges.</p>
+<p>*[E-A-T]: Expertise, Authoritativeness, Trustworthiness</p>
+<h2 id="Maintainability-Features"><a href="#Maintainability-Features" class="headerlink" title="Maintainability Features"></a>Maintainability Features</h2><p>Maintainability is a crucial aspect of any database management system, and MogDB excels in this area with its array of innovative features. These features are designed to ensure seamless system updates, optimize performance, monitor and analyze system KPIs, and resolve any potential faults. Let’s explore these maintainability features in detail.</p>
+<p>One of the standout maintainability features of MogDB is the grey upgrade capability. This feature allows for seamless system updates without interrupting ongoing operations. With grey upgrade, administrators can apply patches, upgrades, or even major version changes to MogDB without causing downtime or disrupting user access. This ensures that businesses can keep their databases up-to-date with the latest enhancements and security fixes while minimizing any potential disruptions to their operations.</p>
+<p>Another essential maintainability feature offered by MogDB is slow SQL diagnosis. Slow SQL queries can significantly impact database performance and user experience. MogDB addresses this issue by providing comprehensive tools for identifying and optimizing slow SQL queries. The system analyzes query execution plans, identifies bottlenecks, and suggests optimizations to improve query performance. By pinpointing problematic queries and optimizing them, administrators can enhance overall database performance and ensure smooth operation.</p>
+<p>System KPI diagnosis is another vital component of MogDB’s maintainability arsenal. Monitoring key performance indicators (KPIs) is crucial for understanding the health and efficiency of a database system. MogDB provides robust tools for monitoring and analyzing various KPIs such as CPU utilization, memory usage, disk I&#x2F;O, network traffic, and more. Administrators can set up custom alerts based on predefined thresholds to proactively identify any anomalies or potential issues before they impact the system’s performance or availability.</p>
+<p>In addition to diagnosing slow SQL queries and monitoring KPIs, MogDB also offers fault diagnosis capabilities. When an issue arises within the database system, it is essential to quickly identify the root cause and resolve it efficiently. MogDB provides advanced diagnostic tools that help administrators identify and troubleshoot various types of faults, including hardware failures, network issues, software bugs, or configuration problems. By quickly identifying and resolving faults, administrators can minimize downtime and ensure the continuous availability of their database system.</p>
+<h2 id="Compatibility-Features"><a href="#Compatibility-Features" class="headerlink" title="Compatibility Features"></a>Compatibility Features</h2><p>MogDB offers a wide range of compatibility features that make it a versatile and flexible choice for database administrators, developers, and IT professionals. One of the key compatibility features is its support for various SQL features. With MogDB, you can leverage the full power of SQL and take advantage of advanced querying capabilities to meet your specific business needs.</p>
+<p>In addition to its support for SQL features, MogDB also provides seamless compatibility with Oracle databases. This compatibility feature allows for easy migration from Oracle to MogDB without any major disruptions or changes to your existing applications. The transition process is smooth and hassle-free, ensuring that you can quickly start benefiting from the high-performance and highly available nature of MogDB.</p>
+<p>Another compatibility feature offered by MogDB is its support for MySQL databases. This means that you can seamlessly integrate MogDB into your existing MySQL infrastructure without any major modifications. Whether you are running applications that rely on MySQL or have data stored in MySQL databases, MogDB ensures a seamless integration process, allowing you to leverage the advanced capabilities and performance enhancements provided by MogDB.</p>
+<p>The compatibility features of MogDB not only enable smooth transitions and integrations but also ensure that your existing applications continue to function seamlessly with minimal changes required. This level of compatibility reduces the effort and time required for migration or integration projects, allowing you to focus on other critical aspects of your business.</p>
+<p>With its comprehensive set of compatibility features, MogDB provides a robust solution that meets the diverse needs of different industries and applications. Whether you are working with complex SQL queries, migrating from Oracle databases, or integrating with MySQL infrastructure, MogDB offers the flexibility and reliability needed to ensure a successful deployment.</p>
+<h2 id="AI-Capabilities"><a href="#AI-Capabilities" class="headerlink" title="AI Capabilities"></a>AI Capabilities</h2><p>MogDB stands out among other distributed relational database management systems due to its advanced AI capabilities. These capabilities empower organizations to leverage the power of artificial intelligence for autonomous database operations, database-driven AI, and improved performance through the ABO optimizer.</p>
+<h3 id="AI4DB-for-Autonomous-Database-Operations"><a href="#AI4DB-for-Autonomous-Database-Operations" class="headerlink" title="AI4DB for Autonomous Database Operations"></a>AI4DB for Autonomous Database Operations</h3><p>With MogDB’s AI4DB feature, organizations can enhance their operational efficiency by automating various database tasks. This includes automated performance tuning, query optimization, and workload management. The AI algorithms embedded within MogDB continuously monitor the system’s performance metrics and automatically adjust configurations to optimize resource allocation and improve overall database performance.</p>
+<p>AI4DB also plays a crucial role in self-healing mechanisms. It can detect anomalies or potential issues within the database environment and take proactive measures to resolve them before they impact critical business operations. By leveraging machine learning algorithms, MogDB can identify patterns in historical data and predict potential failures or bottlenecks, allowing administrators to take preventive actions.</p>
+<p>Furthermore, AI4DB enables intelligent data compression techniques that optimize storage utilization without compromising query performance. By analyzing data access patterns and applying advanced compression algorithms, MogDB reduces storage costs while ensuring fast data retrieval.</p>
+<h3 id="DB4AI-for-Database-Driven-AI"><a href="#DB4AI-for-Database-Driven-AI" class="headerlink" title="DB4AI for Database-Driven AI"></a>DB4AI for Database-Driven AI</h3><p>MogDB’s DB4AI feature allows organizations to seamlessly integrate their databases with artificial intelligence applications. This empowers businesses to unlock valuable insights from their vast amounts of structured and unstructured data.</p>
+<p>By providing native support for popular machine learning frameworks such as TensorFlow and PyTorch, MogDB simplifies the process of training and deploying AI models directly within the database environment. This eliminates the need for complex data pipelines or costly data transfers between different systems.</p>
+<p>With DB4AI, organizations can leverage the full potential of their databases by performing real-time analytics on large volumes of data. They can train predictive models using historical data stored in MogDB and make accurate predictions based on real-time information ingested into the database. This enables businesses to make data-driven decisions faster and gain a competitive edge in today’s fast-paced market.</p>
+<h3 id="ABO-Optimizer-for-Improved-Performance"><a href="#ABO-Optimizer-for-Improved-Performance" class="headerlink" title="ABO Optimizer for Improved Performance"></a>ABO Optimizer for Improved Performance</h3><p>MogDB’s AI capabilities extend to its query optimization engine through the Adaptive Bitwise Optimization (ABO) optimizer. This innovative feature leverages machine learning techniques to intelligently optimize query execution plans based on historical performance data.</p>
+<p>The ABO optimizer continuously analyzes query patterns, execution statistics, and system resources to identify optimal query plans. By learning from past experiences, it can adaptively adjust execution strategies to improve overall query performance. This results in faster response times and more efficient resource utilization.</p>
+<p>Furthermore, the ABO optimizer reduces the need for manual tuning by automatically selecting the most appropriate join methods, access paths, and index usage based on the characteristics of each query. This simplifies database administration tasks and allows administrators to focus on higher-level optimizations rather than fine-tuning individual queries.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>The key features of MogDB make it a powerful and versatile option for database administrators, developers, and IT professionals. Its high performance capabilities, such as the CBO optimizer, vectorized engine, adaptive compression, and parallel query optimization, ensure that users can process large amounts of data quickly and efficiently. This is crucial in today’s fast-paced business environment where time is of the essence.</p>
+<p>Furthermore, MogDB offers high availability features that guarantee uninterrupted access to critical data. The master-slave replication, logical replication, physical backup, and delayed replay functionalities ensure that data is always accessible even in the event of system failures or disasters. This level of reliability instills confidence in users and provides peace of mind knowing that their data is safe.</p>
+<p>Maintainability is another key aspect of MogDB. With features like grey upgrade, slow SQL diagnosis, system KPI diagnosis, and fault diagnosis tools, administrators can easily identify and resolve issues within the database system. This streamlines maintenance processes and minimizes downtime for businesses.</p>
+<p>Compatibility with various SQL features as well as Oracle and MySQL compatibility allows for seamless integration with existing systems and applications. This eliminates the need for extensive modifications or rewrites when migrating from other database management systems to MogDB.</p>
+<p>In addition to these impressive features, MogDB also offers AI capabilities through AI4DB for autonomous database operations and DB4AI for database-driven AI. These advanced capabilities enable users to leverage artificial intelligence technologies within their databases to enhance performance and gain valuable insights from their data.</p>
+<p>Overall, MogDB stands out as a highly performant, highly available, easy-to-use distributed relational database management system with a wide range of features tailored to meet the needs of modern businesses. Its compatibility with existing systems and applications combined with its AI capabilities make it an attractive choice for organizations across industries. Whether you are a database administrator looking for improved performance or a developer seeking seamless integration options, MogDB has you covered. Trust in MogDB to unlock the power of your data.</p>
 ]]></content>
       <tags>
         <tag>MogDB</tag>
@@ -840,105 +954,78 @@
       </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/1970/01/01/The%20best%20practices%20for%20using%20partition%20table%20in%20PostgreSQL/</url>
-    <content><![CDATA[<h1 id="The-best-practices-for-using-partition-table-in-PostgreSQL"><a href="#The-best-practices-for-using-partition-table-in-PostgreSQL" class="headerlink" title="The best practices for using partition table in PostgreSQL"></a>The best practices for using partition table in PostgreSQL</h1><h2 id="What-is-partition-table"><a href="#What-is-partition-table" class="headerlink" title="What is partition table?"></a>What is partition table?</h2><p>Partition table is a table that is divided into smaller parts. Each part is called a partition.</p>
-<p>Why use partition table?</p>
+    <title>Ensuring Data Integrity: How Major Databases Handle Partial Writes and Atomic Operations</title>
+    <url>/2024/05/30/Ensuring-Data-Integrity-How-Major-Databases-Handle-Partial-Writes-and-Atomic-Operations/</url>
+    <content><![CDATA[<p>In the world of databases, ensuring atomicity in write operations is crucial. This post explores the importance of atomic writes and how various databases handle potential issues like partial writes.</p>
+<h4 id="Understanding-Partial-Writes"><a href="#Understanding-Partial-Writes" class="headerlink" title="Understanding Partial Writes"></a>Understanding Partial Writes</h4><p>In the I&#x2F;O write chain, the size of atomic operations can vary. An operation at a higher level may be split into multiple operations at a lower level, leading to scenarios where some operations succeed while others fail. This phenomenon is known as a partial write.</p>
+<ul>
+<li><strong>Legacy Disk Drives</strong>: Default sector size is 512 bytes.</li>
+<li><strong>Modern Disk Drives</strong>: Advanced format sector size is 4k.</li>
+<li><strong>Filesystem Page Size</strong>: For example, ext4 has a default page size of 4k.</li>
+<li><strong>Database Page Sizes</strong>:<ul>
+<li>Oracle: 8K</li>
+<li>MySQL: 16K</li>
+<li>PostgreSQL: 8K</li>
+<li>openGauss: 8K</li>
+</ul>
+</li>
+</ul>
+<h3 id="The-Reality-of-Partial-Writes"><a href="#The-Reality-of-Partial-Writes" class="headerlink" title="The Reality of Partial Writes"></a>The Reality of Partial Writes</h3><p>While theoretically, databases must handle partial writes, in practice, such events are quite rare. The critical aspect is not just preventing partial writes but ensuring robust mechanisms for data integrity checks (checksums) and recovery when issues do arise.</p>
+<h3 id="How-Oracle-Handles-Partial-Writes"><a href="#How-Oracle-Handles-Partial-Writes" class="headerlink" title="How Oracle Handles Partial Writes"></a>How Oracle Handles Partial Writes</h3><p>Oracle’s approach to partial writes is pragmatic:</p>
 <ol>
-<li><strong>Performance</strong>: Partition table can improve the performance of the table. Because each partition can be stored in a separate file, the query can be executed faster.</li>
-<li><strong>Maintenance</strong>: Partition table can make the maintenance of the table easier. Because each partition can be maintained separately, the maintenance of the table can be done faster.</li>
+<li><strong>Automatic Repair</strong>: If a fractured block is detected, Oracle tries to repair it using the corresponding block from Active Data Guard (ADG) or the flashback log.</li>
+<li><strong>Error Reporting</strong>: If automatic repair fails, an ORA-01578 error is logged, prompting the DBA to perform a media recovery.</li>
+<li><strong>Block-Level Recovery</strong>: Oracle supports block-level recovery, making the process less cumbersome and time-consuming.</li>
 </ol>
-<h2 id="How-to-create-a-partition-table"><a href="#How-to-create-a-partition-table" class="headerlink" title="How to create a partition table?"></a>How to create a partition table?</h2><ol>
-<li><strong>Create a partition table</strong>:</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement (</span><br><span class="line">    city_id         <span class="type">int</span> <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    logdate         <span class="type">date</span> <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    peaktemp        <span class="type">int</span>,</span><br><span class="line">    unitsales       <span class="type">int</span></span><br><span class="line">) <span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">RANGE</span> (logdate);</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li><strong>Create a partition table for each partition</strong>:</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement_y2006m02 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> measurement</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2006-02-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2006-03-01&#x27;</span>);</span><br><span class="line">...</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement_y2007m11 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> measurement</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2007-11-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2007-12-01&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="Partition-table-types"><a href="#Partition-table-types" class="headerlink" title="Partition table types"></a>Partition table types</h2><p>There are 3 basic types of partition table in PostgreSQL:</p>
+<p>Oracle’s backup sets are designed to handle partial writes:</p>
+<ul>
+<li><strong>Using OS Commands</strong>: When backing up data files using OS commands, Oracle requires the tablespace to be in backup mode. Any changes to data blocks are logged in the redo log, ensuring a clean block can be restored during recovery.</li>
+<li><strong>Using RMAN</strong>: RMAN handles partial writes by ensuring that each backup block is clean, eliminating the need to worry about fractured blocks.</li>
+<li><strong>Block Checking</strong>: Oracle provides mechanisms like DB_BLOCK_CHECKING for comprehensive checksums.</li>
+</ul>
+<h3 id="How-MySQL-Handles-Partial-Writes"><a href="#How-MySQL-Handles-Partial-Writes" class="headerlink" title="How MySQL Handles Partial Writes"></a>How MySQL Handles Partial Writes</h3><p>MySQL employs a <strong>double write buffer</strong> to safeguard against partial writes. </p>
 <ol>
-<li><strong>List Partition</strong>: The table is partitioned by explicitly listing which key value(s) appear in each partition.</li>
-<li><strong>Range Partition</strong>: The table is partitioned into “ranges” defined by a key column or set of columns, with no overlap between the ranges of values assigned to different partitions.</li>
-<li><strong>Hash Partition</strong>: The table is partitioned by specifying a modulus and a remainder for each partition.</li>
+<li><strong>Double Write Buffer</strong>: Despite its name, the double write buffer is not stored in memory; instead, it consists of persistent files on disk. The mechanism works as follows: before writing a data block to its final location on disk, MySQL first writes it to the double write buffer.</li>
+<li><strong>Data Integrity</strong>: This approach ensures that there is always a clean copy of the block available—either in the double write buffer or in the data files—allowing for safe redo operations.</li>
 </ol>
-<p>Combine these 3 basic types of partition table, we can create more complex partition table. This is called <strong>Composite Partitioning</strong>.</p>
-<p>There are 4 types of composite partitioning:</p>
+<p>However, this method is not without its challenges. One of the primary concerns is its efficiency, as it effectively doubles the I&#x2F;O workload for redo logging. This has sparked ongoing discussions about the trade-offs and effectiveness of using a double write buffer to address partial writes.</p>
+<h3 id="How-PostgreSQL-Handles-Partial-Writes"><a href="#How-PostgreSQL-Handles-Partial-Writes" class="headerlink" title="How PostgreSQL Handles Partial Writes"></a>How PostgreSQL Handles Partial Writes</h3><p>PostgreSQL employs <strong>full page writes</strong> to manage partial writes effectively:</p>
 <ol>
-<li><strong>List-Range Partition</strong>: The partition is divided into several ranges.<br>The step is: create table A partition by list, then create table A1 partition of A partition by range, then create table A1-1 partition of A1</li>
-<li><strong>Range-List Partition</strong>: The partition is divided into several ranges.<br>The step is: create table A partition by range, then create table B of table A but partition by list.</li>
-<li><strong>Range-Hash Partition</strong>: The partition is divided into several ranges.</li>
-<li><strong>Hash-Range Partition</strong>: The partition is divided into several ranges.</li>
+<li><strong>Full Page Writes</strong>: When a data block is updated for the first time after a checkpoint, the entire block is written to the WAL (Write-Ahead Logging) log. This is akin to the database always being in “Backup status,” similar to issuing the <code>alter tablespace x begin backup</code> command in an Oracle database.</li>
+<li><strong>Data Integrity</strong>: This mechanism ensures that even if a partial write occurs, the database remains consistent because the original page can be used for redo operations.</li>
 </ol>
-<h2 id="Data-dictionary-about-partition-table"><a href="#Data-dictionary-about-partition-table" class="headerlink" title="Data dictionary about partition table"></a>Data dictionary about partition table</h2><ol>
-<li><strong>pg_partitioned_table</strong>: This table stores the information about the partitioned table.</li>
-<li><strong>pg_partition_rule</strong>: This table stores the information about the partition rule.</li>
-<li><strong>pg_partition_column</strong>: This table stores the information about the partition column.</li>
-<li><strong>pg_partition_index</strong>: This table stores the information about the partition index.</li>
-<li><strong>pg_partition_constraint</strong>: This table stores the information about the partition constraint.</li>
-<li><strong>pg_partition_constraint_column</strong>: This table stores the information about the partition constraint column.</li>
-<li><strong>pg_partition_constraint_index</strong>: This table stores the information about the partition constraint index.</li>
+<p>There has been community discussion about adopting a double write buffer mechanism, but it remains an area of interest rather than active development. For more details, you can check out these discussions:</p>
+<ul>
+<li><a href="https://www.postgresql.org/message-id/1962493974.656458.1327703514780.JavaMail.root@zimbra-prod-mbox-4.vmware.com">Discussion on Double Write Buffer Mechanism (Post 1)</a></li>
+<li><a href="https://www.postgresql.org/message-id/20180418062240.GJ18178%40paquier.xyz">Discussion on Double Write Buffer Mechanism (Post 2)</a></li>
+</ul>
+<h3 id="How-MogDB-Handles-Partial-Writes"><a href="#How-MogDB-Handles-Partial-Writes" class="headerlink" title="How MogDB Handles Partial Writes"></a>How MogDB Handles Partial Writes</h3><p>MogDB (the enterprise edition of openGauss) combines strategies from MySQL and PostgreSQL:</p>
+<ol>
+<li><strong>Double Write Buffer</strong>: Similar to MySQL, MogDB uses a double write buffer by setting <code>enable_double_write=on</code>.</li>
+<li><strong>Full Page Writes</strong>: MogDB retains PostgreSQL’s full page write mechanism by setting <code>full_page_writes=on</code>.</li>
 </ol>
-]]></content>
-  </entry>
-  <entry>
-    <title>Unlocking the Power: Key Features of MogDB</title>
-    <url>/2024/05/27/Unlocking-the-Power-Key-Features-of-MogDB/</url>
-    <content><![CDATA[<h2 id="Introduction-to-MogDB"><a href="#Introduction-to-MogDB" class="headerlink" title="Introduction to MogDB"></a>Introduction to MogDB</h2><p><a href="https://www.mogdb.io/">MogDB</a> is a cutting-edge distributed relational database management system that offers an array of powerful features designed to meet the needs of modern businesses. With its high performance, availability, maintainability, compatibility, and AI capabilities, MogDB stands out as a top choice for database administrators, developers, and IT professionals.</p>
-<p>One of the key selling points of MogDB is its ability to deliver exceptional performance. This is achieved through various innovative features such as the <a href="https://docs.mogdb.io/en/mogdb/v2.0/2-optimizer-cost-constants/">Cost-Based Optimizer</a> (CBO) optimizer, which intelligently chooses the most efficient execution plans for queries. Additionally, MogDB utilizes a <a href="https://docs.mogdb.io/en/mogdb/v3.1/3-vectorized-engine/">vectorized engine</a> that processes data in batches instead of row by row, resulting in significant performance improvements. The <a href="https://docs.mogdb.io/en/mogdb/v3.0/5-adaptive-compression">adaptive compression</a> feature further enhances performance by reducing storage requirements and minimizing I&#x2F;O operations.</p>
-<p>In terms of availability, MogDB offers robust solutions to ensure uninterrupted access to critical data. It supports <a href="https://en.wikipedia.org/wiki/Master-slave_replication">master-slave replication</a>, allowing for automatic failover in case of primary node failure. <a href="https://docs.mogdb.io/en/mogdb/v2.1/2-logical-replication">Logical replication</a> enables real-time data synchronization across multiple databases, while <a href="https://docs.mogdb.io/en/mogdb/v2.1/5-physical-backup">physical backup</a> provides reliable data protection. <a href="https://docs.mogdb.io/en/mogdb/v3.0/9-delayed-replay">Delayed replay</a> allows for easy recovery from accidental data corruption or deletion.</p>
-<p>Maintaining a database can be complex and time-consuming. However, MogDB simplifies this process with its advanced maintainability features. The <a href="https://docs.mogdb.io/en/mogdb/v3.0/upgrade-guide/">grey upgrade</a> feature allows for seamless upgrades without interrupting service availability. <a href="https://docs.mogdb.io/en/mogdb/v3.1/3-slow-sql-diagnosis">Slow SQL diagnosis</a> helps identify and optimize poorly performing queries, improving overall system efficiency. <a href="https://docs.mogdb.io/en/mogdb/v2.1/5-system-kpi-aided-diagnosis/">System KPI diagnosis</a> provides insights into system health and performance metrics, enabling proactive maintenance and troubleshooting. Fault diagnosis helps pinpoint issues quickly and accurately.</p>
-<p>Compatibility is another area where MogDB excels. It supports various SQL features and ensures compatibility with popular database systems such as Oracle and MySQL. This makes it easier for organizations to migrate their existing applications or leverage their existing SQL knowledge without major modifications.</p>
-<p>MogDB also boasts impressive AI capabilities that set it apart from traditional databases. The AI4DB feature enables autonomous database operations, automating routine tasks and optimizing performance based on machine learning algorithms. DB4AI allows for database-driven AI, empowering organizations to leverage their data for advanced analytics and machine learning applications. Additionally, the ABO optimizer intelligently adapts query execution plans based on real-time data statistics, further enhancing performance.</p>
-<h2 id="High-Performance-Features"><a href="#High-Performance-Features" class="headerlink" title="High Performance Features"></a>High Performance Features</h2><p>MogDB is designed to deliver exceptional performance, ensuring that your database operations run smoothly and efficiently. With its cutting-edge features, MogDB offers unparalleled speed and optimization capabilities.</p>
-<p>One of the key high-performance features of MogDB is the Cost-Based Optimizer (CBO). This optimizer leverages advanced algorithms and statistical models to determine the most efficient execution plan for queries. By analyzing query statistics and data distribution, the CBO can make intelligent decisions on how to execute queries in the most optimal way. This results in faster query processing times and improved overall performance.</p>
-<p>In addition to the CBO optimizer, MogDB also utilizes a vectorized engine. This engine takes advantage of modern CPU architectures by performing operations on entire vectors of data at once, rather than processing individual elements sequentially. As a result, complex queries that involve large datasets can be executed more quickly and efficiently.</p>
-<p>Another feature that contributes to MogDB’s high performance is adaptive compression. This feature dynamically adjusts the level of compression applied to data based on its characteristics and usage patterns. By compressing data when it is not actively being accessed or modified, MogDB can reduce storage requirements and improve I&#x2F;O performance. When data needs to be accessed or modified, it is decompressed on-the-fly for seamless operations.</p>
-<p>Parallel query optimization is yet another powerful feature offered by MogDB. This feature allows queries to be divided into smaller tasks that can be executed simultaneously across multiple cores or nodes in a distributed environment. By leveraging parallelism, MogDB can significantly speed up query processing times for large datasets or complex queries.</p>
-<p>With these high-performance features combined, MogDB ensures that your database operations are lightning-fast and efficient. Whether you’re running simple CRUD operations or complex analytical queries, you can rely on MogDB to deliver exceptional performance every time.</p>
-<p>It’s worth noting that while these high-performance features greatly enhance the speed and efficiency of MogDB, they do not compromise on data integrity or reliability. MogDB is built with a strong focus on ACID (Atomicity, Consistency, Isolation, Durability) principles, ensuring that your data remains consistent and reliable even under high-performance workloads.</p>
-<h2 id="High-Availability-Features"><a href="#High-Availability-Features" class="headerlink" title="High Availability Features"></a>High Availability Features</h2><p>Ensuring high availability is crucial for any database management system, and MogDB excels in this aspect with its robust set of features. Let’s dive into the key high availability features that make MogDB a reliable choice for businesses.</p>
-<p><strong>Master-slave replication for data redundancy</strong></p>
-<p>MogDB offers master-slave replication, a powerful feature that enhances data redundancy and fault tolerance. With this feature, changes made to the master node are automatically replicated to one or more slave nodes. In the event of a failure or outage on the master node, one of the slave nodes can seamlessly take over as the new master, ensuring uninterrupted service availability. This replication mechanism not only provides data redundancy but also improves read scalability by allowing read operations to be distributed across multiple nodes.</p>
-<p><strong>Logical replication for real-time data synchronization</strong></p>
-<p>In addition to master-slave replication, MogDB supports logical replication, enabling real-time data synchronization between databases. This feature allows specific tables or even subsets of tables to be replicated from one database instance to another. By capturing and propagating changes at the logical level rather than replicating entire physical blocks, logical replication minimizes network traffic and reduces latency. It enables businesses to maintain up-to-date replicas of their databases for reporting purposes or offloading read-intensive workloads without impacting the performance of the primary database.</p>
-<p><strong>Physical backup for data protection</strong></p>
-<p>Data protection is paramount in any database system, and MogDB addresses this need through its physical backup feature. With physical backups, administrators can create full copies of their databases at a specific point in time. These backups capture both the schema and data files, ensuring comprehensive recovery options in case of hardware failures, user errors, or other catastrophic events. MogDB’s physical backup mechanism provides flexibility by allowing backups to be stored on different storage devices or even transferred to remote locations for disaster recovery purposes.</p>
-<p><strong>Delayed replay for data recovery</strong></p>
-<p>MogDB includes a delayed replay feature that allows administrators to recover data from a specific point in time. This feature is particularly useful in scenarios where accidental data deletions or modifications occur and need to be rolled back. By leveraging the transaction log, MogDB can replay changes up until a certain point, effectively restoring the database to its state prior to the incident. The delayed replay feature provides an additional layer of protection against human errors or malicious activities, ensuring that businesses can quickly recover from data-related incidents.</p>
-<p>In summary, MogDB offers a comprehensive set of high availability features that guarantee reliability and continuous operation for businesses. The master-slave replication ensures data redundancy and read scalability, while logical replication enables real-time data synchronization for reporting or offloading purposes. Physical backups and delayed replay provide robust data protection mechanisms, allowing administrators to recover from hardware failures or user errors effectively. With these high availability features, MogDB empowers organizations with the confidence that their critical databases will remain accessible and resilient even in the face of unexpected challenges.</p>
-<p>*[E-A-T]: Expertise, Authoritativeness, Trustworthiness</p>
-<h2 id="Maintainability-Features"><a href="#Maintainability-Features" class="headerlink" title="Maintainability Features"></a>Maintainability Features</h2><p>Maintainability is a crucial aspect of any database management system, and MogDB excels in this area with its array of innovative features. These features are designed to ensure seamless system updates, optimize performance, monitor and analyze system KPIs, and resolve any potential faults. Let’s explore these maintainability features in detail.</p>
-<p>One of the standout maintainability features of MogDB is the grey upgrade capability. This feature allows for seamless system updates without interrupting ongoing operations. With grey upgrade, administrators can apply patches, upgrades, or even major version changes to MogDB without causing downtime or disrupting user access. This ensures that businesses can keep their databases up-to-date with the latest enhancements and security fixes while minimizing any potential disruptions to their operations.</p>
-<p>Another essential maintainability feature offered by MogDB is slow SQL diagnosis. Slow SQL queries can significantly impact database performance and user experience. MogDB addresses this issue by providing comprehensive tools for identifying and optimizing slow SQL queries. The system analyzes query execution plans, identifies bottlenecks, and suggests optimizations to improve query performance. By pinpointing problematic queries and optimizing them, administrators can enhance overall database performance and ensure smooth operation.</p>
-<p>System KPI diagnosis is another vital component of MogDB’s maintainability arsenal. Monitoring key performance indicators (KPIs) is crucial for understanding the health and efficiency of a database system. MogDB provides robust tools for monitoring and analyzing various KPIs such as CPU utilization, memory usage, disk I&#x2F;O, network traffic, and more. Administrators can set up custom alerts based on predefined thresholds to proactively identify any anomalies or potential issues before they impact the system’s performance or availability.</p>
-<p>In addition to diagnosing slow SQL queries and monitoring KPIs, MogDB also offers fault diagnosis capabilities. When an issue arises within the database system, it is essential to quickly identify the root cause and resolve it efficiently. MogDB provides advanced diagnostic tools that help administrators identify and troubleshoot various types of faults, including hardware failures, network issues, software bugs, or configuration problems. By quickly identifying and resolving faults, administrators can minimize downtime and ensure the continuous availability of their database system.</p>
-<h2 id="Compatibility-Features"><a href="#Compatibility-Features" class="headerlink" title="Compatibility Features"></a>Compatibility Features</h2><p>MogDB offers a wide range of compatibility features that make it a versatile and flexible choice for database administrators, developers, and IT professionals. One of the key compatibility features is its support for various SQL features. With MogDB, you can leverage the full power of SQL and take advantage of advanced querying capabilities to meet your specific business needs.</p>
-<p>In addition to its support for SQL features, MogDB also provides seamless compatibility with Oracle databases. This compatibility feature allows for easy migration from Oracle to MogDB without any major disruptions or changes to your existing applications. The transition process is smooth and hassle-free, ensuring that you can quickly start benefiting from the high-performance and highly available nature of MogDB.</p>
-<p>Another compatibility feature offered by MogDB is its support for MySQL databases. This means that you can seamlessly integrate MogDB into your existing MySQL infrastructure without any major modifications. Whether you are running applications that rely on MySQL or have data stored in MySQL databases, MogDB ensures a seamless integration process, allowing you to leverage the advanced capabilities and performance enhancements provided by MogDB.</p>
-<p>The compatibility features of MogDB not only enable smooth transitions and integrations but also ensure that your existing applications continue to function seamlessly with minimal changes required. This level of compatibility reduces the effort and time required for migration or integration projects, allowing you to focus on other critical aspects of your business.</p>
-<p>With its comprehensive set of compatibility features, MogDB provides a robust solution that meets the diverse needs of different industries and applications. Whether you are working with complex SQL queries, migrating from Oracle databases, or integrating with MySQL infrastructure, MogDB offers the flexibility and reliability needed to ensure a successful deployment.</p>
-<h2 id="AI-Capabilities"><a href="#AI-Capabilities" class="headerlink" title="AI Capabilities"></a>AI Capabilities</h2><p>MogDB stands out among other distributed relational database management systems due to its advanced AI capabilities. These capabilities empower organizations to leverage the power of artificial intelligence for autonomous database operations, database-driven AI, and improved performance through the ABO optimizer.</p>
-<h3 id="AI4DB-for-Autonomous-Database-Operations"><a href="#AI4DB-for-Autonomous-Database-Operations" class="headerlink" title="AI4DB for Autonomous Database Operations"></a>AI4DB for Autonomous Database Operations</h3><p>With MogDB’s AI4DB feature, organizations can enhance their operational efficiency by automating various database tasks. This includes automated performance tuning, query optimization, and workload management. The AI algorithms embedded within MogDB continuously monitor the system’s performance metrics and automatically adjust configurations to optimize resource allocation and improve overall database performance.</p>
-<p>AI4DB also plays a crucial role in self-healing mechanisms. It can detect anomalies or potential issues within the database environment and take proactive measures to resolve them before they impact critical business operations. By leveraging machine learning algorithms, MogDB can identify patterns in historical data and predict potential failures or bottlenecks, allowing administrators to take preventive actions.</p>
-<p>Furthermore, AI4DB enables intelligent data compression techniques that optimize storage utilization without compromising query performance. By analyzing data access patterns and applying advanced compression algorithms, MogDB reduces storage costs while ensuring fast data retrieval.</p>
-<h3 id="DB4AI-for-Database-Driven-AI"><a href="#DB4AI-for-Database-Driven-AI" class="headerlink" title="DB4AI for Database-Driven AI"></a>DB4AI for Database-Driven AI</h3><p>MogDB’s DB4AI feature allows organizations to seamlessly integrate their databases with artificial intelligence applications. This empowers businesses to unlock valuable insights from their vast amounts of structured and unstructured data.</p>
-<p>By providing native support for popular machine learning frameworks such as TensorFlow and PyTorch, MogDB simplifies the process of training and deploying AI models directly within the database environment. This eliminates the need for complex data pipelines or costly data transfers between different systems.</p>
-<p>With DB4AI, organizations can leverage the full potential of their databases by performing real-time analytics on large volumes of data. They can train predictive models using historical data stored in MogDB and make accurate predictions based on real-time information ingested into the database. This enables businesses to make data-driven decisions faster and gain a competitive edge in today’s fast-paced market.</p>
-<h3 id="ABO-Optimizer-for-Improved-Performance"><a href="#ABO-Optimizer-for-Improved-Performance" class="headerlink" title="ABO Optimizer for Improved Performance"></a>ABO Optimizer for Improved Performance</h3><p>MogDB’s AI capabilities extend to its query optimization engine through the Adaptive Bitwise Optimization (ABO) optimizer. This innovative feature leverages machine learning techniques to intelligently optimize query execution plans based on historical performance data.</p>
-<p>The ABO optimizer continuously analyzes query patterns, execution statistics, and system resources to identify optimal query plans. By learning from past experiences, it can adaptively adjust execution strategies to improve overall query performance. This results in faster response times and more efficient resource utilization.</p>
-<p>Furthermore, the ABO optimizer reduces the need for manual tuning by automatically selecting the most appropriate join methods, access paths, and index usage based on the characteristics of each query. This simplifies database administration tasks and allows administrators to focus on higher-level optimizations rather than fine-tuning individual queries.</p>
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>The key features of MogDB make it a powerful and versatile option for database administrators, developers, and IT professionals. Its high performance capabilities, such as the CBO optimizer, vectorized engine, adaptive compression, and parallel query optimization, ensure that users can process large amounts of data quickly and efficiently. This is crucial in today’s fast-paced business environment where time is of the essence.</p>
-<p>Furthermore, MogDB offers high availability features that guarantee uninterrupted access to critical data. The master-slave replication, logical replication, physical backup, and delayed replay functionalities ensure that data is always accessible even in the event of system failures or disasters. This level of reliability instills confidence in users and provides peace of mind knowing that their data is safe.</p>
-<p>Maintainability is another key aspect of MogDB. With features like grey upgrade, slow SQL diagnosis, system KPI diagnosis, and fault diagnosis tools, administrators can easily identify and resolve issues within the database system. This streamlines maintenance processes and minimizes downtime for businesses.</p>
-<p>Compatibility with various SQL features as well as Oracle and MySQL compatibility allows for seamless integration with existing systems and applications. This eliminates the need for extensive modifications or rewrites when migrating from other database management systems to MogDB.</p>
-<p>In addition to these impressive features, MogDB also offers AI capabilities through AI4DB for autonomous database operations and DB4AI for database-driven AI. These advanced capabilities enable users to leverage artificial intelligence technologies within their databases to enhance performance and gain valuable insights from their data.</p>
-<p>Overall, MogDB stands out as a highly performant, highly available, easy-to-use distributed relational database management system with a wide range of features tailored to meet the needs of modern businesses. Its compatibility with existing systems and applications combined with its AI capabilities make it an attractive choice for organizations across industries. Whether you are a database administrator looking for improved performance or a developer seeking seamless integration options, MogDB has you covered. Trust in MogDB to unlock the power of your data.</p>
+<p>Depending on the configuration of incremental checkpoints (enable_incremental_checkpoint):</p>
+<ul>
+<li><strong>Incremental Checkpoints Off</strong>:<ul>
+<li>With <code>full_page_writes=on</code>, full page writes are used.</li>
+<li>With <code>full_page_writes=off</code>, partial writes are not a concern.</li>
+</ul>
+</li>
+<li><strong>Incremental Checkpoints On</strong>:<ul>
+<li>With <code>enable_double_write=on</code>, double writes are used.</li>
+<li>With <code>enable_double_write=off</code>, the behavior depends on full_page_writes settings.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>Ensuring atomic writes in databases is essential for data integrity and consistency. While partial writes are rare, robust mechanisms for detection and recovery are vital. Oracle, MySQL, PostgreSQL, and MogDB&#x2F;openGauss each have unique approaches to handling these scenarios, ensuring that data remains reliable and recoverable.</p>
 ]]></content>
       <tags>
         <tag>MogDB</tag>
+        <tag>Oracle</tag>
+        <tag>PostgreSQL</tag>
+        <tag>openGauss</tag>
+        <tag>MySQL</tag>
+        <tag>Partial Writes</tag>
       </tags>
   </entry>
 </search>
