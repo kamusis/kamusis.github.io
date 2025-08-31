@@ -1,6 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Ensuring Data Integrity: How Major Databases Handle Partial Writes and Atomic Operations</title>
+    <url>/2024/05/30/Ensuring-Data-Integrity-How-Major-Databases-Handle-Partial-Writes-and-Atomic-Operations/</url>
+    <content><![CDATA[<p>In the world of databases, ensuring atomicity in write operations is crucial. This post explores the importance of atomic writes and how various databases handle potential issues like partial writes.</p>
+<h4 id="Understanding-Partial-Writes"><a href="#Understanding-Partial-Writes" class="headerlink" title="Understanding Partial Writes"></a>Understanding Partial Writes</h4><p>In the I&#x2F;O write chain, the size of atomic operations can vary. An operation at a higher level may be split into multiple operations at a lower level, leading to scenarios where some operations succeed while others fail. This phenomenon is known as a partial write.</p>
+<ul>
+<li><strong>Legacy Disk Drives</strong>: Default sector size is 512 bytes.</li>
+<li><strong>Modern Disk Drives</strong>: Advanced format sector size is 4k.</li>
+<li><strong>Filesystem Page Size</strong>: For example, ext4 has a default page size of 4k.</li>
+<li><strong>Database Page Sizes</strong>:<ul>
+<li>Oracle: 8K</li>
+<li>MySQL: 16K</li>
+<li>PostgreSQL: 8K</li>
+<li>openGauss: 8K</li>
+</ul>
+</li>
+</ul>
+<h3 id="The-Reality-of-Partial-Writes"><a href="#The-Reality-of-Partial-Writes" class="headerlink" title="The Reality of Partial Writes"></a>The Reality of Partial Writes</h3><p>While theoretically, databases must handle partial writes, in practice, such events are quite rare. The critical aspect is not just preventing partial writes but ensuring robust mechanisms for data integrity checks (checksums) and recovery when issues do arise.</p>
+<h3 id="How-Oracle-Handles-Partial-Writes"><a href="#How-Oracle-Handles-Partial-Writes" class="headerlink" title="How Oracle Handles Partial Writes"></a>How Oracle Handles Partial Writes</h3><p>Oracle’s approach to partial writes is pragmatic:</p>
+<ol>
+<li><strong>Automatic Repair</strong>: If a fractured block is detected, Oracle tries to repair it using the corresponding block from Active Data Guard (ADG) or the flashback log.</li>
+<li><strong>Error Reporting</strong>: If automatic repair fails, an ORA-01578 error is logged, prompting the DBA to perform a media recovery.</li>
+<li><strong>Block-Level Recovery</strong>: Oracle supports block-level recovery, making the process less cumbersome and time-consuming.</li>
+</ol>
+<p>Oracle’s backup sets are designed to handle partial writes:</p>
+<ul>
+<li><strong>Using OS Commands</strong>: When backing up data files using OS commands, Oracle requires the tablespace to be in backup mode. Any changes to data blocks are logged in the redo log, ensuring a clean block can be restored during recovery.</li>
+<li><strong>Using RMAN</strong>: RMAN handles partial writes by ensuring that each backup block is clean, eliminating the need to worry about fractured blocks.</li>
+<li><strong>Block Checking</strong>: Oracle provides mechanisms like DB_BLOCK_CHECKING for comprehensive checksums.</li>
+</ul>
+<h3 id="How-MySQL-Handles-Partial-Writes"><a href="#How-MySQL-Handles-Partial-Writes" class="headerlink" title="How MySQL Handles Partial Writes"></a>How MySQL Handles Partial Writes</h3><p>MySQL employs a <strong>double write buffer</strong> to safeguard against partial writes. </p>
+<ol>
+<li><strong>Double Write Buffer</strong>: Despite its name, the double write buffer is not stored in memory; instead, it consists of persistent files on disk. The mechanism works as follows: before writing a data block to its final location on disk, MySQL first writes it to the double write buffer.</li>
+<li><strong>Data Integrity</strong>: This approach ensures that there is always a clean copy of the block available—either in the double write buffer or in the data files—allowing for safe redo operations.</li>
+</ol>
+<p>However, this method is not without its challenges. One of the primary concerns is its efficiency, as it effectively doubles the I&#x2F;O workload for redo logging. This has sparked ongoing discussions about the trade-offs and effectiveness of using a double write buffer to address partial writes.</p>
+<h3 id="How-PostgreSQL-Handles-Partial-Writes"><a href="#How-PostgreSQL-Handles-Partial-Writes" class="headerlink" title="How PostgreSQL Handles Partial Writes"></a>How PostgreSQL Handles Partial Writes</h3><p>PostgreSQL employs <strong>full page writes</strong> to manage partial writes effectively:</p>
+<ol>
+<li><strong>Full Page Writes</strong>: When a data block is updated for the first time after a checkpoint, the entire block is written to the WAL (Write-Ahead Logging) log. This is akin to the database always being in “Backup status,” similar to issuing the <code>alter tablespace x begin backup</code> command in an Oracle database.</li>
+<li><strong>Data Integrity</strong>: This mechanism ensures that even if a partial write occurs, the database remains consistent because the original page can be used for redo operations.</li>
+</ol>
+<p>There has been community discussion about adopting a double write buffer mechanism, but it remains an area of interest rather than active development. For more details, you can check out these discussions:</p>
+<ul>
+<li><a href="https://www.postgresql.org/message-id/1962493974.656458.1327703514780.JavaMail.root@zimbra-prod-mbox-4.vmware.com">Discussion on Double Write Buffer Mechanism (Post 1)</a></li>
+<li><a href="https://www.postgresql.org/message-id/20180418062240.GJ18178%40paquier.xyz">Discussion on Double Write Buffer Mechanism (Post 2)</a></li>
+</ul>
+<h3 id="How-MogDB-Handles-Partial-Writes"><a href="#How-MogDB-Handles-Partial-Writes" class="headerlink" title="How MogDB Handles Partial Writes"></a>How MogDB Handles Partial Writes</h3><p>MogDB (the enterprise edition of openGauss) combines strategies from MySQL and PostgreSQL:</p>
+<ol>
+<li><strong>Double Write Buffer</strong>: Similar to MySQL, MogDB uses a double write buffer by setting <code>enable_double_write=on</code>.</li>
+<li><strong>Full Page Writes</strong>: MogDB retains PostgreSQL’s full page write mechanism by setting <code>full_page_writes=on</code>.</li>
+</ol>
+<p>Depending on the configuration of incremental checkpoints (enable_incremental_checkpoint):</p>
+<ul>
+<li><strong>Incremental Checkpoints Off</strong>:<ul>
+<li>With <code>full_page_writes=on</code>, full page writes are used.</li>
+<li>With <code>full_page_writes=off</code>, partial writes are not a concern.</li>
+</ul>
+</li>
+<li><strong>Incremental Checkpoints On</strong>:<ul>
+<li>With <code>enable_double_write=on</code>, double writes are used.</li>
+<li>With <code>enable_double_write=off</code>, the behavior depends on full_page_writes settings.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>Ensuring atomic writes in databases is essential for data integrity and consistency. While partial writes are rare, robust mechanisms for detection and recovery are vital. Oracle, MySQL, PostgreSQL, and MogDB&#x2F;openGauss each have unique approaches to handling these scenarios, ensuring that data remains reliable and recoverable.</p>
+]]></content>
+      <tags>
+        <tag>MogDB</tag>
+        <tag>openGauss</tag>
+        <tag>Oracle</tag>
+        <tag>PostgreSQL</tag>
+        <tag>MySQL</tag>
+        <tag>Partial Writes</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Exploring Oracle Compatibility in MogDB (Series I) - Data Dictionary</title>
     <url>/2024/06/06/Exploring-Oracle-Compatibility-in-MogDB-Series-I-Data-Dictionary/</url>
     <content><![CDATA[<h2 id="Install-PTK"><a href="#Install-PTK" class="headerlink" title="Install PTK"></a>Install PTK</h2><p>PTK is the optimal tool for installing the MogDB database (an enterprise-grade commercial distribution based on openGauss) or the openGauss database, offering a seamless and smooth installation experience.</p>
@@ -59,6 +134,150 @@
       <tags>
         <tag>MogDB</tag>
         <tag>Oracle-Compatibility</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>From Software Search to Code Generation: The Agentic Coding Revolution</title>
+    <url>/2025/04/08/From-Software-Search-to-Code-Generation-The-Agentic-Coding-Revolution/</url>
+    <content><![CDATA[<h2 id="User-Story-RSS-Feed-Clean-up-Journey"><a href="#User-Story-RSS-Feed-Clean-up-Journey" class="headerlink" title="User Story: RSS Feed Clean-up Journey"></a>User Story: RSS Feed Clean-up Journey</h2><p>Over the past 15 years, I’ve accumulated a substantial collection of RSS feeds, numbering over 200 subscriptions. While RSS usage has dramatically declined in recent years, some of these feeds remain part of my daily reading routine. However, the collection has become cluttered:</p>
+<ul>
+<li>Many feeds have become completely inaccessible</li>
+<li>Some bloggers have stopped updating their sites</li>
+<li>Certain feeds are still active but rarely updated</li>
+</ul>
+<p><strong>The Challenge:</strong></p>
+<ul>
+<li>Manual verification of each feed would be tedious and time-consuming</li>
+<li>My RSS reader (News Explorer) lacks feed cleanup functionality</li>
+<li>Alternative solutions like Inoreader require paid subscriptions</li>
+<li>The task remained pending due to lack of efficient solutions</li>
+</ul>
+<p><strong>The Agentic Coding Solution:</strong><br>What was previously a daunting task transformed into a manageable project:</p>
+<ul>
+<li>Total time from requirement writing to completion: ~2 hours</li>
+<li>Automated validation of all feeds</li>
+<li>Generated comprehensive statistics and visualizations</li>
+<li>Successfully categorized feeds into active, inactive, and dead</li>
+<li>Pleasant and efficient development experience</li>
+</ul>
+<p>This experience perfectly illustrates how agentic coding can turn a long-postponed task into an achievable solution through clear requirement description and AI-assisted development.</p>
+<h2 id="The-Traditional-Approach"><a href="#The-Traditional-Approach" class="headerlink" title="The Traditional Approach"></a>The Traditional Approach</h2><p>Traditionally, when faced with a specific requirement like validating and analyzing OPML feed subscriptions, the typical workflow would be:</p>
+<ol>
+<li>Search for existing software that might solve the problem</li>
+<li>Evaluate multiple tools and their features</li>
+<li>Choose the closest match, often compromising on exact requirements</li>
+<li>Learn how to use the chosen software</li>
+<li>Deal with limitations and missing features</li>
+</ol>
+<p>This process is time-consuming and often results in settling for a solution that doesn’t perfectly match our needs.</p>
+<h2 id="The-Agentic-Coding-Paradigm"><a href="#The-Agentic-Coding-Paradigm" class="headerlink" title="The Agentic Coding Paradigm"></a>The Agentic Coding Paradigm</h2><p>With agentic coding, the approach transforms dramatically:</p>
+<ol>
+<li>Clearly describe your requirements in natural language</li>
+<li>Let AI understand and break down the problem</li>
+<li>Generate custom code that exactly matches your needs</li>
+<li>Iterate and refine the solution through conversation</li>
+</ol>
+<h3 id="Real-World-Example-OPML-Feed-Validator"><a href="#Real-World-Example-OPML-Feed-Validator" class="headerlink" title="Real-World Example: OPML Feed Validator"></a>Real-World Example: OPML Feed Validator</h3><p>This project demonstrates the power of agentic coding. Instead of searching for an existing OPML feed validator:</p>
+<ul>
+<li><p>We described our need for a tool that could:</p>
+<ul>
+<li>Validate RSS feeds in an OPML file</li>
+<li>Check feed accessibility</li>
+<li>Analyze update frequencies</li>
+<li>Generate meaningful statistics</li>
+<li>Visualize the results</li>
+</ul>
+</li>
+<li><p>The AI agent:</p>
+<ul>
+<li>Designed the system architecture</li>
+<li>Implemented the required functionality</li>
+<li>Created visualization components</li>
+<li>Generated comprehensive documentation</li>
+<li>All while following best practices and proper error handling</li>
+</ul>
+</li>
+</ul>
+<h2 id="Benefits-of-Agentic-Coding"><a href="#Benefits-of-Agentic-Coding" class="headerlink" title="Benefits of Agentic Coding"></a>Benefits of Agentic Coding</h2><ol>
+<li><strong>Perfect Fit</strong>: Solutions are tailored exactly to your requirements</li>
+<li><strong>Rapid Development</strong>: No need to spend time searching and evaluating existing tools</li>
+<li><strong>Full Control</strong>: Complete access to the source code for modifications</li>
+<li><strong>Learning Opportunity</strong>: Understanding how the solution works through generated code</li>
+<li><strong>Cost-Effective</strong>: No need to purchase or subscribe to multiple tools</li>
+<li><strong>Maintenance Freedom</strong>: Ability to modify and extend the solution as needs evolve</li>
+</ol>
+<h2 id="Future-Implications"><a href="#Future-Implications" class="headerlink" title="Future Implications"></a>Future Implications</h2><p>This shift from “finding” to “generating” solutions represents a fundamental change in how we approach software development. As AI continues to evolve:</p>
+<ul>
+<li>Development will become more requirement-driven than tool-driven</li>
+<li>Custom solutions will become as accessible as off-the-shelf software</li>
+<li>The focus will shift from “what exists” to “what’s possible”</li>
+</ul>
+<p>Agentic coding empowers developers and users alike to create exactly what they need, breaking free from the limitations of existing software solutions.</p>
+<h2 id="Lessons-Learned-and-Experience"><a href="#Lessons-Learned-and-Experience" class="headerlink" title="Lessons Learned and Experience"></a>Lessons Learned and Experience</h2><h3 id="1-The-Importance-of-Clear-Requirements"><a href="#1-The-Importance-of-Clear-Requirements" class="headerlink" title="1. The Importance of Clear Requirements"></a>1. The Importance of Clear Requirements</h3><p>Product thinking and clear requirements are crucial for successful AI-assisted development:</p>
+<ul>
+<li><strong>Clear Vision Leads to Better Code</strong>: When requirements are well-defined and specific about how the tool should behave, the AI generates higher quality code</li>
+<li><strong>Product Mindset</strong>: Requirement providers need to have a clear understanding of:<ul>
+<li>Desired user interactions</li>
+<li>Expected outputs and their formats</li>
+<li>Error handling scenarios</li>
+<li>Performance expectations</li>
+</ul>
+</li>
+<li><strong>Iterative Refinement</strong>: Unclear requirements often lead to multiple iterations and code quality issues</li>
+</ul>
+<h3 id="2-Technology-Stack-Selection-Matters"><a href="#2-Technology-Stack-Selection-Matters" class="headerlink" title="2. Technology Stack Selection Matters"></a>2. Technology Stack Selection Matters</h3><p>The choice of programming languages and libraries significantly impacts AI-assisted development success:</p>
+<ul>
+<li><p><strong>Language Popularity Impact</strong>:</p>
+<ul>
+<li>More widely used languages (like Python) often result in better AI-generated code</li>
+<li>Popular languages have more training data and real-world examples</li>
+<li>In this project, while we chose TypeScript with Deno for learning purposes, Python might have been an easier choice</li>
+</ul>
+</li>
+<li><p><strong>Library Selection Strategy</strong>:</p>
+<ul>
+<li>Popular, widely-used libraries lead to better AI comprehension and implementation</li>
+<li>Example from this project:<ul>
+<li>Initial attempt: Using less common <code>deno_chart</code> library resulted in multiple errors</li>
+<li>Successful pivot: Switching to standard SVG generation led to immediate success</li>
+</ul>
+</li>
+<li>Lesson: Prefer mainstream libraries over niche ones when working with AI</li>
+</ul>
+</li>
+</ul>
+<h3 id="Best-Practices-for-AI-Assisted-Development"><a href="#Best-Practices-for-AI-Assisted-Development" class="headerlink" title="Best Practices for AI-Assisted Development"></a>Best Practices for AI-Assisted Development</h3><ol>
+<li><p><strong>Requirements Phase</strong>:</p>
+<ul>
+<li>Invest time in detailed requirement documentation</li>
+<li>Include specific examples of desired behavior</li>
+<li>Define clear success criteria</li>
+</ul>
+</li>
+<li><p><strong>Technology Selection</strong>:</p>
+<ul>
+<li>Consider language popularity and ecosystem maturity</li>
+<li>Choose widely-adopted libraries when possible</li>
+<li>Balance learning goals with development efficiency</li>
+</ul>
+</li>
+<li><p><strong>Development Process</strong>:</p>
+<ul>
+<li>Start with core functionality using proven technologies</li>
+<li>Experiment with newer technologies only after basic features are stable</li>
+<li>Be prepared to pivot when encountering AI limitations with specific technologies</li>
+</ul>
+</li>
+</ol>
+<p>This project serves as a practical example of these lessons, demonstrating both the potential and limitations of AI-assisted development while highlighting the importance of making informed technology choices.</p>
+<p>The project can be found <a href="https://github.com/kamusis/my-opml-subscriptions">here</a>.</p>
+]]></content>
+      <tags>
+        <tag>Deno</tag>
+        <tag>JavaScript</tag>
+        <tag>TypeScript</tag>
+        <tag>Agentic Coding</tag>
+        <tag>AI</tag>
       </tags>
   </entry>
   <entry>
@@ -431,50 +650,6 @@
       </tags>
   </entry>
   <entry>
-    <title>How to move WSL distro in Windows 11 to another drive</title>
-    <url>/2024/05/27/How-to-move-WSL-distro-in-Windows-11-to-another-drive/</url>
-    <content><![CDATA[<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction:"></a>Introduction:</h2><p>In the world of development and system administration, Windows Subsystem for Linux (WSL) has become a valuable tool. It allows users to run a Linux distribution alongside their Windows environment, opening up a world of possibilities for developers and administrators. In this article, we’ll guide you through the process of migrating a WSL instance, using a real-world example, step by step.</p>
-<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites:"></a>Prerequisites:</h2><p>Before we begin, ensure that you have the following prerequisites in place:</p>
-<ul>
-<li>Windows 10 or later with WSL installed.</li>
-<li>An existing WSL instance (in our case, Ubuntu).</li>
-<li>Sufficient storage space for the migration.</li>
-</ul>
-<h2 id="Step-1-Create-a-Target-Directory"><a href="#Step-1-Create-a-Target-Directory" class="headerlink" title="Step 1: Create a Target Directory"></a>Step 1: Create a Target Directory</h2><p>To start the migration process, we need a target directory to store the migrated WSL instance. In PowerShell, use the ‘mkdir’ command to create this directory. In our example, we create a directory named ‘D:\WSL\Ubuntu’:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">mkdir <span class="literal">-p</span> D:\WSL\Ubuntu</span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-2-List-All-Running-WSL-Instances"><a href="#Step-2-List-All-Running-WSL-Instances" class="headerlink" title="Step 2: List All Running WSL Instances"></a>Step 2: List All Running WSL Instances</h2><p>Before we proceed further, let’s list all the running WSL instances. The following command will display a list of all WSL instances, including their state and version:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-3-Export-the-Source-WSL-Instance"><a href="#Step-3-Export-the-Source-WSL-Instance" class="headerlink" title="Step 3: Export the Source WSL Instance"></a>Step 3: Export the Source WSL Instance</h2><p>Now, let’s export the source WSL instance (in our case, ‘Ubuntu’) into a tar file. This step automatically shuts down the WSL instance and restarts it after the export:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--export</span> Ubuntu D:\WSL\Ubuntu.tar</span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-4-Unregister-the-Source-WSL-Instance"><a href="#Step-4-Unregister-the-Source-WSL-Instance" class="headerlink" title="Step 4: Unregister the Source WSL Instance"></a>Step 4: Unregister the Source WSL Instance</h2><p>Once the export is complete, we need to unregister the source WSL instance to avoid conflicts. Use the following command:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--unregister</span> Ubuntu</span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-5-Confirm-Unregistration"><a href="#Step-5-Confirm-Unregistration" class="headerlink" title="Step 5: Confirm Unregistration"></a>Step 5: Confirm Unregistration</h2><p>To confirm that the source WSL instance has been successfully unregistered, run the following command:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-6-Import-into-the-Target-Directory"><a href="#Step-6-Import-into-the-Target-Directory" class="headerlink" title="Step 6: Import into the Target Directory"></a>Step 6: Import into the Target Directory</h2><p>Now it’s time to import the previously exported WSL instance into the target directory. In this step, we specify the target directory and version (in our case, version 2):</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--import</span> Ubuntu D:\WSL\Ubuntu D:\WSL\Ubuntu.tar <span class="literal">--version</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-7-Verify-the-Migration"><a href="#Step-7-Verify-the-Migration" class="headerlink" title="Step 7: Verify the Migration"></a>Step 7: Verify the Migration</h2><p>To ensure that the migration was successful, list all WSL instances once again:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-8-Access-the-Migrated-WSL-Instance"><a href="#Step-8-Access-the-Migrated-WSL-Instance" class="headerlink" title="Step 8: Access the Migrated WSL Instance"></a>Step 8: Access the Migrated WSL Instance</h2><p>Now, you can access the migrated WSL instance by using the following command:</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-d</span> Ubuntu</span><br></pre></td></tr></table></figure>
-
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion:"></a>Conclusion:</h2><p>Migrating WSL instances is a powerful way to manage and organize your development environments. By following these steps, you can seamlessly move your WSL instances to different directories or machines, ensuring flexibility and efficiency in your development workflow. Keep in mind that WSL provides a bridge between Windows and Linux, allowing you to enjoy the best of both worlds.</p>
-<p>Check the all steps screenshot as below.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># create target directory</span><br><span class="line">PS C:\Users\kamus&gt; mkdir -p D:\WSL\Ubuntu</span><br><span class="line"></span><br><span class="line"># List all the wsl running</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* Ubuntu                 Running         2</span><br><span class="line">  docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Export source wsl</span><br><span class="line">PS C:\Users\kamus&gt; wsl --export Ubuntu D:\WSL\Ubuntu.tar</span><br><span class="line"></span><br><span class="line"># When doing export, wsl will be shutdown automatically and restart after exporting</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* Ubuntu                 Running         2</span><br><span class="line">  docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Unregister the source wsl</span><br><span class="line">PS C:\Users\kamus&gt; wsl --unregister Ubuntu</span><br><span class="line">正在注销...</span><br><span class="line"></span><br><span class="line"># Check unregister is successful</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Import into the target directory</span><br><span class="line">PS C:\Users\kamus&gt; wsl --import Ubuntu D:\WSL\Ubuntu D:\WSL\Ubuntu.tar --version 2</span><br><span class="line"></span><br><span class="line"># Check results</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* docker-desktop         Stopped         2</span><br><span class="line">  Ubuntu                 Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">PS C:\Users\kamus&gt; wsl -d Ubuntu</span><br><span class="line">Welcome to Ubuntu 20.04.5 LTS (GNU/Linux 5.10.102.1-microsoft-standard-WSL2 x86_64)</span><br><span class="line"></span><br><span class="line"> * Documentation:  https://help.ubuntu.com</span><br><span class="line"> * Management:     https://landscape.canonical.com</span><br><span class="line"> * Support:        https://ubuntu.com/advantage</span><br><span class="line"></span><br><span class="line">  System information as of Fri Jan  5 14:40:25 JST 2024</span><br><span class="line"></span><br><span class="line">  System load:  0.68               Processes:             8</span><br><span class="line">  Usage of /:   2.0% of 250.98GB   Users logged in:       0</span><br><span class="line">  Memory usage: 4%                 IPv4 address for eth0: 172.28.208.11</span><br><span class="line">  Swap usage:   0%</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">0 updates can be applied immediately.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">The list of available updates is more than a week old.</span><br><span class="line">To check for new updates run: sudo apt update</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">This message is shown once a day. To disable it please create the</span><br><span class="line">/root/.hushlogin file.</span><br><span class="line">root@Kamus-Trident:/mnt/c/Users/kamus# cat /etc/os-release</span><br><span class="line">NAME=&quot;Ubuntu&quot;</span><br><span class="line">VERSION=&quot;20.04.5 LTS (Focal Fossa)&quot;</span><br><span class="line">ID=ubuntu</span><br><span class="line">ID_LIKE=debian</span><br><span class="line">PRETTY_NAME=&quot;Ubuntu 20.04.5 LTS&quot;</span><br><span class="line">VERSION_ID=&quot;20.04&quot;</span><br><span class="line">HOME_URL=&quot;https://www.ubuntu.com/&quot;</span><br><span class="line">SUPPORT_URL=&quot;https://help.ubuntu.com/&quot;</span><br><span class="line">BUG_REPORT_URL=&quot;https://bugs.launchpad.net/ubuntu/&quot;</span><br><span class="line">PRIVACY_POLICY_URL=&quot;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&quot;</span><br><span class="line">VERSION_CODENAME=focal</span><br><span class="line">UBUNTU_CODENAME=focal</span><br><span class="line">root@Kamus-Trident:/mnt/c/Users/kamus#</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <tags>
-        <tag>WSL</tag>
-        <tag>Windows</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>MTK: The Ultimate Tool for Seamlessly Migrating Oracle Databases to MogDB</title>
     <url>/2024/06/03/MTK-The-Ultimate-Tool-for-Seamlessly-Migrating-Oracle-Databases-to-MogDB/</url>
     <content><![CDATA[<h2 id="Get-the-latest-version-MTK"><a href="#Get-the-latest-version-MTK" class="headerlink" title="Get the latest version MTK."></a>Get the latest version MTK.</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wget https://cdn-mogdb.enmotech.com/mtk/v2.6.3/mtk_2.6.3_linux_amd64.tar.gz</span><br><span class="line">tar -xvf mtk_2.6.3_linux_amd64.tar.gz</span><br></pre></td></tr></table></figure>
@@ -564,6 +739,168 @@
       </tags>
   </entry>
   <entry>
+    <title>How to move WSL distro in Windows 11 to another drive</title>
+    <url>/2024/05/27/How-to-move-WSL-distro-in-Windows-11-to-another-drive/</url>
+    <content><![CDATA[<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction:"></a>Introduction:</h2><p>In the world of development and system administration, Windows Subsystem for Linux (WSL) has become a valuable tool. It allows users to run a Linux distribution alongside their Windows environment, opening up a world of possibilities for developers and administrators. In this article, we’ll guide you through the process of migrating a WSL instance, using a real-world example, step by step.</p>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites:"></a>Prerequisites:</h2><p>Before we begin, ensure that you have the following prerequisites in place:</p>
+<ul>
+<li>Windows 10 or later with WSL installed.</li>
+<li>An existing WSL instance (in our case, Ubuntu).</li>
+<li>Sufficient storage space for the migration.</li>
+</ul>
+<h2 id="Step-1-Create-a-Target-Directory"><a href="#Step-1-Create-a-Target-Directory" class="headerlink" title="Step 1: Create a Target Directory"></a>Step 1: Create a Target Directory</h2><p>To start the migration process, we need a target directory to store the migrated WSL instance. In PowerShell, use the ‘mkdir’ command to create this directory. In our example, we create a directory named ‘D:\WSL\Ubuntu’:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">mkdir <span class="literal">-p</span> D:\WSL\Ubuntu</span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-2-List-All-Running-WSL-Instances"><a href="#Step-2-List-All-Running-WSL-Instances" class="headerlink" title="Step 2: List All Running WSL Instances"></a>Step 2: List All Running WSL Instances</h2><p>Before we proceed further, let’s list all the running WSL instances. The following command will display a list of all WSL instances, including their state and version:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-3-Export-the-Source-WSL-Instance"><a href="#Step-3-Export-the-Source-WSL-Instance" class="headerlink" title="Step 3: Export the Source WSL Instance"></a>Step 3: Export the Source WSL Instance</h2><p>Now, let’s export the source WSL instance (in our case, ‘Ubuntu’) into a tar file. This step automatically shuts down the WSL instance and restarts it after the export:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--export</span> Ubuntu D:\WSL\Ubuntu.tar</span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-4-Unregister-the-Source-WSL-Instance"><a href="#Step-4-Unregister-the-Source-WSL-Instance" class="headerlink" title="Step 4: Unregister the Source WSL Instance"></a>Step 4: Unregister the Source WSL Instance</h2><p>Once the export is complete, we need to unregister the source WSL instance to avoid conflicts. Use the following command:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--unregister</span> Ubuntu</span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-5-Confirm-Unregistration"><a href="#Step-5-Confirm-Unregistration" class="headerlink" title="Step 5: Confirm Unregistration"></a>Step 5: Confirm Unregistration</h2><p>To confirm that the source WSL instance has been successfully unregistered, run the following command:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-6-Import-into-the-Target-Directory"><a href="#Step-6-Import-into-the-Target-Directory" class="headerlink" title="Step 6: Import into the Target Directory"></a>Step 6: Import into the Target Directory</h2><p>Now it’s time to import the previously exported WSL instance into the target directory. In this step, we specify the target directory and version (in our case, version 2):</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">--import</span> Ubuntu D:\WSL\Ubuntu D:\WSL\Ubuntu.tar <span class="literal">--version</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-7-Verify-the-Migration"><a href="#Step-7-Verify-the-Migration" class="headerlink" title="Step 7: Verify the Migration"></a>Step 7: Verify the Migration</h2><p>To ensure that the migration was successful, list all WSL instances once again:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">--all</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-8-Access-the-Migrated-WSL-Instance"><a href="#Step-8-Access-the-Migrated-WSL-Instance" class="headerlink" title="Step 8: Access the Migrated WSL Instance"></a>Step 8: Access the Migrated WSL Instance</h2><p>Now, you can access the migrated WSL instance by using the following command:</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">wsl <span class="literal">-d</span> Ubuntu</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion:"></a>Conclusion:</h2><p>Migrating WSL instances is a powerful way to manage and organize your development environments. By following these steps, you can seamlessly move your WSL instances to different directories or machines, ensuring flexibility and efficiency in your development workflow. Keep in mind that WSL provides a bridge between Windows and Linux, allowing you to enjoy the best of both worlds.</p>
+<p>Check the all steps screenshot as below.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># create target directory</span><br><span class="line">PS C:\Users\kamus&gt; mkdir -p D:\WSL\Ubuntu</span><br><span class="line"></span><br><span class="line"># List all the wsl running</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* Ubuntu                 Running         2</span><br><span class="line">  docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Export source wsl</span><br><span class="line">PS C:\Users\kamus&gt; wsl --export Ubuntu D:\WSL\Ubuntu.tar</span><br><span class="line"></span><br><span class="line"># When doing export, wsl will be shutdown automatically and restart after exporting</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* Ubuntu                 Running         2</span><br><span class="line">  docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Unregister the source wsl</span><br><span class="line">PS C:\Users\kamus&gt; wsl --unregister Ubuntu</span><br><span class="line">正在注销...</span><br><span class="line"></span><br><span class="line"># Check unregister is successful</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* docker-desktop         Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">  </span><br><span class="line"># Import into the target directory</span><br><span class="line">PS C:\Users\kamus&gt; wsl --import Ubuntu D:\WSL\Ubuntu D:\WSL\Ubuntu.tar --version 2</span><br><span class="line"></span><br><span class="line"># Check results</span><br><span class="line">PS C:\Users\kamus&gt; wsl -l --all -v</span><br><span class="line">  NAME                   STATE           VERSION</span><br><span class="line">* docker-desktop         Stopped         2</span><br><span class="line">  Ubuntu                 Stopped         2</span><br><span class="line">  docker-desktop-data    Stopped         2</span><br><span class="line">PS C:\Users\kamus&gt; wsl -d Ubuntu</span><br><span class="line">Welcome to Ubuntu 20.04.5 LTS (GNU/Linux 5.10.102.1-microsoft-standard-WSL2 x86_64)</span><br><span class="line"></span><br><span class="line"> * Documentation:  https://help.ubuntu.com</span><br><span class="line"> * Management:     https://landscape.canonical.com</span><br><span class="line"> * Support:        https://ubuntu.com/advantage</span><br><span class="line"></span><br><span class="line">  System information as of Fri Jan  5 14:40:25 JST 2024</span><br><span class="line"></span><br><span class="line">  System load:  0.68               Processes:             8</span><br><span class="line">  Usage of /:   2.0% of 250.98GB   Users logged in:       0</span><br><span class="line">  Memory usage: 4%                 IPv4 address for eth0: 172.28.208.11</span><br><span class="line">  Swap usage:   0%</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">0 updates can be applied immediately.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">The list of available updates is more than a week old.</span><br><span class="line">To check for new updates run: sudo apt update</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">This message is shown once a day. To disable it please create the</span><br><span class="line">/root/.hushlogin file.</span><br><span class="line">root@Kamus-Trident:/mnt/c/Users/kamus# cat /etc/os-release</span><br><span class="line">NAME=&quot;Ubuntu&quot;</span><br><span class="line">VERSION=&quot;20.04.5 LTS (Focal Fossa)&quot;</span><br><span class="line">ID=ubuntu</span><br><span class="line">ID_LIKE=debian</span><br><span class="line">PRETTY_NAME=&quot;Ubuntu 20.04.5 LTS&quot;</span><br><span class="line">VERSION_ID=&quot;20.04&quot;</span><br><span class="line">HOME_URL=&quot;https://www.ubuntu.com/&quot;</span><br><span class="line">SUPPORT_URL=&quot;https://help.ubuntu.com/&quot;</span><br><span class="line">BUG_REPORT_URL=&quot;https://bugs.launchpad.net/ubuntu/&quot;</span><br><span class="line">PRIVACY_POLICY_URL=&quot;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&quot;</span><br><span class="line">VERSION_CODENAME=focal</span><br><span class="line">UBUNTU_CODENAME=focal</span><br><span class="line">root@Kamus-Trident:/mnt/c/Users/kamus#</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>WSL</tag>
+        <tag>Windows</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/1970/01/01/The%20best%20practices%20for%20using%20partition%20table%20in%20PostgreSQL/</url>
+    <content><![CDATA[<h1 id="The-best-practices-for-using-partition-table-in-PostgreSQL"><a href="#The-best-practices-for-using-partition-table-in-PostgreSQL" class="headerlink" title="The best practices for using partition table in PostgreSQL"></a>The best practices for using partition table in PostgreSQL</h1><h2 id="What-is-partition-table"><a href="#What-is-partition-table" class="headerlink" title="What is partition table?"></a>What is partition table?</h2><p>Partition table is a table that is divided into smaller parts. Each part is called a partition.</p>
+<p>Why use partition table?</p>
+<ol>
+<li><strong>Performance</strong>: Partition table can improve the performance of the table. Because each partition can be stored in a separate file, the query can be executed faster.</li>
+<li><strong>Maintenance</strong>: Partition table can make the maintenance of the table easier. Because each partition can be maintained separately, the maintenance of the table can be done faster.</li>
+</ol>
+<h2 id="How-to-create-a-partition-table"><a href="#How-to-create-a-partition-table" class="headerlink" title="How to create a partition table?"></a>How to create a partition table?</h2><ol>
+<li><strong>Create a partition table</strong>:</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement (</span><br><span class="line">    city_id         <span class="type">int</span> <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    logdate         <span class="type">date</span> <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    peaktemp        <span class="type">int</span>,</span><br><span class="line">    unitsales       <span class="type">int</span></span><br><span class="line">) <span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">RANGE</span> (logdate);</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>Create a partition table for each partition</strong>:</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement_y2006m02 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> measurement</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2006-02-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2006-03-01&#x27;</span>);</span><br><span class="line">...</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement_y2007m11 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> measurement</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2007-11-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2007-12-01&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Partition-table-types"><a href="#Partition-table-types" class="headerlink" title="Partition table types"></a>Partition table types</h2><p>There are 3 basic types of partition table in PostgreSQL:</p>
+<ol>
+<li><strong>List Partition</strong>: The table is partitioned by explicitly listing which key value(s) appear in each partition.</li>
+<li><strong>Range Partition</strong>: The table is partitioned into “ranges” defined by a key column or set of columns, with no overlap between the ranges of values assigned to different partitions.</li>
+<li><strong>Hash Partition</strong>: The table is partitioned by specifying a modulus and a remainder for each partition.</li>
+</ol>
+<p>Combine these 3 basic types of partition table, we can create more complex partition table. This is called <strong>Composite Partitioning</strong>.</p>
+<p>There are 4 types of composite partitioning:</p>
+<ol>
+<li><strong>List-Range Partition</strong>: The partition is divided into several ranges.<br>The step is: create table A partition by list, then create table A1 partition of A partition by range, then create table A1-1 partition of A1</li>
+<li><strong>Range-List Partition</strong>: The partition is divided into several ranges.<br>The step is: create table A partition by range, then create table B of table A but partition by list.</li>
+<li><strong>Range-Hash Partition</strong>: The partition is divided into several ranges.</li>
+<li><strong>Hash-Range Partition</strong>: The partition is divided into several ranges.</li>
+</ol>
+<h2 id="Data-dictionary-about-partition-table"><a href="#Data-dictionary-about-partition-table" class="headerlink" title="Data dictionary about partition table"></a>Data dictionary about partition table</h2><ol>
+<li><strong>pg_partitioned_table</strong>: This table stores the information about the partitioned table.</li>
+<li><strong>pg_partition_rule</strong>: This table stores the information about the partition rule.</li>
+<li><strong>pg_partition_column</strong>: This table stores the information about the partition column.</li>
+<li><strong>pg_partition_index</strong>: This table stores the information about the partition index.</li>
+<li><strong>pg_partition_constraint</strong>: This table stores the information about the partition constraint.</li>
+<li><strong>pg_partition_constraint_column</strong>: This table stores the information about the partition constraint column.</li>
+<li><strong>pg_partition_constraint_index</strong>: This table stores the information about the partition constraint index.</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
+    <title>Setting Up PostgreSQL Development Environment with VS Code, DevContainer, and Windsurf</title>
+    <url>/2025/08/31/Setting-Up-PostgreSQL-Development-Environment-with-VS-Code-DevContainer-and-Windsurf/</url>
+    <content><![CDATA[<p>Developing PostgreSQL from source on Windows can be challenging due to the need for numerous build tools and dependencies. Using a development container (DevContainer) provides a consistent, isolated environment that works seamlessly across Windows, macOS, and Linux, eliminating platform-specific setup hassles.</p>
+<p>Here is a simple step-by-step guide for setting up and building PostgreSQL source code with VS Code and a development container, and then using Windsurf to learn PostgreSQL source code.</p>
+<h2 id="Setup-and-Build-PostgreSQL-in-VS-Code"><a href="#Setup-and-Build-PostgreSQL-in-VS-Code" class="headerlink" title="Setup and Build PostgreSQL in VS Code"></a>Setup and Build PostgreSQL in VS Code</h2><h3 id="1-Download-the-Complete-PostgreSQL-Source-Code"><a href="#1-Download-the-Complete-PostgreSQL-Source-Code" class="headerlink" title="1. Download the Complete PostgreSQL Source Code"></a>1. Download the Complete PostgreSQL Source Code</h3><ul>
+<li>Obtain the full PostgreSQL source from the official repository or website. Typically run:<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://git.postgresql.org/git/postgresql.git</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-Create-Required-Directories-and-Files-in-PostgreSQL-Source-Code-Directory"><a href="#2-Create-Required-Directories-and-Files-in-PostgreSQL-Source-Code-Directory" class="headerlink" title="2. Create Required Directories and Files in PostgreSQL Source Code Directory"></a>2. Create Required Directories and Files in PostgreSQL Source Code Directory</h3><ul>
+<li>Create the following directories:<ul>
+<li><code>.vscode</code></li>
+<li><code>.devcontainer</code></li>
+</ul>
+</li>
+<li>Add necessary configuration files inside each directory:<ul>
+<li>Place VS Code workspace settings in <code>.vscode</code></li>
+<li>Add development container configuration files (e.g., <code>devcontainer.json</code> and <code>Dockerfile</code>) in <code>.devcontainer</code>.</li>
+</ul>
+</li>
+</ul>
+<p>Add the following content to the <code>devcontainer.json</code> file:</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;PostgreSQL Dev&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;build&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;dockerfile&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Dockerfile&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;customizations&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;vscode&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;extensions&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;ms-vscode.cpptools&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;ms-vscode.cmake-tools&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;Codeium.codeium&quot;</span></span><br><span class="line">      <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;settings&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;editor.formatOnSave&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;files.eol&quot;</span><span class="punctuation">:</span> <span class="string">&quot;\n&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;editor.codeActionsOnSave&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;source.fixAll.eslint&quot;</span><span class="punctuation">:</span> <span class="string">&quot;explicit&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Add the following content to the <code>Dockerfile</code> file:</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">22.04</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> apt update &amp;&amp; apt install -y \</span></span><br><span class="line"><span class="language-bash">    build-essential \</span></span><br><span class="line"><span class="language-bash">    flex \</span></span><br><span class="line"><span class="language-bash">    bison \</span></span><br><span class="line"><span class="language-bash">    libreadline-dev \</span></span><br><span class="line"><span class="language-bash">    zlib1g-dev \</span></span><br><span class="line"><span class="language-bash">    pkg-config \</span></span><br><span class="line"><span class="language-bash">    libssl-dev \</span></span><br><span class="line"><span class="language-bash">    libxml2-dev \</span></span><br><span class="line"><span class="language-bash">    libxslt1-dev \</span></span><br><span class="line"><span class="language-bash">    libedit-dev \</span></span><br><span class="line"><span class="language-bash">    libicu-dev \</span></span><br><span class="line"><span class="language-bash">    git \</span></span><br><span class="line"><span class="language-bash">    curl \</span></span><br><span class="line"><span class="language-bash">    &amp;&amp; <span class="built_in">rm</span> -rf /var/lib/apt/lists/*</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ENV</span> CC=/usr/bin/gcc</span><br><span class="line"><span class="keyword">ENV</span> CXX=/usr/bin/g++</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>For editors using the Microsoft C&#x2F;C++ extension, it’s recommended to add a <code>c_cpp_properties.json</code> file to the <code>.vscode</code>.</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;configurations&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Linux&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;includePath&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;$&#123;workspaceFolder&#125;/**&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;$&#123;workspaceFolder&#125;/src/include&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;$&#123;workspaceFolder&#125;/src/include/utils&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;$&#123;workspaceFolder&#125;/src/backend&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;$&#123;workspaceFolder&#125;/src/backend/utils&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;/usr/include&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;/usr/local/include&quot;</span></span><br><span class="line">      <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;defines&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;compilerPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/usr/bin/gcc&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;cStandard&quot;</span><span class="punctuation">:</span> <span class="string">&quot;c11&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;cppStandard&quot;</span><span class="punctuation">:</span> <span class="string">&quot;c++14&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;intelliSenseMode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;linux-gcc-x64&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="number">4</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>For editors (e.g., Windsurf) using clangd instead of the Microsoft C&#x2F;C++ extension, it’s recommended to add a <code>.clangd</code> configuration file and a <code>compile_commands.json</code> file to the project root.</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.clangd</span><br><span class="line">CompileFlags:</span><br><span class="line">  Add: [</span><br><span class="line">    &quot;-I$&#123;workspaceFolder&#125;/src/include&quot;,</span><br><span class="line">    &quot;-I$&#123;workspaceFolder&#125;/src/include/utils&quot;,</span><br><span class="line">    &quot;-I$&#123;workspaceFolder&#125;/src/backend&quot;, </span><br><span class="line">    &quot;-I$&#123;workspaceFolder&#125;/src/backend/utils&quot;,</span><br><span class="line">    &quot;-std=c11&quot;</span><br><span class="line">  ]</span><br><span class="line">compile_commands.json</span><br><span class="line">[</span><br><span class="line">  &#123;</span><br><span class="line">    &quot;directory&quot;: &quot;/workspaces/postgresql&quot;,</span><br><span class="line">    &quot;command&quot;: &quot;/usr/bin/gcc -I/workspaces/postgresql/src/include -I/workspaces/postgresql/src/backend -c /workspaces/postgresql/src/backend/bootstrap/bootstrap.c -o bootstrap.o&quot;,</span><br><span class="line">    &quot;file&quot;: &quot;/workspaces/postgresql/src/backend/bootstrap/bootstrap.c&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    &quot;directory&quot;: &quot;/workspaces/postgresql&quot;,</span><br><span class="line">    &quot;command&quot;: &quot;/usr/bin/gcc -I/workspaces/postgresql/src/include -I/workspaces/postgresql/src/backend -c /workspaces/postgresql/src/backend/utils/init/globals.c -o globals.o&quot;,</span><br><span class="line">    &quot;file&quot;: &quot;/workspaces/postgresql/src/backend/utils/init/globals.c&quot;</span><br><span class="line">  &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>To ensure consistent line endings and proper handling of text and binary files in your PostgreSQL project, add the following content to the<code>.gitattributes</code> file in project root:</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># Set default behavior to automatically normalize line endings to LF</span><br><span class="line">* text=auto eol=lf</span><br><span class="line"></span><br><span class="line"># Explicitly declare text files to be normalized to LF</span><br><span class="line">*.c text eol=lf</span><br><span class="line">*.h text eol=lf</span><br><span class="line">*.cpp text eol=lf</span><br><span class="line">*.hpp text eol=lf</span><br><span class="line">*.cc text eol=lf</span><br><span class="line">*.hh text eol=lf</span><br><span class="line">*.py text eol=lf</span><br><span class="line">*.sh text eol=lf</span><br><span class="line">*.pl text eol=lf</span><br><span class="line">*.pm text eol=lf</span><br><span class="line">*.sql text eol=lf</span><br><span class="line">Makefile text eol=lf</span><br><span class="line">makefile text eol=lf</span><br><span class="line">*.mk text eol=lf</span><br><span class="line"></span><br><span class="line"># Declare binary files that should not be modified</span><br><span class="line">*.png binary</span><br><span class="line">*.jpg binary</span><br><span class="line">*.gif binary</span><br><span class="line">*.ico binary</span><br><span class="line">*.zip binary</span><br><span class="line">*.tar binary</span><br><span class="line">*.gz binary</span><br><span class="line">*.pdf binary</span><br></pre></td></tr></table></figure>
+
+<p>This configuration will automatically normalize line endings for text files to LF, and protect binary files from unwanted line ending conversions, improving cross-platform compatibility.</p>
+<p>Finnally, the newly created directories and files and modified files should look like this:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">postgresql/</span><br><span class="line">├── All the stuff in the original postgresql source code</span><br><span class="line">├── .devcontainer/</span><br><span class="line">│   ├── devcontainer.json</span><br><span class="line">│   └── Dockerfile</span><br><span class="line">├── .vscode/</span><br><span class="line">│   └── c_cpp_properties.json</span><br><span class="line">├── .gitattributes</span><br><span class="line">├── .clangd</span><br><span class="line">└── compile_commands.json</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-Reopen-Folder-in-Container-VS-Code"><a href="#3-Reopen-Folder-in-Container-VS-Code" class="headerlink" title="3. Reopen Folder in Container (VS Code)"></a>3. Reopen Folder in Container (VS Code)</h3><ul>
+<li>In VS Code, use the “Dev Containers: Reopen in Container” command to open your workspace within the defined development container. If you can’t find this command by Ctrl+Shift+P (or Cmd+Shift+P on macOS), you can install the Dev Containers extension from the VS Code marketplace.</li>
+</ul>
+<h3 id="4-Build-PostgreSQL-in-the-Container"><a href="#4-Build-PostgreSQL-in-the-Container" class="headerlink" title="4. Build PostgreSQL in the Container"></a>4. Build PostgreSQL in the Container</h3><ul>
+<li>In the container’s terminal, execute:<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./configure &amp;&amp; make</span><br></pre></td></tr></table></figure></li>
+<li>This will configure the build and compile all required files, including generated headers such as <code>errcodes.h</code>.</li>
+</ul>
+<p>These steps ensure a stable environment for building and developing PostgreSQL efficiently with VS Code and containers.</p>
+<ul>
+<li><h3 id="Access-this-Devcontainer-from-Windsurf"><a href="#Access-this-Devcontainer-from-Windsurf" class="headerlink" title="Access this Devcontainer from Windsurf"></a>Access this Devcontainer from Windsurf</h3><ul>
+<li>Close VS Code, the devcontainer will also stop automatically. No way to keep it running.</li>
+<li>Use <code>docker ps -a</code> to find the container id of this devcontainer.</li>
+<li>Use <code>docker start &lt;container_id&gt;</code> to start the devcontainer.</li>
+<li>Open Windsurf, use <code>Open a Remote Window -&gt; Attach to Running Container</code> to attach to this devcontainer.</li>
+<li>Windsurf cannot use Microsoft C&#x2F;C++ extension anymore, use clangd instead. Install clangd extension in Windsurf.</li>
+<li>In Windsurf, open the postgresql source code directory, should be <code>/workspaces/postgresql</code>.</li>
+</ul>
+<p><img src="https://s2.loli.net/2025/08/31/qxi1N8VKfdtQ9D3.png" alt="20250831181535"></p>
+<p>Thanks to the Cascade and the latest feature - DeepWiki of Windsurf, you can now enjoy the brand new learning experience powered by AI.</p>
+</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>PostgreSQL</tag>
+        <tag>Windsurf</tag>
+        <tag>VSCode</tag>
+        <tag>DevContainer</tag>
+        <tag>Development Setup</tag>
+        <tag>AI Coding</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MogDB ASH: Unveiling the Active Session History for Powerful Database Performance Tuning</title>
     <url>/2024/05/27/MogDB-ASH-Unveiling-the-Active-Session-History-for-Powerful-Database-Performance-Tuning/</url>
     <content><![CDATA[<h4 id="What-is-ASH"><a href="#What-is-ASH" class="headerlink" title="What is ASH?"></a>What is ASH?</h4><p>ASH, or Active Session History, is a feature in Oracle databases that records information about active sessions at regular intervals in both the database memory and persistent system tables. Data in memory is cleared after a database restart, but data in the persistent system tables is retained for a longer period. ASH is extremely useful for diagnosing issues when the database encounters problems or performance issues by allowing retrospective analysis to identify the root cause.</p>
@@ -605,92 +942,6 @@
       <tags>
         <tag>MogDB</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Some Misconceptions About Database Performance - Application Concurrent Requests, Database Connections, and Database Connection Pools</title>
-    <url>/2024/08/21/Some-Misconceptions-About-Database-Performance-Application-Concurrent-Requests-Database-Connections-and-Database-Connection-Pools/</url>
-    <content><![CDATA[<p>Let’s start with a chart from a database stress test result.</p>
-<p><img src="https://s2.loli.net/2024/08/21/Ra2u1Q9cJNpOlUm.png" alt="1724216413686"></p>
-<p>In the chart above, the X-axis represents the number of concurrent connections, and the Y-axis represents the TPS (Transactions Per Second) provided by the database. The stress testing tool used is pgbench, and the database is a single instance of PostgreSQL 16. TPS_PGDirect represents the TPS when pgbench directly sends the load to PostgreSQL, while TPS_PGBouncer represents the TPS when pgbench sends the load to the PGBouncer database connection pool.</p>
-<p>We can clearly see that when the number of connections exceeds 256, the TPS begins to gradually decline when the load is sent directly to the database. When the number of connections eventually rises to over 8000, the database is almost at a standstill. However, when using PGBouncer, the TPS remains stable and excellent, with the database consistently providing high TPS regardless of the number of connections.</p>
-<p>Many people might conclude from this chart that if the concurrent connections increase beyond a certain threshold, PostgreSQL becomes inadequate, and PGBouncer must be used to improve performance.</p>
-<p>Some users may attempt to conduct various hardware environment combination tests to derive a reference threshold number to guide at what pressure PostgreSQL can cope, and once it exceeds a certain pressure, PGBouncer should be enabled.</p>
-<p>So, is this conclusion correct? And does testing out a threshold number have real guiding significance?</p>
-<h2 id="Understanding-Concurrent-Performance"><a href="#Understanding-Concurrent-Performance" class="headerlink" title="Understanding Concurrent Performance"></a>Understanding Concurrent Performance</h2><p>To determine how many concurrent business requests a database can handle, we should focus on the Y-axis from the test chart above, rather than the X-axis. The Y-axis TPS represents the number of transactions the database can process per second, while the X-axis connection count is merely the database connection number we configured ourselves (which can be simply understood as the max_connections parameter value). We can observe that at 256 connections, the direct database stress test with pgbench allows the database to provide over 50,000 TPS, which is actually almost the highest number in the entire stress test (WITHOUT PGBouncer). Subsequent tests using PGBouncer, this number was not significantly exceeded. Therefore, PGBouncer is not a weapon to improve database performance.</p>
-<p>What is performance? Performance means: for a determined business transaction pressure (how much work a business transaction needs to handle, such as how much CPU, memory, and IO it consumes), the more transactions the database can execute, the higher the performance. In the chart above, this is represented by the Y-axis TPS (Transactions Per Second).</p>
-<p>For example, suppose a user request (Application Request) requires executing 5 transactions from start to finish, and assume these transactions consume similar amounts of time (even if there are differences, we can always get the average transaction runtime in a system). In this case, 50,000 TPS means the database can handle 10,000 user requests per second, which can be simply understood as handling 10,000 concurrent users. If TPS rises to 100,000, the database can handle 20,000 concurrent users; if TPS drops to 10,000, it can only handle 2,000 concurrent users. This is a simple calculation logic, and in this description, we did not mention anything about database connections (User Connections).</p>
-<p>So why does it seem like PGBouncer improves performance when the number of connections continues to increase? Because in this situation, PGBouncer acts as a limiter on database connections, reducing the extra overhead caused by the database&#x2F;operating system handling too many connections, allowing the database and operating system to focus on processing the business requests sent from each connection, and enabling user requests exceeding the connection limit to share database connections. What PGBouncer does is: if your restaurant can only provide 10 tables, then I only allow 10 tables of guests to enter, and other guests have to wait outside.</p>
-<p>However, why should we let 100 tables of guests rush into the restaurant all at once? Without PGBouncer, can’t we control allowing only 10 tables of guests to enter? In modern applications, application-side connection pools are more commonly used, such as connection pools in various middleware software (Weblogic, WebSphere, Tomcat, etc.) or dedicated JDBC connection pools like HikariCP.</p>
-<p>Exceeding the number of connections that can be handled is unnecessary. When the database is already at its peak processing capacity, having more connections will not improve overall processing capability; instead, it will slow down the entire database.</p>
-<p>To summarize the meaning of the chart above more straightforwardly: when the total number of database connections is at 256, the database reaches its peak processing capacity, and direct database connections can provide 50,000 TPS without any connection pool. If 50,000 TPS cannot meet the application’s concurrent performance requirements, increasing the number of connections will not help. But if connections are increased (wrongly, without any other control), a layer of connection pool like PGBouncer can be added as a connection pool buffer to keep performance stable at around 50,000 TPS.</p>
-<p>So, do we have any reason to arbitrarily increase the number of connections? No. What we need to do is: allow the database to open only the number of connections within its processing capacity and enable these connections to be shared by more user requests. When the restaurant size is fixed, the higher the turnover rate, the higher the restaurant’s daily revenue.</p>
-<h2 id="How-to-Ask-Questions-About-Performance"><a href="#How-to-Ask-Questions-About-Performance" class="headerlink" title="How to Ask Questions About Performance"></a>How to Ask Questions About Performance</h2><p>Instead of asking: how can we ensure the database provides sufficient TPS with 4000 connections, we should ask: how can we ensure the database provides 50,000 TPS.</p>
-<p>Because the number of connections is not a performance metric, it is merely a parameter configuration option.</p>
-<p>In the example above, a connection count of 4000 or 8000 is not a fixed value, nor is it an optimized value. We cannot try to do more additional database optimizations on an unoptimized, modifiable parameter setting, as this may lead to a reversal of priorities. If we can already provide maximum processing capacity with 256 fully loaded database connections, why optimize a database with more than 256 connections? We should ensure the database always runs at full capacity with a maximum of 256 connections.</p>
-<p>Now, our question about performance can be more specific. Suppose we have multiple sets of database servers with different configurations; what should the fully loaded connection count be for each set to achieve optimal processing capacity?</p>
-<p>This requires testing. However, we will ultimately find that this fully loaded connection count is usually related only to the database server’s hardware resources, such as the number of CPU cores, CPU speed, memory size, storage speed, and the bandwidth and latency between storage and host.</p>
-<h2 id="Is-Database-Application-Performance-Only-Related-to-Hardware-Resources"><a href="#Is-Database-Application-Performance-Only-Related-to-Hardware-Resources" class="headerlink" title="Is Database Application Performance Only Related to Hardware Resources?"></a>Is Database Application Performance Only Related to Hardware Resources?</h2><p>Of course not. Concurrent performance (P) &#x3D; Hardware processing capability (H) &#x2F; Business transaction pressure (T).</p>
-<p>As mentioned earlier, the performance metric TPS is for a “determined business transaction pressure,” meaning a determined T value.</p>
-<p>When the T value is determined, we can only improve the H value to further enhance the P value. Conversely, there is naturally another optimization approach: reducing the T value. There are various ways to reduce the T value, such as adding necessary indexes, rewriting SQL, using partitioned tables, etc. The optimization plan should be formulated based on where the T value is consumed most, which is another topic.</p>
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>To answer the two initial questions:</p>
-<ol>
-<li>If concurrent connections increase beyond a certain threshold, PostgreSQL becomes inadequate, and PGBouncer must be used to improve performance. Is this conclusion correct?</li>
-</ol>
-<p>If we must create more connections to the database than the hardware processing capacity for certain hardware resources, using PGBouncer can stabilize performance. However, we have no reason to create more connections than the hardware processing capacity. We have various means to control the maximum number of connections the database can open, and various middleware solutions can provide connection pools. From this perspective, PGBouncer does not improve database performance; it merely reduces concurrency conflicts, doing what any connection pool software can do.</p>
-<ol start="2">
-<li>Is it meaningful to attempt various hardware environment combination tests to derive a reference threshold number to guide at what pressure PostgreSQL can cope, and once it exceeds a certain pressure, PGBouncer should be enabled?</li>
-</ol>
-<p>It has some significance, but simple stress tests like pgbench are not enough to guide real applications. Concurrent performance (P) &#x3D; Hardware processing capability (H) &#x2F; Business transaction pressure (T). Testing in a determined hardware environment means the H value is fixed, so we should focus on T during testing. The T value provided by pgbench is a very simple transaction pressure (only four tables, simple CRUD operations), and the P value tested under this pressure can only be used as a reference. To guide application deployment, typical transaction pressure of the application itself must be abstracted for testing to have guiding significance.</p>
-]]></content>
-      <tags>
-        <tag>PostgreSQL</tag>
-        <tag>Database</tag>
-        <tag>Performance</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2024/10/05/The%20best%20practices%20for%20using%20partition%20table%20in%20PostgreSQL/</url>
-    <content><![CDATA[<h1 id="The-best-practices-for-using-partition-table-in-PostgreSQL"><a href="#The-best-practices-for-using-partition-table-in-PostgreSQL" class="headerlink" title="The best practices for using partition table in PostgreSQL"></a>The best practices for using partition table in PostgreSQL</h1><h2 id="What-is-partition-table"><a href="#What-is-partition-table" class="headerlink" title="What is partition table?"></a>What is partition table?</h2><p>Partition table is a table that is divided into smaller parts. Each part is called a partition.</p>
-<p>Why use partition table?</p>
-<ol>
-<li><strong>Performance</strong>: Partition table can improve the performance of the table. Because each partition can be stored in a separate file, the query can be executed faster.</li>
-<li><strong>Maintenance</strong>: Partition table can make the maintenance of the table easier. Because each partition can be maintained separately, the maintenance of the table can be done faster.</li>
-</ol>
-<h2 id="How-to-create-a-partition-table"><a href="#How-to-create-a-partition-table" class="headerlink" title="How to create a partition table?"></a>How to create a partition table?</h2><ol>
-<li><strong>Create a partition table</strong>:</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement (</span><br><span class="line">    city_id         <span class="type">int</span> <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    logdate         <span class="type">date</span> <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    peaktemp        <span class="type">int</span>,</span><br><span class="line">    unitsales       <span class="type">int</span></span><br><span class="line">) <span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">RANGE</span> (logdate);</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li><strong>Create a partition table for each partition</strong>:</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement_y2006m02 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> measurement</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2006-02-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2006-03-01&#x27;</span>);</span><br><span class="line">...</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement_y2007m11 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> measurement</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2007-11-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2007-12-01&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="Partition-table-types"><a href="#Partition-table-types" class="headerlink" title="Partition table types"></a>Partition table types</h2><p>There are 3 basic types of partition table in PostgreSQL:</p>
-<ol>
-<li><strong>List Partition</strong>: The table is partitioned by explicitly listing which key value(s) appear in each partition.</li>
-<li><strong>Range Partition</strong>: The table is partitioned into “ranges” defined by a key column or set of columns, with no overlap between the ranges of values assigned to different partitions.</li>
-<li><strong>Hash Partition</strong>: The table is partitioned by specifying a modulus and a remainder for each partition.</li>
-</ol>
-<p>Combine these 3 basic types of partition table, we can create more complex partition table. This is called <strong>Composite Partitioning</strong>.</p>
-<p>There are 4 types of composite partitioning:</p>
-<ol>
-<li><strong>List-Range Partition</strong>: The partition is divided into several ranges.<br>The step is: create table A partition by list, then create table A1 partition of A partition by range, then create table A1-1 partition of A1</li>
-<li><strong>Range-List Partition</strong>: The partition is divided into several ranges.<br>The step is: create table A partition by range, then create table B of table A but partition by list.</li>
-<li><strong>Range-Hash Partition</strong>: The partition is divided into several ranges.</li>
-<li><strong>Hash-Range Partition</strong>: The partition is divided into several ranges.</li>
-</ol>
-<h2 id="Data-dictionary-about-partition-table"><a href="#Data-dictionary-about-partition-table" class="headerlink" title="Data dictionary about partition table"></a>Data dictionary about partition table</h2><ol>
-<li><strong>pg_partitioned_table</strong>: This table stores the information about the partitioned table.</li>
-<li><strong>pg_partition_rule</strong>: This table stores the information about the partition rule.</li>
-<li><strong>pg_partition_column</strong>: This table stores the information about the partition column.</li>
-<li><strong>pg_partition_index</strong>: This table stores the information about the partition index.</li>
-<li><strong>pg_partition_constraint</strong>: This table stores the information about the partition constraint.</li>
-<li><strong>pg_partition_constraint_column</strong>: This table stores the information about the partition constraint column.</li>
-<li><strong>pg_partition_constraint_index</strong>: This table stores the information about the partition constraint index.</li>
-</ol>
-]]></content>
   </entry>
   <entry>
     <title>Unlocking the Power: Key Features of MogDB</title>
@@ -748,6 +999,163 @@
 ]]></content>
       <tags>
         <tag>MogDB</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Some Misconceptions About Database Performance - Application Concurrent Requests, Database Connections, and Database Connection Pools</title>
+    <url>/2024/08/21/Some-Misconceptions-About-Database-Performance-Application-Concurrent-Requests-Database-Connections-and-Database-Connection-Pools/</url>
+    <content><![CDATA[<p>Let’s start with a chart from a database stress test result.</p>
+<p><img src="https://s2.loli.net/2024/08/21/Ra2u1Q9cJNpOlUm.png" alt="1724216413686"></p>
+<p>In the chart above, the X-axis represents the number of concurrent connections, and the Y-axis represents the TPS (Transactions Per Second) provided by the database. The stress testing tool used is pgbench, and the database is a single instance of PostgreSQL 16. TPS_PGDirect represents the TPS when pgbench directly sends the load to PostgreSQL, while TPS_PGBouncer represents the TPS when pgbench sends the load to the PGBouncer database connection pool.</p>
+<p>We can clearly see that when the number of connections exceeds 256, the TPS begins to gradually decline when the load is sent directly to the database. When the number of connections eventually rises to over 8000, the database is almost at a standstill. However, when using PGBouncer, the TPS remains stable and excellent, with the database consistently providing high TPS regardless of the number of connections.</p>
+<p>Many people might conclude from this chart that if the concurrent connections increase beyond a certain threshold, PostgreSQL becomes inadequate, and PGBouncer must be used to improve performance.</p>
+<p>Some users may attempt to conduct various hardware environment combination tests to derive a reference threshold number to guide at what pressure PostgreSQL can cope, and once it exceeds a certain pressure, PGBouncer should be enabled.</p>
+<p>So, is this conclusion correct? And does testing out a threshold number have real guiding significance?</p>
+<h2 id="Understanding-Concurrent-Performance"><a href="#Understanding-Concurrent-Performance" class="headerlink" title="Understanding Concurrent Performance"></a>Understanding Concurrent Performance</h2><p>To determine how many concurrent business requests a database can handle, we should focus on the Y-axis from the test chart above, rather than the X-axis. The Y-axis TPS represents the number of transactions the database can process per second, while the X-axis connection count is merely the database connection number we configured ourselves (which can be simply understood as the max_connections parameter value). We can observe that at 256 connections, the direct database stress test with pgbench allows the database to provide over 50,000 TPS, which is actually almost the highest number in the entire stress test (WITHOUT PGBouncer). Subsequent tests using PGBouncer, this number was not significantly exceeded. Therefore, PGBouncer is not a weapon to improve database performance.</p>
+<p>What is performance? Performance means: for a determined business transaction pressure (how much work a business transaction needs to handle, such as how much CPU, memory, and IO it consumes), the more transactions the database can execute, the higher the performance. In the chart above, this is represented by the Y-axis TPS (Transactions Per Second).</p>
+<p>For example, suppose a user request (Application Request) requires executing 5 transactions from start to finish, and assume these transactions consume similar amounts of time (even if there are differences, we can always get the average transaction runtime in a system). In this case, 50,000 TPS means the database can handle 10,000 user requests per second, which can be simply understood as handling 10,000 concurrent users. If TPS rises to 100,000, the database can handle 20,000 concurrent users; if TPS drops to 10,000, it can only handle 2,000 concurrent users. This is a simple calculation logic, and in this description, we did not mention anything about database connections (User Connections).</p>
+<p>So why does it seem like PGBouncer improves performance when the number of connections continues to increase? Because in this situation, PGBouncer acts as a limiter on database connections, reducing the extra overhead caused by the database&#x2F;operating system handling too many connections, allowing the database and operating system to focus on processing the business requests sent from each connection, and enabling user requests exceeding the connection limit to share database connections. What PGBouncer does is: if your restaurant can only provide 10 tables, then I only allow 10 tables of guests to enter, and other guests have to wait outside.</p>
+<p>However, why should we let 100 tables of guests rush into the restaurant all at once? Without PGBouncer, can’t we control allowing only 10 tables of guests to enter? In modern applications, application-side connection pools are more commonly used, such as connection pools in various middleware software (Weblogic, WebSphere, Tomcat, etc.) or dedicated JDBC connection pools like HikariCP.</p>
+<p>Exceeding the number of connections that can be handled is unnecessary. When the database is already at its peak processing capacity, having more connections will not improve overall processing capability; instead, it will slow down the entire database.</p>
+<p>To summarize the meaning of the chart above more straightforwardly: when the total number of database connections is at 256, the database reaches its peak processing capacity, and direct database connections can provide 50,000 TPS without any connection pool. If 50,000 TPS cannot meet the application’s concurrent performance requirements, increasing the number of connections will not help. But if connections are increased (wrongly, without any other control), a layer of connection pool like PGBouncer can be added as a connection pool buffer to keep performance stable at around 50,000 TPS.</p>
+<p>So, do we have any reason to arbitrarily increase the number of connections? No. What we need to do is: allow the database to open only the number of connections within its processing capacity and enable these connections to be shared by more user requests. When the restaurant size is fixed, the higher the turnover rate, the higher the restaurant’s daily revenue.</p>
+<h2 id="How-to-Ask-Questions-About-Performance"><a href="#How-to-Ask-Questions-About-Performance" class="headerlink" title="How to Ask Questions About Performance"></a>How to Ask Questions About Performance</h2><p>Instead of asking: how can we ensure the database provides sufficient TPS with 4000 connections, we should ask: how can we ensure the database provides 50,000 TPS.</p>
+<p>Because the number of connections is not a performance metric, it is merely a parameter configuration option.</p>
+<p>In the example above, a connection count of 4000 or 8000 is not a fixed value, nor is it an optimized value. We cannot try to do more additional database optimizations on an unoptimized, modifiable parameter setting, as this may lead to a reversal of priorities. If we can already provide maximum processing capacity with 256 fully loaded database connections, why optimize a database with more than 256 connections? We should ensure the database always runs at full capacity with a maximum of 256 connections.</p>
+<p>Now, our question about performance can be more specific. Suppose we have multiple sets of database servers with different configurations; what should the fully loaded connection count be for each set to achieve optimal processing capacity?</p>
+<p>This requires testing. However, we will ultimately find that this fully loaded connection count is usually related only to the database server’s hardware resources, such as the number of CPU cores, CPU speed, memory size, storage speed, and the bandwidth and latency between storage and host.</p>
+<h2 id="Is-Database-Application-Performance-Only-Related-to-Hardware-Resources"><a href="#Is-Database-Application-Performance-Only-Related-to-Hardware-Resources" class="headerlink" title="Is Database Application Performance Only Related to Hardware Resources?"></a>Is Database Application Performance Only Related to Hardware Resources?</h2><p>Of course not. Concurrent performance (P) &#x3D; Hardware processing capability (H) &#x2F; Business transaction pressure (T).</p>
+<p>As mentioned earlier, the performance metric TPS is for a “determined business transaction pressure,” meaning a determined T value.</p>
+<p>When the T value is determined, we can only improve the H value to further enhance the P value. Conversely, there is naturally another optimization approach: reducing the T value. There are various ways to reduce the T value, such as adding necessary indexes, rewriting SQL, using partitioned tables, etc. The optimization plan should be formulated based on where the T value is consumed most, which is another topic.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>To answer the two initial questions:</p>
+<ol>
+<li>If concurrent connections increase beyond a certain threshold, PostgreSQL becomes inadequate, and PGBouncer must be used to improve performance. Is this conclusion correct?</li>
+</ol>
+<p>If we must create more connections to the database than the hardware processing capacity for certain hardware resources, using PGBouncer can stabilize performance. However, we have no reason to create more connections than the hardware processing capacity. We have various means to control the maximum number of connections the database can open, and various middleware solutions can provide connection pools. From this perspective, PGBouncer does not improve database performance; it merely reduces concurrency conflicts, doing what any connection pool software can do.</p>
+<ol start="2">
+<li>Is it meaningful to attempt various hardware environment combination tests to derive a reference threshold number to guide at what pressure PostgreSQL can cope, and once it exceeds a certain pressure, PGBouncer should be enabled?</li>
+</ol>
+<p>It has some significance, but simple stress tests like pgbench are not enough to guide real applications. Concurrent performance (P) &#x3D; Hardware processing capability (H) &#x2F; Business transaction pressure (T). Testing in a determined hardware environment means the H value is fixed, so we should focus on T during testing. The T value provided by pgbench is a very simple transaction pressure (only four tables, simple CRUD operations), and the P value tested under this pressure can only be used as a reference. To guide application deployment, typical transaction pressure of the application itself must be abstracted for testing to have guiding significance.</p>
+]]></content>
+      <tags>
+        <tag>PostgreSQL</tag>
+        <tag>Database</tag>
+        <tag>Performance</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vibe Coding: A 10-Day Journey from Zero to Building a Full-Stack RSS Validator Tool</title>
+    <url>/2025/04/19/Vibe-Coding-A-10-Day-Journey-from-Zero-to-Building-a-Full-Stack-RSS-Validator-Tool/</url>
+    <content><![CDATA[<p>10 days (2025&#x2F;4&#x2F;8 to 2025&#x2F;4&#x2F;18), From zero to <a href="https://kamusis-my-opml-sub.deno.dev/">https://kamusis-my-opml-sub.deno.dev/</a></p>
+<p>The code implemented in the entire project so far includes backend and some frontend by Claude 3.7 Sonnet (sometimes Claude 3.5), while a larger portion of the frontend is by OpenAI GPT-4.1 (in Windsurf, this model is currently available for free for a limited time).</p>
+<p>Project URL: <a href="https://kamusis-my-opml-sub.deno.dev/">https://kamusis-my-opml-sub.deno.dev/</a></p>
+<h2 id="User-Story"><a href="#User-Story" class="headerlink" title="User Story"></a>User Story</h2><p>I’ve been using RSS for like… 15 years now? Over time I’ve somehow ended up with 200+ feed subscriptions. I know RSS isn’t exactly trendy anymore, but a handful of these feeds are still part of my daily routine.</p>
+<p>The problem? My feed list has turned into a total mess:</p>
+<ul>
+<li>Some feeds are completely dead</li>
+<li>Some blogs haven’t been updated in years</li>
+<li>Others post like once every six months</li>
+<li>And a bunch just throw 404s now</li>
+</ul>
+<p>I want to clean it up, but here’s the thing:<br>Going through each one manually sounds like actual hell.<br>My reader (News Explorer) doesn’t have any built-in tools to help with this.<br>I tried Googling things like “rss feed analyze” and “cleanup,” but honestly didn’t come across any useful tools.</p>
+<p>So the mess remains… because there’s just no good way to deal with it. Until I finally decided to just build one myself—well, more like let AI build it for me.</p>
+<h2 id="Background-of-Me"><a href="#Background-of-Me" class="headerlink" title="Background of Me"></a>Background of Me</h2><ul>
+<li>Can read code (sometimes need to rely on AI for interpretation and understanding.)</li>
+<li>Have manually written backend code in the past, but haven’t written extensive backend code in the last twenty years.</li>
+<li>Have never manually written frontend code and have limited knowledge of the basic principles of frontend rendering mechanisms.</li>
+<li>Started learning about JavaScript and TypeScript a month ago. </li>
+<li>A beginner with Deno. Understand the calling sequence and respective responsibilities from components to islands to routes API, then to backend services, and finally to backend logic implementation.</li>
+</ul>
+<h2 id="Tools"><a href="#Tools" class="headerlink" title="Tools"></a>Tools</h2><ul>
+<li>Agentic Coding Editor (Windsurf)</li>
+<li>Design and Code Generater LLM (Claude 3.5&#x2F;3.7 + openAI GPT-4.1)<br>We need a subscription to an Agentic Coding Editor, such as Cursor, Windsurf, or Github Copilot, for design and coding.</li>
+<li>Code Reviewer LLM (Gemini Code Assist)<br>Additionally, we need Gemini Code Assist (currently considered free) to review code and consult on any code-related questions. Gemini Code Assist is also very effective, and it can be said that Gemini is the best model to help you understand code.</li>
+<li>MCP Server (sequential-thinking)</li>
+</ul>
+<h2 id="Process"><a href="#Process" class="headerlink" title="Process"></a>Process</h2><ol>
+<li><p><strong>Design Phase</strong></p>
+<ul>
+<li>Write the design and outline original requirements</li>
+<li>Let AI write the design (experience shows Claude 3.5 + sequential-thinking MCP server works well; theoretically, any LLM with thinking capabilities is better suited for overall design)</li>
+<li>Review the design, which should include implementation details such as interaction flow design, class design, function design, etc.</li>
+<li>If you are trying to develop a full-stack application, you should write design documents for both frontend and backend</li>
+<li>Continue to ask questions and interact with AI until you believe the overall design is reasonable and implementable (This step is not suitable for people who have no programming knowledge at all, but it is very important.)</li>
+</ul>
+</li>
+<li><p><strong>Implementation Planning</strong></p>
+<ul>
+<li>Based on the design, ask AI to write an implementation plan (Claude 3.5 + sequential-thinking MCP server)</li>
+<li>Break it down into steps</li>
+<li>Ask AI to plan steps following a senior programmer’s approach</li>
+<li>Review steps, raise questions until the steps are reasonable (This step is not suitable for people who have no programming knowledge at all, but it is very important.)</li>
+</ul>
+</li>
+<li><p><strong>Implementation</strong></p>
+<ul>
+<li>Strictly follow the steps</li>
+<li>Ask AI to implement functions one by one (Claude 3.5&#x2F;3.7)</li>
+<li>After each function is implemented, ask AI to generate unit tests to ensure they pass</li>
+</ul>
+</li>
+<li><p><strong>Oversee</strong></p>
+<ul>
+<li>If you have no programming experience, you might not be able to understand what the AI is doing or identify potential risks. As a result, you wouldn’t be able to oversee the AI or question its output, and would have to hope the AI makes no mistakes at all. This could make the implementation process much harder down the line.</li>
+<li>Ensure strict monitoring of what AI is actually doing</li>
+<li>For example: AI might implement underlying function calls in test cases rather than generating test cases for the target file, which would make it appear that tests pass when in fact there is no effective testing of the target file<br><img src="https://s2.loli.net/2025/04/18/U7QKqbAi4psHe5k.png" alt="20250418171722"></li>
+<li>Sometimes AI will take the initiative to use mocks for testing; we need to know when it’s appropriate to use mocks in tests and when to test real functionality</li>
+<li>This requires us to know whether we’re doing Integration&#x2F;Component Testing or Pure Unit Testing<br><img src="https://s2.loli.net/2025/04/18/NY75BW2golesZ1z.png" alt="20250418171748"></li>
+</ul>
+</li>
+<li><p><strong>Code Review and Design Update</strong></p>
+<ul>
+<li>Ask another AI to read the generated code (experience shows Gemini Code Assist is very suitable for this work)</li>
+<li>Compare with the original design</li>
+<li>Have AI analyze whether the original design has been fully implemented; if not, what’s missing<ul>
+<li>Evaluate missing content and decide whether to implement it now</li>
+</ul>
+</li>
+<li>Or whether functionality beyond the design has been implemented<ul>
+<li>Evaluate functionality beyond the design and decide whether to reflect it back into the design</li>
+<li>Why update the design? Because subsequent work may need to reference the design document, so ensuring the design document correctly reflects the code logic is a good practice</li>
+<li>You don’t necessarily need to document every single implementation detail (like the specific batch size in batchValidate), but changes to public interfaces and communication protocols are definitely worth updating.<br> <img src="https://s2.loli.net/2025/04/18/lDY7tNzLk3jyqbe.png" alt="20250418171854"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Continuous Review</strong></p>
+<ul>
+<li><p>After completing each requirement, ask AI to review the design document again to understand current progress and what needs to be done<br><img src="https://s2.loli.net/2025/04/18/SGCFPs16RjNYW2w.png" alt="20250418171956"><br><img src="https://s2.loli.net/2025/04/18/4ruVdyUvfnXpRkx.png" alt="20250418172014"><br><img src="https://s2.loli.net/2025/04/18/qFpkw1RolUBz9AK.png" alt="20250418172023"></p>
+</li>
+<li><p>When major milestones are completed or before implementing the next major task, have AI review the completed work and write a new development plan</p>
+</li>
+<li><p>Always read the development plan completed by AI and make manual modifications if necessary<br><img src="https://s2.loli.net/2025/04/18/hDo2LBbfCGdSPAn.png" alt="20250418172046"></p>
+</li>
+<li><p>After reaching a milestone, have AI (preferably a different AI) review progress again<br><img src="https://s2.loli.net/2025/04/18/hbxZ1vydXm4fSjW.png" alt="20250418172133"></p>
+</li>
+</ul>
+</li>
+</ol>
+<p>Repeat the above steps until the entire project is completed.</p>
+<h2 id="Learning-from-the-Project"><a href="#Learning-from-the-Project" class="headerlink" title="Learning from the Project"></a>Learning from the Project</h2><h3 id="Git-and-GitHub"><a href="#Git-and-GitHub" class="headerlink" title="Git and GitHub"></a>Git and GitHub</h3><ul>
+<li>Make good use of git; commit after completing each milestone functionality</li>
+<li>When working on significant, large-scale features—like making a fundamental data structure change from the ground up—it’s safer to use GitHub PRs, even if you’re working solo. Create a issue, create a branch for this issue, make changes, test thoroughly, and merge after confirming everything is correct.</li>
+</ul>
+<h3 id="Debugging"><a href="#Debugging" class="headerlink" title="Debugging"></a>Debugging</h3><p>When debugging, this prompt is very useful: “Important: Try to fix things at the cause, not the symptom.” We need to adopt this mindset ourselves because even if we define this rule in the global rules, AI might still not follow it. When we see AI trying to fix a bug with a method that treats the symptom rather than the cause, we should interrupt and emphasize again that it needs to find the cause, not just fix the symptom. This requires us to have debugging skills, which is why Agentic Coding is currently not suitable for people who have no programming knowledge at all. Creating a familiar Snake game might not require any debugging, but for a real-world software project, if we let AI debug on its own, it might make the program progressively worse.</p>
+<p>The sequential-thinking MCP server is very useful when debugging bugs involving multi-layer call logic. It will check and analyze multiple files in the call path sequentially, typically making it easier to find the root cause. Without thinking capabilities, AI models might not have a clear enough approach to decide which files to check.<br><img src="https://s2.loli.net/2025/04/18/pazwuMm18lTEyAQ.png" alt="20250418172250"><br><img src="https://s2.loli.net/2025/04/18/5iWpbQ4wLzHqAcv.png" alt="20250418193434"></p>
+<p>For completely unfamiliar code sections, if bugs occur, we can only rely on AI to analyze and fix them itself, which significantly increases the frequency of interactions with AI and the cost of using AI. For example, when debugging backend programs, the Windsurf editor spends an average of 5 credits because I can point out possible debugging directions; but once we start debugging frontend pages, such as table flickering during refresh that must be fixed by adjusting CSS, because I have almost no frontend development experience, I have no suggestions or interventions, resulting in an average of 15 credits spent. When multiple modifications to a bug have no effect, rolling back the changes to the beginning stage of the bug and then using the sequential-thinking tool to think and fix will have better results.<br><img src="https://s2.loli.net/2025/04/18/alR9YzpLygPBONq.png" alt="20250418193823"></p>
+<h3 id="Refactoring"><a href="#Refactoring" class="headerlink" title="Refactoring"></a>Refactoring</h3><p>Refactoring is often essential because we don’t review every line of AI-generated code, so we might miss some errors made by the AI. For example, in my project, when implementing a feature, the AI didn’t use the interface previously defined in types.d.ts, but instead created a new interface with a similar name based on its understanding, and continued using this new interface throughout the feature implementation. After discovery, refactoring was necessary.<br><img src="https://s2.loli.net/2025/04/18/TkjuXLp6hPmAoJM.png" alt="20250418193509"><br><img src="https://s2.loli.net/2025/04/18/P4fBlqVZQ7Ht2vK.png" alt="20250418193659"><br><img src="https://s2.loli.net/2025/04/18/m8FJnfNsTbyQh19.png" alt="20250418193708"></p>
+<h3 id="Multi-Model-mutual-argumentation"><a href="#Multi-Model-mutual-argumentation" class="headerlink" title="Multi-Model mutual argumentation"></a>Multi-Model mutual argumentation</h3><p>When an AI offers suggestions and you’re unsure about them, a solid learning trick is to run those ideas by another AI for a second opinion. Take, for example, deciding if an endpoint should be defined with POST or GET.<br>I had Claude 3.7 whip up some code, then passed it over to Gemini for a quick check. Gemini suggested switching to GET, saying it might align better with common standards.<br><img src="https://s2.loli.net/2025/04/18/Kd8O62HauxbGItl.png" alt="20250418194455"></p>
+<p>When sending the suggestion back to Claude 3.7, Claude 3.7 still believed using POST was better.<br><img src="https://s2.loli.net/2025/04/18/RA1uqhJ3MGFTE5r.png" alt="20250418194505"></p>
+<p>When sending Claude 3.7’s reply back to Gemini, Gemini agreed.<br><img src="https://s2.loli.net/2025/04/18/BYc7FXRm1Gh6b5T.png" alt="20250418194515"></p>
+<p>This is a fascinating experience, like being part of a team where you watch two experts share their opinions and eventually reach a consensus.</p>
+<p>I hope in the future there will be a more convenient mechanism for Multi-Model mutual argumentation (rather than manual copy-pasting), which would greatly improve the quality of AI-generated code.</p>
+]]></content>
+      <tags>
+        <tag>Deno</tag>
+        <tag>JavaScript</tag>
+        <tag>TypeScript</tag>
+        <tag>Agentic Coding</tag>
+        <tag>AI</tag>
       </tags>
   </entry>
   <entry>
@@ -951,340 +1359,6 @@
 ]]></content>
       <tags>
         <tag>MogDB</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Ensuring Data Integrity: How Major Databases Handle Partial Writes and Atomic Operations</title>
-    <url>/2024/05/30/Ensuring-Data-Integrity-How-Major-Databases-Handle-Partial-Writes-and-Atomic-Operations/</url>
-    <content><![CDATA[<p>In the world of databases, ensuring atomicity in write operations is crucial. This post explores the importance of atomic writes and how various databases handle potential issues like partial writes.</p>
-<h4 id="Understanding-Partial-Writes"><a href="#Understanding-Partial-Writes" class="headerlink" title="Understanding Partial Writes"></a>Understanding Partial Writes</h4><p>In the I&#x2F;O write chain, the size of atomic operations can vary. An operation at a higher level may be split into multiple operations at a lower level, leading to scenarios where some operations succeed while others fail. This phenomenon is known as a partial write.</p>
-<ul>
-<li><strong>Legacy Disk Drives</strong>: Default sector size is 512 bytes.</li>
-<li><strong>Modern Disk Drives</strong>: Advanced format sector size is 4k.</li>
-<li><strong>Filesystem Page Size</strong>: For example, ext4 has a default page size of 4k.</li>
-<li><strong>Database Page Sizes</strong>:<ul>
-<li>Oracle: 8K</li>
-<li>MySQL: 16K</li>
-<li>PostgreSQL: 8K</li>
-<li>openGauss: 8K</li>
-</ul>
-</li>
-</ul>
-<h3 id="The-Reality-of-Partial-Writes"><a href="#The-Reality-of-Partial-Writes" class="headerlink" title="The Reality of Partial Writes"></a>The Reality of Partial Writes</h3><p>While theoretically, databases must handle partial writes, in practice, such events are quite rare. The critical aspect is not just preventing partial writes but ensuring robust mechanisms for data integrity checks (checksums) and recovery when issues do arise.</p>
-<h3 id="How-Oracle-Handles-Partial-Writes"><a href="#How-Oracle-Handles-Partial-Writes" class="headerlink" title="How Oracle Handles Partial Writes"></a>How Oracle Handles Partial Writes</h3><p>Oracle’s approach to partial writes is pragmatic:</p>
-<ol>
-<li><strong>Automatic Repair</strong>: If a fractured block is detected, Oracle tries to repair it using the corresponding block from Active Data Guard (ADG) or the flashback log.</li>
-<li><strong>Error Reporting</strong>: If automatic repair fails, an ORA-01578 error is logged, prompting the DBA to perform a media recovery.</li>
-<li><strong>Block-Level Recovery</strong>: Oracle supports block-level recovery, making the process less cumbersome and time-consuming.</li>
-</ol>
-<p>Oracle’s backup sets are designed to handle partial writes:</p>
-<ul>
-<li><strong>Using OS Commands</strong>: When backing up data files using OS commands, Oracle requires the tablespace to be in backup mode. Any changes to data blocks are logged in the redo log, ensuring a clean block can be restored during recovery.</li>
-<li><strong>Using RMAN</strong>: RMAN handles partial writes by ensuring that each backup block is clean, eliminating the need to worry about fractured blocks.</li>
-<li><strong>Block Checking</strong>: Oracle provides mechanisms like DB_BLOCK_CHECKING for comprehensive checksums.</li>
-</ul>
-<h3 id="How-MySQL-Handles-Partial-Writes"><a href="#How-MySQL-Handles-Partial-Writes" class="headerlink" title="How MySQL Handles Partial Writes"></a>How MySQL Handles Partial Writes</h3><p>MySQL employs a <strong>double write buffer</strong> to safeguard against partial writes. </p>
-<ol>
-<li><strong>Double Write Buffer</strong>: Despite its name, the double write buffer is not stored in memory; instead, it consists of persistent files on disk. The mechanism works as follows: before writing a data block to its final location on disk, MySQL first writes it to the double write buffer.</li>
-<li><strong>Data Integrity</strong>: This approach ensures that there is always a clean copy of the block available—either in the double write buffer or in the data files—allowing for safe redo operations.</li>
-</ol>
-<p>However, this method is not without its challenges. One of the primary concerns is its efficiency, as it effectively doubles the I&#x2F;O workload for redo logging. This has sparked ongoing discussions about the trade-offs and effectiveness of using a double write buffer to address partial writes.</p>
-<h3 id="How-PostgreSQL-Handles-Partial-Writes"><a href="#How-PostgreSQL-Handles-Partial-Writes" class="headerlink" title="How PostgreSQL Handles Partial Writes"></a>How PostgreSQL Handles Partial Writes</h3><p>PostgreSQL employs <strong>full page writes</strong> to manage partial writes effectively:</p>
-<ol>
-<li><strong>Full Page Writes</strong>: When a data block is updated for the first time after a checkpoint, the entire block is written to the WAL (Write-Ahead Logging) log. This is akin to the database always being in “Backup status,” similar to issuing the <code>alter tablespace x begin backup</code> command in an Oracle database.</li>
-<li><strong>Data Integrity</strong>: This mechanism ensures that even if a partial write occurs, the database remains consistent because the original page can be used for redo operations.</li>
-</ol>
-<p>There has been community discussion about adopting a double write buffer mechanism, but it remains an area of interest rather than active development. For more details, you can check out these discussions:</p>
-<ul>
-<li><a href="https://www.postgresql.org/message-id/1962493974.656458.1327703514780.JavaMail.root@zimbra-prod-mbox-4.vmware.com">Discussion on Double Write Buffer Mechanism (Post 1)</a></li>
-<li><a href="https://www.postgresql.org/message-id/20180418062240.GJ18178%40paquier.xyz">Discussion on Double Write Buffer Mechanism (Post 2)</a></li>
-</ul>
-<h3 id="How-MogDB-Handles-Partial-Writes"><a href="#How-MogDB-Handles-Partial-Writes" class="headerlink" title="How MogDB Handles Partial Writes"></a>How MogDB Handles Partial Writes</h3><p>MogDB (the enterprise edition of openGauss) combines strategies from MySQL and PostgreSQL:</p>
-<ol>
-<li><strong>Double Write Buffer</strong>: Similar to MySQL, MogDB uses a double write buffer by setting <code>enable_double_write=on</code>.</li>
-<li><strong>Full Page Writes</strong>: MogDB retains PostgreSQL’s full page write mechanism by setting <code>full_page_writes=on</code>.</li>
-</ol>
-<p>Depending on the configuration of incremental checkpoints (enable_incremental_checkpoint):</p>
-<ul>
-<li><strong>Incremental Checkpoints Off</strong>:<ul>
-<li>With <code>full_page_writes=on</code>, full page writes are used.</li>
-<li>With <code>full_page_writes=off</code>, partial writes are not a concern.</li>
-</ul>
-</li>
-<li><strong>Incremental Checkpoints On</strong>:<ul>
-<li>With <code>enable_double_write=on</code>, double writes are used.</li>
-<li>With <code>enable_double_write=off</code>, the behavior depends on full_page_writes settings.</li>
-</ul>
-</li>
-</ul>
-<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>Ensuring atomic writes in databases is essential for data integrity and consistency. While partial writes are rare, robust mechanisms for detection and recovery are vital. Oracle, MySQL, PostgreSQL, and MogDB&#x2F;openGauss each have unique approaches to handling these scenarios, ensuring that data remains reliable and recoverable.</p>
-]]></content>
-      <tags>
-        <tag>MogDB</tag>
-        <tag>Oracle</tag>
-        <tag>PostgreSQL</tag>
-        <tag>openGauss</tag>
-        <tag>MySQL</tag>
-        <tag>Partial Writes</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>From Software Search to Code Generation: The Agentic Coding Revolution</title>
-    <url>/2025/04/08/From-Software-Search-to-Code-Generation-The-Agentic-Coding-Revolution/</url>
-    <content><![CDATA[<h2 id="User-Story-RSS-Feed-Clean-up-Journey"><a href="#User-Story-RSS-Feed-Clean-up-Journey" class="headerlink" title="User Story: RSS Feed Clean-up Journey"></a>User Story: RSS Feed Clean-up Journey</h2><p>Over the past 15 years, I’ve accumulated a substantial collection of RSS feeds, numbering over 200 subscriptions. While RSS usage has dramatically declined in recent years, some of these feeds remain part of my daily reading routine. However, the collection has become cluttered:</p>
-<ul>
-<li>Many feeds have become completely inaccessible</li>
-<li>Some bloggers have stopped updating their sites</li>
-<li>Certain feeds are still active but rarely updated</li>
-</ul>
-<p><strong>The Challenge:</strong></p>
-<ul>
-<li>Manual verification of each feed would be tedious and time-consuming</li>
-<li>My RSS reader (News Explorer) lacks feed cleanup functionality</li>
-<li>Alternative solutions like Inoreader require paid subscriptions</li>
-<li>The task remained pending due to lack of efficient solutions</li>
-</ul>
-<p><strong>The Agentic Coding Solution:</strong><br>What was previously a daunting task transformed into a manageable project:</p>
-<ul>
-<li>Total time from requirement writing to completion: ~2 hours</li>
-<li>Automated validation of all feeds</li>
-<li>Generated comprehensive statistics and visualizations</li>
-<li>Successfully categorized feeds into active, inactive, and dead</li>
-<li>Pleasant and efficient development experience</li>
-</ul>
-<p>This experience perfectly illustrates how agentic coding can turn a long-postponed task into an achievable solution through clear requirement description and AI-assisted development.</p>
-<h2 id="The-Traditional-Approach"><a href="#The-Traditional-Approach" class="headerlink" title="The Traditional Approach"></a>The Traditional Approach</h2><p>Traditionally, when faced with a specific requirement like validating and analyzing OPML feed subscriptions, the typical workflow would be:</p>
-<ol>
-<li>Search for existing software that might solve the problem</li>
-<li>Evaluate multiple tools and their features</li>
-<li>Choose the closest match, often compromising on exact requirements</li>
-<li>Learn how to use the chosen software</li>
-<li>Deal with limitations and missing features</li>
-</ol>
-<p>This process is time-consuming and often results in settling for a solution that doesn’t perfectly match our needs.</p>
-<h2 id="The-Agentic-Coding-Paradigm"><a href="#The-Agentic-Coding-Paradigm" class="headerlink" title="The Agentic Coding Paradigm"></a>The Agentic Coding Paradigm</h2><p>With agentic coding, the approach transforms dramatically:</p>
-<ol>
-<li>Clearly describe your requirements in natural language</li>
-<li>Let AI understand and break down the problem</li>
-<li>Generate custom code that exactly matches your needs</li>
-<li>Iterate and refine the solution through conversation</li>
-</ol>
-<h3 id="Real-World-Example-OPML-Feed-Validator"><a href="#Real-World-Example-OPML-Feed-Validator" class="headerlink" title="Real-World Example: OPML Feed Validator"></a>Real-World Example: OPML Feed Validator</h3><p>This project demonstrates the power of agentic coding. Instead of searching for an existing OPML feed validator:</p>
-<ul>
-<li><p>We described our need for a tool that could:</p>
-<ul>
-<li>Validate RSS feeds in an OPML file</li>
-<li>Check feed accessibility</li>
-<li>Analyze update frequencies</li>
-<li>Generate meaningful statistics</li>
-<li>Visualize the results</li>
-</ul>
-</li>
-<li><p>The AI agent:</p>
-<ul>
-<li>Designed the system architecture</li>
-<li>Implemented the required functionality</li>
-<li>Created visualization components</li>
-<li>Generated comprehensive documentation</li>
-<li>All while following best practices and proper error handling</li>
-</ul>
-</li>
-</ul>
-<h2 id="Benefits-of-Agentic-Coding"><a href="#Benefits-of-Agentic-Coding" class="headerlink" title="Benefits of Agentic Coding"></a>Benefits of Agentic Coding</h2><ol>
-<li><strong>Perfect Fit</strong>: Solutions are tailored exactly to your requirements</li>
-<li><strong>Rapid Development</strong>: No need to spend time searching and evaluating existing tools</li>
-<li><strong>Full Control</strong>: Complete access to the source code for modifications</li>
-<li><strong>Learning Opportunity</strong>: Understanding how the solution works through generated code</li>
-<li><strong>Cost-Effective</strong>: No need to purchase or subscribe to multiple tools</li>
-<li><strong>Maintenance Freedom</strong>: Ability to modify and extend the solution as needs evolve</li>
-</ol>
-<h2 id="Future-Implications"><a href="#Future-Implications" class="headerlink" title="Future Implications"></a>Future Implications</h2><p>This shift from “finding” to “generating” solutions represents a fundamental change in how we approach software development. As AI continues to evolve:</p>
-<ul>
-<li>Development will become more requirement-driven than tool-driven</li>
-<li>Custom solutions will become as accessible as off-the-shelf software</li>
-<li>The focus will shift from “what exists” to “what’s possible”</li>
-</ul>
-<p>Agentic coding empowers developers and users alike to create exactly what they need, breaking free from the limitations of existing software solutions.</p>
-<h2 id="Lessons-Learned-and-Experience"><a href="#Lessons-Learned-and-Experience" class="headerlink" title="Lessons Learned and Experience"></a>Lessons Learned and Experience</h2><h3 id="1-The-Importance-of-Clear-Requirements"><a href="#1-The-Importance-of-Clear-Requirements" class="headerlink" title="1. The Importance of Clear Requirements"></a>1. The Importance of Clear Requirements</h3><p>Product thinking and clear requirements are crucial for successful AI-assisted development:</p>
-<ul>
-<li><strong>Clear Vision Leads to Better Code</strong>: When requirements are well-defined and specific about how the tool should behave, the AI generates higher quality code</li>
-<li><strong>Product Mindset</strong>: Requirement providers need to have a clear understanding of:<ul>
-<li>Desired user interactions</li>
-<li>Expected outputs and their formats</li>
-<li>Error handling scenarios</li>
-<li>Performance expectations</li>
-</ul>
-</li>
-<li><strong>Iterative Refinement</strong>: Unclear requirements often lead to multiple iterations and code quality issues</li>
-</ul>
-<h3 id="2-Technology-Stack-Selection-Matters"><a href="#2-Technology-Stack-Selection-Matters" class="headerlink" title="2. Technology Stack Selection Matters"></a>2. Technology Stack Selection Matters</h3><p>The choice of programming languages and libraries significantly impacts AI-assisted development success:</p>
-<ul>
-<li><p><strong>Language Popularity Impact</strong>:</p>
-<ul>
-<li>More widely used languages (like Python) often result in better AI-generated code</li>
-<li>Popular languages have more training data and real-world examples</li>
-<li>In this project, while we chose TypeScript with Deno for learning purposes, Python might have been an easier choice</li>
-</ul>
-</li>
-<li><p><strong>Library Selection Strategy</strong>:</p>
-<ul>
-<li>Popular, widely-used libraries lead to better AI comprehension and implementation</li>
-<li>Example from this project:<ul>
-<li>Initial attempt: Using less common <code>deno_chart</code> library resulted in multiple errors</li>
-<li>Successful pivot: Switching to standard SVG generation led to immediate success</li>
-</ul>
-</li>
-<li>Lesson: Prefer mainstream libraries over niche ones when working with AI</li>
-</ul>
-</li>
-</ul>
-<h3 id="Best-Practices-for-AI-Assisted-Development"><a href="#Best-Practices-for-AI-Assisted-Development" class="headerlink" title="Best Practices for AI-Assisted Development"></a>Best Practices for AI-Assisted Development</h3><ol>
-<li><p><strong>Requirements Phase</strong>:</p>
-<ul>
-<li>Invest time in detailed requirement documentation</li>
-<li>Include specific examples of desired behavior</li>
-<li>Define clear success criteria</li>
-</ul>
-</li>
-<li><p><strong>Technology Selection</strong>:</p>
-<ul>
-<li>Consider language popularity and ecosystem maturity</li>
-<li>Choose widely-adopted libraries when possible</li>
-<li>Balance learning goals with development efficiency</li>
-</ul>
-</li>
-<li><p><strong>Development Process</strong>:</p>
-<ul>
-<li>Start with core functionality using proven technologies</li>
-<li>Experiment with newer technologies only after basic features are stable</li>
-<li>Be prepared to pivot when encountering AI limitations with specific technologies</li>
-</ul>
-</li>
-</ol>
-<p>This project serves as a practical example of these lessons, demonstrating both the potential and limitations of AI-assisted development while highlighting the importance of making informed technology choices.</p>
-<p>The project can be found <a href="https://github.com/kamusis/my-opml-subscriptions">here</a>.</p>
-]]></content>
-      <tags>
-        <tag>Deno</tag>
-        <tag>JavaScript</tag>
-        <tag>TypeScript</tag>
-        <tag>Agentic Coding</tag>
-        <tag>AI</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Vibe Coding: A 10-Day Journey from Zero to Building a Full-Stack RSS Validator Tool</title>
-    <url>/2025/04/19/Vibe-Coding-A-10-Day-Journey-from-Zero-to-Building-a-Full-Stack-RSS-Validator-Tool/</url>
-    <content><![CDATA[<p>10 days (2025&#x2F;4&#x2F;8 to 2025&#x2F;4&#x2F;18), From zero to <a href="https://kamusis-my-opml-sub.deno.dev/">https://kamusis-my-opml-sub.deno.dev/</a></p>
-<p>The code implemented in the entire project so far includes backend and some frontend by Claude 3.7 Sonnet (sometimes Claude 3.5), while a larger portion of the frontend is by OpenAI GPT-4.1 (in Windsurf, this model is currently available for free for a limited time).</p>
-<p>Project URL: <a href="https://kamusis-my-opml-sub.deno.dev/">https://kamusis-my-opml-sub.deno.dev/</a></p>
-<h2 id="User-Story"><a href="#User-Story" class="headerlink" title="User Story"></a>User Story</h2><p>I’ve been using RSS for like… 15 years now? Over time I’ve somehow ended up with 200+ feed subscriptions. I know RSS isn’t exactly trendy anymore, but a handful of these feeds are still part of my daily routine.</p>
-<p>The problem? My feed list has turned into a total mess:</p>
-<ul>
-<li>Some feeds are completely dead</li>
-<li>Some blogs haven’t been updated in years</li>
-<li>Others post like once every six months</li>
-<li>And a bunch just throw 404s now</li>
-</ul>
-<p>I want to clean it up, but here’s the thing:<br>Going through each one manually sounds like actual hell.<br>My reader (News Explorer) doesn’t have any built-in tools to help with this.<br>I tried Googling things like “rss feed analyze” and “cleanup,” but honestly didn’t come across any useful tools.</p>
-<p>So the mess remains… because there’s just no good way to deal with it. Until I finally decided to just build one myself—well, more like let AI build it for me.</p>
-<h2 id="Background-of-Me"><a href="#Background-of-Me" class="headerlink" title="Background of Me"></a>Background of Me</h2><ul>
-<li>Can read code (sometimes need to rely on AI for interpretation and understanding.)</li>
-<li>Have manually written backend code in the past, but haven’t written extensive backend code in the last twenty years.</li>
-<li>Have never manually written frontend code and have limited knowledge of the basic principles of frontend rendering mechanisms.</li>
-<li>Started learning about JavaScript and TypeScript a month ago. </li>
-<li>A beginner with Deno. Understand the calling sequence and respective responsibilities from components to islands to routes API, then to backend services, and finally to backend logic implementation.</li>
-</ul>
-<h2 id="Tools"><a href="#Tools" class="headerlink" title="Tools"></a>Tools</h2><ul>
-<li>Agentic Coding Editor (Windsurf)</li>
-<li>Design and Code Generater LLM (Claude 3.5&#x2F;3.7 + openAI GPT-4.1)<br>We need a subscription to an Agentic Coding Editor, such as Cursor, Windsurf, or Github Copilot, for design and coding.</li>
-<li>Code Reviewer LLM (Gemini Code Assist)<br>Additionally, we need Gemini Code Assist (currently considered free) to review code and consult on any code-related questions. Gemini Code Assist is also very effective, and it can be said that Gemini is the best model to help you understand code.</li>
-<li>MCP Server (sequential-thinking)</li>
-</ul>
-<h2 id="Process"><a href="#Process" class="headerlink" title="Process"></a>Process</h2><ol>
-<li><p><strong>Design Phase</strong></p>
-<ul>
-<li>Write the design and outline original requirements</li>
-<li>Let AI write the design (experience shows Claude 3.5 + sequential-thinking MCP server works well; theoretically, any LLM with thinking capabilities is better suited for overall design)</li>
-<li>Review the design, which should include implementation details such as interaction flow design, class design, function design, etc.</li>
-<li>If you are trying to develop a full-stack application, you should write design documents for both frontend and backend</li>
-<li>Continue to ask questions and interact with AI until you believe the overall design is reasonable and implementable (This step is not suitable for people who have no programming knowledge at all, but it is very important.)</li>
-</ul>
-</li>
-<li><p><strong>Implementation Planning</strong></p>
-<ul>
-<li>Based on the design, ask AI to write an implementation plan (Claude 3.5 + sequential-thinking MCP server)</li>
-<li>Break it down into steps</li>
-<li>Ask AI to plan steps following a senior programmer’s approach</li>
-<li>Review steps, raise questions until the steps are reasonable (This step is not suitable for people who have no programming knowledge at all, but it is very important.)</li>
-</ul>
-</li>
-<li><p><strong>Implementation</strong></p>
-<ul>
-<li>Strictly follow the steps</li>
-<li>Ask AI to implement functions one by one (Claude 3.5&#x2F;3.7)</li>
-<li>After each function is implemented, ask AI to generate unit tests to ensure they pass</li>
-</ul>
-</li>
-<li><p><strong>Oversee</strong></p>
-<ul>
-<li>If you have no programming experience, you might not be able to understand what the AI is doing or identify potential risks. As a result, you wouldn’t be able to oversee the AI or question its output, and would have to hope the AI makes no mistakes at all. This could make the implementation process much harder down the line.</li>
-<li>Ensure strict monitoring of what AI is actually doing</li>
-<li>For example: AI might implement underlying function calls in test cases rather than generating test cases for the target file, which would make it appear that tests pass when in fact there is no effective testing of the target file<br><img src="https://s2.loli.net/2025/04/18/U7QKqbAi4psHe5k.png" alt="20250418171722"></li>
-<li>Sometimes AI will take the initiative to use mocks for testing; we need to know when it’s appropriate to use mocks in tests and when to test real functionality</li>
-<li>This requires us to know whether we’re doing Integration&#x2F;Component Testing or Pure Unit Testing<br><img src="https://s2.loli.net/2025/04/18/NY75BW2golesZ1z.png" alt="20250418171748"></li>
-</ul>
-</li>
-<li><p><strong>Code Review and Design Update</strong></p>
-<ul>
-<li>Ask another AI to read the generated code (experience shows Gemini Code Assist is very suitable for this work)</li>
-<li>Compare with the original design</li>
-<li>Have AI analyze whether the original design has been fully implemented; if not, what’s missing<ul>
-<li>Evaluate missing content and decide whether to implement it now</li>
-</ul>
-</li>
-<li>Or whether functionality beyond the design has been implemented<ul>
-<li>Evaluate functionality beyond the design and decide whether to reflect it back into the design</li>
-<li>Why update the design? Because subsequent work may need to reference the design document, so ensuring the design document correctly reflects the code logic is a good practice</li>
-<li>You don’t necessarily need to document every single implementation detail (like the specific batch size in batchValidate), but changes to public interfaces and communication protocols are definitely worth updating.<br> <img src="https://s2.loli.net/2025/04/18/lDY7tNzLk3jyqbe.png" alt="20250418171854"></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><strong>Continuous Review</strong></p>
-<ul>
-<li><p>After completing each requirement, ask AI to review the design document again to understand current progress and what needs to be done<br><img src="https://s2.loli.net/2025/04/18/SGCFPs16RjNYW2w.png" alt="20250418171956"><br><img src="https://s2.loli.net/2025/04/18/4ruVdyUvfnXpRkx.png" alt="20250418172014"><br><img src="https://s2.loli.net/2025/04/18/qFpkw1RolUBz9AK.png" alt="20250418172023"></p>
-</li>
-<li><p>When major milestones are completed or before implementing the next major task, have AI review the completed work and write a new development plan</p>
-</li>
-<li><p>Always read the development plan completed by AI and make manual modifications if necessary<br><img src="https://s2.loli.net/2025/04/18/hDo2LBbfCGdSPAn.png" alt="20250418172046"></p>
-</li>
-<li><p>After reaching a milestone, have AI (preferably a different AI) review progress again<br><img src="https://s2.loli.net/2025/04/18/hbxZ1vydXm4fSjW.png" alt="20250418172133"></p>
-</li>
-</ul>
-</li>
-</ol>
-<p>Repeat the above steps until the entire project is completed.</p>
-<h2 id="Learning-from-the-Project"><a href="#Learning-from-the-Project" class="headerlink" title="Learning from the Project"></a>Learning from the Project</h2><h3 id="Git-and-GitHub"><a href="#Git-and-GitHub" class="headerlink" title="Git and GitHub"></a>Git and GitHub</h3><ul>
-<li>Make good use of git; commit after completing each milestone functionality</li>
-<li>When working on significant, large-scale features—like making a fundamental data structure change from the ground up—it’s safer to use GitHub PRs, even if you’re working solo. Create a issue, create a branch for this issue, make changes, test thoroughly, and merge after confirming everything is correct.</li>
-</ul>
-<h3 id="Debugging"><a href="#Debugging" class="headerlink" title="Debugging"></a>Debugging</h3><p>When debugging, this prompt is very useful: “Important: Try to fix things at the cause, not the symptom.” We need to adopt this mindset ourselves because even if we define this rule in the global rules, AI might still not follow it. When we see AI trying to fix a bug with a method that treats the symptom rather than the cause, we should interrupt and emphasize again that it needs to find the cause, not just fix the symptom. This requires us to have debugging skills, which is why Agentic Coding is currently not suitable for people who have no programming knowledge at all. Creating a familiar Snake game might not require any debugging, but for a real-world software project, if we let AI debug on its own, it might make the program progressively worse.</p>
-<p>The sequential-thinking MCP server is very useful when debugging bugs involving multi-layer call logic. It will check and analyze multiple files in the call path sequentially, typically making it easier to find the root cause. Without thinking capabilities, AI models might not have a clear enough approach to decide which files to check.<br><img src="https://s2.loli.net/2025/04/18/pazwuMm18lTEyAQ.png" alt="20250418172250"><br><img src="https://s2.loli.net/2025/04/18/5iWpbQ4wLzHqAcv.png" alt="20250418193434"></p>
-<p>For completely unfamiliar code sections, if bugs occur, we can only rely on AI to analyze and fix them itself, which significantly increases the frequency of interactions with AI and the cost of using AI. For example, when debugging backend programs, the Windsurf editor spends an average of 5 credits because I can point out possible debugging directions; but once we start debugging frontend pages, such as table flickering during refresh that must be fixed by adjusting CSS, because I have almost no frontend development experience, I have no suggestions or interventions, resulting in an average of 15 credits spent. When multiple modifications to a bug have no effect, rolling back the changes to the beginning stage of the bug and then using the sequential-thinking tool to think and fix will have better results.<br><img src="https://s2.loli.net/2025/04/18/alR9YzpLygPBONq.png" alt="20250418193823"></p>
-<h3 id="Refactoring"><a href="#Refactoring" class="headerlink" title="Refactoring"></a>Refactoring</h3><p>Refactoring is often essential because we don’t review every line of AI-generated code, so we might miss some errors made by the AI. For example, in my project, when implementing a feature, the AI didn’t use the interface previously defined in types.d.ts, but instead created a new interface with a similar name based on its understanding, and continued using this new interface throughout the feature implementation. After discovery, refactoring was necessary.<br><img src="https://s2.loli.net/2025/04/18/TkjuXLp6hPmAoJM.png" alt="20250418193509"><br><img src="https://s2.loli.net/2025/04/18/P4fBlqVZQ7Ht2vK.png" alt="20250418193659"><br><img src="https://s2.loli.net/2025/04/18/m8FJnfNsTbyQh19.png" alt="20250418193708"></p>
-<h3 id="Multi-Model-mutual-argumentation"><a href="#Multi-Model-mutual-argumentation" class="headerlink" title="Multi-Model mutual argumentation"></a>Multi-Model mutual argumentation</h3><p>When an AI offers suggestions and you’re unsure about them, a solid learning trick is to run those ideas by another AI for a second opinion. Take, for example, deciding if an endpoint should be defined with POST or GET.<br>I had Claude 3.7 whip up some code, then passed it over to Gemini for a quick check. Gemini suggested switching to GET, saying it might align better with common standards.<br><img src="https://s2.loli.net/2025/04/18/Kd8O62HauxbGItl.png" alt="20250418194455"></p>
-<p>When sending the suggestion back to Claude 3.7, Claude 3.7 still believed using POST was better.<br><img src="https://s2.loli.net/2025/04/18/RA1uqhJ3MGFTE5r.png" alt="20250418194505"></p>
-<p>When sending Claude 3.7’s reply back to Gemini, Gemini agreed.<br><img src="https://s2.loli.net/2025/04/18/BYc7FXRm1Gh6b5T.png" alt="20250418194515"></p>
-<p>This is a fascinating experience, like being part of a team where you watch two experts share their opinions and eventually reach a consensus.</p>
-<p>I hope in the future there will be a more convenient mechanism for Multi-Model mutual argumentation (rather than manual copy-pasting), which would greatly improve the quality of AI-generated code.</p>
-]]></content>
-      <tags>
-        <tag>Deno</tag>
-        <tag>JavaScript</tag>
-        <tag>TypeScript</tag>
-        <tag>Agentic Coding</tag>
-        <tag>AI</tag>
       </tags>
   </entry>
 </search>
