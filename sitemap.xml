@@ -92,15 +92,6 @@
   </url>
   
   <url>
-    <loc>https://www.kamusis.me/2026/01/28/The%20best%20practices%20for%20using%20partition%20table%20in%20PostgreSQL/</loc>
-    
-    <lastmod>2024-10-11</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.kamusis.me/2024/08/21/Some-Misconceptions-About-Database-Performance-Application-Concurrent-Requests-Database-Connections-and-Database-Connection-Pools/</loc>
     
     <lastmod>2024-08-21</lastmod>

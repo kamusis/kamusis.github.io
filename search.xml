@@ -1055,50 +1055,6 @@
       </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2026/01/28/The%20best%20practices%20for%20using%20partition%20table%20in%20PostgreSQL/</url>
-    <content><![CDATA[<h1 id="The-best-practices-for-using-partition-table-in-PostgreSQL"><a href="#The-best-practices-for-using-partition-table-in-PostgreSQL" class="headerlink" title="The best practices for using partition table in PostgreSQL"></a>The best practices for using partition table in PostgreSQL</h1><h2 id="What-is-partition-table"><a href="#What-is-partition-table" class="headerlink" title="What is partition table?"></a>What is partition table?</h2><p>Partition table is a table that is divided into smaller parts. Each part is called a partition.</p>
-<p>Why use partition table?</p>
-<ol>
-<li><strong>Performance</strong>: Partition table can improve the performance of the table. Because each partition can be stored in a separate file, the query can be executed faster.</li>
-<li><strong>Maintenance</strong>: Partition table can make the maintenance of the table easier. Because each partition can be maintained separately, the maintenance of the table can be done faster.</li>
-</ol>
-<h2 id="How-to-create-a-partition-table"><a href="#How-to-create-a-partition-table" class="headerlink" title="How to create a partition table?"></a>How to create a partition table?</h2><ol>
-<li><strong>Create a partition table</strong>:</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement (</span><br><span class="line">    city_id         <span class="type">int</span> <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    logdate         <span class="type">date</span> <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    peaktemp        <span class="type">int</span>,</span><br><span class="line">    unitsales       <span class="type">int</span></span><br><span class="line">) <span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">RANGE</span> (logdate);</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li><strong>Create a partition table for each partition</strong>:</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement_y2006m02 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> measurement</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2006-02-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2006-03-01&#x27;</span>);</span><br><span class="line">...</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement_y2007m11 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> measurement</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2007-11-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2007-12-01&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="Partition-table-types"><a href="#Partition-table-types" class="headerlink" title="Partition table types"></a>Partition table types</h2><p>There are 3 basic types of partition table in PostgreSQL:</p>
-<ol>
-<li><strong>List Partition</strong>: The table is partitioned by explicitly listing which key value(s) appear in each partition.</li>
-<li><strong>Range Partition</strong>: The table is partitioned into “ranges” defined by a key column or set of columns, with no overlap between the ranges of values assigned to different partitions.</li>
-<li><strong>Hash Partition</strong>: The table is partitioned by specifying a modulus and a remainder for each partition.</li>
-</ol>
-<p>Combine these 3 basic types of partition table, we can create more complex partition table. This is called <strong>Composite Partitioning</strong>.</p>
-<p>There are 4 types of composite partitioning:</p>
-<ol>
-<li><strong>List-Range Partition</strong>: The partition is divided into several ranges.<br>The step is: create table A partition by list, then create table A1 partition of A partition by range, then create table A1-1 partition of A1</li>
-<li><strong>Range-List Partition</strong>: The partition is divided into several ranges.<br>The step is: create table A partition by range, then create table B of table A but partition by list.</li>
-<li><strong>Range-Hash Partition</strong>: The partition is divided into several ranges.</li>
-<li><strong>Hash-Range Partition</strong>: The partition is divided into several ranges.</li>
-</ol>
-<h2 id="Data-dictionary-about-partition-table"><a href="#Data-dictionary-about-partition-table" class="headerlink" title="Data dictionary about partition table"></a>Data dictionary about partition table</h2><ol>
-<li><strong>pg_partitioned_table</strong>: This table stores the information about the partitioned table.</li>
-<li><strong>pg_partition_rule</strong>: This table stores the information about the partition rule.</li>
-<li><strong>pg_partition_column</strong>: This table stores the information about the partition column.</li>
-<li><strong>pg_partition_index</strong>: This table stores the information about the partition index.</li>
-<li><strong>pg_partition_constraint</strong>: This table stores the information about the partition constraint.</li>
-<li><strong>pg_partition_constraint_column</strong>: This table stores the information about the partition constraint column.</li>
-<li><strong>pg_partition_constraint_index</strong>: This table stores the information about the partition constraint index.</li>
-</ol>
-]]></content>
-  </entry>
-  <entry>
     <title>Unlocking the Power: Key Features of MogDB</title>
     <url>/2024/05/27/Unlocking-the-Power-Key-Features-of-MogDB/</url>
     <content><![CDATA[<h2 id="Introduction-to-MogDB"><a href="#Introduction-to-MogDB" class="headerlink" title="Introduction to MogDB"></a>Introduction to MogDB</h2><p><a href="https://www.mogdb.io/">MogDB</a> is a cutting-edge distributed relational database management system that offers an array of powerful features designed to meet the needs of modern businesses. With its high performance, availability, maintainability, compatibility, and AI capabilities, MogDB stands out as a top choice for database administrators, developers, and IT professionals.</p>
