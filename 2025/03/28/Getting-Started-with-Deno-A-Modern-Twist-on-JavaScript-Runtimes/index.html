@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=#58b77a>
+  <title>Getting Started with Deno: A Modern Twist on JavaScript Runtimes | Kamus&#39; Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  <meta name="description" content="If you’ve been in the JavaScript world for a while, you’ve probably heard of Deno—the runtime that’s been making waves as a “better Node.js.” Built by Ryan D...">
+  <link rel="canonical" href="https://www.kamusis.me/2025/03/28/Getting-Started-with-Deno-A-Modern-Twist-on-JavaScript-Runtimes/">
+  <meta property="og:site_name" content="Kamus' Notes">
+  <meta property="og:title" content="Getting Started with Deno: A Modern Twist on JavaScript Runtimes | Kamus' Notes">
+  <meta property="og:description" content="If you’ve been in the JavaScript world for a while, you’ve probably heard of Deno—the runtime that’s been making waves as a “better Node.js.” Built by Ryan D...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.kamusis.me/2025/03/28/Getting-Started-with-Deno-A-Modern-Twist-on-JavaScript-Runtimes/">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Getting Started with Deno: A Modern Twist on JavaScript Runtimes | Kamus' Notes">
+  <meta name="twitter:description" content="If you’ve been in the JavaScript world for a while, you’ve probably heard of Deno—the runtime that’s been making waves as a “better Node.js.” Built by Ryan D...">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Getting Started with Deno: A Modern Twist on JavaScript Runtimes","description":"If you’ve been in the JavaScript world for a while, you’ve probably heard of Deno—the runtime that’s been making waves as a “better Node.js.” Built by Ryan D...","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kamusis.me/2025/03/28/Getting-Started-with-Deno-A-Modern-Twist-on-JavaScript-Runtimes/"},"author":{"@type":"Person","name":"Kamus"},"publisher":{"@type":"Person","name":"Kamus"},"datePublished":"2025-03-28T03:27:03.000Z","dateModified":"2025-04-08T05:28:20.000Z","url":"https://www.kamusis.me/2025/03/28/Getting-Started-with-Deno-A-Modern-Twist-on-JavaScript-Runtimes/","image":["https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg"]}</script>
+  <script id="hexo-configurations">
+  var CONFIG = {
+    root: '/',
+    theme: 'lx',
+    version: '0.4.4',
+    localsearch:{
+      "enable": true,
+      "trigger": "auto",
+      "top_n_per_article": 1,
+      "unescape": false,
+      "preload": false
+      },
+    path: 'search.xml'
+  };
+</script>
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/css/main.min.css">
+  
+  <style type="text/css">
+    pre,
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+    html {
+      font-family: sans-serif;
+    }
+    body {
+      font-family: sans-serif;
+    }
+    h1, h2, h3, h4, h5, figure {
+      font-family: sans-serif;
+    }
+    .menu-container{
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "",
+	     });
+	}); 
+	</script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+<body>
+<div class="single">
+<div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Search..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+<div id="page">
+<div class="header">
+  <div id="lx-aside" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg)" data-stellar-background-ratio="0.5">
+    <div class="overlay">
+      <a href="javascript:;" class="popup-trigger" title="search"><i class="menu-item-icon fa fa-search fa-fw"></i></a>
+      <div class="page-title">
+        <div class="avatar"><a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"></a></div>
+        <span>2025-03-28</span>
+        <h2>Getting Star...</h2>
+        <div class="tags"><i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Deno/" rel="tag">Deno</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/JavaScript/" rel="tag">JavaScript</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Node-js/" rel="tag">Node.js</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/TypeScript/" rel="tag">TypeScript</a></div>
+        <div class="social-links">
+    <a href="https://github.com/kamusis" target="_blank" title="social-link"><i class="fa fa-github fa-fw"></i></a>
+    <a href="mailto:kamusis@gmail.com" target="_blank" title="social-link"><i class="fa fa-envelope fa-fw"></i></a>
+    <a href="https://www.linkedin.com/in/kamus/" target="_blank" title="social-link"><i class="fa fa-linkedin fa-fw"></i></a>
+    <a href="https://twitter.com/kamusis" target="_blank" title="social-link"><i class="fa fa-twitter fa-fw"></i></a>
+    <a href="https://www.instagram.com/kamusis/" target="_blank" title="social-link"><i class="fa fa-instagram fa-fw"></i></a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="lx-main-content">
+  <div class="lx-post">
+    <div class="lx-entry padding">
+      <div>
+        <p>If you’ve been in the JavaScript world for a while, you’ve probably heard of Deno—the runtime that’s been making waves as a “better Node.js.” Built by Ryan Dahl (the original creator of Node.js), Deno takes a fresh approach to running JavaScript and TypeScript, aiming to fix some of Node’s pain points while embracing modern standards. In this post, I’ll walk you through what Deno is, how it works, and how it stacks up against Node.js—especially based on my recent dive into it while tinkering with a Supabase integration.</p>
+<h2 id="What-is-Deno"><a href="#What-is-Deno" class="headerlink" title="What is Deno?"></a>What is Deno?</h2><p>Deno is a secure, modern runtime for JavaScript and TypeScript, launched in 2020. It’s designed to be simple, safe, and developer-friendly, with built-in support for TypeScript, ES Modules, and a standard library—no extra tools required. Think of it as Node.js reimagined with lessons learned from the past decade.</p>
+<p>Here’s a quick taste of Deno in action:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; serve &#125; <span class="keyword">from</span> <span class="string">&quot;https://deno.land/std@0.224.0/http/server.ts&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">serve</span>(<span class="function">(<span class="params">req</span>) =&gt;</span> <span class="keyword">new</span> <span class="title class_">Response</span>(<span class="string">&quot;Hello, Deno!&quot;</span>), &#123; <span class="attr">port</span>: <span class="number">8000</span> &#125;);</span><br></pre></td></tr></table></figure>
+<p>Run it with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deno run --allow-net main.ts</span><br></pre></td></tr></table></figure>
+<p>Boom—a web server in three lines, no <code>npm install</code> or <code>node_modules</code> in sight.</p>
+<h2 id="Key-Features-of-Deno"><a href="#Key-Features-of-Deno" class="headerlink" title="Key Features of Deno"></a>Key Features of Deno</h2><h3 id="1-TypeScript-Out-of-the-Box"><a href="#1-TypeScript-Out-of-the-Box" class="headerlink" title="1. TypeScript Out of the Box"></a>1. TypeScript Out of the Box</h3><p>Deno runs TypeScript natively—no <code>tsconfig.json</code> or <code>tsc</code> needed. Write your <code>.ts</code> file, run it with <code>deno run</code>, and Deno compiles it in memory. Compare that to Node.js, where you’d need <code>typescript</code> installed and a build step (or <code>ts-node</code> for a quicker dev loop).</p>
+<h3 id="2-URL-Based-Imports"><a href="#2-URL-Based-Imports" class="headerlink" title="2. URL-Based Imports"></a>2. URL-Based Imports</h3><p>Forget <code>node_modules</code>. Deno fetches dependencies from URLs:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; load &#125; <span class="keyword">from</span> <span class="string">&quot;https://deno.land/std@0.224.0/dotenv/mod.ts&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>It caches them globally (more on that later) and skips the package manager entirely.</p>
+<h3 id="3-Security-by-Default"><a href="#3-Security-by-Default" class="headerlink" title="3. Security by Default"></a>3. Security by Default</h3><p>Deno won’t let your script touch the network, filesystem, or environment unless you explicitly allow it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deno run --allow-env --allow-read main.ts</span><br></pre></td></tr></table></figure>
+<p>This is a stark contrast to Node.js, where scripts have free rein unless you sandbox them yourself.</p>
+<h3 id="4-Centralized-Dependency-Cache"><a href="#4-Centralized-Dependency-Cache" class="headerlink" title="4. Centralized Dependency Cache"></a>4. Centralized Dependency Cache</h3><p>Deno stores all dependencies in a single global cache (e.g., <code>~/.cache/deno/deps</code> on Unix). Run <code>deno info</code> to see where:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">deno info</span><br><span class="line"><span class="comment"># Outputs: Modules cache: &quot;/home/username/.cache/deno/deps&quot;</span></span><br></pre></td></tr></table></figure>
+<p>No per-project <code>node_modules</code> bloating your disk.</p>
+<h3 id="5-Standard-Library"><a href="#5-Standard-Library" class="headerlink" title="5. Standard Library"></a>5. Standard Library</h3><p>Deno ships with a curated <code>std</code> library (e.g., <code>https://deno.land/std@0.224.0</code>), covering HTTP servers, file I&#x2F;O, and even a <code>dotenv</code> module for <code>.env</code> files—stuff you’d normally grab from npm in Node.js.</p>
+<h2 id="Deno-vs-Node-js-A-Head-to-Head-Comparison"><a href="#Deno-vs-Node-js-A-Head-to-Head-Comparison" class="headerlink" title="Deno vs. Node.js: A Head-to-Head Comparison"></a>Deno vs. Node.js: A Head-to-Head Comparison</h2><p>I recently played with Deno to connect to Supabase, and it highlighted some big differences from Node.js. Here’s how they stack up:</p>
+<h3 id="Dependency-Management"><a href="#Dependency-Management" class="headerlink" title="Dependency Management"></a>Dependency Management</h3><ul>
+<li><strong>Node.js</strong>: Uses <code>npm</code> and <code>package.json</code> to install dependencies into a local <code>node_modules</code> folder per project. Cloning a repo? Run <code>npm install</code> every time.<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @supabase/supabase-js</span><br></pre></td></tr></table></figure></li>
+<li><strong>Deno</strong>: Imports modules via URLs, cached globally at <code>~/.cache/deno/deps</code>. Clone a Deno repo, and you’re ready to run—no install step.<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createClient &#125; <span class="keyword">from</span> <span class="string">&quot;https://esm.sh/@supabase/supabase-js@2.49.3&quot;</span>;</span><br></pre></td></tr></table></figure></li>
+<li><strong>Winner?</strong>: Deno for simplicity, Node.js for isolation (different projects can use different versions of the same module without URL juggling).</li>
+</ul>
+<h3 id="TypeScript-Support"><a href="#TypeScript-Support" class="headerlink" title="TypeScript Support"></a>TypeScript Support</h3><ul>
+<li><strong>Node.js</strong>: Requires setup—install <code>typescript</code>, configure <code>tsconfig.json</code>, and compile to JavaScript (or use <code>ts-node</code>). It’s mature but clunky.</li>
+<li><strong>Deno</strong>: TypeScript runs natively. No config, no build step. Write <code>.ts</code> and go.</li>
+<li><strong>Winner</strong>: Deno, hands down, unless you’re stuck on a legacy Node.js workflow.</li>
+</ul>
+<h3 id="Configuration-Files"><a href="#Configuration-Files" class="headerlink" title="Configuration Files"></a>Configuration Files</h3><ul>
+<li><strong>Node.js</strong>: Relies on <code>package.json</code> for dependencies and scripts, often paired with <code>tsconfig.json</code> for TypeScript.</li>
+<li><strong>Deno</strong>: Optional <code>deno.json</code> for imports and settings, but not required. My Supabase script didn’t need one—just a <code>.env</code> file and <code>std/dotenv</code>.</li>
+<li><strong>Winner</strong>: Deno for minimalism.</li>
+</ul>
+<h3 id="Security"><a href="#Security" class="headerlink" title="Security"></a>Security</h3><ul>
+<li><strong>Node.js</strong>: Open by default. Your script can read files or hit the network without warning.</li>
+<li><strong>Deno</strong>: Locked down. Want to read <code>.env</code>? Add <code>--allow-read</code>. Network access? <code>--allow-net</code>. It forced me to think about permissions when connecting to Supabase.</li>
+<li><strong>Winner</strong>: Deno for safety.</li>
+</ul>
+<h3 id="Ecosystem"><a href="#Ecosystem" class="headerlink" title="Ecosystem"></a>Ecosystem</h3><ul>
+<li><strong>Node.js</strong>: Massive npm ecosystem—hundreds of thousands of packages. Whatever you need, it’s there.</li>
+<li><strong>Deno</strong>: Smaller but growing ecosystem via <code>deno.land/x</code> and CDNs like <code>esm.sh</code>. It worked fine for Supabase, but niche libraries might be missing.</li>
+<li><strong>Winner</strong>: Node.js for sheer volume.</li>
+</ul>
+<h3 id="Learning-Curve"><a href="#Learning-Curve" class="headerlink" title="Learning Curve"></a>Learning Curve</h3><ul>
+<li><strong>Node.js</strong>: Familiar to most JavaScript devs, but the setup (npm, TypeScript, etc.) can overwhelm beginners.</li>
+<li><strong>Deno</strong>: Fresh approach, but URL imports and permissions might feel alien if you’re Node.js-native.</li>
+<li><strong>Winner</strong>: Tie—depends on your background.</li>
+</ul>
+<h2 id="A-Real-World-Example-Supabase-with-Deno"><a href="#A-Real-World-Example-Supabase-with-Deno" class="headerlink" title="A Real-World Example: Supabase with Deno"></a>A Real-World Example: Supabase with Deno</h2><p>Here’s how I set up a Supabase client in Deno:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createClient &#125; <span class="keyword">from</span> <span class="string">&quot;https://esm.sh/@supabase/supabase-js@2.49.3&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; load &#125; <span class="keyword">from</span> <span class="string">&quot;https://deno.land/std@0.224.0/dotenv/mod.ts&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> env = <span class="keyword">await</span> <span class="title function_">load</span>(&#123; <span class="attr">envPath</span>: <span class="string">&quot;./.env&quot;</span> &#125;);</span><br><span class="line"><span class="keyword">const</span> supabaseUrl = env[<span class="string">&quot;SUPABASE_URL&quot;</span>] || <span class="title class_">Deno</span>.<span class="property">env</span>.<span class="title function_">get</span>(<span class="string">&quot;SUPABASE_URL&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> supabaseKey = env[<span class="string">&quot;SUPABASE_ANON_KEY&quot;</span>] || <span class="title class_">Deno</span>.<span class="property">env</span>.<span class="title function_">get</span>(<span class="string">&quot;SUPABASE_ANON_KEY&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!supabaseUrl || !supabaseKey) &#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&quot;Missing SUPABASE_URL or SUPABASE_ANON_KEY&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> supabase = <span class="title function_">createClient</span>(supabaseUrl, supabaseKey);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Supabase client created! Attributes:&quot;</span>, <span class="title class_">Object</span>.<span class="title function_">keys</span>(supabase));</span><br></pre></td></tr></table></figure>
+<p>Run it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deno run --allow-env --allow-read main.ts</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>.env</code> file: <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> (grabbed from Supabase’s dashboard—<em>not</em> my database password!).</li>
+<li>VS Code linting needed the Deno extension and a <code>deno cache main.ts</code> to quiet TypeScript errors.</li>
+</ul>
+<p>In Node.js, I’d have installed <code>@supabase/supabase-js</code> via npm, set up a <code>dotenv</code> package, and skipped the permissions flags. Deno’s way felt leaner but required tweaking for editor support.</p>
+<h2 id="Should-You-Use-Deno"><a href="#Should-You-Use-Deno" class="headerlink" title="Should You Use Deno?"></a>Should You Use Deno?</h2><ul>
+<li><strong>Use Deno if</strong>:<ul>
+<li>You love TypeScript and hate build steps.</li>
+<li>You want a secure, minimal setup for small projects or experiments.</li>
+<li>You’re intrigued by a modern take on JavaScript runtimes.</li>
+</ul>
+</li>
+<li><strong>Stick with Node.js if</strong>:<ul>
+<li>You need the npm ecosystem’s depth.</li>
+<li>You’re working on a legacy project or with a team entrenched in Node.</li>
+<li>You prefer per-project dependency isolation.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Wrapping-Up"><a href="#Wrapping-Up" class="headerlink" title="Wrapping Up"></a>Wrapping Up</h2><p>Deno’s not here to kill Node.js—it’s a different flavor of the same JavaScript pie. After messing with it for Supabase, I’m hooked on its simplicity and TypeScript support, but I’d still reach for Node.js on bigger, ecosystem-heavy projects. Try it yourself—spin up a Deno script, check your cache with <code>deno info</code>, and see if it clicks for you.</p>
+<p>What’s your take? Node.js veteran or Deno newbie? Let me know in the comments!</p>
+<hr>
+<p>This post covers Deno’s core concepts, contrasts it with Node.js, and ties in our Supabase example for a practical angle. Feel free to tweak the tone or add more details if you’re aiming for a specific audience! Want me to adjust anything?</p>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="lx-navigation">
+	<div class="lx-cover next lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-l.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2025/04/08/From-Software-Search-to-Code-Generation-The-Agentic-Coding-Revolution/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Next</span>
+						<h3>From So...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+        <div class="lx-cover prev lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-r.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2024/12/12/How-to-Generate-a-VSIX-File-from-VS-Code-Extension-Source-Code/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Prev</span>
+						<h3>How to ...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+
+</div>
+
+<footer>
+  <div>
+  Copyright &copy; 2026.<a href="/">Kamus' Notes</a><br>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme <a href="https://lx.js.org" target="_blank">Lx</a><br>
+  </div>
+</footer>
+
+</div>
+
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<div class="menu visibility">
+  <div class="menu-head">
+    <span class="layer">
+      <div class="col">
+        <div class="row for-pic">
+          <div class="profile-pic">
+            <a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"/></a>
+          </div>
+        </div>
+        <div class="row for-name">
+          <p>Kamus</p>
+          <span class="tagline">Hello, World!</span>
+        </div>
+      </div>
+    </span>
+  </div>
+  <nav class="menu-container">
+  <ul class="menu-items">
+    <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    <li><a href="/archives/"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+    
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-bookmark fa-fw"></i>Pages</span>
+        <ul>
+          <li><a href="/about/">About</a></li>
+        </ul>
+    </li>
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-link fa-fw"></i>Friends</span>
+        <ul>
+          <li> <a href="https://www.eygle.com/" target="_blank">Eygle</a></li>
+        <li> <a href="https://yangtingkun.net" target="_blank">Laoyang</a></li>
+        </ul>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/local.search.min.js"></script>
+
+</body>
+</html>

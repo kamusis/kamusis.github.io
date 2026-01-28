@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=#58b77a>
+  <title>How to Find the Corresponding Session in MogDB/openGauss from OS Thread ID | Kamus&#39; Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  <meta name="description" content="Diagnostic NeedsWhen the MogDB database consumes a significant amount of system resources, such as nearly 100% CPU usage, how can we determine which session(...">
+  <link rel="canonical" href="https://www.kamusis.me/2024/05/27/How-to-Find-the-Corresponding-Session-in-MogDB-openGauss-from-OS-Thread-ID/">
+  <meta property="og:site_name" content="Kamus' Notes">
+  <meta property="og:title" content="How to Find the Corresponding Session in MogDB/openGauss from OS Thread ID | Kamus' Notes">
+  <meta property="og:description" content="Diagnostic NeedsWhen the MogDB database consumes a significant amount of system resources, such as nearly 100% CPU usage, how can we determine which session(...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.kamusis.me/2024/05/27/How-to-Find-the-Corresponding-Session-in-MogDB-openGauss-from-OS-Thread-ID/">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Find the Corresponding Session in MogDB/openGauss from OS Thread ID | Kamus' Notes">
+  <meta name="twitter:description" content="Diagnostic NeedsWhen the MogDB database consumes a significant amount of system resources, such as nearly 100% CPU usage, how can we determine which session(...">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"How to Find the Corresponding Session in MogDB/openGauss from OS Thread ID","description":"Diagnostic NeedsWhen the MogDB database consumes a significant amount of system resources, such as nearly 100% CPU usage, how can we determine which session(...","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kamusis.me/2024/05/27/How-to-Find-the-Corresponding-Session-in-MogDB-openGauss-from-OS-Thread-ID/"},"author":{"@type":"Person","name":"Kamus"},"publisher":{"@type":"Person","name":"Kamus"},"datePublished":"2024-05-27T06:55:48.000Z","dateModified":"2024-05-27T07:01:07.000Z","url":"https://www.kamusis.me/2024/05/27/How-to-Find-the-Corresponding-Session-in-MogDB-openGauss-from-OS-Thread-ID/","image":["https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg"]}</script>
+  <script id="hexo-configurations">
+  var CONFIG = {
+    root: '/',
+    theme: 'lx',
+    version: '0.4.4',
+    localsearch:{
+      "enable": true,
+      "trigger": "auto",
+      "top_n_per_article": 1,
+      "unescape": false,
+      "preload": false
+      },
+    path: 'search.xml'
+  };
+</script>
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/css/main.min.css">
+  
+  <style type="text/css">
+    pre,
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+    html {
+      font-family: sans-serif;
+    }
+    body {
+      font-family: sans-serif;
+    }
+    h1, h2, h3, h4, h5, figure {
+      font-family: sans-serif;
+    }
+    .menu-container{
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "",
+	     });
+	}); 
+	</script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+<body>
+<div class="single">
+<div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Search..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+<div id="page">
+<div class="header">
+  <div id="lx-aside" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg)" data-stellar-background-ratio="0.5">
+    <div class="overlay">
+      <a href="javascript:;" class="popup-trigger" title="search"><i class="menu-item-icon fa fa-search fa-fw"></i></a>
+      <div class="page-title">
+        <div class="avatar"><a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"></a></div>
+        <span>2024-05-27</span>
+        <h2>How to Find ...</h2>
+        <div class="tags"><i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/MogDB/" rel="tag">MogDB</a></div>
+        <div class="social-links">
+    <a href="https://github.com/kamusis" target="_blank" title="social-link"><i class="fa fa-github fa-fw"></i></a>
+    <a href="mailto:kamusis@gmail.com" target="_blank" title="social-link"><i class="fa fa-envelope fa-fw"></i></a>
+    <a href="https://www.linkedin.com/in/kamus/" target="_blank" title="social-link"><i class="fa fa-linkedin fa-fw"></i></a>
+    <a href="https://twitter.com/kamusis" target="_blank" title="social-link"><i class="fa fa-twitter fa-fw"></i></a>
+    <a href="https://www.instagram.com/kamusis/" target="_blank" title="social-link"><i class="fa fa-instagram fa-fw"></i></a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="lx-main-content">
+  <div class="lx-post">
+    <div class="lx-entry padding">
+      <div>
+        <h3 id="Diagnostic-Needs"><a href="#Diagnostic-Needs" class="headerlink" title="Diagnostic Needs"></a>Diagnostic Needs</h3><p>When the MogDB database consumes a significant amount of system resources, such as nearly 100% CPU usage, how can we determine which session(s) in the database are using these resources?</p>
+<p>In Oracle databases, diagnosing such issues typically involves associating <code>v$session</code>, <code>v$process</code>, and the OS process ID found using the <code>top</code> or <code>ps</code> commands. However, MogDB uses a thread model, and only one process ID is visible at the OS level. So, how do we pinpoint the problem?</p>
+<p>Since MogDB uses a thread model, unlike PostgreSQL’s process model, checking network port access with the <code>lsof</code> command at the OS level will show multiple user sessions connected, but only the process ID will be displayed in the PID column, not the thread.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">lsof -i 4 -a -p `pgrep -u omm3 mogdb`</span></span><br><span class="line">COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME</span><br><span class="line">mogdb   12027   omm3    8u  IPv4 20313752      0t0  TCP *:biimenu (LISTEN)</span><br><span class="line">mogdb   12027   omm3    9u  IPv4 20313753      0t0  TCP *:18001 (LISTEN)</span><br><span class="line">mogdb   12027   omm3  325u  IPv4 28320946      0t0  TCP mogdb-kernel-0004:biimenu-&gt;softbank060132034173.bbtec.net:45206 (ESTABLISHED)</span><br><span class="line">mogdb   12027   omm3  330u  IPv4 28316174      0t0  TCP mogdb-kernel-0004:biimenu-&gt;softbank060132034173.bbtec.net:45208 (ESTABLISHED)</span><br><span class="line">mogdb   12027   omm3  336u  IPv4 28302815      0t0  TCP mogdb-kernel-0004:biimenu-&gt;softbank060132034173.bbtec.net:45210 (ESTABLISHED)</span><br><span class="line">mogdb   12027   omm3  340u  IPv4 28323140      0t0  TCP mogdb-kernel-0004:biimenu-&gt;softbank060132034173.bbtec.net:45212 (ESTABLISHED)</span><br><span class="line">mogdb   12027   omm3  360u  IPv4 28323141      0t0  TCP mogdb-kernel-0004:biimenu-&gt;softbank060132034173.bbtec.net:45214 (ESTABLISHED)</span><br><span class="line">mogdb   12027   omm3  375u  IPv4 28305050      0t0  TCP mogdb-kernel-0004:biimenu-&gt;softbank060132034173.bbtec.net:45216 (ESTABLISHED)</span><br></pre></td></tr></table></figure>
+
+<h3 id="How-to-Get-Thread-ID"><a href="#How-to-Get-Thread-ID" class="headerlink" title="How to Get Thread ID"></a>How to Get Thread ID</h3><p>You can use <code>htop</code>. After opening <code>htop</code>, press F5 to display the process tree. The first PID is the process ID, and each line under the tree structure shows the corresponding thread ID for that process.</p>
+<p><img src="https://s2.loli.net/2022/05/30/HmitAhrOMNaX9WB.png" alt="img"></p>
+<p>You can also use the <code>ps</code> command. The <code>-L</code> parameter displays threads, and the <code>-o</code> parameter specifies the columns of interest.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">ps -Lp `pgrep -u omm3 mogdb` -o %cpu,tid,pid,ppid,cmd,<span class="built_in">comm</span></span></span><br><span class="line"><span class="meta prompt_">%</span><span class="language-bash">CPU   TID   PID  PPID CMD                         COMMAND</span></span><br><span class="line"> 0.0 17847 17847     1 /opt/mogdb3/app/bin/mogdb - mogdb</span><br><span class="line"> 0.0 17848 17847     1 /opt/mogdb3/app/bin/mogdb - jemalloc_bg_thd</span><br><span class="line"> 0.0 17854 17847     1 /opt/mogdb3/app/bin/mogdb - mogdb</span><br><span class="line"> 0.0 17855 17847     1 /opt/mogdb3/app/bin/mogdb - syslogger</span><br><span class="line"> 0.0 17856 17847     1 /opt/mogdb3/app/bin/mogdb - reaper</span><br><span class="line"> 0.0 17857 17847     1 /opt/mogdb3/app/bin/mogdb - jemalloc_bg_thd</span><br><span class="line"> 0.0 17858 17847     1 /opt/mogdb3/app/bin/mogdb - jemalloc_bg_thd</span><br><span class="line"> 0.0 17860 17847     1 /opt/mogdb3/app/bin/mogdb - jemalloc_bg_thd</span><br><span class="line"> 0.0 17884 17847     1 /opt/mogdb3/app/bin/mogdb - checkpointer</span><br><span class="line"> 0.0 17885 17847     1 /opt/mogdb3/app/bin/mogdb - Spbgwriter</span><br><span class="line"> 0.1 17886 17847     1 /opt/mogdb3/app/bin/mogdb - pagewriter</span><br><span class="line"> 0.0 17887 17847     1 /opt/mogdb3/app/bin/mogdb - pagewriter</span><br><span class="line"> 0.0 17888 17847     1 /opt/mogdb3/app/bin/mogdb - pagewriter</span><br><span class="line"> 0.0 17889 17847     1 /opt/mogdb3/app/bin/mogdb - pagewriter</span><br><span class="line"> 0.0 17890 17847     1 /opt/mogdb3/app/bin/mogdb - pagewriter</span><br><span class="line"> 0.8 17891 17847     1 /opt/mogdb3/app/bin/mogdb - WALwriter</span><br><span class="line"> 0.0 17892 17847     1 /opt/mogdb3/app/bin/mogdb - WALwriteraux</span><br><span class="line"> 0.0 17893 17847     1 /opt/mogdb3/app/bin/mogdb - AVClauncher</span><br><span class="line"> 0.0 17894 17847     1 /opt/mogdb3/app/bin/mogdb - Jobscheduler</span><br><span class="line"> 0.0 17895 17847     1 /opt/mogdb3/app/bin/mogdb - asyncundolaunch</span><br><span class="line"> 0.0 17896 17847     1 /opt/mogdb3/app/bin/mogdb - globalstats</span><br><span class="line"> 0.0 17897 17847     1 /opt/mogdb3/app/bin/mogdb - applylauncher</span><br><span class="line"> 0.0 17898 17847     1 /opt/mogdb3/app/bin/mogdb - statscollector</span><br><span class="line"> 0.0 17899 17847     1 /opt/mogdb3/app/bin/mogdb - snapshotworker</span><br><span class="line"> 0.1 17900 17847     1 /opt/mogdb3/app/bin/mogdb - TrackStmtWorker</span><br><span class="line"> 0.0 17901 17847     1 /opt/mogdb3/app/bin/mogdb - 2pccleaner</span><br><span class="line"> 0.0 17902 17847     1 /opt/mogdb3/app/bin/mogdb - faultmonitor</span><br><span class="line"> 0.0 17904 17847     1 /opt/mogdb3/app/bin/mogdb - undorecycler</span><br><span class="line"> 0.0 18372 17847     1 /opt/mogdb3/app/bin/mogdb - worker</span><br><span class="line"> 0.0 18373 17847     1 /opt/mogdb3/app/bin/mogdb - worker</span><br><span class="line"> 0.0 18374 17847     1 /opt/mogdb3/app/bin/mogdb - worker</span><br><span class="line"> 0.0 18375 17847     1 /opt/mogdb3/app/bin/mogdb - worker</span><br><span class="line"> 0.0 18376 17847     1 /opt/mogdb3/app/bin/mogdb - worker</span><br><span class="line"> 0.0 18377 17847     1 /opt/mogdb3/app/bin/mogdb - worker</span><br><span class="line"> 0.0 18378 17847     1 /opt/mogdb3/app/bin/mogdb - worker</span><br><span class="line"> 0.0 18379 17847     1 /opt/mogdb3/app/bin/mogdb - worker</span><br><span class="line"> 0.0 18380 17847     1 /opt/mogdb3/app/bin/mogdb - worker</span><br><span class="line"> 0.0 18381 17847     1 /opt/mogdb3/app/bin/mogdb - worker</span><br><span class="line"> 0.0 18382 17847     1 /opt/mogdb3/app/bin/mogdb - worker</span><br><span class="line"> 0.0 18454 17847     1 /opt/mogdb3/app/bin/mogdb - worker</span><br><span class="line"> 0.0 19475 17847     1 /opt/mogdb3/app/bin/mogdb - worker</span><br><span class="line"> 0.0 19480 17847     1 /opt/mogdb3/app/bin/mogdb - worker</span><br><span class="line"> 0.0 29529 17847     1 /opt/mogdb3/app/bin/mogdb - worker</span><br><span class="line"> 0.0 30999 17847     1 /opt/mogdb3/app/bin/mogdb - worker</span><br></pre></td></tr></table></figure>
+
+<p>The rows in the <code>comm</code> column that display as “worker” are backend processes of user sessions in the database. Typically, user sessions that consume high CPU can be filtered to show only user sessions using the <code>grep</code> command.</p>
+<h3 id="How-to-Map-OS-Thread-ID-to-Database-Session"><a href="#How-to-Map-OS-Thread-ID-to-Database-Session" class="headerlink" title="How to Map OS Thread ID to Database Session"></a>How to Map OS Thread ID to Database Session</h3><p>Suppose on this server, the thread with ID 18372 is consuming a lot of CPU. In MogDB, you can query the <code>pg_os_threads</code> view to find the session ID corresponding to this thread.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MogDB<span class="operator">=</span># <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> pg_os_threads <span class="keyword">where</span> lwpid<span class="operator">=</span><span class="number">18372</span>;</span><br><span class="line"></span><br><span class="line">node_name <span class="operator">|</span> pid              <span class="operator">|</span> lwpid <span class="operator">|</span> thread_name <span class="operator">|</span> creation_time</span><br><span class="line"><span class="comment">----------+------------------+-------+-------------+------------------------------</span></span><br><span class="line">dn_6001   <span class="operator">|</span> <span class="number">140545137571584</span>  <span class="operator">|</span> <span class="number">18372</span> <span class="operator">|</span> dn_6001     <span class="operator">|</span> <span class="number">2022</span><span class="number">-05</span><span class="number">-30</span> <span class="number">19</span>:<span class="number">54</span>:<span class="number">42.459129</span><span class="operator">+</span><span class="number">08</span></span><br><span class="line">(<span class="number">1</span> <span class="type">row</span>)</span><br></pre></td></tr></table></figure>
+
+<p>The <code>pg_os_threads</code> view records the relationship between lightweight thread IDs and session IDs. The <code>lwpid</code> column is the OS thread ID, and the <code>pid</code> column is the database session ID. For detailed information, refer to the MogDB documentation on <code>PG_OS_THREADS</code>.</p>
+<p>If you have <code>monadmin</code> privileges, you can also query the <code>os_threads</code> view in the <code>dbe_perf</code> schema, which provides the same information.</p>
+<p>After finding the database session ID, you can perform various actions, such as querying the <code>dbe_perf.session_stat_activity</code> view to get the application name, client IP address, and the SQL query being executed by that session.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MogDB<span class="operator">=</span># <span class="keyword">select</span> application_name, client_addr, query <span class="keyword">from</span> dbe_perf.session_stat_activity <span class="keyword">where</span> pid<span class="operator">=</span><span class="number">140545137571584</span>;</span><br><span class="line"></span><br><span class="line">application_name <span class="operator">|</span> client_addr <span class="operator">|</span> query</span><br><span class="line"><span class="comment">-----------------+-------------+---------------------------------------------</span></span><br><span class="line">dn_6001          <span class="operator">|</span> <span class="number">172.16</span><span class="number">.0</span><span class="number">.176</span><span class="operator">|</span> <span class="keyword">SELECT</span> cfg_value <span class="keyword">FROM</span> bmsql_config <span class="keyword">WHERE</span> cfg_name <span class="operator">=</span> $<span class="number">1</span></span><br><span class="line">(<span class="number">1</span> <span class="type">row</span>)</span><br></pre></td></tr></table></figure>
+
+<p>You can also query the <code>dbe_perf.thread_wait_status</code> view to get the current wait event of the session. Note that this view contains the <code>lwtid</code> field, which directly corresponds to the thread ID.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MogDB<span class="operator">=</span># <span class="keyword">select</span> lwtid, wait_status, wait_event <span class="keyword">from</span> dbe_perf.thread_wait_status <span class="keyword">where</span> sessionid<span class="operator">=</span><span class="number">140545137571584</span>;</span><br><span class="line"></span><br><span class="line">lwtid <span class="operator">|</span> wait_status <span class="operator">|</span> wait_event</span><br><span class="line"><span class="comment">------+-------------+-----------</span></span><br><span class="line"><span class="number">18372</span> <span class="operator">|</span> wait cmd    <span class="operator">|</span> wait cmd</span><br><span class="line">(<span class="number">1</span> <span class="type">row</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="lx-navigation">
+	<div class="lx-cover next lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-l.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2024/05/27/How-to-build-blog-site-by-using-Hexo-in-Windows-WSL-and-deploy-to-GitHub-Pages/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Next</span>
+						<h3>How to ...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+        <div class="lx-cover prev lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-r.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2024/05/27/MogDB-ASH-Unveiling-the-Active-Session-History-for-Powerful-Database-Performance-Tuning/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Prev</span>
+						<h3>MogDB A...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+
+</div>
+
+<footer>
+  <div>
+  Copyright &copy; 2026.<a href="/">Kamus' Notes</a><br>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme <a href="https://lx.js.org" target="_blank">Lx</a><br>
+  </div>
+</footer>
+
+</div>
+
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<div class="menu visibility">
+  <div class="menu-head">
+    <span class="layer">
+      <div class="col">
+        <div class="row for-pic">
+          <div class="profile-pic">
+            <a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"/></a>
+          </div>
+        </div>
+        <div class="row for-name">
+          <p>Kamus</p>
+          <span class="tagline">Hello, World!</span>
+        </div>
+      </div>
+    </span>
+  </div>
+  <nav class="menu-container">
+  <ul class="menu-items">
+    <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    <li><a href="/archives/"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+    
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-bookmark fa-fw"></i>Pages</span>
+        <ul>
+          <li><a href="/about/">About</a></li>
+        </ul>
+    </li>
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-link fa-fw"></i>Friends</span>
+        <ul>
+          <li> <a href="https://www.eygle.com/" target="_blank">Eygle</a></li>
+        <li> <a href="https://yangtingkun.net" target="_blank">Laoyang</a></li>
+        </ul>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/local.search.min.js"></script>
+
+</body>
+</html>

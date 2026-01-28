@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=#58b77a>
+  <title>The Stealth Trap: Architecting a High-Performance Nginx Hardening &amp; Fail2ban Defense System | Kamus&#39; Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  <meta name="description" content="IntroductionIn a public cloud environment, every IP is under constant surveillance by automated botnets. Traditional security (like standard 404 errors) is o...">
+  <link rel="canonical" href="https://www.kamusis.me/2026/01/28/The-Stealth-Trap-Architecting-a-High-Performance-Nginx-Hardening-Fail2ban-Defense-System/">
+  <meta property="og:site_name" content="Kamus' Notes">
+  <meta property="og:title" content="The Stealth Trap: Architecting a High-Performance Nginx Hardening & Fail2ban Defense System | Kamus' Notes">
+  <meta property="og:description" content="IntroductionIn a public cloud environment, every IP is under constant surveillance by automated botnets. Traditional security (like standard 404 errors) is o...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.kamusis.me/2026/01/28/The-Stealth-Trap-Architecting-a-High-Performance-Nginx-Hardening-Fail2ban-Defense-System/">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Stealth Trap: Architecting a High-Performance Nginx Hardening & Fail2ban Defense System | Kamus' Notes">
+  <meta name="twitter:description" content="IntroductionIn a public cloud environment, every IP is under constant surveillance by automated botnets. Traditional security (like standard 404 errors) is o...">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"The Stealth Trap: Architecting a High-Performance Nginx Hardening & Fail2ban Defense System","description":"IntroductionIn a public cloud environment, every IP is under constant surveillance by automated botnets. Traditional security (like standard 404 errors) is o...","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kamusis.me/2026/01/28/The-Stealth-Trap-Architecting-a-High-Performance-Nginx-Hardening-Fail2ban-Defense-System/"},"author":{"@type":"Person","name":"Kamus"},"publisher":{"@type":"Person","name":"Kamus"},"datePublished":"2026-01-28T05:33:45.000Z","dateModified":"2026-01-28T06:33:45.892Z","url":"https://www.kamusis.me/2026/01/28/The-Stealth-Trap-Architecting-a-High-Performance-Nginx-Hardening-Fail2ban-Defense-System/","image":["https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg"]}</script>
+  <script id="hexo-configurations">
+  var CONFIG = {
+    root: '/',
+    theme: 'lx',
+    version: '0.4.4',
+    localsearch:{
+      "enable": true,
+      "trigger": "auto",
+      "top_n_per_article": 1,
+      "unescape": false,
+      "preload": false
+      },
+    path: 'search.xml'
+  };
+</script>
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/css/main.min.css">
+  
+  <style type="text/css">
+    pre,
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+    html {
+      font-family: sans-serif;
+    }
+    body {
+      font-family: sans-serif;
+    }
+    h1, h2, h3, h4, h5, figure {
+      font-family: sans-serif;
+    }
+    .menu-container{
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "",
+	     });
+	}); 
+	</script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+<body>
+<div class="single">
+<div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Search..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+<div id="page">
+<div class="header">
+  <div id="lx-aside" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg)" data-stellar-background-ratio="0.5">
+    <div class="overlay">
+      <a href="javascript:;" class="popup-trigger" title="search"><i class="menu-item-icon fa fa-search fa-fw"></i></a>
+      <div class="page-title">
+        <div class="avatar"><a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"></a></div>
+        <span>2026-01-28</span>
+        <h2>The Stealth ...</h2>
+        <div class="tags"><i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/fail2ban/" rel="tag">fail2ban</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/hardening/" rel="tag">hardening</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/ipset/" rel="tag">ipset</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/nginx/" rel="tag">nginx</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/security/" rel="tag">security</a></div>
+        <div class="social-links">
+    <a href="https://github.com/kamusis" target="_blank" title="social-link"><i class="fa fa-github fa-fw"></i></a>
+    <a href="mailto:kamusis@gmail.com" target="_blank" title="social-link"><i class="fa fa-envelope fa-fw"></i></a>
+    <a href="https://www.linkedin.com/in/kamus/" target="_blank" title="social-link"><i class="fa fa-linkedin fa-fw"></i></a>
+    <a href="https://twitter.com/kamusis" target="_blank" title="social-link"><i class="fa fa-twitter fa-fw"></i></a>
+    <a href="https://www.instagram.com/kamusis/" target="_blank" title="social-link"><i class="fa fa-instagram fa-fw"></i></a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="lx-main-content">
+  <div class="lx-post">
+    <div class="lx-entry padding">
+      <div>
+        <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>In a public cloud environment, every IP is under constant surveillance by automated botnets. Traditional security (like standard 404 errors) is often insufficient because it still consumes server resources to process malicious requests. This guide outlines a layered defense strategy that <strong>identifies</strong> malicious behavior, <strong>isolates</strong> it into dedicated logs, and <strong>bans</strong> the source IP at the firewall level using Fail2ban.</p>
+<hr>
+<h2 id="Core-Concepts"><a href="#Core-Concepts" class="headerlink" title="Core Concepts"></a>Core Concepts</h2><h3 id="1-The-“Default-Deny”-Philosophy"><a href="#1-The-“Default-Deny”-Philosophy" class="headerlink" title="1. The “Default Deny” Philosophy"></a>1. The “Default Deny” Philosophy</h3><p>Most bots scan IP ranges directly rather than specific domains. By configuring a <strong>Default Server</strong> in Nginx that catches all requests not matching your legitimate hostnames, you create a “sinkhole” for 90% of global background noise.</p>
+<h3 id="2-The-Power-of-Nginx-Status-Code-444"><a href="#2-The-Power-of-Nginx-Status-Code-444" class="headerlink" title="2. The Power of Nginx Status Code 444"></a>2. The Power of Nginx Status Code <code>444</code></h3><p>Nginx has a non-standard status code: <code>444 (No Response)</code>. When Nginx returns 444, it immediately terminates the TCP connection without sending any headers or data back to the client. This:</p>
+<ul>
+<li>Saves bandwidth.</li>
+<li>Reduces CPU overhead.</li>
+<li>Confuses scanners, making your server appear as if it’s offline or protected by an advanced firewall.</li>
+</ul>
+<h3 id="3-Log-Isolation-Noise-vs-Signal"><a href="#3-Log-Isolation-Noise-vs-Signal" class="headerlink" title="3. Log Isolation (Noise vs. Signal)"></a>3. Log Isolation (Noise vs. Signal)</h3><p>Instead of searching for attacks in a massive <code>access.log</code>, we redirect confirmed malicious probes to a dedicated <code>scanners.log</code>. This makes our Fail2ban triggers <strong>high-fidelity</strong>—if an IP appears in this log, it is 100% a malicious actor.</p>
+<hr>
+<h2 id="Step-by-Step-Implementation"><a href="#Step-by-Step-Implementation" class="headerlink" title="Step-by-Step Implementation"></a>Step-by-Step Implementation</h2><h3 id="Step-1-Create-the-Hardening-Snippet"><a href="#Step-1-Create-the-Hardening-Snippet" class="headerlink" title="Step 1: Create the Hardening Snippet"></a>Step 1: Create the Hardening Snippet</h3><p>We define common attack patterns (probing for <code>.env</code> files, <code>wp-admin</code>, <code>cgi-bin</code>, etc.) in a reusable snippet.</p>
+<p><strong>File Location (on server):</strong> <code>/etc/nginx/snippets/hardening.conf</code></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Block .env / .env.* probes</span></span><br><span class="line"><span class="section">location</span> <span class="regexp">~* \.env(\.|$)</span> &#123;</span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">log_not_found</span> <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Block common php/wordpress/profiler probes</span></span><br><span class="line"><span class="section">location</span> <span class="regexp">~* ^/(wp-admin|wp-login\.php|xmlrpc\.php|phpinfo(\.php)?|app_dev\.php|_profiler)(/|$)</span> &#123;</span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">log_not_found</span> <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Block hidden files (keep .well-known for ACME, etc.)</span></span><br><span class="line"><span class="section">location</span> <span class="regexp">~ /\.(?!well-known).*</span> &#123;</span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">log_not_found</span> <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Block common VCS/config/secret file probes (only if requested paths are exact)</span></span><br><span class="line"><span class="section">location</span> = /.git &#123;</span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="section">location</span> = /.svn &#123;</span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="section">location</span> = /.hg &#123;</span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Block common backup / editor swap files</span></span><br><span class="line"><span class="section">location</span> <span class="regexp">~* \.(bak|old|orig|save|swp|swo|tmp)$</span> &#123;</span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">log_not_found</span> <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Step-2-Configure-the-Stealth-Default-Server"><a href="#Step-2-Configure-the-Stealth-Default-Server" class="headerlink" title="Step 2: Configure the Stealth Default Server"></a>Step 2: Configure the Stealth Default Server</h3><p>This handles all traffic directed at your IP address or non-existent subdomains.</p>
+<p><strong>File Location (on server):</strong> <code>/etc/nginx/conf.d/00-default-deny.conf</code></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span> default_server;</span><br><span class="line">    <span class="attribute">server_name</span> _;</span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">443</span> ssl default_server;</span><br><span class="line">    <span class="attribute">server_name</span> _;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Reuse an existing cert so TLS handshake can complete before dropping</span></span><br><span class="line">    <span class="attribute">ssl_certificate</span> /etc/nginx/ssl/your-domain/fullchain.pem;</span><br><span class="line">    <span class="attribute">ssl_certificate_key</span> /etc/nginx/ssl/your-domain/key.pem;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Step-3-Apply-Hardening-to-Production-Vhosts"><a href="#Step-3-Apply-Hardening-to-Production-Vhosts" class="headerlink" title="Step 3: Apply Hardening to Production Vhosts"></a>Step 3: Apply Hardening to Production Vhosts</h3><p>Include the snippet in all your legitimate domain configurations to protect against targeted path scans.</p>
+<p><strong>Example Site Config:</strong> <code>/etc/nginx/conf.d/my-app.conf</code></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">443</span> ssl;</span><br><span class="line">    <span class="attribute">server_name</span> my-app.com;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">include</span> snippets/hardening.conf;</span><br><span class="line"></span><br><span class="line">    <span class="section">location</span> / &#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://127.0.0.1:8080;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Step-4-Configure-Fail2ban-Layer"><a href="#Step-4-Configure-Fail2ban-Layer" class="headerlink" title="Step 4: Configure Fail2ban Layer"></a>Step 4: Configure Fail2ban Layer</h3><p>With malicious traffic isolated in <code>scanners.log</code>, we can implement a “Zero Tolerance” policy.</p>
+<h4 id="A-Create-a-minimalist-Filter"><a href="#A-Create-a-minimalist-Filter" class="headerlink" title="A. Create a minimalist Filter"></a>A. Create a minimalist Filter</h4><p><strong>File Location (on server):</strong> <code>/etc/fail2ban/filter.d/nginx-aggressive.conf</code></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Definition]</span></span><br><span class="line"><span class="comment"># If it&#x27;s in the scanners log, it&#x27;s a confirmed bot. Catch everything.</span></span><br><span class="line"><span class="attr">failregex</span> = ^&lt;HOST&gt; -.*</span><br><span class="line">ignoreregex =</span><br></pre></td></tr></table></figure>
+
+<h4 id="B-Configure-the-Jail"><a href="#B-Configure-the-Jail" class="headerlink" title="B. Configure the Jail"></a>B. Configure the Jail</h4><p>Use a <strong>unique Jail name</strong> (e.g., <code>nginx-scanner-trap</code>) to avoid conflicts with system default naming conventions which may force-override paths.</p>
+<p><strong>File Location (on server):</strong> <code>/etc/fail2ban/jail.d/nginx-scanners.conf</code></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[nginx-scanner-trap]</span></span><br><span class="line"><span class="attr">enabled</span>  = <span class="literal">true</span></span><br><span class="line"><span class="attr">port</span>     = http,https</span><br><span class="line"><span class="attr">filter</span>   = nginx-aggressive</span><br><span class="line"><span class="attr">logpath</span>  = /var/log/nginx/scanners.log</span><br><span class="line"><span class="attr">backend</span>  = polling <span class="comment"># Reliable file-based monitoring</span></span><br><span class="line"><span class="attr">findtime</span> = <span class="number">600</span>      <span class="comment"># 10 minute window</span></span><br><span class="line"><span class="attr">maxretry</span> = <span class="number">1</span>        <span class="comment"># One strike and you&#x27;re out</span></span><br><span class="line"><span class="attr">bantime</span>  = <span class="number">604800</span>   <span class="comment"># Ban for 1 week (or -1 for permanent)</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Verification-Monitoring"><a href="#Verification-Monitoring" class="headerlink" title="Verification &amp; Monitoring"></a>Verification &amp; Monitoring</h2><h3 id="1-Test-the-Trap"><a href="#1-Test-the-Trap" class="headerlink" title="1. Test the Trap"></a>1. Test the Trap</h3><p>Run a scan against your own IP from a secondary network (e.g., mobile hotspot):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -I http://YOUR_SERVER_IP/.env</span><br></pre></td></tr></table></figure>
+
+<p>The connection should be immediately reset (or return no data).</p>
+<h3 id="2-Check-the-“Harvest”"><a href="#2-Check-the-“Harvest”" class="headerlink" title="2. Check the “Harvest”"></a>2. Check the “Harvest”</h3><p>Verify that the IP was logged and subsequently banned:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Verify the log entry has been generated</span></span><br><span class="line">sudo <span class="built_in">cat</span> /var/log/nginx/scanners.log</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check Fail2ban jail status</span></span><br><span class="line">sudo fail2ban-client status nginx-scanner-trap</span><br><span class="line"></span><br><span class="line"><span class="comment"># View real-time ban actions</span></span><br><span class="line">sudo <span class="built_in">tail</span> -f /var/log/fail2ban.<span class="built_in">log</span> | grep <span class="string">&quot;nginx-scanner-trap&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Phase-2-High-Performance-Optimization-with-ipset"><a href="#Phase-2-High-Performance-Optimization-with-ipset" class="headerlink" title="Phase 2: High-Performance Optimization with ipset"></a>Phase 2: High-Performance Optimization with <code>ipset</code></h2><p>As your banned list grows (e.g., beyond 1,000+ IPs), standard <code>iptables</code> rules can introduce network latency due to linear chain searching (O(n)). By switching to <code>ipset</code>, we utilize hash tables (O(1)), ensuring near-zero performance impact regardless of the blacklist size.</p>
+<h3 id="1-Install-Kernel-Tools"><a href="#1-Install-Kernel-Tools" class="headerlink" title="1. Install Kernel Tools"></a>1. Install Kernel Tools</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update &amp;&amp; sudo apt install ipset -y</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Update-Fail2ban-Global-Configuration"><a href="#2-Update-Fail2ban-Global-Configuration" class="headerlink" title="2. Update Fail2ban Global Configuration"></a>2. Update Fail2ban Global Configuration</h3><p>Refactor <code>jail.local</code> to use the high-performance action variables.</p>
+<p><strong>File:</strong> <code>/etc/fail2ban/jail.local</code></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[DEFAULT]</span></span><br><span class="line"><span class="comment"># Global high-performance ban action using ipset</span></span><br><span class="line"><span class="attr">banaction</span> = iptables-ipset</span><br><span class="line"><span class="attr">banaction_allports</span> = iptables-ipset[type=allports]</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-Implement-“Total-Lockdown”-All-Ports-Ban"><a href="#3-Implement-“Total-Lockdown”-All-Ports-Ban" class="headerlink" title="3. Implement “Total Lockdown” (All-Ports Ban)"></a>3. Implement “Total Lockdown” (All-Ports Ban)</h3><p>Apply the <code>allports</code> version to critical jails like SSH and your Nginx trap. This ensures that once a host is marked as malicious, it is blocked from <strong>every port</strong> on your server.</p>
+<p><strong>File:</strong> <code>/etc/fail2ban/jail.d/sshd-permban.conf</code></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[sshd]</span></span><br><span class="line"><span class="attr">enabled</span> = <span class="literal">true</span></span><br><span class="line"><span class="comment"># Use the all-ports ban action</span></span><br><span class="line"><span class="attr">banaction</span> = %(banaction_allports)s</span><br><span class="line"><span class="attr">bantime</span> = -<span class="number">1</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-Restart-Fail2ban-to-Apply-Changes"><a href="#4-Restart-Fail2ban-to-Apply-Changes" class="headerlink" title="4. Restart Fail2ban to Apply Changes"></a>4. Restart Fail2ban to Apply Changes</h3><p>After modifying fail2ban jail conf, fully restart Fail2ban to ensure the jail is reloaded and the updated <code>banaction</code> takes effect.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart fail2ban</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-Verify-Performance-Gains"><a href="#5-Verify-Performance-Gains" class="headerlink" title="5. Verify Performance Gains"></a>5. Verify Performance Gains</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Check the clean iptables ruleset (only one rule per jail)</span></span><br><span class="line">sudo iptables -L -n</span><br><span class="line"></span><br><span class="line"><span class="comment"># Inspect the high-speed hash set</span></span><br><span class="line">sudo ipset list</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>By shifting security from <strong>Response</strong> (sending 403 Forbidden) to <strong>Stealth</strong> (dropping connections) and <strong>Automated Retaliation</strong> (firewall banning), you significantly reduce the attack surface of your server. This setup allows your backend applications to focus their resources on legitimate users while the silent guard handles the noise.</p>
+<p>Phase 2 takes the system from “works well” to “scales indefinitely”: when the banned list grows into the thousands, <code>ipset</code> prevents performance degradation by replacing linear <code>iptables</code> chain growth with O(1) hash-set lookups. Combined with an all-ports ban policy for high-risk offenders (e.g., persistent SSH brute-force), you get a defense that remains fast, predictable, and operationally simple even under constant internet-wide scanning.</p>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="lx-navigation">
+	<div class="lx-cover next lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-l.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2026/01/28/The%20best%20practices%20for%20using%20partition%20table%20in%20PostgreSQL/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Next</span>
+						<h3></h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+        <div class="lx-cover prev lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-r.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2026/01/27/Deploying-Your-Own-High-Performance-VPN-Server-for-Windows-The-Ultimate-Guide/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Prev</span>
+						<h3>Deployi...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+
+</div>
+
+<footer>
+  <div>
+  Copyright &copy; 2026.<a href="/">Kamus' Notes</a><br>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme <a href="https://lx.js.org" target="_blank">Lx</a><br>
+  </div>
+</footer>
+
+</div>
+
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<div class="menu visibility">
+  <div class="menu-head">
+    <span class="layer">
+      <div class="col">
+        <div class="row for-pic">
+          <div class="profile-pic">
+            <a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"/></a>
+          </div>
+        </div>
+        <div class="row for-name">
+          <p>Kamus</p>
+          <span class="tagline">Hello, World!</span>
+        </div>
+      </div>
+    </span>
+  </div>
+  <nav class="menu-container">
+  <ul class="menu-items">
+    <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    <li><a href="/archives/"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+    
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-bookmark fa-fw"></i>Pages</span>
+        <ul>
+          <li><a href="/about/">About</a></li>
+        </ul>
+    </li>
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-link fa-fw"></i>Friends</span>
+        <ul>
+          <li> <a href="https://www.eygle.com/" target="_blank">Eygle</a></li>
+        <li> <a href="https://yangtingkun.net" target="_blank">Laoyang</a></li>
+        </ul>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/local.search.min.js"></script>
+
+</body>
+</html>

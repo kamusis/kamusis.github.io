@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=#58b77a>
+  <title>MogDB ASH: Unveiling the Active Session History for Powerful Database Performance Tuning | Kamus&#39; Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  <meta name="description" content="What is ASH?ASH, or Active Session History, is a feature in Oracle databases that records information about active sessions at regular intervals in both the ...">
+  <link rel="canonical" href="https://www.kamusis.me/2024/05/27/MogDB-ASH-Unveiling-the-Active-Session-History-for-Powerful-Database-Performance-Tuning/">
+  <meta property="og:site_name" content="Kamus' Notes">
+  <meta property="og:title" content="MogDB ASH: Unveiling the Active Session History for Powerful Database Performance Tuning | Kamus' Notes">
+  <meta property="og:description" content="What is ASH?ASH, or Active Session History, is a feature in Oracle databases that records information about active sessions at regular intervals in both the ...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.kamusis.me/2024/05/27/MogDB-ASH-Unveiling-the-Active-Session-History-for-Powerful-Database-Performance-Tuning/">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MogDB ASH: Unveiling the Active Session History for Powerful Database Performance Tuning | Kamus' Notes">
+  <meta name="twitter:description" content="What is ASH?ASH, or Active Session History, is a feature in Oracle databases that records information about active sessions at regular intervals in both the ...">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"MogDB ASH: Unveiling the Active Session History for Powerful Database Performance Tuning","description":"What is ASH?ASH, or Active Session History, is a feature in Oracle databases that records information about active sessions at regular intervals in both the ...","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kamusis.me/2024/05/27/MogDB-ASH-Unveiling-the-Active-Session-History-for-Powerful-Database-Performance-Tuning/"},"author":{"@type":"Person","name":"Kamus"},"publisher":{"@type":"Person","name":"Kamus"},"datePublished":"2024-05-27T06:48:34.000Z","dateModified":"2024-05-27T07:01:32.000Z","url":"https://www.kamusis.me/2024/05/27/MogDB-ASH-Unveiling-the-Active-Session-History-for-Powerful-Database-Performance-Tuning/","image":["https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg"]}</script>
+  <script id="hexo-configurations">
+  var CONFIG = {
+    root: '/',
+    theme: 'lx',
+    version: '0.4.4',
+    localsearch:{
+      "enable": true,
+      "trigger": "auto",
+      "top_n_per_article": 1,
+      "unescape": false,
+      "preload": false
+      },
+    path: 'search.xml'
+  };
+</script>
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/css/main.min.css">
+  
+  <style type="text/css">
+    pre,
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+    html {
+      font-family: sans-serif;
+    }
+    body {
+      font-family: sans-serif;
+    }
+    h1, h2, h3, h4, h5, figure {
+      font-family: sans-serif;
+    }
+    .menu-container{
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "",
+	     });
+	}); 
+	</script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+<body>
+<div class="single">
+<div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Search..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+<div id="page">
+<div class="header">
+  <div id="lx-aside" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg)" data-stellar-background-ratio="0.5">
+    <div class="overlay">
+      <a href="javascript:;" class="popup-trigger" title="search"><i class="menu-item-icon fa fa-search fa-fw"></i></a>
+      <div class="page-title">
+        <div class="avatar"><a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"></a></div>
+        <span>2024-05-27</span>
+        <h2>MogDB ASH: U...</h2>
+        <div class="tags"><i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/MogDB/" rel="tag">MogDB</a></div>
+        <div class="social-links">
+    <a href="https://github.com/kamusis" target="_blank" title="social-link"><i class="fa fa-github fa-fw"></i></a>
+    <a href="mailto:kamusis@gmail.com" target="_blank" title="social-link"><i class="fa fa-envelope fa-fw"></i></a>
+    <a href="https://www.linkedin.com/in/kamus/" target="_blank" title="social-link"><i class="fa fa-linkedin fa-fw"></i></a>
+    <a href="https://twitter.com/kamusis" target="_blank" title="social-link"><i class="fa fa-twitter fa-fw"></i></a>
+    <a href="https://www.instagram.com/kamusis/" target="_blank" title="social-link"><i class="fa fa-instagram fa-fw"></i></a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="lx-main-content">
+  <div class="lx-post">
+    <div class="lx-entry padding">
+      <div>
+        <h4 id="What-is-ASH"><a href="#What-is-ASH" class="headerlink" title="What is ASH?"></a>What is ASH?</h4><p>ASH, or Active Session History, is a feature in Oracle databases that records information about active sessions at regular intervals in both the database memory and persistent system tables. Data in memory is cleared after a database restart, but data in the persistent system tables is retained for a longer period. ASH is extremely useful for diagnosing issues when the database encounters problems or performance issues by allowing retrospective analysis to identify the root cause.</p>
+<p>In MogDB, a similar ASH capability is implemented.</p>
+<h4 id="ASH-Capability-in-MogDB"><a href="#ASH-Capability-in-MogDB" class="headerlink" title="ASH Capability in MogDB"></a>ASH Capability in MogDB</h4><p>The ASH capability in MogDB is divided into two parts: the open-source community version (openGauss) and the enhanced enterprise version.</p>
+<p><strong>1. openGauss Community Version:</strong><br>MogDB inherits the ASH capability from openGauss. The database provides two main views: <code>dbe_perf.LOCAL_ACTIVE_SESSION</code> and <code>GS_ASP</code>. The <code>LOCAL_ACTIVE_SESSION</code> view is an in-memory table, while <code>GS_ASP</code> is a persistent table. These views contain sampling information about current active sessions.</p>
+<p>Key parameters affecting ASH functionality:</p>
+<ul>
+<li><strong>enable_asp:</strong> Set to <code>on</code> or <code>off</code> to enable or disable ASH functionality. Default is <code>on</code>.</li>
+<li><strong>asp_sample_interval:</strong> Specifies the interval between each sample. Default is 1 second. To reduce sampling pressure, this can be set to a longer interval, up to a maximum of 10 seconds.</li>
+<li><strong>asp_sample_num:</strong> Specifies the total number of samples retained in the <code>LOCAL_ACTIVE_SESSION</code> in-memory table. Exceeding this number triggers a flush of in-memory samples to the <code>GS_ASP</code> system table and clears the in-memory table. Default is 100,000 samples.</li>
+<li><strong>asp_flush_rate:</strong> Determines which in-memory samples are flushed to the <code>GS_ASP</code> table. Samples with <code>sampleid % asp_flush_rate == 0</code> are marked as <code>need_flush_sample=true</code> and are persisted. Default is 10, meaning 1&#x2F;10 of samples are persisted.</li>
+<li><strong>asp_retention_days:</strong> Specifies the retention period for data in the <code>GS_ASP</code> table. Default is 2 days, with a maximum of 7 days.</li>
+</ul>
+<p><strong>2. MogDB Enterprise Version:</strong><br>The enterprise version enhances ASH capability, termed “SQL Execution State Observation,” by adding sampling of SQL execution operators. The <code>plan_node_id</code> field is added to views to record the execution operator during each sample, allowing identification of which step in the execution plan is causing performance issues.</p>
+<p>Key parameters affecting enterprise ASH functionality:</p>
+<ul>
+<li><strong>resource_track_level:</strong> Set to <code>operator</code> to enable operator sampling capability. Default is <code>query</code>, which records only SQL-level sampling.</li>
+</ul>
+<h4 id="LOCAL-ACTIVE-SESSION-View"><a href="#LOCAL-ACTIVE-SESSION-View" class="headerlink" title="LOCAL_ACTIVE_SESSION View"></a>LOCAL_ACTIVE_SESSION View</h4><p>This view records extensive information, including session ID, wait events, and SQL query ID (which can be linked to <code>dbe_perf.statement_history</code> or <code>dbe_perf.statement_complex_runtime</code> to retrieve SQL text and execution plans). </p>
+<p><img src="https://s2.loli.net/2022/10/24/UZR4wcX8lyeDHS7.png" alt="image-20221024155531233"></p>
+<p>Note: The <code>plan_node_id</code> field exists only in the enterprise version.</p>
+<h4 id="Recording-SQL-Execution-Plans"><a href="#Recording-SQL-Execution-Plans" class="headerlink" title="Recording SQL Execution Plans"></a>Recording SQL Execution Plans</h4><p>Querying the execution plans of past or currently executing SQL is a common requirement in database maintenance. In MogDB, the following views record SQL execution plans:</p>
+<ul>
+<li><strong>dbe_perf.STATEMENT_HISTORY:</strong> Records information about completed SQL, including execution plans (<code>query_plan</code> field).</li>
+<li><strong>dbe_perf.STATEMENT_COMPLEX_RUNTIME:</strong> Records information about currently executing SQL, including execution plans (<code>query_plan</code> field).</li>
+</ul>
+<p>Parameters affecting recording of SQL execution plans:</p>
+<ul>
+<li><strong>enable_resource_track:</strong> Enables or disables resource tracking. Default is <code>on</code>. If set to <code>off</code>, no user SQL execution information, including execution plans, is tracked.</li>
+<li><strong>resource_track_cost:</strong> Sets the minimum execution cost for SQL statements to be tracked. Only SQL with a cost above this value will have its execution plan recorded.</li>
+</ul>
+<h4 id="Comprehensive-Query-Example"><a href="#Comprehensive-Query-Example" class="headerlink" title="Comprehensive Query Example"></a>Comprehensive Query Example</h4><p>The following query retrieves all information about ongoing SQL executions, including historical samples:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> las.sample_time, las.application_name, las.unique_query_id, las.event, scr.query, scr.query_plan</span><br><span class="line"><span class="keyword">FROM</span> dbe_perf.local_active_session las, dbe_perf.statement_complex_runtime scr</span><br><span class="line"><span class="keyword">WHERE</span> las.thread_id <span class="operator">=</span> scr.pid <span class="keyword">AND</span> scr.pid <span class="operator">&lt;&gt;</span> pg_backend_pid();</span><br></pre></td></tr></table></figure>
+
+<p>Example output shows a frequently executed full table scan query, including SQL text, execution plan, and client information, providing valuable data for performance diagnosis.</p>
+<p><img src="https://s2.loli.net/2022/10/24/MxBW7629sCSaGKp.png" alt="image-20221024183300024"></p>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="lx-navigation">
+	<div class="lx-cover next lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-l.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2024/05/27/How-to-Find-the-Corresponding-Session-in-MogDB-openGauss-from-OS-Thread-ID/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Next</span>
+						<h3>How to ...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+        <div class="lx-cover prev lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-r.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2024/05/27/How-to-move-WSL-distro-in-Windows-11-to-another-drive/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Prev</span>
+						<h3>How to ...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+
+</div>
+
+<footer>
+  <div>
+  Copyright &copy; 2026.<a href="/">Kamus' Notes</a><br>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme <a href="https://lx.js.org" target="_blank">Lx</a><br>
+  </div>
+</footer>
+
+</div>
+
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<div class="menu visibility">
+  <div class="menu-head">
+    <span class="layer">
+      <div class="col">
+        <div class="row for-pic">
+          <div class="profile-pic">
+            <a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"/></a>
+          </div>
+        </div>
+        <div class="row for-name">
+          <p>Kamus</p>
+          <span class="tagline">Hello, World!</span>
+        </div>
+      </div>
+    </span>
+  </div>
+  <nav class="menu-container">
+  <ul class="menu-items">
+    <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    <li><a href="/archives/"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+    
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-bookmark fa-fw"></i>Pages</span>
+        <ul>
+          <li><a href="/about/">About</a></li>
+        </ul>
+    </li>
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-link fa-fw"></i>Friends</span>
+        <ul>
+          <li> <a href="https://www.eygle.com/" target="_blank">Eygle</a></li>
+        <li> <a href="https://yangtingkun.net" target="_blank">Laoyang</a></li>
+        </ul>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/local.search.min.js"></script>
+
+</body>
+</html>

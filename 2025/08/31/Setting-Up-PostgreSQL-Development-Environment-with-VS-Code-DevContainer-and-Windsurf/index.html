@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=#58b77a>
+  <title>Setting Up PostgreSQL Development Environment with VS Code, DevContainer, and Windsurf | Kamus&#39; Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  <meta name="description" content="Developing PostgreSQL from source on Windows can be challenging due to the need for numerous build tools and dependencies. Using a development container (Dev...">
+  <link rel="canonical" href="https://www.kamusis.me/2025/08/31/Setting-Up-PostgreSQL-Development-Environment-with-VS-Code-DevContainer-and-Windsurf/">
+  <meta property="og:site_name" content="Kamus' Notes">
+  <meta property="og:title" content="Setting Up PostgreSQL Development Environment with VS Code, DevContainer, and Windsurf | Kamus' Notes">
+  <meta property="og:description" content="Developing PostgreSQL from source on Windows can be challenging due to the need for numerous build tools and dependencies. Using a development container (Dev...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.kamusis.me/2025/08/31/Setting-Up-PostgreSQL-Development-Environment-with-VS-Code-DevContainer-and-Windsurf/">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Setting Up PostgreSQL Development Environment with VS Code, DevContainer, and Windsurf | Kamus' Notes">
+  <meta name="twitter:description" content="Developing PostgreSQL from source on Windows can be challenging due to the need for numerous build tools and dependencies. Using a development container (Dev...">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Setting Up PostgreSQL Development Environment with VS Code, DevContainer, and Windsurf","description":"Developing PostgreSQL from source on Windows can be challenging due to the need for numerous build tools and dependencies. Using a development container (Dev...","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kamusis.me/2025/08/31/Setting-Up-PostgreSQL-Development-Environment-with-VS-Code-DevContainer-and-Windsurf/"},"author":{"@type":"Person","name":"Kamus"},"publisher":{"@type":"Person","name":"Kamus"},"datePublished":"2025-08-31T08:43:04.000Z","dateModified":"2025-08-31T09:31:20.897Z","url":"https://www.kamusis.me/2025/08/31/Setting-Up-PostgreSQL-Development-Environment-with-VS-Code-DevContainer-and-Windsurf/","image":["https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg"]}</script>
+  <script id="hexo-configurations">
+  var CONFIG = {
+    root: '/',
+    theme: 'lx',
+    version: '0.4.4',
+    localsearch:{
+      "enable": true,
+      "trigger": "auto",
+      "top_n_per_article": 1,
+      "unescape": false,
+      "preload": false
+      },
+    path: 'search.xml'
+  };
+</script>
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/css/main.min.css">
+  
+  <style type="text/css">
+    pre,
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+    html {
+      font-family: sans-serif;
+    }
+    body {
+      font-family: sans-serif;
+    }
+    h1, h2, h3, h4, h5, figure {
+      font-family: sans-serif;
+    }
+    .menu-container{
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "",
+	     });
+	}); 
+	</script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+<body>
+<div class="single">
+<div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Search..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+<div id="page">
+<div class="header">
+  <div id="lx-aside" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg)" data-stellar-background-ratio="0.5">
+    <div class="overlay">
+      <a href="javascript:;" class="popup-trigger" title="search"><i class="menu-item-icon fa fa-search fa-fw"></i></a>
+      <div class="page-title">
+        <div class="avatar"><a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"></a></div>
+        <span>2025-08-31</span>
+        <h2>Setting Up P...</h2>
+        <div class="tags"><i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/AI-Coding/" rel="tag">AI Coding</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/DevContainer/" rel="tag">DevContainer</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Development-Setup/" rel="tag">Development Setup</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/PostgreSQL/" rel="tag">PostgreSQL</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/VSCode/" rel="tag">VSCode</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Windsurf/" rel="tag">Windsurf</a></div>
+        <div class="social-links">
+    <a href="https://github.com/kamusis" target="_blank" title="social-link"><i class="fa fa-github fa-fw"></i></a>
+    <a href="mailto:kamusis@gmail.com" target="_blank" title="social-link"><i class="fa fa-envelope fa-fw"></i></a>
+    <a href="https://www.linkedin.com/in/kamus/" target="_blank" title="social-link"><i class="fa fa-linkedin fa-fw"></i></a>
+    <a href="https://twitter.com/kamusis" target="_blank" title="social-link"><i class="fa fa-twitter fa-fw"></i></a>
+    <a href="https://www.instagram.com/kamusis/" target="_blank" title="social-link"><i class="fa fa-instagram fa-fw"></i></a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="lx-main-content">
+  <div class="lx-post">
+    <div class="lx-entry padding">
+      <div>
+        <p>Developing PostgreSQL from source on Windows can be challenging due to the need for numerous build tools and dependencies. Using a development container (DevContainer) provides a consistent, isolated environment that works seamlessly across Windows, macOS, and Linux, eliminating platform-specific setup hassles.</p>
+<p>Here is a simple step-by-step guide for setting up and building PostgreSQL source code with VS Code and a development container, and then using Windsurf to learn PostgreSQL source code.</p>
+<h2 id="Setup-and-Build-PostgreSQL-in-VS-Code"><a href="#Setup-and-Build-PostgreSQL-in-VS-Code" class="headerlink" title="Setup and Build PostgreSQL in VS Code"></a>Setup and Build PostgreSQL in VS Code</h2><h3 id="1-Download-the-Complete-PostgreSQL-Source-Code"><a href="#1-Download-the-Complete-PostgreSQL-Source-Code" class="headerlink" title="1. Download the Complete PostgreSQL Source Code"></a>1. Download the Complete PostgreSQL Source Code</h3><ul>
+<li>Obtain the full PostgreSQL source from the official repository or website. Typically run:<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://git.postgresql.org/git/postgresql.git</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-Create-Required-Directories-and-Files-in-PostgreSQL-Source-Code-Directory"><a href="#2-Create-Required-Directories-and-Files-in-PostgreSQL-Source-Code-Directory" class="headerlink" title="2. Create Required Directories and Files in PostgreSQL Source Code Directory"></a>2. Create Required Directories and Files in PostgreSQL Source Code Directory</h3><ul>
+<li>Create the following directories:<ul>
+<li><code>.vscode</code></li>
+<li><code>.devcontainer</code></li>
+</ul>
+</li>
+<li>Add necessary configuration files inside each directory:<ul>
+<li>Place VS Code workspace settings in <code>.vscode</code></li>
+<li>Add development container configuration files (e.g., <code>devcontainer.json</code> and <code>Dockerfile</code>) in <code>.devcontainer</code>.</li>
+</ul>
+</li>
+</ul>
+<p>Add the following content to the <code>devcontainer.json</code> file:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;PostgreSQL Dev&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;build&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;dockerfile&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Dockerfile&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;customizations&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;vscode&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;extensions&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;ms-vscode.cpptools&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;ms-vscode.cmake-tools&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;Codeium.codeium&quot;</span></span><br><span class="line">      <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;settings&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;editor.formatOnSave&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;files.eol&quot;</span><span class="punctuation">:</span> <span class="string">&quot;\n&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;editor.codeActionsOnSave&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;source.fixAll.eslint&quot;</span><span class="punctuation">:</span> <span class="string">&quot;explicit&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Add the following content to the <code>Dockerfile</code> file:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">22.04</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> apt update &amp;&amp; apt install -y \</span></span><br><span class="line"><span class="language-bash">    build-essential \</span></span><br><span class="line"><span class="language-bash">    flex \</span></span><br><span class="line"><span class="language-bash">    bison \</span></span><br><span class="line"><span class="language-bash">    libreadline-dev \</span></span><br><span class="line"><span class="language-bash">    zlib1g-dev \</span></span><br><span class="line"><span class="language-bash">    pkg-config \</span></span><br><span class="line"><span class="language-bash">    libssl-dev \</span></span><br><span class="line"><span class="language-bash">    libxml2-dev \</span></span><br><span class="line"><span class="language-bash">    libxslt1-dev \</span></span><br><span class="line"><span class="language-bash">    libedit-dev \</span></span><br><span class="line"><span class="language-bash">    libicu-dev \</span></span><br><span class="line"><span class="language-bash">    git \</span></span><br><span class="line"><span class="language-bash">    curl \</span></span><br><span class="line"><span class="language-bash">    &amp;&amp; <span class="built_in">rm</span> -rf /var/lib/apt/lists/*</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ENV</span> CC=/usr/bin/gcc</span><br><span class="line"><span class="keyword">ENV</span> CXX=/usr/bin/g++</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>For editors using the Microsoft C&#x2F;C++ extension, it’s recommended to add a <code>c_cpp_properties.json</code> file to the <code>.vscode</code>.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;configurations&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Linux&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;includePath&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;$&#123;workspaceFolder&#125;/**&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;$&#123;workspaceFolder&#125;/src/include&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;$&#123;workspaceFolder&#125;/src/include/utils&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;$&#123;workspaceFolder&#125;/src/backend&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;$&#123;workspaceFolder&#125;/src/backend/utils&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;/usr/include&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;/usr/local/include&quot;</span></span><br><span class="line">      <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;defines&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;compilerPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/usr/bin/gcc&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;cStandard&quot;</span><span class="punctuation">:</span> <span class="string">&quot;c11&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;cppStandard&quot;</span><span class="punctuation">:</span> <span class="string">&quot;c++14&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;intelliSenseMode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;linux-gcc-x64&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="number">4</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>For editors (e.g., Windsurf) using clangd instead of the Microsoft C&#x2F;C++ extension, it’s recommended to add a <code>.clangd</code> configuration file and a <code>compile_commands.json</code> file to the project root.</p>
+</li>
+</ul>
+<p><u>.clangd</u></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CompileFlags:</span><br><span class="line">  Add: [</span><br><span class="line">    &quot;-I$&#123;workspaceFolder&#125;/src/include&quot;,</span><br><span class="line">    &quot;-I$&#123;workspaceFolder&#125;/src/include/utils&quot;,</span><br><span class="line">    &quot;-I$&#123;workspaceFolder&#125;/src/backend&quot;, </span><br><span class="line">    &quot;-I$&#123;workspaceFolder&#125;/src/backend/utils&quot;,</span><br><span class="line">    &quot;-std=c11&quot;</span><br><span class="line">  ]</span><br></pre></td></tr></table></figure>
+
+<p><u>compile_commands.json</u></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;directory&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/workspaces/postgresql&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;command&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/usr/bin/gcc -I/workspaces/postgresql/src/include -I/workspaces/postgresql/src/backend -c /workspaces/postgresql/src/backend/bootstrap/bootstrap.c -o bootstrap.o&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/workspaces/postgresql/src/backend/bootstrap/bootstrap.c&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;directory&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/workspaces/postgresql&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;command&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/usr/bin/gcc -I/workspaces/postgresql/src/include -I/workspaces/postgresql/src/backend -c /workspaces/postgresql/src/backend/utils/init/globals.c -o globals.o&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/workspaces/postgresql/src/backend/utils/init/globals.c&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>To ensure consistent line endings and proper handling of text and binary files in your PostgreSQL project, add the following content to the<code>.gitattributes</code> file in project root:</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"># Set default behavior to automatically normalize line endings to LF</span><br><span class="line">* text=auto eol=lf</span><br><span class="line"></span><br><span class="line"># Explicitly declare text files to be normalized to LF</span><br><span class="line">*.c text eol=lf</span><br><span class="line">*.h text eol=lf</span><br><span class="line">*.cpp text eol=lf</span><br><span class="line">*.hpp text eol=lf</span><br><span class="line">*.cc text eol=lf</span><br><span class="line">*.hh text eol=lf</span><br><span class="line">*.py text eol=lf</span><br><span class="line">*.sh text eol=lf</span><br><span class="line">*.pl text eol=lf</span><br><span class="line">*.pm text eol=lf</span><br><span class="line">*.sql text eol=lf</span><br><span class="line">Makefile text eol=lf</span><br><span class="line">makefile text eol=lf</span><br><span class="line">*.mk text eol=lf</span><br><span class="line"></span><br><span class="line"># Declare binary files that should not be modified</span><br><span class="line">*.png binary</span><br><span class="line">*.jpg binary</span><br><span class="line">*.gif binary</span><br><span class="line">*.ico binary</span><br><span class="line">*.zip binary</span><br><span class="line">*.tar binary</span><br><span class="line">*.gz binary</span><br><span class="line">*.pdf binary</span><br></pre></td></tr></table></figure>
+
+<p>This configuration will automatically normalize line endings for text files to LF, and protect binary files from unwanted line ending conversions, improving cross-platform compatibility.</p>
+<p>Finnally, the newly created directories and files and modified files should look like this:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">postgresql/</span><br><span class="line">├── All the stuff in the original postgresql source code</span><br><span class="line">├── .devcontainer/</span><br><span class="line">│   ├── devcontainer.json</span><br><span class="line">│   └── Dockerfile</span><br><span class="line">├── .vscode/</span><br><span class="line">│   └── c_cpp_properties.json</span><br><span class="line">├── .gitattributes</span><br><span class="line">├── .clangd</span><br><span class="line">└── compile_commands.json</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-Reopen-Folder-in-Container-VS-Code"><a href="#3-Reopen-Folder-in-Container-VS-Code" class="headerlink" title="3. Reopen Folder in Container (VS Code)"></a>3. Reopen Folder in Container (VS Code)</h3><ul>
+<li>In VS Code, use the “Dev Containers: Reopen in Container” command to open your workspace within the defined development container. If you can’t find this command by Ctrl+Shift+P (or Cmd+Shift+P on macOS), you can install the Dev Containers extension from the VS Code marketplace.</li>
+</ul>
+<h3 id="4-Build-PostgreSQL-in-the-Container"><a href="#4-Build-PostgreSQL-in-the-Container" class="headerlink" title="4. Build PostgreSQL in the Container"></a>4. Build PostgreSQL in the Container</h3><ul>
+<li>In the container’s terminal, execute:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure &amp;&amp; make</span><br></pre></td></tr></table></figure></li>
+<li>This will configure the build and compile all required files, including generated headers such as <code>errcodes.h</code>.</li>
+</ul>
+<p>These steps ensure a stable environment for building and developing PostgreSQL efficiently with VS Code and containers.</p>
+<ul>
+<li><h3 id="Access-this-Devcontainer-from-Windsurf"><a href="#Access-this-Devcontainer-from-Windsurf" class="headerlink" title="Access this Devcontainer from Windsurf"></a>Access this Devcontainer from Windsurf</h3><ul>
+<li>Close VS Code, the devcontainer will also stop automatically. No way to keep it running.</li>
+<li>Use <code>docker ps -a</code> to find the container id of this devcontainer.</li>
+<li>Use <code>docker start &lt;container_id&gt;</code> to start the devcontainer.</li>
+<li>Open Windsurf, use <code>Open a Remote Window -&gt; Attach to Running Container</code> to attach to this devcontainer.</li>
+<li>Windsurf cannot use Microsoft C&#x2F;C++ extension anymore, use clangd instead. Install clangd extension in Windsurf.</li>
+<li>In Windsurf, open the postgresql source code directory, should be <code>/workspaces/postgresql</code>.</li>
+</ul>
+<p><img src="https://s2.loli.net/2025/08/31/qxi1N8VKfdtQ9D3.png" alt="20250831181535"></p>
+<p>Thanks to the Cascade and the latest feature - DeepWiki of Windsurf, you can now enjoy the brand new learning experience powered by AI.</p>
+</li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="lx-navigation">
+	<div class="lx-cover next lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-l.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2026/01/27/Deploying-Your-Own-High-Performance-VPN-Server-for-Windows-The-Ultimate-Guide/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Next</span>
+						<h3>Deployi...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+        <div class="lx-cover prev lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-r.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2025/04/19/Vibe-Coding-A-10-Day-Journey-from-Zero-to-Building-a-Full-Stack-RSS-Validator-Tool/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Prev</span>
+						<h3>Vibe Co...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+
+</div>
+
+<footer>
+  <div>
+  Copyright &copy; 2026.<a href="/">Kamus' Notes</a><br>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme <a href="https://lx.js.org" target="_blank">Lx</a><br>
+  </div>
+</footer>
+
+</div>
+
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<div class="menu visibility">
+  <div class="menu-head">
+    <span class="layer">
+      <div class="col">
+        <div class="row for-pic">
+          <div class="profile-pic">
+            <a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"/></a>
+          </div>
+        </div>
+        <div class="row for-name">
+          <p>Kamus</p>
+          <span class="tagline">Hello, World!</span>
+        </div>
+      </div>
+    </span>
+  </div>
+  <nav class="menu-container">
+  <ul class="menu-items">
+    <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    <li><a href="/archives/"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+    
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-bookmark fa-fw"></i>Pages</span>
+        <ul>
+          <li><a href="/about/">About</a></li>
+        </ul>
+    </li>
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-link fa-fw"></i>Friends</span>
+        <ul>
+          <li> <a href="https://www.eygle.com/" target="_blank">Eygle</a></li>
+        <li> <a href="https://yangtingkun.net" target="_blank">Laoyang</a></li>
+        </ul>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/local.search.min.js"></script>
+
+</body>
+</html>

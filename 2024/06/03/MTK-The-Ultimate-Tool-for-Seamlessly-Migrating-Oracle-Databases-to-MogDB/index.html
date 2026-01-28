@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=#58b77a>
+  <title>MTK: The Ultimate Tool for Seamlessly Migrating Oracle Databases to MogDB | Kamus&#39; Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  <meta name="description" content="Get the latest version MTK.12wget https://cdn-mogdb.enmotech.com/mtk/v2.6.3/mtk_2.6.3_linux_amd64.tar.gztar -xvf mtk_2.6.3_linux_amd64.tar.gz
+
+
+
+Generate MTK...">
+  <link rel="canonical" href="https://www.kamusis.me/2024/06/03/MTK-The-Ultimate-Tool-for-Seamlessly-Migrating-Oracle-Databases-to-MogDB/">
+  <meta property="og:site_name" content="Kamus' Notes">
+  <meta property="og:title" content="MTK: The Ultimate Tool for Seamlessly Migrating Oracle Databases to MogDB | Kamus' Notes">
+  <meta property="og:description" content="Get the latest version MTK.12wget https://cdn-mogdb.enmotech.com/mtk/v2.6.3/mtk_2.6.3_linux_amd64.tar.gztar -xvf mtk_2.6.3_linux_amd64.tar.gz
+
+
+
+Generate MTK...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.kamusis.me/2024/06/03/MTK-The-Ultimate-Tool-for-Seamlessly-Migrating-Oracle-Databases-to-MogDB/">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MTK: The Ultimate Tool for Seamlessly Migrating Oracle Databases to MogDB | Kamus' Notes">
+  <meta name="twitter:description" content="Get the latest version MTK.12wget https://cdn-mogdb.enmotech.com/mtk/v2.6.3/mtk_2.6.3_linux_amd64.tar.gztar -xvf mtk_2.6.3_linux_amd64.tar.gz
+
+
+
+Generate MTK...">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"MTK: The Ultimate Tool for Seamlessly Migrating Oracle Databases to MogDB","description":"Get the latest version MTK.12wget https://cdn-mogdb.enmotech.com/mtk/v2.6.3/mtk_2.6.3_linux_amd64.tar.gztar -xvf mtk_2.6.3_linux_amd64.tar.gz\n\n\n\nGenerate MTK...","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kamusis.me/2024/06/03/MTK-The-Ultimate-Tool-for-Seamlessly-Migrating-Oracle-Databases-to-MogDB/"},"author":{"@type":"Person","name":"Kamus"},"publisher":{"@type":"Person","name":"Kamus"},"datePublished":"2024-06-03T03:57:19.000Z","dateModified":"2024-06-03T03:58:00.000Z","url":"https://www.kamusis.me/2024/06/03/MTK-The-Ultimate-Tool-for-Seamlessly-Migrating-Oracle-Databases-to-MogDB/","image":["https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg"]}</script>
+  <script id="hexo-configurations">
+  var CONFIG = {
+    root: '/',
+    theme: 'lx',
+    version: '0.4.4',
+    localsearch:{
+      "enable": true,
+      "trigger": "auto",
+      "top_n_per_article": 1,
+      "unescape": false,
+      "preload": false
+      },
+    path: 'search.xml'
+  };
+</script>
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/css/main.min.css">
+  
+  <style type="text/css">
+    pre,
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+    html {
+      font-family: sans-serif;
+    }
+    body {
+      font-family: sans-serif;
+    }
+    h1, h2, h3, h4, h5, figure {
+      font-family: sans-serif;
+    }
+    .menu-container{
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "",
+	     });
+	}); 
+	</script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+<body>
+<div class="single">
+<div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Search..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+<div id="page">
+<div class="header">
+  <div id="lx-aside" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg)" data-stellar-background-ratio="0.5">
+    <div class="overlay">
+      <a href="javascript:;" class="popup-trigger" title="search"><i class="menu-item-icon fa fa-search fa-fw"></i></a>
+      <div class="page-title">
+        <div class="avatar"><a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"></a></div>
+        <span>2024-06-03</span>
+        <h2>MTK: The Ult...</h2>
+        <div class="tags"><i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Database-Migration/" rel="tag">Database Migration</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/MogDB/" rel="tag">MogDB</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Oracle/" rel="tag">Oracle</a></div>
+        <div class="social-links">
+    <a href="https://github.com/kamusis" target="_blank" title="social-link"><i class="fa fa-github fa-fw"></i></a>
+    <a href="mailto:kamusis@gmail.com" target="_blank" title="social-link"><i class="fa fa-envelope fa-fw"></i></a>
+    <a href="https://www.linkedin.com/in/kamus/" target="_blank" title="social-link"><i class="fa fa-linkedin fa-fw"></i></a>
+    <a href="https://twitter.com/kamusis" target="_blank" title="social-link"><i class="fa fa-twitter fa-fw"></i></a>
+    <a href="https://www.instagram.com/kamusis/" target="_blank" title="social-link"><i class="fa fa-instagram fa-fw"></i></a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="lx-main-content">
+  <div class="lx-post">
+    <div class="lx-entry padding">
+      <div>
+        <h2 id="Get-the-latest-version-MTK"><a href="#Get-the-latest-version-MTK" class="headerlink" title="Get the latest version MTK."></a>Get the latest version MTK.</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://cdn-mogdb.enmotech.com/mtk/v2.6.3/mtk_2.6.3_linux_amd64.tar.gz</span><br><span class="line">tar -xvf mtk_2.6.3_linux_amd64.tar.gz</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Generate-MTK-trial-license-online"><a href="#Generate-MTK-trial-license-online" class="headerlink" title="Generate MTK trial license online"></a>Generate MTK trial license online</h2><p>The trial license is valid for 1 month, and each email address can generate only one license. However, email addresses with the “enmotech.com” domain can generate licenses repeatedly. If clients wish to extend their trial of MTK beyond the initial month, they should contact Enmotech’s sales or pre-sales team to request an additional 1-month license.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[kamus@altlinux10 mtk_2.6.3_linux_amd64]$ ./mtk license gen</span><br><span class="line">License File Not Found (default license.json)</span><br><span class="line">The License code is invalid, start applying</span><br><span class="line">✔ Email: kamus@enmotech.com█</span><br><span class="line">Start applying for email kamus@enmotech.com authorization.</span><br><span class="line">Start parsing the interface to return data.</span><br><span class="line">Successful application for authorization. Please check the mail and save it as license.json.</span><br></pre></td></tr></table></figure>
+
+<p>Upon receiving the email, upload the attached license.json file to the MTK directory. Then, use the command mtk -v to verify the license validation.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[kamus@altlinux10 mtk_2.6.3_linux_amd64]$ ./mtk -v</span><br><span class="line">Using license file: /home/kamus/mogdb-tools/mtk_2.6.3_linux_amd64/license.json</span><br><span class="line">Name: kamus@enmotech.com</span><br><span class="line">Expiry: 2022-10-24 12:08:58.751194162 +0800 +0800</span><br><span class="line">License key verified!</span><br><span class="line">License checks OK!</span><br><span class="line"></span><br><span class="line">MMMMMMMM               MMMMMMMMTTTTTTTTTTTTTTTTTTTTTTTKKKKKKKKK    KKKKKKK</span><br><span class="line">M:::::::M             M:::::::MT:::::::::::::::::::::TK:::::::K    K:::::K</span><br><span class="line">M::::::::M           M::::::::MT:::::::::::::::::::::TK:::::::K    K:::::K</span><br><span class="line">M:::::::::M         M:::::::::MT:::::TT:::::::TT:::::TK:::::::K   K::::::K</span><br><span class="line">M::::::::::M       M::::::::::MTTTTTT  T:::::T  TTTTTTKK::::::K  K:::::KKK</span><br><span class="line">M:::::::::::M     M:::::::::::M        T:::::T          K:::::K K:::::K</span><br><span class="line">M:::::::M::::M   M::::M:::::::M        T:::::T          K::::::K:::::K</span><br><span class="line">M::::::M M::::M M::::M M::::::M        T:::::T          K:::::::::::K</span><br><span class="line">M::::::M  M::::M::::M  M::::::M        T:::::T          K:::::::::::K</span><br><span class="line">M::::::M   M:::::::M   M::::::M        T:::::T          K::::::K:::::K</span><br><span class="line">M::::::M    M:::::M    M::::::M        T:::::T          K:::::K K:::::K</span><br><span class="line">M::::::M     MMMMM     M::::::M        T:::::T        KK::::::K  K:::::KKK</span><br><span class="line">M::::::M               M::::::M      TT:::::::TT      K:::::::K   K::::::K</span><br><span class="line">M::::::M               M::::::M      T:::::::::T      K:::::::K    K:::::K</span><br><span class="line">M::::::M               M::::::M      T:::::::::T      K:::::::K    K:::::K</span><br><span class="line">MMMMMMMM               MMMMMMMM      TTTTTTTTTTT      KKKKKKKKK    KKKKKKK</span><br><span class="line"></span><br><span class="line">Release version: v2.6.3</span><br><span class="line">Git Commit hash: da0ed8ee</span><br><span class="line">Git Commit Date: 2022-09-22T01:17:49Z</span><br><span class="line">Git Tag        : v2.6.3</span><br><span class="line">Build timestamp: 20220922011907</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Install-Oracle-instant-client"><a href="#Install-Oracle-instant-client" class="headerlink" title="Install Oracle instant client"></a>Install Oracle instant client</h2><p>MTK requires the <a target="_blank" rel="noopener" href="https://www.oracle.com/database/technologies/instant-client/downloads.html">Oracle Instant Client</a> to migrate Oracle objects to MogDB. In this tutorial, we will download the <a target="_blank" rel="noopener" href="https://download.oracle.com/otn_software/linux/instantclient/217000/instantclient-basic-linux.x64-21.7.0.0.0dbru.zip">Oracle Instant Client for Linux x86-64 Basic Package</a>. After downloading, unzip the file and set the <code>LD_LIBRARY_PATH</code> parameter as follows:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/home/kamus/instantclient_21_7:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
+
+<p>In this tutorial, we will migrate a sample schema “customer_orders” to MogDB. The scripts for Oracle can be downloaded from the <a target="_blank" rel="noopener" href="https://github.com/oracle-samples/db-sample-schemas">db-sample-schemas</a> repository on GitHub.</p>
+<p><img src="https://s2.loli.net/2022/09/24/mKnfuY28shRNI9X.png" alt="image-20220924140451621"></p>
+<h2 id="Initialize-migration-project"><a href="#Initialize-migration-project" class="headerlink" title="Initialize migration project"></a>Initialize migration project</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./mtk init-project -s oracle -t mogdb -n ora2mogdb</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Modify-MTK-configuration-file"><a href="#Modify-MTK-configuration-file" class="headerlink" title="Modify MTK configuration file"></a>Modify MTK configuration file</h2><p>Modify the example MTK configuration file stored in the <code>project_name_dir/config</code> directory. Refer to the <a target="_blank" rel="noopener" href="https://docs.mogdb.io/en/mtk/v2.0/mtk-parameter">MTK documentation</a> for detailed information on each parameter. The essential configuration sections for MTK are <code>source</code>, <code>target</code>, and <code>object</code>.</p>
+<ul>
+<li><p><strong><code>source</code> section</strong>: This defines the connection to the source database. MTK needs to query the Oracle database dictionary to retrieve DDL. Therefore, it is typically recommended to use a DBA user, with the default system user being sufficient.</p>
+</li>
+<li><p><strong><code>target</code> section</strong>: This defines the connection to the target database.</p>
+</li>
+<li><p><strong><code>object</code> section</strong>: To migrate all objects within a schema, simply specify the schema name in the <code>schemas</code> section.</p>
+</li>
+</ul>
+<p>The <code>mtk.json</code> configuration file should look like this:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;source&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;oracle&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;connect&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;host&quot;</span><span class="punctuation">:</span> <span class="string">&quot;119.3.182.31&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;user&quot;</span><span class="punctuation">:</span> <span class="string">&quot;system&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="number">15221</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span> <span class="string">&quot;oracle&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;dbName&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ORACLE21C&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;charset&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;clientCharset&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;target&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mogdb&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;connect&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;host&quot;</span><span class="punctuation">:</span> <span class="string">&quot;127.0.0.1&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;user&quot;</span><span class="punctuation">:</span> <span class="string">&quot;co&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="number">26000</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Enmo@123&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;dbName&quot;</span><span class="punctuation">:</span> <span class="string">&quot;postgres&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;charset&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;clientCharset&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;object&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;tables&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;schemas&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;co&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;excludeTable&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;tableSplit&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;dataOnly&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;schemaOnly&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>For this tutorial, we plan to migrate all objects in the “CO” schema from the Oracle database to the same user in MogDB. For testing purposes, we will not create a new database in MogDB. Instead, we will create a new user “co” in the default database, <code>postgres</code>.</p>
+<p>Run the following command to create the user:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[omm@altlinux10 ~]$ gsql -d postgres -p 26000 -r</span><br><span class="line">gsql ((MogDB <span class="number">3.0</span>.<span class="number">2</span> build <span class="number">9</span>bc79be5) compiled at <span class="number">2022</span>-<span class="number">09</span>-<span class="number">18</span> <span class="number">00</span>:<span class="number">37</span>:<span class="number">49</span> commit <span class="number">0</span> last mr  )</span><br><span class="line">Non-SSL connection (SSL connection is recommended when requiring high-security)</span><br><span class="line">Type &quot;help&quot; for help.</span><br><span class="line"></span><br><span class="line">MogDB=# create user co identified by &quot;Enmo@<span class="number">123</span>&quot;;</span><br><span class="line">CREATE ROLE</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Start-migration"><a href="#Start-migration" class="headerlink" title="Start migration"></a>Start migration</h2><p>Now, we can start migration.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./mtk -c ora2mogdb/config/mtk.json</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Check-migration-report"><a href="#Check-migration-report" class="headerlink" title="Check migration report"></a>Check migration report</h2><p>The migration result report will be generated in the project report directory, available in both plain text and HTML formats. For simplicity, I have included the text format result in this tutorial.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">-----------------------</span><br><span class="line">ObjectName Type Summary</span><br><span class="line">-----------------------</span><br><span class="line"></span><br><span class="line">+------------------+-------------------+-------------------+--------+-----------+-------------+-------------+-------------+--------------------|-------------+</span><br><span class="line">|       Type       |     StartTime     |      EndTime      | Status | Total Num | Success Num | Warring Num | Failed  Num |Failed(Invalid) Num | Time        |</span><br><span class="line">+------------------+-------------------+-------------------+--------+-----------+-------------+-------------+-------------+--------------------|-------------+</span><br><span class="line">|Schema            |2022-09-24 15:12:36|2022-09-24 15:12:36|finish  |1          |1            |0            |0            |0                   |282 ms       ｜</span><br><span class="line">|Sequence          |2022-09-24 15:12:36|2022-09-24 15:12:36|finish  |0          |0            |0            |0            |0                   |210 ms       ｜</span><br><span class="line">|ObjectType        |2022-09-24 15:12:36|2022-09-24 15:12:36|finish  |0          |0            |0            |0            |0                   |356 ms       ｜</span><br><span class="line">|Queue             |2022-09-24 15:12:36|2022-09-24 15:12:37|finish  |0          |0            |0            |0            |0                   |177 ms       ｜</span><br><span class="line">|Table             |2022-09-24 15:12:37|2022-09-24 15:12:47|finish  |7          |7            |0            |0            |0                   |9 s 952 ms   ｜</span><br><span class="line">|TableData         |2022-09-24 15:12:47|2022-09-24 15:12:53|finish  |7          |7            |0            |0            |0                   |6 s 743 ms   ｜</span><br><span class="line">|Index             |2022-09-24 15:12:53|2022-09-24 15:12:53|finish  |7          |7            |0            |0            |0                   |1 ms         ｜</span><br><span class="line">|Constraint        |2022-09-24 15:12:53|2022-09-24 15:12:53|finish  |24         |23           |0            |1            |0                   |51 ms        ｜</span><br><span class="line">|DBLink            |2022-09-24 15:12:53|2022-09-24 15:12:53|finish  |0          |0            |0            |0            |0                   |67 ms        ｜</span><br><span class="line">|View              |2022-09-24 15:12:53|2022-09-24 15:12:54|finish  |4          |2            |0            |2            |0                   |723 ms       ｜</span><br><span class="line">|MaterializedView  |2022-09-24 15:12:54|2022-09-24 15:12:54|finish  |0          |0            |0            |0            |0                   |138 ms       ｜</span><br><span class="line">|Function          |2022-09-24 15:12:54|2022-09-24 15:12:54|finish  |0          |0            |0            |0            |0                   |113 ms       ｜</span><br><span class="line">|Procedure         |2022-09-24 15:12:54|2022-09-24 15:12:55|finish  |0          |0            |0            |0            |0                   |109 ms       ｜</span><br><span class="line">|Package           |2022-09-24 15:12:55|2022-09-24 15:12:55|finish  |0          |0            |0            |0            |0                   |77 ms        ｜</span><br><span class="line">|Trigger           |2022-09-24 15:12:55|2022-09-24 15:12:55|finish  |0          |0            |0            |0            |0                   |404 ms       ｜</span><br><span class="line">|Synonym           |2022-09-24 15:12:55|2022-09-24 15:12:55|finish  |0          |0            |0            |0            |0                   |74 ms        ｜</span><br><span class="line">|TableDataCom      |2022-09-24 15:12:55|2022-09-24 15:12:56|finish  |7          |7            |0            |0            |0                   |810 ms       ｜</span><br><span class="line">|AlterSequence     |2022-09-24 15:12:56|2022-09-24 15:12:56|finish  |0          |0            |0            |0            |0                   |71 ms        ｜</span><br><span class="line">|CollStatistics    |2022-09-24 15:12:56|2022-09-24 15:12:56|finish  |7          |7            |0            |0            |0                   |29 ms        ｜</span><br><span class="line">+------------------+-------------------+-------------------+--------+-----------+-------------+-------------+-------------+--------------------|-------------+</span><br></pre></td></tr></table></figure>
+
+
+
+<p>We can see that all tables and table data have been successfully migrated to MogDB without any errors. However, there is one failed constraint and two failed views.</p>
+<p>The failed constraint is a JSON check constraint, which is not supported by MogDB.</p>
+<p><img src="https://s2.loli.net/2022/09/24/RDKmsNFvroWTPgZ.png" alt="image-20220924153609138"></p>
+<p>The failed views are due to the <code>grouping_id</code> function and the <code>json_table</code> function, which are not yet implemented in MogDB ().</p>
+<table>
+<thead>
+<tr>
+<th>SQL</th>
+<th>ERROR</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://s2.loli.net/2022/09/24/4BMfnQ6alrqhvd8.png" alt="image-20220924154621375"></td>
+<td>pq: function grouping_id(character varying, character varying) does not exist</td>
+</tr>
+<tr>
+<td><img src="https://s2.loli.net/2022/09/24/D6kHROy3vFULnQA.png" alt="image-20220924154529308"></td>
+<td>pq: syntax error at or near “columns”</td>
+</tr>
+</tbody></table>
+<h2 id="Check-migration-result"><a href="#Check-migration-result" class="headerlink" title="Check migration result"></a>Check migration result</h2><p>Run the sample queries to ensure that all the data has been migrated to MogDB without any errors.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/* 5 products with the highest revenue</span><br><span class="line">   With their corresponding order rank */</span><br><span class="line">select p.product_name, </span><br><span class="line">       count(*) number_of_orders,</span><br><span class="line">       sum ( oi.quantity * oi.unit_price ) total_value,</span><br><span class="line">       rank () over ( </span><br><span class="line">         order by count(*) desc </span><br><span class="line">       ) order_count_rank</span><br><span class="line">from   products p</span><br><span class="line">join   order_items oi</span><br><span class="line">on     p.product_id = oi.product_id</span><br><span class="line">group  by p.product_name</span><br><span class="line">order  by sum ( oi.quantity * oi.unit_price ) desc</span><br><span class="line">fetch  first 5 rows only;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">MogDB=&gt; select p.product_name,</span><br><span class="line">MogDB-&gt;        count(*) number_of_orders,</span><br><span class="line">MogDB-&gt;        sum ( oi.quantity * oi.unit_price ) total_value,</span><br><span class="line">MogDB-&gt;        rank () over (</span><br><span class="line">MogDB(&gt;          order by sum ( oi.quantity * oi.unit_price ) desc</span><br><span class="line">MogDB(&gt;        ) revenue_rank</span><br><span class="line">MogDB-&gt; from   products p</span><br><span class="line">MogDB-&gt; join   order_items oi</span><br><span class="line">MogDB-&gt; on     p.product_id = oi.product_id</span><br><span class="line">MogDB-&gt; group  by p.product_name</span><br><span class="line">MogDB-&gt; order  by count(*) desc</span><br><span class="line">MogDB-&gt; fetch  first 5 rows only;</span><br><span class="line">     product_name      | number_of_orders | total_value | revenue_rank</span><br><span class="line">-----------------------+------------------+-------------+--------------</span><br><span class="line"> Girl&#x27;s Trousers (Red) |              148 |    15794.76 |            1</span><br><span class="line"> Boy&#x27;s Hoodie (Grey)   |              100 |     3754.08 |           35</span><br><span class="line"> Men&#x27;s Pyjamas (Blue)  |              100 |     3274.61 |           36</span><br><span class="line"> Men&#x27;s Coat (Red)      |               98 |     4230.30 |           31</span><br><span class="line"> Boy&#x27;s Socks (White)   |               98 |     3081.12 |           38</span><br><span class="line">(5 rows)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Migrating tables, table data, and indexes from Oracle to MogDB typically proceeds without issues. However, for views, procedures, functions, and packages, some modifications to the source code may be necessary. With the ongoing development of Oracle compatibility in MogDB, we believe that the need for such modifications will decrease over time, making the migration process from Oracle to MogDB even smoother.</p>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="lx-navigation">
+	<div class="lx-cover next lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-l.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2024/06/05/Working-Mechanism-of-synchronous-standby-names-in-MogDB/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Next</span>
+						<h3>Working...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+        <div class="lx-cover prev lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-r.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2024/05/30/Ensuring-Data-Integrity-How-Major-Databases-Handle-Partial-Writes-and-Atomic-Operations/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Prev</span>
+						<h3>Ensurin...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+
+</div>
+
+<footer>
+  <div>
+  Copyright &copy; 2026.<a href="/">Kamus' Notes</a><br>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme <a href="https://lx.js.org" target="_blank">Lx</a><br>
+  </div>
+</footer>
+
+</div>
+
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<div class="menu visibility">
+  <div class="menu-head">
+    <span class="layer">
+      <div class="col">
+        <div class="row for-pic">
+          <div class="profile-pic">
+            <a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"/></a>
+          </div>
+        </div>
+        <div class="row for-name">
+          <p>Kamus</p>
+          <span class="tagline">Hello, World!</span>
+        </div>
+      </div>
+    </span>
+  </div>
+  <nav class="menu-container">
+  <ul class="menu-items">
+    <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    <li><a href="/archives/"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+    
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-bookmark fa-fw"></i>Pages</span>
+        <ul>
+          <li><a href="/about/">About</a></li>
+        </ul>
+    </li>
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-link fa-fw"></i>Friends</span>
+        <ul>
+          <li> <a href="https://www.eygle.com/" target="_blank">Eygle</a></li>
+        <li> <a href="https://yangtingkun.net" target="_blank">Laoyang</a></li>
+        </ul>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/local.search.min.js"></script>
+
+</body>
+</html>

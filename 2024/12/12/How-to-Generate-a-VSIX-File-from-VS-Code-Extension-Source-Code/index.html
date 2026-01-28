@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=#58b77a>
+  <title>How to Generate a VSIX File from VS Code Extension Source Code | Kamus&#39; Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  <meta name="description" content="As I’ve been using Windsurf as my primary code editor, I encountered a situation where the vs-picgo extension wasn’t available in the Windsurf marketplace. T...">
+  <link rel="canonical" href="https://www.kamusis.me/2024/12/12/How-to-Generate-a-VSIX-File-from-VS-Code-Extension-Source-Code/">
+  <meta property="og:site_name" content="Kamus' Notes">
+  <meta property="og:title" content="How to Generate a VSIX File from VS Code Extension Source Code | Kamus' Notes">
+  <meta property="og:description" content="As I’ve been using Windsurf as my primary code editor, I encountered a situation where the vs-picgo extension wasn’t available in the Windsurf marketplace. T...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.kamusis.me/2024/12/12/How-to-Generate-a-VSIX-File-from-VS-Code-Extension-Source-Code/">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Generate a VSIX File from VS Code Extension Source Code | Kamus' Notes">
+  <meta name="twitter:description" content="As I’ve been using Windsurf as my primary code editor, I encountered a situation where the vs-picgo extension wasn’t available in the Windsurf marketplace. T...">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"How to Generate a VSIX File from VS Code Extension Source Code","description":"As I’ve been using Windsurf as my primary code editor, I encountered a situation where the vs-picgo extension wasn’t available in the Windsurf marketplace. T...","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kamusis.me/2024/12/12/How-to-Generate-a-VSIX-File-from-VS-Code-Extension-Source-Code/"},"author":{"@type":"Person","name":"Kamus"},"publisher":{"@type":"Person","name":"Kamus"},"datePublished":"2024-12-12T06:39:52.000Z","dateModified":"2024-12-12T06:42:56.000Z","url":"https://www.kamusis.me/2024/12/12/How-to-Generate-a-VSIX-File-from-VS-Code-Extension-Source-Code/","image":["https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg"]}</script>
+  <script id="hexo-configurations">
+  var CONFIG = {
+    root: '/',
+    theme: 'lx',
+    version: '0.4.4',
+    localsearch:{
+      "enable": true,
+      "trigger": "auto",
+      "top_n_per_article": 1,
+      "unescape": false,
+      "preload": false
+      },
+    path: 'search.xml'
+  };
+</script>
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/css/main.min.css">
+  
+  <style type="text/css">
+    pre,
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+    html {
+      font-family: sans-serif;
+    }
+    body {
+      font-family: sans-serif;
+    }
+    h1, h2, h3, h4, h5, figure {
+      font-family: sans-serif;
+    }
+    .menu-container{
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "",
+	     });
+	}); 
+	</script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+<body>
+<div class="single">
+<div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Search..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+<div id="page">
+<div class="header">
+  <div id="lx-aside" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg)" data-stellar-background-ratio="0.5">
+    <div class="overlay">
+      <a href="javascript:;" class="popup-trigger" title="search"><i class="menu-item-icon fa fa-search fa-fw"></i></a>
+      <div class="page-title">
+        <div class="avatar"><a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"></a></div>
+        <span>2024-12-12</span>
+        <h2>How to Gener...</h2>
+        <div class="tags"><i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Extension/" rel="tag">Extension</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Packaging/" rel="tag">Packaging</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/VS-Code/" rel="tag">VS Code</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/VSIX/" rel="tag">VSIX</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Windsurf/" rel="tag">Windsurf</a></div>
+        <div class="social-links">
+    <a href="https://github.com/kamusis" target="_blank" title="social-link"><i class="fa fa-github fa-fw"></i></a>
+    <a href="mailto:kamusis@gmail.com" target="_blank" title="social-link"><i class="fa fa-envelope fa-fw"></i></a>
+    <a href="https://www.linkedin.com/in/kamus/" target="_blank" title="social-link"><i class="fa fa-linkedin fa-fw"></i></a>
+    <a href="https://twitter.com/kamusis" target="_blank" title="social-link"><i class="fa fa-twitter fa-fw"></i></a>
+    <a href="https://www.instagram.com/kamusis/" target="_blank" title="social-link"><i class="fa fa-instagram fa-fw"></i></a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="lx-main-content">
+  <div class="lx-post">
+    <div class="lx-entry padding">
+      <div>
+        <p>As I’ve been using Windsurf as my primary code editor, I encountered a situation where the vs-picgo extension wasn’t available in the Windsurf marketplace. This necessitated the need to manually package the extension from its source code. This guide documents the process of generating a VSIX file for VS Code extensions, which can then be installed manually in compatible editors like Windsurf.</p>
+<p>In this guide, I’ll walk you through the process of generating a VSIX file from a VS Code extension’s source code. We’ll use the popular <a target="_blank" rel="noopener" href="https://github.com/PicGo/vs-picgo">vs-picgo</a> extension as an example.</p>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><p>Before we begin, make sure you have the following installed:</p>
+<ul>
+<li>Node.js (version 12 or higher)</li>
+<li>npm (comes with Node.js)</li>
+</ul>
+<h2 id="Step-1-Install-Required-Tools"><a href="#Step-1-Install-Required-Tools" class="headerlink" title="Step 1: Install Required Tools"></a>Step 1: Install Required Tools</h2><p>First, we need to install two essential tools:</p>
+<ul>
+<li><code>yarn</code>: A package manager that will handle our dependencies</li>
+<li><code>vsce</code>: The VS Code Extension Manager tool that creates VSIX packages</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install Yarn globally</span></span><br><span class="line">sudo npm install -g yarn</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install vsce globally</span></span><br><span class="line">sudo npm install -g @vscode/vsce</span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-2-Prepare-the-Project"><a href="#Step-2-Prepare-the-Project" class="headerlink" title="Step 2: Prepare the Project"></a>Step 2: Prepare the Project</h2><ol>
+<li><p>Clone or download the extension source code:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/PicGo/vs-picgo.git</span><br><span class="line"><span class="built_in">cd</span> vs-picgo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Install project dependencies:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn install</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>This command will:</p>
+<ul>
+<li>Read the <code>package.json</code> file</li>
+<li>Install all required dependencies</li>
+<li>Create or update the <code>yarn.lock</code> file</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong>: The <code>yarn.lock</code> file is important! Don’t delete it as it ensures consistent installations across different environments.</p>
+</blockquote>
+<h2 id="Step-3-Build-the-Extension"><a href="#Step-3-Build-the-Extension" class="headerlink" title="Step 3: Build the Extension"></a>Step 3: Build the Extension</h2><p>Build the extension using the production build command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn build:prod</span><br></pre></td></tr></table></figure>
+
+<p>This command typically:</p>
+<ul>
+<li>Cleans the previous build output</li>
+<li>Compiles TypeScript&#x2F;JavaScript files</li>
+<li>Bundles all necessary assets</li>
+<li>Creates the <code>dist</code> directory with the compiled code</li>
+</ul>
+<p>In vs-picgo’s case, the build process:</p>
+<ol>
+<li>Uses <code>esbuild</code> for fast bundling</li>
+<li>Creates both extension and webview bundles</li>
+<li>Generates source maps (disabled in production)</li>
+<li>Optimizes the code for production use</li>
+</ol>
+<h2 id="Step-4-Package-the-Extension"><a href="#Step-4-Package-the-Extension" class="headerlink" title="Step 4: Package the Extension"></a>Step 4: Package the Extension</h2><p>Finally, create the VSIX file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vsce package</span><br></pre></td></tr></table></figure>
+
+<p>This command:</p>
+<ol>
+<li>Runs any pre-publish scripts defined in <code>package.json</code></li>
+<li>Validates the extension manifest</li>
+<li>Packages all required files into a VSIX file</li>
+<li>Names the file based on the extension’s name and version (e.g., <code>vs-picgo-2.1.6.vsix</code>)</li>
+</ol>
+<p>The resulting VSIX file will contain:</p>
+<ul>
+<li>Compiled JavaScript files</li>
+<li>Assets (images, CSS, etc.)</li>
+<li>Extension manifest</li>
+<li>Documentation files</li>
+<li>License information</li>
+</ul>
+<h2 id="What’s-Inside-the-VSIX"><a href="#What’s-Inside-the-VSIX" class="headerlink" title="What’s Inside the VSIX?"></a>What’s Inside the VSIX?</h2><p>The VSIX file is essentially a ZIP archive with a specific structure. For vs-picgo, it includes:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">vs-picgo-2.1.6.vsix</span><br><span class="line">├─ [Content_Types].xml </span><br><span class="line">├─ extension.vsixmanifest </span><br><span class="line">└─ extension/</span><br><span class="line">   ├─ LICENSE.txt</span><br><span class="line">   ├─ changelog.md</span><br><span class="line">   ├─ logo.png</span><br><span class="line">   ├─ package.json</span><br><span class="line">   ├─ package.nls.json</span><br><span class="line">   ├─ readme.md</span><br><span class="line">   └─ dist/</span><br><span class="line">      ├─ extension.js</span><br><span class="line">      └─ webview/</span><br><span class="line">         ├─ index.css</span><br><span class="line">         └─ index.js</span><br></pre></td></tr></table></figure>
+
+<h2 id="Installing-the-Extension"><a href="#Installing-the-Extension" class="headerlink" title="Installing the Extension"></a>Installing the Extension</h2><p>You can install the generated VSIX file in VS Code or any compatible editor by:</p>
+<ol>
+<li>Opening VS Code&#x2F;Windsurf&#x2F;Cursor …</li>
+<li>Going to the Extensions view</li>
+<li>Clicking the “…” menu (More Actions)</li>
+<li>Selecting “Install from VSIX…”</li>
+<li>Choosing your generated VSIX file</li>
+</ol>
+<h2 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h2><p>If you encounter any issues:</p>
+<ol>
+<li><p><strong>Missing dist directory error</strong>:</p>
+<ul>
+<li>This is normal on first build</li>
+<li>The build process will create it automatically</li>
+</ul>
+</li>
+<li><p><strong>Dependency errors</strong>:</p>
+<ul>
+<li>Run <code>yarn install</code> again</li>
+<li>Check if you’re using the correct Node.js version</li>
+</ul>
+</li>
+<li><p><strong>VSIX packaging fails</strong>:</p>
+<ul>
+<li>Verify your <code>package.json</code> is valid</li>
+<li>Ensure all required files are present</li>
+<li>Check the extension manifest for errors</li>
+</ul>
+</li>
+</ol>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Building a VS Code extension VSIX file is straightforward once you have the right tools installed. The process mainly involves installing dependencies, building the source code, and packaging everything into a VSIX file.</p>
+<p>Remember to keep your <code>yarn.lock</code> file and always build in production mode before packaging to ensure the best performance and smallest file size for your users.</p>
+<p>Happy extension building! 🚀</p>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="lx-navigation">
+	<div class="lx-cover next lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-l.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2025/03/28/Getting-Started-with-Deno-A-Modern-Twist-on-JavaScript-Runtimes/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Next</span>
+						<h3>Getting...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+        <div class="lx-cover prev lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-r.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2024/11/14/What-is-DBOS-and-What-Should-We-Expect/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Prev</span>
+						<h3>What is...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+
+</div>
+
+<footer>
+  <div>
+  Copyright &copy; 2026.<a href="/">Kamus' Notes</a><br>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme <a href="https://lx.js.org" target="_blank">Lx</a><br>
+  </div>
+</footer>
+
+</div>
+
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<div class="menu visibility">
+  <div class="menu-head">
+    <span class="layer">
+      <div class="col">
+        <div class="row for-pic">
+          <div class="profile-pic">
+            <a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"/></a>
+          </div>
+        </div>
+        <div class="row for-name">
+          <p>Kamus</p>
+          <span class="tagline">Hello, World!</span>
+        </div>
+      </div>
+    </span>
+  </div>
+  <nav class="menu-container">
+  <ul class="menu-items">
+    <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    <li><a href="/archives/"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+    
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-bookmark fa-fw"></i>Pages</span>
+        <ul>
+          <li><a href="/about/">About</a></li>
+        </ul>
+    </li>
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-link fa-fw"></i>Friends</span>
+        <ul>
+          <li> <a href="https://www.eygle.com/" target="_blank">Eygle</a></li>
+        <li> <a href="https://yangtingkun.net" target="_blank">Laoyang</a></li>
+        </ul>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/local.search.min.js"></script>
+
+</body>
+</html>

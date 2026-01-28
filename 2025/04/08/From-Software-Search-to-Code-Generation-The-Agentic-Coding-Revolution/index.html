@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=#58b77a>
+  <title>From Software Search to Code Generation: The Agentic Coding Revolution | Kamus&#39; Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  <meta name="description" content="User Story: RSS Feed Clean-up JourneyOver the past 15 years, I’ve accumulated a substantial collection of RSS feeds, numbering over 200 subscriptions. While ...">
+  <link rel="canonical" href="https://www.kamusis.me/2025/04/08/From-Software-Search-to-Code-Generation-The-Agentic-Coding-Revolution/">
+  <meta property="og:site_name" content="Kamus' Notes">
+  <meta property="og:title" content="From Software Search to Code Generation: The Agentic Coding Revolution | Kamus' Notes">
+  <meta property="og:description" content="User Story: RSS Feed Clean-up JourneyOver the past 15 years, I’ve accumulated a substantial collection of RSS feeds, numbering over 200 subscriptions. While ...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.kamusis.me/2025/04/08/From-Software-Search-to-Code-Generation-The-Agentic-Coding-Revolution/">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="From Software Search to Code Generation: The Agentic Coding Revolution | Kamus' Notes">
+  <meta name="twitter:description" content="User Story: RSS Feed Clean-up JourneyOver the past 15 years, I’ve accumulated a substantial collection of RSS feeds, numbering over 200 subscriptions. While ...">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"From Software Search to Code Generation: The Agentic Coding Revolution","description":"User Story: RSS Feed Clean-up JourneyOver the past 15 years, I’ve accumulated a substantial collection of RSS feeds, numbering over 200 subscriptions. While ...","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kamusis.me/2025/04/08/From-Software-Search-to-Code-Generation-The-Agentic-Coding-Revolution/"},"author":{"@type":"Person","name":"Kamus"},"publisher":{"@type":"Person","name":"Kamus"},"datePublished":"2025-04-07T21:20:11.000Z","dateModified":"2025-04-08T06:21:30.000Z","url":"https://www.kamusis.me/2025/04/08/From-Software-Search-to-Code-Generation-The-Agentic-Coding-Revolution/","image":["https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg"]}</script>
+  <script id="hexo-configurations">
+  var CONFIG = {
+    root: '/',
+    theme: 'lx',
+    version: '0.4.4',
+    localsearch:{
+      "enable": true,
+      "trigger": "auto",
+      "top_n_per_article": 1,
+      "unescape": false,
+      "preload": false
+      },
+    path: 'search.xml'
+  };
+</script>
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/css/main.min.css">
+  
+  <style type="text/css">
+    pre,
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+    html {
+      font-family: sans-serif;
+    }
+    body {
+      font-family: sans-serif;
+    }
+    h1, h2, h3, h4, h5, figure {
+      font-family: sans-serif;
+    }
+    .menu-container{
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "",
+	     });
+	}); 
+	</script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+<body>
+<div class="single">
+<div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Search..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+<div id="page">
+<div class="header">
+  <div id="lx-aside" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg)" data-stellar-background-ratio="0.5">
+    <div class="overlay">
+      <a href="javascript:;" class="popup-trigger" title="search"><i class="menu-item-icon fa fa-search fa-fw"></i></a>
+      <div class="page-title">
+        <div class="avatar"><a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"></a></div>
+        <span>2025-04-08</span>
+        <h2>From Softwar...</h2>
+        <div class="tags"><i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/AI/" rel="tag">AI</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Agentic-Coding/" rel="tag">Agentic Coding</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Deno/" rel="tag">Deno</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/JavaScript/" rel="tag">JavaScript</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/TypeScript/" rel="tag">TypeScript</a></div>
+        <div class="social-links">
+    <a href="https://github.com/kamusis" target="_blank" title="social-link"><i class="fa fa-github fa-fw"></i></a>
+    <a href="mailto:kamusis@gmail.com" target="_blank" title="social-link"><i class="fa fa-envelope fa-fw"></i></a>
+    <a href="https://www.linkedin.com/in/kamus/" target="_blank" title="social-link"><i class="fa fa-linkedin fa-fw"></i></a>
+    <a href="https://twitter.com/kamusis" target="_blank" title="social-link"><i class="fa fa-twitter fa-fw"></i></a>
+    <a href="https://www.instagram.com/kamusis/" target="_blank" title="social-link"><i class="fa fa-instagram fa-fw"></i></a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="lx-main-content">
+  <div class="lx-post">
+    <div class="lx-entry padding">
+      <div>
+        <h2 id="User-Story-RSS-Feed-Clean-up-Journey"><a href="#User-Story-RSS-Feed-Clean-up-Journey" class="headerlink" title="User Story: RSS Feed Clean-up Journey"></a>User Story: RSS Feed Clean-up Journey</h2><p>Over the past 15 years, I’ve accumulated a substantial collection of RSS feeds, numbering over 200 subscriptions. While RSS usage has dramatically declined in recent years, some of these feeds remain part of my daily reading routine. However, the collection has become cluttered:</p>
+<ul>
+<li>Many feeds have become completely inaccessible</li>
+<li>Some bloggers have stopped updating their sites</li>
+<li>Certain feeds are still active but rarely updated</li>
+</ul>
+<p><strong>The Challenge:</strong></p>
+<ul>
+<li>Manual verification of each feed would be tedious and time-consuming</li>
+<li>My RSS reader (News Explorer) lacks feed cleanup functionality</li>
+<li>Alternative solutions like Inoreader require paid subscriptions</li>
+<li>The task remained pending due to lack of efficient solutions</li>
+</ul>
+<p><strong>The Agentic Coding Solution:</strong><br>What was previously a daunting task transformed into a manageable project:</p>
+<ul>
+<li>Total time from requirement writing to completion: ~2 hours</li>
+<li>Automated validation of all feeds</li>
+<li>Generated comprehensive statistics and visualizations</li>
+<li>Successfully categorized feeds into active, inactive, and dead</li>
+<li>Pleasant and efficient development experience</li>
+</ul>
+<p>This experience perfectly illustrates how agentic coding can turn a long-postponed task into an achievable solution through clear requirement description and AI-assisted development.</p>
+<h2 id="The-Traditional-Approach"><a href="#The-Traditional-Approach" class="headerlink" title="The Traditional Approach"></a>The Traditional Approach</h2><p>Traditionally, when faced with a specific requirement like validating and analyzing OPML feed subscriptions, the typical workflow would be:</p>
+<ol>
+<li>Search for existing software that might solve the problem</li>
+<li>Evaluate multiple tools and their features</li>
+<li>Choose the closest match, often compromising on exact requirements</li>
+<li>Learn how to use the chosen software</li>
+<li>Deal with limitations and missing features</li>
+</ol>
+<p>This process is time-consuming and often results in settling for a solution that doesn’t perfectly match our needs.</p>
+<h2 id="The-Agentic-Coding-Paradigm"><a href="#The-Agentic-Coding-Paradigm" class="headerlink" title="The Agentic Coding Paradigm"></a>The Agentic Coding Paradigm</h2><p>With agentic coding, the approach transforms dramatically:</p>
+<ol>
+<li>Clearly describe your requirements in natural language</li>
+<li>Let AI understand and break down the problem</li>
+<li>Generate custom code that exactly matches your needs</li>
+<li>Iterate and refine the solution through conversation</li>
+</ol>
+<h3 id="Real-World-Example-OPML-Feed-Validator"><a href="#Real-World-Example-OPML-Feed-Validator" class="headerlink" title="Real-World Example: OPML Feed Validator"></a>Real-World Example: OPML Feed Validator</h3><p>This project demonstrates the power of agentic coding. Instead of searching for an existing OPML feed validator:</p>
+<ul>
+<li><p>We described our need for a tool that could:</p>
+<ul>
+<li>Validate RSS feeds in an OPML file</li>
+<li>Check feed accessibility</li>
+<li>Analyze update frequencies</li>
+<li>Generate meaningful statistics</li>
+<li>Visualize the results</li>
+</ul>
+</li>
+<li><p>The AI agent:</p>
+<ul>
+<li>Designed the system architecture</li>
+<li>Implemented the required functionality</li>
+<li>Created visualization components</li>
+<li>Generated comprehensive documentation</li>
+<li>All while following best practices and proper error handling</li>
+</ul>
+</li>
+</ul>
+<h2 id="Benefits-of-Agentic-Coding"><a href="#Benefits-of-Agentic-Coding" class="headerlink" title="Benefits of Agentic Coding"></a>Benefits of Agentic Coding</h2><ol>
+<li><strong>Perfect Fit</strong>: Solutions are tailored exactly to your requirements</li>
+<li><strong>Rapid Development</strong>: No need to spend time searching and evaluating existing tools</li>
+<li><strong>Full Control</strong>: Complete access to the source code for modifications</li>
+<li><strong>Learning Opportunity</strong>: Understanding how the solution works through generated code</li>
+<li><strong>Cost-Effective</strong>: No need to purchase or subscribe to multiple tools</li>
+<li><strong>Maintenance Freedom</strong>: Ability to modify and extend the solution as needs evolve</li>
+</ol>
+<h2 id="Future-Implications"><a href="#Future-Implications" class="headerlink" title="Future Implications"></a>Future Implications</h2><p>This shift from “finding” to “generating” solutions represents a fundamental change in how we approach software development. As AI continues to evolve:</p>
+<ul>
+<li>Development will become more requirement-driven than tool-driven</li>
+<li>Custom solutions will become as accessible as off-the-shelf software</li>
+<li>The focus will shift from “what exists” to “what’s possible”</li>
+</ul>
+<p>Agentic coding empowers developers and users alike to create exactly what they need, breaking free from the limitations of existing software solutions.</p>
+<h2 id="Lessons-Learned-and-Experience"><a href="#Lessons-Learned-and-Experience" class="headerlink" title="Lessons Learned and Experience"></a>Lessons Learned and Experience</h2><h3 id="1-The-Importance-of-Clear-Requirements"><a href="#1-The-Importance-of-Clear-Requirements" class="headerlink" title="1. The Importance of Clear Requirements"></a>1. The Importance of Clear Requirements</h3><p>Product thinking and clear requirements are crucial for successful AI-assisted development:</p>
+<ul>
+<li><strong>Clear Vision Leads to Better Code</strong>: When requirements are well-defined and specific about how the tool should behave, the AI generates higher quality code</li>
+<li><strong>Product Mindset</strong>: Requirement providers need to have a clear understanding of:<ul>
+<li>Desired user interactions</li>
+<li>Expected outputs and their formats</li>
+<li>Error handling scenarios</li>
+<li>Performance expectations</li>
+</ul>
+</li>
+<li><strong>Iterative Refinement</strong>: Unclear requirements often lead to multiple iterations and code quality issues</li>
+</ul>
+<h3 id="2-Technology-Stack-Selection-Matters"><a href="#2-Technology-Stack-Selection-Matters" class="headerlink" title="2. Technology Stack Selection Matters"></a>2. Technology Stack Selection Matters</h3><p>The choice of programming languages and libraries significantly impacts AI-assisted development success:</p>
+<ul>
+<li><p><strong>Language Popularity Impact</strong>:</p>
+<ul>
+<li>More widely used languages (like Python) often result in better AI-generated code</li>
+<li>Popular languages have more training data and real-world examples</li>
+<li>In this project, while we chose TypeScript with Deno for learning purposes, Python might have been an easier choice</li>
+</ul>
+</li>
+<li><p><strong>Library Selection Strategy</strong>:</p>
+<ul>
+<li>Popular, widely-used libraries lead to better AI comprehension and implementation</li>
+<li>Example from this project:<ul>
+<li>Initial attempt: Using less common <code>deno_chart</code> library resulted in multiple errors</li>
+<li>Successful pivot: Switching to standard SVG generation led to immediate success</li>
+</ul>
+</li>
+<li>Lesson: Prefer mainstream libraries over niche ones when working with AI</li>
+</ul>
+</li>
+</ul>
+<h3 id="Best-Practices-for-AI-Assisted-Development"><a href="#Best-Practices-for-AI-Assisted-Development" class="headerlink" title="Best Practices for AI-Assisted Development"></a>Best Practices for AI-Assisted Development</h3><ol>
+<li><p><strong>Requirements Phase</strong>:</p>
+<ul>
+<li>Invest time in detailed requirement documentation</li>
+<li>Include specific examples of desired behavior</li>
+<li>Define clear success criteria</li>
+</ul>
+</li>
+<li><p><strong>Technology Selection</strong>:</p>
+<ul>
+<li>Consider language popularity and ecosystem maturity</li>
+<li>Choose widely-adopted libraries when possible</li>
+<li>Balance learning goals with development efficiency</li>
+</ul>
+</li>
+<li><p><strong>Development Process</strong>:</p>
+<ul>
+<li>Start with core functionality using proven technologies</li>
+<li>Experiment with newer technologies only after basic features are stable</li>
+<li>Be prepared to pivot when encountering AI limitations with specific technologies</li>
+</ul>
+</li>
+</ol>
+<p>This project serves as a practical example of these lessons, demonstrating both the potential and limitations of AI-assisted development while highlighting the importance of making informed technology choices.</p>
+<p>The project can be found <a target="_blank" rel="noopener" href="https://github.com/kamusis/my-opml-subscriptions">here</a>.</p>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="lx-navigation">
+	<div class="lx-cover next lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-l.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2025/04/19/Vibe-Coding-A-10-Day-Journey-from-Zero-to-Building-a-Full-Stack-RSS-Validator-Tool/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Next</span>
+						<h3>Vibe Co...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+        <div class="lx-cover prev lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-r.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2025/03/28/Getting-Started-with-Deno-A-Modern-Twist-on-JavaScript-Runtimes/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Prev</span>
+						<h3>Getting...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+
+</div>
+
+<footer>
+  <div>
+  Copyright &copy; 2026.<a href="/">Kamus' Notes</a><br>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme <a href="https://lx.js.org" target="_blank">Lx</a><br>
+  </div>
+</footer>
+
+</div>
+
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<div class="menu visibility">
+  <div class="menu-head">
+    <span class="layer">
+      <div class="col">
+        <div class="row for-pic">
+          <div class="profile-pic">
+            <a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"/></a>
+          </div>
+        </div>
+        <div class="row for-name">
+          <p>Kamus</p>
+          <span class="tagline">Hello, World!</span>
+        </div>
+      </div>
+    </span>
+  </div>
+  <nav class="menu-container">
+  <ul class="menu-items">
+    <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    <li><a href="/archives/"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+    
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-bookmark fa-fw"></i>Pages</span>
+        <ul>
+          <li><a href="/about/">About</a></li>
+        </ul>
+    </li>
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-link fa-fw"></i>Friends</span>
+        <ul>
+          <li> <a href="https://www.eygle.com/" target="_blank">Eygle</a></li>
+        <li> <a href="https://yangtingkun.net" target="_blank">Laoyang</a></li>
+        </ul>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/local.search.min.js"></script>
+
+</body>
+</html>

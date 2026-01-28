@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=#58b77a>
+  <title>Deploying Your Own High-Performance VPN Server for Windows: The Ultimate Guide | Kamus&#39; Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  <meta name="description" content="Setting up a private VPN server used to be a daunting task involving complex certificates and manual network configurations. However, with modern containeriz...">
+  <link rel="canonical" href="https://www.kamusis.me/2026/01/27/Deploying-Your-Own-High-Performance-VPN-Server-for-Windows-The-Ultimate-Guide/">
+  <meta property="og:site_name" content="Kamus' Notes">
+  <meta property="og:title" content="Deploying Your Own High-Performance VPN Server for Windows: The Ultimate Guide | Kamus' Notes">
+  <meta property="og:description" content="Setting up a private VPN server used to be a daunting task involving complex certificates and manual network configurations. However, with modern containeriz...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.kamusis.me/2026/01/27/Deploying-Your-Own-High-Performance-VPN-Server-for-Windows-The-Ultimate-Guide/">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Deploying Your Own High-Performance VPN Server for Windows: The Ultimate Guide | Kamus' Notes">
+  <meta name="twitter:description" content="Setting up a private VPN server used to be a daunting task involving complex certificates and manual network configurations. However, with modern containeriz...">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Deploying Your Own High-Performance VPN Server for Windows: The Ultimate Guide","description":"Setting up a private VPN server used to be a daunting task involving complex certificates and manual network configurations. However, with modern containeriz...","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kamusis.me/2026/01/27/Deploying-Your-Own-High-Performance-VPN-Server-for-Windows-The-Ultimate-Guide/"},"author":{"@type":"Person","name":"Kamus"},"publisher":{"@type":"Person","name":"Kamus"},"datePublished":"2026-01-27T11:27:16.000Z","dateModified":"2026-01-27T11:31:58.713Z","url":"https://www.kamusis.me/2026/01/27/Deploying-Your-Own-High-Performance-VPN-Server-for-Windows-The-Ultimate-Guide/","image":["https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg"]}</script>
+  <script id="hexo-configurations">
+  var CONFIG = {
+    root: '/',
+    theme: 'lx',
+    version: '0.4.4',
+    localsearch:{
+      "enable": true,
+      "trigger": "auto",
+      "top_n_per_article": 1,
+      "unescape": false,
+      "preload": false
+      },
+    path: 'search.xml'
+  };
+</script>
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/css/main.min.css">
+  
+  <style type="text/css">
+    pre,
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+    html {
+      font-family: sans-serif;
+    }
+    body {
+      font-family: sans-serif;
+    }
+    h1, h2, h3, h4, h5, figure {
+      font-family: sans-serif;
+    }
+    .menu-container{
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "",
+	     });
+	}); 
+	</script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+<body>
+<div class="single">
+<div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Search..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+<div id="page">
+<div class="header">
+  <div id="lx-aside" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg)" data-stellar-background-ratio="0.5">
+    <div class="overlay">
+      <a href="javascript:;" class="popup-trigger" title="search"><i class="menu-item-icon fa fa-search fa-fw"></i></a>
+      <div class="page-title">
+        <div class="avatar"><a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"></a></div>
+        <span>2026-01-27</span>
+        <h2>Deploying Yo...</h2>
+        <div class="tags"><i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Docker/" rel="tag">Docker</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/IPsec/" rel="tag">IPsec</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/L2TP/" rel="tag">L2TP</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Linux/" rel="tag">Linux</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Networking/" rel="tag">Networking</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Privacy/" rel="tag">Privacy</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Self-Hosting/" rel="tag">Self-Hosting</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/VPN/" rel="tag">VPN</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Windows-11/" rel="tag">Windows 11</a></div>
+        <div class="social-links">
+    <a href="https://github.com/kamusis" target="_blank" title="social-link"><i class="fa fa-github fa-fw"></i></a>
+    <a href="mailto:kamusis@gmail.com" target="_blank" title="social-link"><i class="fa fa-envelope fa-fw"></i></a>
+    <a href="https://www.linkedin.com/in/kamus/" target="_blank" title="social-link"><i class="fa fa-linkedin fa-fw"></i></a>
+    <a href="https://twitter.com/kamusis" target="_blank" title="social-link"><i class="fa fa-twitter fa-fw"></i></a>
+    <a href="https://www.instagram.com/kamusis/" target="_blank" title="social-link"><i class="fa fa-instagram fa-fw"></i></a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="lx-main-content">
+  <div class="lx-post">
+    <div class="lx-entry padding">
+      <div>
+        <p>Setting up a private VPN server used to be a daunting task involving complex certificates and manual network configurations. However, with modern containerization and robust open-source tools, you can now deploy a professional-grade VPN server in minutes. This guide walks you through setting up an <strong>IPsec&#x2F;L2TP VPN</strong> server on Linux that works seamlessly with the Windows 11 built-in client—no extra software required.</p>
+<h2 id="Why-This-Method"><a href="#Why-This-Method" class="headerlink" title="Why This Method?"></a>Why This Method?</h2><ul>
+<li><strong>No Third-Party Clients</strong>: Uses the native VPN client already built into Windows.</li>
+<li><strong>Fast and Secure</strong>: Leverages IPsec for strong encryption and high performance.</li>
+<li><strong>Docker Simplicity</strong>: One command to start, one command to stop.</li>
+<li><strong>Total Privacy</strong>: You own the hardware and the data.</li>
+</ul>
+<hr>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><ul>
+<li>A Linux server (VPS) with a public IP (e.g., Ubuntu, Debian, or CentOS).</li>
+<li><strong>Docker</strong> installed on the server.</li>
+<li>Firewall access to <strong>UDP ports 500 and 4500</strong>.</li>
+</ul>
+<hr>
+<h2 id="Step-1-Deploy-the-VPN-Server-Linux-Side"><a href="#Step-1-Deploy-the-VPN-Server-Linux-Side" class="headerlink" title="Step 1: Deploy the VPN Server (Linux Side)"></a>Step 1: Deploy the VPN Server (Linux Side)</h2><p>We will use the highly acclaimed <code>hwdsl2/ipsec-vpn-server</code> Docker image.</p>
+<h3 id="1-Create-a-Credentials-File"><a href="#1-Create-a-Credentials-File" class="headerlink" title="1. Create a Credentials File"></a>1. Create a Credentials File</h3><p>First, create a hidden environment file to store your secrets. Avoid putting passwords directly in your command history.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &lt;&lt;<span class="string">EOF &gt; .vpn.env</span></span><br><span class="line"><span class="string">VPN_IPSEC_PSK=Your_Secret_PreShared_Key</span></span><br><span class="line"><span class="string">VPN_USER=vpn_admin</span></span><br><span class="line"><span class="string">VPN_PASSWORD=Your_Strong_Password</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Run-the-Docker-Container"><a href="#2-Run-the-Docker-Container" class="headerlink" title="2. Run the Docker Container"></a>2. Run the Docker Container</h3><p>Run the following command to start the server. This command mounts necessary kernel modules and creates a persistent volume for configurations.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line">    --name ipsec-vpn-server \</span><br><span class="line">    --restart=always \</span><br><span class="line">    --env-file ./.vpn.env \</span><br><span class="line">    -v ikev2-vpn-data:/etc/ipsec.d \</span><br><span class="line">    -v /lib/modules:/lib/modules:ro \</span><br><span class="line">    -p 500:500/udp \</span><br><span class="line">    -p 4500:4500/udp \</span><br><span class="line">    -d --privileged \</span><br><span class="line">    hwdsl2/ipsec-vpn-server:latest</span><br></pre></td></tr></table></figure>
+
+<p><strong>Key Parameters Explained:</strong></p>
+<ul>
+<li><code>-p 500/4500:udp</code>: These are the standard ports for IPsec communication.</li>
+<li><code>--privileged</code>: Required for the container to manipulate network routing and encryption at the kernel level.</li>
+<li><code>-v /lib/modules</code>: Allows the container to use the host’s crypto modules.</li>
+</ul>
+<hr>
+<h2 id="Step-2-Configure-Windows-11"><a href="#Step-2-Configure-Windows-11" class="headerlink" title="Step 2: Configure Windows 11"></a>Step 2: Configure Windows 11</h2><p>Windows makes it easy to add a VPN, but you must select the correct type.</p>
+<ol>
+<li>Go to <strong>Settings &gt; Network &amp; internet &gt; VPN</strong>.</li>
+<li>Click <strong>Add VPN</strong>.</li>
+<li>Fill in the details:<ul>
+<li><strong>VPN provider</strong>: Windows (built-in)</li>
+<li><strong>Connection name</strong>: My Private VPN</li>
+<li><strong>Server name or address</strong>: <code>[Your Server&#39;s Public IP]</code></li>
+<li><strong>VPN type</strong>: <strong>L2TP&#x2F;IPsec with pre-shared key</strong></li>
+<li><strong>Pre-shared key</strong>: <code>[Your_Secret_PreShared_Key]</code></li>
+<li><strong>User name</strong>: <code>vpn_admin</code></li>
+<li><strong>Password</strong>: <code>[Your_Strong_Password]</code></li>
+</ul>
+</li>
+<li>Click <strong>Save</strong>.</li>
+</ol>
+<hr>
+<h2 id="Step-3-The-“Magic-Fix”-for-NAT-Traversal"><a href="#Step-3-The-“Magic-Fix”-for-NAT-Traversal" class="headerlink" title="Step 3: The “Magic Fix” for NAT Traversal"></a>Step 3: The “Magic Fix” for NAT Traversal</h2><p>If your server or your home PC is behind a router (which is almost always the case), Windows might block the connection by default. This is the most common reason for the “Server Not Responding” error.</p>
+<p><strong>To fix this, run this command in Windows Command Prompt (Admin):</strong></p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REG ADD HKLM\SYSTEM\CurrentControlSet\Services\PolicyAgent /v AssumeUDPEncapsulationContextOnSendRule /t REG_DWORD /d <span class="number">2</span> /f</span><br></pre></td></tr></table></figure>
+
+<p><strong>CRITICAL</strong>: You <strong>MUST reboot</strong> your Windows computer after running this command for the change to take effect.</p>
+<hr>
+<h2 id="Step-4-Verification"><a href="#Step-4-Verification" class="headerlink" title="Step 4: Verification"></a>Step 4: Verification</h2><p>Once connected, you can verify your new identity.</p>
+<h3 id="1-Check-your-Public-IP"><a href="#1-Check-your-Public-IP" class="headerlink" title="1. Check your Public IP"></a>1. Check your Public IP</h3><p>Open a terminal (PowerShell) and run:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">curl</span> ifconfig.me</span><br></pre></td></tr></table></figure>
+
+<p>It should now return your <strong>Linux Server’s IP address</strong> instead of your local home IP.</p>
+<h3 id="2-Inspect-your-Internal-VPN-IP"><a href="#2-Inspect-your-Internal-VPN-IP" class="headerlink" title="2. Inspect your Internal VPN IP"></a>2. Inspect your Internal VPN IP</h3><p>Run <code>ipconfig</code>. You will see a new <strong>PPP adapter</strong> with an IP like <code>192.168.42.10</code>. Where did this come from? This is your identity inside the “Private VPN Tunnel.” Your server’s VPN daemon (pppd) assigned this to you so it can route your traffic safely to the internet.</p>
+<hr>
+<h2 id="Frequently-Asked-Questions"><a href="#Frequently-Asked-Questions" class="headerlink" title="Frequently Asked Questions"></a>Frequently Asked Questions</h2><h3 id="What-is-the-difference-between-PSK-and-Password"><a href="#What-is-the-difference-between-PSK-and-Password" class="headerlink" title="What is the difference between PSK and Password?"></a>What is the difference between PSK and Password?</h3><ul>
+<li><strong>Pre-Shared Key (PSK)</strong>: This is like a “Wi-Fi password” for the machine. It builds the secure encrypted tunnel between your PC and the Server.</li>
+<li><strong>User Password</strong>: This identifies <em>you</em> as an authorized user once the tunnel is built. Both are required for maximum security.</li>
+</ul>
+<h3 id="Will-websites-know-my-real-location"><a href="#Will-websites-know-my-real-location" class="headerlink" title="Will websites know my real location?"></a>Will websites know my real location?</h3><p>No. Once connected, all your traffic exits from the Linux server. If your server is in the US and you are in Japan, websites like Google or Netflix will see you as a US-based user.</p>
+<h3 id="Why-is-there-a-slight-delay-when-browsing"><a href="#Why-is-there-a-slight-delay-when-browsing" class="headerlink" title="Why is there a slight delay when browsing?"></a>Why is there a slight delay when browsing?</h3><p>Since your data packets now travel to the server and back (e.g., Japan ➔ USA ➔ Japan), you will notice a higher “Ping” or latency. This is normal for any VPN and depends on the physical distance between you and your server.</p>
+<hr>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Hosting your own VPN server is a great way to gain deep knowledge of networking while securing your digital life. Using Docker and the native Windows client, you get a clean, high-performance solution without the overhead of heavy third-party applications. Happy (and private) surfing!</p>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="lx-navigation">
+	<div class="lx-cover next lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-l.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2026/01/28/The-Stealth-Trap-Architecting-a-High-Performance-Nginx-Hardening-Fail2ban-Defense-System/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Next</span>
+						<h3>The Ste...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+        <div class="lx-cover prev lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-r.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2025/08/31/Setting-Up-PostgreSQL-Development-Environment-with-VS-Code-DevContainer-and-Windsurf/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Prev</span>
+						<h3>Setting...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+
+</div>
+
+<footer>
+  <div>
+  Copyright &copy; 2026.<a href="/">Kamus' Notes</a><br>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme <a href="https://lx.js.org" target="_blank">Lx</a><br>
+  </div>
+</footer>
+
+</div>
+
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<div class="menu visibility">
+  <div class="menu-head">
+    <span class="layer">
+      <div class="col">
+        <div class="row for-pic">
+          <div class="profile-pic">
+            <a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"/></a>
+          </div>
+        </div>
+        <div class="row for-name">
+          <p>Kamus</p>
+          <span class="tagline">Hello, World!</span>
+        </div>
+      </div>
+    </span>
+  </div>
+  <nav class="menu-container">
+  <ul class="menu-items">
+    <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    <li><a href="/archives/"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+    
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-bookmark fa-fw"></i>Pages</span>
+        <ul>
+          <li><a href="/about/">About</a></li>
+        </ul>
+    </li>
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-link fa-fw"></i>Friends</span>
+        <ul>
+          <li> <a href="https://www.eygle.com/" target="_blank">Eygle</a></li>
+        <li> <a href="https://yangtingkun.net" target="_blank">Laoyang</a></li>
+        </ul>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/local.search.min.js"></script>
+
+</body>
+</html>

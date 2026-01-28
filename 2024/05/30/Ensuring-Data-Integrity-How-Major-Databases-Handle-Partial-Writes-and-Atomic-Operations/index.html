@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=#58b77a>
+  <title>Ensuring Data Integrity: How Major Databases Handle Partial Writes and Atomic Operations | Kamus&#39; Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  <meta name="description" content="In the world of databases, ensuring atomicity in write operations is crucial. This post explores the importance of atomic writes and how various databases ha...">
+  <link rel="canonical" href="https://www.kamusis.me/2024/05/30/Ensuring-Data-Integrity-How-Major-Databases-Handle-Partial-Writes-and-Atomic-Operations/">
+  <meta property="og:site_name" content="Kamus' Notes">
+  <meta property="og:title" content="Ensuring Data Integrity: How Major Databases Handle Partial Writes and Atomic Operations | Kamus' Notes">
+  <meta property="og:description" content="In the world of databases, ensuring atomicity in write operations is crucial. This post explores the importance of atomic writes and how various databases ha...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.kamusis.me/2024/05/30/Ensuring-Data-Integrity-How-Major-Databases-Handle-Partial-Writes-and-Atomic-Operations/">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Ensuring Data Integrity: How Major Databases Handle Partial Writes and Atomic Operations | Kamus' Notes">
+  <meta name="twitter:description" content="In the world of databases, ensuring atomicity in write operations is crucial. This post explores the importance of atomic writes and how various databases ha...">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Ensuring Data Integrity: How Major Databases Handle Partial Writes and Atomic Operations","description":"In the world of databases, ensuring atomicity in write operations is crucial. This post explores the importance of atomic writes and how various databases ha...","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kamusis.me/2024/05/30/Ensuring-Data-Integrity-How-Major-Databases-Handle-Partial-Writes-and-Atomic-Operations/"},"author":{"@type":"Person","name":"Kamus"},"publisher":{"@type":"Person","name":"Kamus"},"datePublished":"2024-05-30T10:22:37.000Z","dateModified":"2025-02-13T18:44:15.000Z","url":"https://www.kamusis.me/2024/05/30/Ensuring-Data-Integrity-How-Major-Databases-Handle-Partial-Writes-and-Atomic-Operations/","image":["https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg"]}</script>
+  <script id="hexo-configurations">
+  var CONFIG = {
+    root: '/',
+    theme: 'lx',
+    version: '0.4.4',
+    localsearch:{
+      "enable": true,
+      "trigger": "auto",
+      "top_n_per_article": 1,
+      "unescape": false,
+      "preload": false
+      },
+    path: 'search.xml'
+  };
+</script>
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/css/main.min.css">
+  
+  <style type="text/css">
+    pre,
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+    html {
+      font-family: sans-serif;
+    }
+    body {
+      font-family: sans-serif;
+    }
+    h1, h2, h3, h4, h5, figure {
+      font-family: sans-serif;
+    }
+    .menu-container{
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "",
+	     });
+	}); 
+	</script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+<body>
+<div class="single">
+<div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Search..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+<div id="page">
+<div class="header">
+  <div id="lx-aside" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg)" data-stellar-background-ratio="0.5">
+    <div class="overlay">
+      <a href="javascript:;" class="popup-trigger" title="search"><i class="menu-item-icon fa fa-search fa-fw"></i></a>
+      <div class="page-title">
+        <div class="avatar"><a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"></a></div>
+        <span>2024-05-30</span>
+        <h2>Ensuring Dat...</h2>
+        <div class="tags"><i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/MogDB/" rel="tag">MogDB</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/MySQL/" rel="tag">MySQL</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Oracle/" rel="tag">Oracle</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Partial-Writes/" rel="tag">Partial Writes</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/PostgreSQL/" rel="tag">PostgreSQL</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/openGauss/" rel="tag">openGauss</a></div>
+        <div class="social-links">
+    <a href="https://github.com/kamusis" target="_blank" title="social-link"><i class="fa fa-github fa-fw"></i></a>
+    <a href="mailto:kamusis@gmail.com" target="_blank" title="social-link"><i class="fa fa-envelope fa-fw"></i></a>
+    <a href="https://www.linkedin.com/in/kamus/" target="_blank" title="social-link"><i class="fa fa-linkedin fa-fw"></i></a>
+    <a href="https://twitter.com/kamusis" target="_blank" title="social-link"><i class="fa fa-twitter fa-fw"></i></a>
+    <a href="https://www.instagram.com/kamusis/" target="_blank" title="social-link"><i class="fa fa-instagram fa-fw"></i></a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="lx-main-content">
+  <div class="lx-post">
+    <div class="lx-entry padding">
+      <div>
+        <p>In the world of databases, ensuring atomicity in write operations is crucial. This post explores the importance of atomic writes and how various databases handle potential issues like partial writes.</p>
+<h4 id="Understanding-Partial-Writes"><a href="#Understanding-Partial-Writes" class="headerlink" title="Understanding Partial Writes"></a>Understanding Partial Writes</h4><p>In the I&#x2F;O write chain, the size of atomic operations can vary. An operation at a higher level may be split into multiple operations at a lower level, leading to scenarios where some operations succeed while others fail. This phenomenon is known as a partial write.</p>
+<ul>
+<li><strong>Legacy Disk Drives</strong>: Default sector size is 512 bytes.</li>
+<li><strong>Modern Disk Drives</strong>: Advanced format sector size is 4k.</li>
+<li><strong>Filesystem Page Size</strong>: For example, ext4 has a default page size of 4k.</li>
+<li><strong>Database Page Sizes</strong>:<ul>
+<li>Oracle: 8K</li>
+<li>MySQL: 16K</li>
+<li>PostgreSQL: 8K</li>
+<li>openGauss: 8K</li>
+</ul>
+</li>
+</ul>
+<h3 id="The-Reality-of-Partial-Writes"><a href="#The-Reality-of-Partial-Writes" class="headerlink" title="The Reality of Partial Writes"></a>The Reality of Partial Writes</h3><p>While theoretically, databases must handle partial writes, in practice, such events are quite rare. The critical aspect is not just preventing partial writes but ensuring robust mechanisms for data integrity checks (checksums) and recovery when issues do arise.</p>
+<h3 id="How-Oracle-Handles-Partial-Writes"><a href="#How-Oracle-Handles-Partial-Writes" class="headerlink" title="How Oracle Handles Partial Writes"></a>How Oracle Handles Partial Writes</h3><p>Oracle’s approach to partial writes is pragmatic:</p>
+<ol>
+<li><strong>Automatic Repair</strong>: If a fractured block is detected, Oracle tries to repair it using the corresponding block from Active Data Guard (ADG) or the flashback log.</li>
+<li><strong>Error Reporting</strong>: If automatic repair fails, an ORA-01578 error is logged, prompting the DBA to perform a media recovery.</li>
+<li><strong>Block-Level Recovery</strong>: Oracle supports block-level recovery, making the process less cumbersome and time-consuming.</li>
+</ol>
+<p>Oracle’s backup sets are designed to handle partial writes:</p>
+<ul>
+<li><strong>Using OS Commands</strong>: When backing up data files using OS commands, Oracle requires the tablespace to be in backup mode. Any changes to data blocks are logged in the redo log, ensuring a clean block can be restored during recovery.</li>
+<li><strong>Using RMAN</strong>: RMAN handles partial writes by ensuring that each backup block is clean, eliminating the need to worry about fractured blocks.</li>
+<li><strong>Block Checking</strong>: Oracle provides mechanisms like DB_BLOCK_CHECKING for comprehensive checksums.</li>
+</ul>
+<h3 id="How-MySQL-Handles-Partial-Writes"><a href="#How-MySQL-Handles-Partial-Writes" class="headerlink" title="How MySQL Handles Partial Writes"></a>How MySQL Handles Partial Writes</h3><p>MySQL employs a <strong>double write buffer</strong> to safeguard against partial writes. </p>
+<ol>
+<li><strong>Double Write Buffer</strong>: Despite its name, the double write buffer is not stored in memory; instead, it consists of persistent files on disk. The mechanism works as follows: before writing a data block to its final location on disk, MySQL first writes it to the double write buffer.</li>
+<li><strong>Data Integrity</strong>: This approach ensures that there is always a clean copy of the block available—either in the double write buffer or in the data files—allowing for safe redo operations.</li>
+</ol>
+<p>However, this method is not without its challenges. One of the primary concerns is its efficiency, as it effectively doubles the I&#x2F;O workload for redo logging. This has sparked ongoing discussions about the trade-offs and effectiveness of using a double write buffer to address partial writes.</p>
+<h3 id="How-PostgreSQL-Handles-Partial-Writes"><a href="#How-PostgreSQL-Handles-Partial-Writes" class="headerlink" title="How PostgreSQL Handles Partial Writes"></a>How PostgreSQL Handles Partial Writes</h3><p>PostgreSQL employs <strong>full page writes</strong> to manage partial writes effectively:</p>
+<ol>
+<li><strong>Full Page Writes</strong>: When a data block is updated for the first time after a checkpoint, the entire block is written to the WAL (Write-Ahead Logging) log. This is akin to the database always being in “Backup status,” similar to issuing the <code>alter tablespace x begin backup</code> command in an Oracle database.</li>
+<li><strong>Data Integrity</strong>: This mechanism ensures that even if a partial write occurs, the database remains consistent because the original page can be used for redo operations.</li>
+</ol>
+<p>There has been community discussion about adopting a double write buffer mechanism, but it remains an area of interest rather than active development. For more details, you can check out these discussions:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.postgresql.org/message-id/1962493974.656458.1327703514780.JavaMail.root@zimbra-prod-mbox-4.vmware.com">Discussion on Double Write Buffer Mechanism (Post 1)</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.postgresql.org/message-id/20180418062240.GJ18178%40paquier.xyz">Discussion on Double Write Buffer Mechanism (Post 2)</a></li>
+</ul>
+<h3 id="How-MogDB-Handles-Partial-Writes"><a href="#How-MogDB-Handles-Partial-Writes" class="headerlink" title="How MogDB Handles Partial Writes"></a>How MogDB Handles Partial Writes</h3><p>MogDB (the enterprise edition of openGauss) combines strategies from MySQL and PostgreSQL:</p>
+<ol>
+<li><strong>Double Write Buffer</strong>: Similar to MySQL, MogDB uses a double write buffer by setting <code>enable_double_write=on</code>.</li>
+<li><strong>Full Page Writes</strong>: MogDB retains PostgreSQL’s full page write mechanism by setting <code>full_page_writes=on</code>.</li>
+</ol>
+<p>Depending on the configuration of incremental checkpoints (enable_incremental_checkpoint):</p>
+<ul>
+<li><strong>Incremental Checkpoints Off</strong>:<ul>
+<li>With <code>full_page_writes=on</code>, full page writes are used.</li>
+<li>With <code>full_page_writes=off</code>, partial writes are not a concern.</li>
+</ul>
+</li>
+<li><strong>Incremental Checkpoints On</strong>:<ul>
+<li>With <code>enable_double_write=on</code>, double writes are used.</li>
+<li>With <code>enable_double_write=off</code>, the behavior depends on full_page_writes settings.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>Ensuring atomic writes in databases is essential for data integrity and consistency. While partial writes are rare, robust mechanisms for detection and recovery are vital. Oracle, MySQL, PostgreSQL, and MogDB&#x2F;openGauss each have unique approaches to handling these scenarios, ensuring that data remains reliable and recoverable.</p>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="lx-navigation">
+	<div class="lx-cover next lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-l.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2024/06/03/MTK-The-Ultimate-Tool-for-Seamlessly-Migrating-Oracle-Databases-to-MogDB/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Next</span>
+						<h3>MTK: Th...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+        <div class="lx-cover prev lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-r.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2024/05/27/How-to-build-blog-site-by-using-Hexo-in-Windows-WSL-and-deploy-to-GitHub-Pages/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Prev</span>
+						<h3>How to ...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+
+</div>
+
+<footer>
+  <div>
+  Copyright &copy; 2026.<a href="/">Kamus' Notes</a><br>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme <a href="https://lx.js.org" target="_blank">Lx</a><br>
+  </div>
+</footer>
+
+</div>
+
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<div class="menu visibility">
+  <div class="menu-head">
+    <span class="layer">
+      <div class="col">
+        <div class="row for-pic">
+          <div class="profile-pic">
+            <a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"/></a>
+          </div>
+        </div>
+        <div class="row for-name">
+          <p>Kamus</p>
+          <span class="tagline">Hello, World!</span>
+        </div>
+      </div>
+    </span>
+  </div>
+  <nav class="menu-container">
+  <ul class="menu-items">
+    <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    <li><a href="/archives/"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+    
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-bookmark fa-fw"></i>Pages</span>
+        <ul>
+          <li><a href="/about/">About</a></li>
+        </ul>
+    </li>
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-link fa-fw"></i>Friends</span>
+        <ul>
+          <li> <a href="https://www.eygle.com/" target="_blank">Eygle</a></li>
+        <li> <a href="https://yangtingkun.net" target="_blank">Laoyang</a></li>
+        </ul>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/local.search.min.js"></script>
+
+</body>
+</html>

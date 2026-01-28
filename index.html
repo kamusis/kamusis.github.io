@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=#58b77a>
+  <title>Kamus&#39; Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  <meta name="description" content="Expert insights and practical tips on openGauss, MogDB, Oracle, Linux, and cloud-native technologies. Elevate your database management and system administration skills with in-depth technical articles, tutorials, and best practices for real-world challenges.">
+  <link rel="canonical" href="https://www.kamusis.me/">
+  <meta property="og:site_name" content="Kamus' Notes">
+  <meta property="og:title" content="Kamus' Notes">
+  <meta property="og:description" content="Expert insights and practical tips on openGauss, MogDB, Oracle, Linux, and cloud-native technologies. Elevate your database management and system administration skills with in-depth technical articles, tutorials, and best practices for real-world challenges.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.kamusis.me/">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/cover.min.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kamus' Notes">
+  <meta name="twitter:description" content="Expert insights and practical tips on openGauss, MogDB, Oracle, Linux, and cloud-native technologies. Elevate your database management and system administration skills with in-depth technical articles, tutorials, and best practices for real-world challenges.">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/cover.min.jpeg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Kamus' Notes","url":"https://www.kamusis.me/"}</script>
+  <script id="hexo-configurations">
+  var CONFIG = {
+    root: '/',
+    theme: 'lx',
+    version: '0.4.4',
+    localsearch:{
+      "enable": true,
+      "trigger": "auto",
+      "top_n_per_article": 1,
+      "unescape": false,
+      "preload": false
+      },
+    path: 'search.xml'
+  };
+</script>
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/css/main.min.css">
+  
+  <style type="text/css">
+    pre,
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+    html {
+      font-family: sans-serif;
+    }
+    body {
+      font-family: sans-serif;
+    }
+    h1, h2, h3, h4, h5, figure {
+      font-family: sans-serif;
+    }
+    .menu-container{
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "",
+	     });
+	}); 
+	</script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+<body>
+<div id="page">
+<div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Search..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+<div class="header">
+  <div id="lx-aside" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/cover.min.jpeg)">
+    <div class="overlay">
+      <a href="javascript:;" class="popup-trigger" title="search"><i class="menu-item-icon fa fa-search fa-fw"></i></a>
+      <div class="featured">
+        <div class="avatar"><a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"></a></div>
+        <span>Kamus</span>
+        <h1>Kamus' Notes</h1>
+        <span>面朝大海，春暖花开</span>
+        <div class="social-links">
+    <a href="https://github.com/kamusis" target="_blank" title="social-link"><i class="fa fa-github fa-fw"></i></a>
+    <a href="mailto:kamusis@gmail.com" target="_blank" title="social-link"><i class="fa fa-envelope fa-fw"></i></a>
+    <a href="https://www.linkedin.com/in/kamus/" target="_blank" title="social-link"><i class="fa fa-linkedin fa-fw"></i></a>
+    <a href="https://twitter.com/kamusis" target="_blank" title="social-link"><i class="fa fa-twitter fa-fw"></i></a>
+    <a href="https://www.instagram.com/kamusis/" target="_blank" title="social-link"><i class="fa fa-instagram fa-fw"></i></a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="lx-main-content">
+  <div class="lx-post">
+
+  <div class="lx-entry padding">
+    <div>
+      <h2 class="title"><a href="/2026/01/28/The%20best%20practices%20for%20using%20partition%20table%20in%20PostgreSQL/"></a></h2>
+      <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2026-01-28</span>
+      <p><h1 id="The-best-practices-for-using-partition-table-in-PostgreSQL"><a href="#The-best-practices-for-using-partition-table-in-PostgreSQL" class="headerlink" title="The best practices for using partition table in PostgreSQL"></a>The best practices for using partition table in PostgreSQL</h1><h2 id="What-is-partition-table"><a href="#What-is-partition-table" class="headerlink" title="What is partition table?"></a>What is partition table?</h2><p>Partition table is a table that is divided into smaller parts. Each part is called a partition.</p>
+<p>Why use partition table?</p>
+<ol>
+<li><strong>Performance</strong>: Partition table can improve the performance of the table. Because each partition can be stored in a separate file, the query can be executed faster.</li>
+<li><strong>Maintenance</strong>: Partition table can make the maintenance of the table easier. Because each partition can be maintained separately, the maintenance of the table can be done faster.</li>
+</ol>
+<h2 id="How-to-create-a-partition-table"><a href="#How-to-create-a-partition-table" class="headerlink" title="How to create a partition table?"></a>How to create a partition table?</h2><ol>
+<li><strong>Create a partition table</strong>:</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement (</span><br><span class="line">    city_id         <span class="type">int</span> <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    logdate         <span class="type">date</span> <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    peaktemp        <span class="type">int</span>,</span><br><span class="line">    unitsales       <span class="type">int</span></span><br><span class="line">) <span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">RANGE</span> (logdate);</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>Create a partition table for each partition</strong>:</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement_y2006m02 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> measurement</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2006-02-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2006-03-01&#x27;</span>);</span><br><span class="line">...</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> measurement_y2007m11 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> measurement</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2007-11-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2007-12-01&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Partition-table-types"><a href="#Partition-table-types" class="headerlink" title="Partition table types"></a>Partition table types</h2><p>There are 3 basic types of partition table in PostgreSQL:</p>
+<ol>
+<li><strong>List Partition</strong>: The table is partitioned by explicitly listing which key value(s) appear in each partition.</li>
+<li><strong>Range Partition</strong>: The table is partitioned into “ranges” defined by a key column or set of columns, with no overlap between the ranges of values assigned to different partitions.</li>
+<li><strong>Hash Partition</strong>: The table is partitioned by specifying a modulus and a remainder for each partition.</li>
+</ol>
+<p>Combine these 3 basic types of partition table, we can create more complex partition table. This is called <strong>Composite Partitioning</strong>.</p>
+<p>There are 4 types of composite partitioning:</p>
+<ol>
+<li><strong>List-Range Partition</strong>: The partition is divided into several ranges.<br>The step is: create table A partition by list, then create table A1 partition of A partition by range, then create table A1-1 partition of A1</li>
+<li><strong>Range-List Partition</strong>: The partition is divided into several ranges.<br>The step is: create table A partition by range, then create table B of table A but partition by list.</li>
+<li><strong>Range-Hash Partition</strong>: The partition is divided into several ranges.</li>
+<li><strong>Hash-Range Partition</strong>: The partition is divided into several ranges.</li>
+</ol>
+<h2 id="Data-dictionary-about-partition-table"><a href="#Data-dictionary-about-partition-table" class="headerlink" title="Data dictionary about partition table"></a>Data dictionary about partition table</h2><ol>
+<li><strong>pg_partitioned_table</strong>: This table stores the information about the partitioned table.</li>
+<li><strong>pg_partition_rule</strong>: This table stores the information about the partition rule.</li>
+<li><strong>pg_partition_column</strong>: This table stores the information about the partition column.</li>
+<li><strong>pg_partition_index</strong>: This table stores the information about the partition index.</li>
+<li><strong>pg_partition_constraint</strong>: This table stores the information about the partition constraint.</li>
+<li><strong>pg_partition_constraint_column</strong>: This table stores the information about the partition constraint column.</li>
+<li><strong>pg_partition_constraint_index</strong>: This table stores the information about the partition constraint index.</li>
+</ol>
+</p>
+      <div class="post-button"><a class="btn" href="/2026/01/28/The%20best%20practices%20for%20using%20partition%20table%20in%20PostgreSQL/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
+    </div>
+  </div>
+  <div class="lx-entry padding">
+    <div>
+      <h2 class="title"><a href="/2026/01/28/The-Stealth-Trap-Architecting-a-High-Performance-Nginx-Hardening-Fail2ban-Defense-System/">The Stealth Trap: Architecting a High-Performance Nginx Hardening & Fail2ban Defense System</a></h2>
+      <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2026-01-28</span>
+      <p><h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>In a public cloud environment, every IP is under constant surveillance by automated botnets. Traditional security (like standard 404 errors) is often insufficient because it still consumes server resources to process malicious requests. This guide outlines a layered defense strategy that <strong>identifies</strong> malicious behavior, <strong>isolates</strong> it into dedicated logs, and <strong>bans</strong> the source IP at the firewall level using Fail2ban.</p>
+<hr>
+<h2 id="Core-Concepts"><a href="#Core-Concepts" class="headerlink" title="Core Concepts"></a>Core Concepts</h2><h3 id="1-The-“Default-Deny”-Philosophy"><a href="#1-The-“Default-Deny”-Philosophy" class="headerlink" title="1. The “Default Deny” Philosophy"></a>1. The “Default Deny” Philosophy</h3><p>Most bots scan IP ranges directly rather than specific domains. By configuring a <strong>Default Server</strong> in Nginx that catches all requests not matching your legitimate hostnames, you create a “sinkhole” for 90% of global background noise.</p>
+<h3 id="2-The-Power-of-Nginx-Status-Code-444"><a href="#2-The-Power-of-Nginx-Status-Code-444" class="headerlink" title="2. The Power of Nginx Status Code 444"></a>2. The Power of Nginx Status Code <code>444</code></h3><p>Nginx has a non-standard status code: <code>444 (No Response)</code>. When Nginx returns 444, it immediately terminates the TCP connection without sending any headers or data back to the client. This:</p>
+<ul>
+<li>Saves bandwidth.</li>
+<li>Reduces CPU overhead.</li>
+<li>Confuses scanners, making your server appear as if it’s offline or protected by an advanced firewall.</li>
+</ul>
+<h3 id="3-Log-Isolation-Noise-vs-Signal"><a href="#3-Log-Isolation-Noise-vs-Signal" class="headerlink" title="3. Log Isolation (Noise vs. Signal)"></a>3. Log Isolation (Noise vs. Signal)</h3><p>Instead of searching for attacks in a massive <code>access.log</code>, we redirect confirmed malicious probes to a dedicated <code>scanners.log</code>. This makes our Fail2ban triggers <strong>high-fidelity</strong>—if an IP appears in this log, it is 100% a malicious actor.</p>
+<hr>
+<h2 id="Step-by-Step-Implementation"><a href="#Step-by-Step-Implementation" class="headerlink" title="Step-by-Step Implementation"></a>Step-by-Step Implementation</h2><h3 id="Step-1-Create-the-Hardening-Snippet"><a href="#Step-1-Create-the-Hardening-Snippet" class="headerlink" title="Step 1: Create the Hardening Snippet"></a>Step 1: Create the Hardening Snippet</h3><p>We define common attack patterns (probing for <code>.env</code> files, <code>wp-admin</code>, <code>cgi-bin</code>, etc.) in a reusable snippet.</p>
+<p><strong>File Location (on server):</strong> <code>/etc/nginx/snippets/hardening.conf</code></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Block .env / .env.* probes</span></span><br><span class="line"><span class="section">location</span> <span class="regexp">~* \.env(\.|$)</span> &#123;</span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">log_not_found</span> <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Block common php/wordpress/profiler probes</span></span><br><span class="line"><span class="section">location</span> <span class="regexp">~* ^/(wp-admin|wp-login\.php|xmlrpc\.php|phpinfo(\.php)?|app_dev\.php|_profiler)(/|$)</span> &#123;</span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">log_not_found</span> <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Block hidden files (keep .well-known for ACME, etc.)</span></span><br><span class="line"><span class="section">location</span> <span class="regexp">~ /\.(?!well-known).*</span> &#123;</span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">log_not_found</span> <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Block common VCS/config/secret file probes (only if requested paths are exact)</span></span><br><span class="line"><span class="section">location</span> = /.git &#123;</span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="section">location</span> = /.svn &#123;</span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="section">location</span> = /.hg &#123;</span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Block common backup / editor swap files</span></span><br><span class="line"><span class="section">location</span> <span class="regexp">~* \.(bak|old|orig|save|swp|swo|tmp)$</span> &#123;</span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">log_not_found</span> <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Step-2-Configure-the-Stealth-Default-Server"><a href="#Step-2-Configure-the-Stealth-Default-Server" class="headerlink" title="Step 2: Configure the Stealth Default Server"></a>Step 2: Configure the Stealth Default Server</h3><p>This handles all traffic directed at your IP address or non-existent subdomains.</p>
+<p><strong>File Location (on server):</strong> <code>/etc/nginx/conf.d/00-default-deny.conf</code></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span> default_server;</span><br><span class="line">    <span class="attribute">server_name</span> _;</span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">443</span> ssl default_server;</span><br><span class="line">    <span class="attribute">server_name</span> _;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Reuse an existing cert so TLS handshake can complete before dropping</span></span><br><span class="line">    <span class="attribute">ssl_certificate</span> /etc/nginx/ssl/your-domain/fullchain.pem;</span><br><span class="line">    <span class="attribute">ssl_certificate_key</span> /etc/nginx/ssl/your-domain/key.pem;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/scanners.log;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">444</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Step-3-Apply-Hardening-to-Production-Vhosts"><a href="#Step-3-Apply-Hardening-to-Production-Vhosts" class="headerlink" title="Step 3: Apply Hardening to Production Vhosts"></a>Step 3: Apply Hardening to Production Vhosts</h3><p>Include the snippet in all your legitimate domain configurations to protect against targeted path scans.</p>
+<p><strong>Example Site Config:</strong> <code>/etc/nginx/conf.d/my-app.conf</code></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">443</span> ssl;</span><br><span class="line">    <span class="attribute">server_name</span> my-app.com;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">include</span> snippets/hardening.conf;</span><br><span class="line"></span><br><span class="line">    <span class="section">location</span> / &#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://127.0.0.1:8080;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Step-4-Configure-Fail2ban-Layer"><a href="#Step-4-Configure-Fail2ban-Layer" class="headerlink" title="Step 4: Configure Fail2ban Layer"></a>Step 4: Configure Fail2ban Layer</h3><p>With malicious traffic isolated in <code>scanners.log</code>, we can implement a “Zero Tolerance” policy.</p>
+<h4 id="A-Create-a-minimalist-Filter"><a href="#A-Create-a-minimalist-Filter" class="headerlink" title="A. Create a minimalist Filter"></a>A. Create a minimalist Filter</h4><p><strong>File Location (on server):</strong> <code>/etc/fail2ban/filter.d/nginx-aggressive.conf</code></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Definition]</span></span><br><span class="line"><span class="comment"># If it&#x27;s in the scanners log, it&#x27;s a confirmed bot. Catch everything.</span></span><br><span class="line"><span class="attr">failregex</span> = ^&lt;HOST&gt; -.*</span><br><span class="line">ignoreregex =</span><br></pre></td></tr></table></figure>
+
+<h4 id="B-Configure-the-Jail"><a href="#B-Configure-the-Jail" class="headerlink" title="B. Configure the Jail"></a>B. Configure the Jail</h4><p>Use a <strong>unique Jail name</strong> (e.g., <code>nginx-scanner-trap</code>) to avoid conflicts with system default naming conventions which may force-override paths.</p>
+<p><strong>File Location (on server):</strong> <code>/etc/fail2ban/jail.d/nginx-scanners.conf</code></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[nginx-scanner-trap]</span></span><br><span class="line"><span class="attr">enabled</span>  = <span class="literal">true</span></span><br><span class="line"><span class="attr">port</span>     = http,https</span><br><span class="line"><span class="attr">filter</span>   = nginx-aggressive</span><br><span class="line"><span class="attr">logpath</span>  = /var/log/nginx/scanners.log</span><br><span class="line"><span class="attr">backend</span>  = polling <span class="comment"># Reliable file-based monitoring</span></span><br><span class="line"><span class="attr">findtime</span> = <span class="number">600</span>      <span class="comment"># 10 minute window</span></span><br><span class="line"><span class="attr">maxretry</span> = <span class="number">1</span>        <span class="comment"># One strike and you&#x27;re out</span></span><br><span class="line"><span class="attr">bantime</span>  = <span class="number">604800</span>   <span class="comment"># Ban for 1 week (or -1 for permanent)</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Verification-Monitoring"><a href="#Verification-Monitoring" class="headerlink" title="Verification &amp; Monitoring"></a>Verification &amp; Monitoring</h2><h3 id="1-Test-the-Trap"><a href="#1-Test-the-Trap" class="headerlink" title="1. Test the Trap"></a>1. Test the Trap</h3><p>Run a scan against your own IP from a secondary network (e.g., mobile hotspot):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -I http://YOUR_SERVER_IP/.env</span><br></pre></td></tr></table></figure>
+
+<p>The connection should be immediately reset (or return no data).</p>
+<h3 id="2-Check-the-“Harvest”"><a href="#2-Check-the-“Harvest”" class="headerlink" title="2. Check the “Harvest”"></a>2. Check the “Harvest”</h3><p>Verify that the IP was logged and subsequently banned:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Verify the log entry has been generated</span></span><br><span class="line">sudo <span class="built_in">cat</span> /var/log/nginx/scanners.log</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check Fail2ban jail status</span></span><br><span class="line">sudo fail2ban-client status nginx-scanner-trap</span><br><span class="line"></span><br><span class="line"><span class="comment"># View real-time ban actions</span></span><br><span class="line">sudo <span class="built_in">tail</span> -f /var/log/fail2ban.<span class="built_in">log</span> | grep <span class="string">&quot;nginx-scanner-trap&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Phase-2-High-Performance-Optimization-with-ipset"><a href="#Phase-2-High-Performance-Optimization-with-ipset" class="headerlink" title="Phase 2: High-Performance Optimization with ipset"></a>Phase 2: High-Performance Optimization with <code>ipset</code></h2><p>As your banned list grows (e.g., beyond 1,000+ IPs), standard <code>iptables</code> rules can introduce network latency due to linear chain searching (O(n)). By switching to <code>ipset</code>, we utilize hash tables (O(1)), ensuring near-zero performance impact regardless of the blacklist size.</p>
+<h3 id="1-Install-Kernel-Tools"><a href="#1-Install-Kernel-Tools" class="headerlink" title="1. Install Kernel Tools"></a>1. Install Kernel Tools</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update &amp;&amp; sudo apt install ipset -y</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Update-Fail2ban-Global-Configuration"><a href="#2-Update-Fail2ban-Global-Configuration" class="headerlink" title="2. Update Fail2ban Global Configuration"></a>2. Update Fail2ban Global Configuration</h3><p>Refactor <code>jail.local</code> to use the high-performance action variables.</p>
+<p><strong>File:</strong> <code>/etc/fail2ban/jail.local</code></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[DEFAULT]</span></span><br><span class="line"><span class="comment"># Global high-performance ban action using ipset</span></span><br><span class="line"><span class="attr">banaction</span> = iptables-ipset</span><br><span class="line"><span class="attr">banaction_allports</span> = iptables-ipset[type=allports]</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-Implement-“Total-Lockdown”-All-Ports-Ban"><a href="#3-Implement-“Total-Lockdown”-All-Ports-Ban" class="headerlink" title="3. Implement “Total Lockdown” (All-Ports Ban)"></a>3. Implement “Total Lockdown” (All-Ports Ban)</h3><p>Apply the <code>allports</code> version to critical jails like SSH and your Nginx trap. This ensures that once a host is marked as malicious, it is blocked from <strong>every port</strong> on your server.</p>
+<p><strong>File:</strong> <code>/etc/fail2ban/jail.d/sshd-permban.conf</code></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[sshd]</span></span><br><span class="line"><span class="attr">enabled</span> = <span class="literal">true</span></span><br><span class="line"><span class="comment"># Use the all-ports ban action</span></span><br><span class="line"><span class="attr">banaction</span> = %(banaction_allports)s</span><br><span class="line"><span class="attr">bantime</span> = -<span class="number">1</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-Restart-Fail2ban-to-Apply-Changes"><a href="#4-Restart-Fail2ban-to-Apply-Changes" class="headerlink" title="4. Restart Fail2ban to Apply Changes"></a>4. Restart Fail2ban to Apply Changes</h3><p>After modifying fail2ban jail conf, fully restart Fail2ban to ensure the jail is reloaded and the updated <code>banaction</code> takes effect.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart fail2ban</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-Verify-Performance-Gains"><a href="#5-Verify-Performance-Gains" class="headerlink" title="5. Verify Performance Gains"></a>5. Verify Performance Gains</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Check the clean iptables ruleset (only one rule per jail)</span></span><br><span class="line">sudo iptables -L -n</span><br><span class="line"></span><br><span class="line"><span class="comment"># Inspect the high-speed hash set</span></span><br><span class="line">sudo ipset list</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>By shifting security from <strong>Response</strong> (sending 403 Forbidden) to <strong>Stealth</strong> (dropping connections) and <strong>Automated Retaliation</strong> (firewall banning), you significantly reduce the attack surface of your server. This setup allows your backend applications to focus their resources on legitimate users while the silent guard handles the noise.</p>
+<p>Phase 2 takes the system from “works well” to “scales indefinitely”: when the banned list grows into the thousands, <code>ipset</code> prevents performance degradation by replacing linear <code>iptables</code> chain growth with O(1) hash-set lookups. Combined with an all-ports ban policy for high-risk offenders (e.g., persistent SSH brute-force), you get a defense that remains fast, predictable, and operationally simple even under constant internet-wide scanning.</p>
+</p>
+      <div class="post-button"><a class="btn" href="/2026/01/28/The-Stealth-Trap-Architecting-a-High-Performance-Nginx-Hardening-Fail2ban-Defense-System/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
+    </div>
+  </div>
+  <div class="lx-entry padding">
+    <div>
+      <h2 class="title"><a href="/2026/01/27/Deploying-Your-Own-High-Performance-VPN-Server-for-Windows-The-Ultimate-Guide/">Deploying Your Own High-Performance VPN Server for Windows: The Ultimate Guide</a></h2>
+      <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2026-01-27</span>
+      <p><p>Setting up a private VPN server used to be a daunting task involving complex certificates and manual network configurations. However, with modern containerization and robust open-source tools, you can now deploy a professional-grade VPN server in minutes. This guide walks you through setting up an <strong>IPsec&#x2F;L2TP VPN</strong> server on Linux that works seamlessly with the Windows 11 built-in client—no extra software required.</p>
+<h2 id="Why-This-Method"><a href="#Why-This-Method" class="headerlink" title="Why This Method?"></a>Why This Method?</h2><ul>
+<li><strong>No Third-Party Clients</strong>: Uses the native VPN client already built into Windows.</li>
+<li><strong>Fast and Secure</strong>: Leverages IPsec for strong encryption and high performance.</li>
+<li><strong>Docker Simplicity</strong>: One command to start, one command to stop.</li>
+<li><strong>Total Privacy</strong>: You own the hardware and the data.</li>
+</ul>
+<hr>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><ul>
+<li>A Linux server (VPS) with a public IP (e.g., Ubuntu, Debian, or CentOS).</li>
+<li><strong>Docker</strong> installed on the server.</li>
+<li>Firewall access to <strong>UDP ports 500 and 4500</strong>.</li>
+</ul>
+<hr>
+<h2 id="Step-1-Deploy-the-VPN-Server-Linux-Side"><a href="#Step-1-Deploy-the-VPN-Server-Linux-Side" class="headerlink" title="Step 1: Deploy the VPN Server (Linux Side)"></a>Step 1: Deploy the VPN Server (Linux Side)</h2><p>We will use the highly acclaimed <code>hwdsl2/ipsec-vpn-server</code> Docker image.</p>
+<h3 id="1-Create-a-Credentials-File"><a href="#1-Create-a-Credentials-File" class="headerlink" title="1. Create a Credentials File"></a>1. Create a Credentials File</h3><p>First, create a hidden environment file to store your secrets. Avoid putting passwords directly in your command history.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &lt;&lt;<span class="string">EOF &gt; .vpn.env</span></span><br><span class="line"><span class="string">VPN_IPSEC_PSK=Your_Secret_PreShared_Key</span></span><br><span class="line"><span class="string">VPN_USER=vpn_admin</span></span><br><span class="line"><span class="string">VPN_PASSWORD=Your_Strong_Password</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Run-the-Docker-Container"><a href="#2-Run-the-Docker-Container" class="headerlink" title="2. Run the Docker Container"></a>2. Run the Docker Container</h3><p>Run the following command to start the server. This command mounts necessary kernel modules and creates a persistent volume for configurations.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line">    --name ipsec-vpn-server \</span><br><span class="line">    --restart=always \</span><br><span class="line">    --env-file ./.vpn.env \</span><br><span class="line">    -v ikev2-vpn-data:/etc/ipsec.d \</span><br><span class="line">    -v /lib/modules:/lib/modules:ro \</span><br><span class="line">    -p 500:500/udp \</span><br><span class="line">    -p 4500:4500/udp \</span><br><span class="line">    -d --privileged \</span><br><span class="line">    hwdsl2/ipsec-vpn-server:latest</span><br></pre></td></tr></table></figure>
+
+<p><strong>Key Parameters Explained:</strong></p>
+<ul>
+<li><code>-p 500/4500:udp</code>: These are the standard ports for IPsec communication.</li>
+<li><code>--privileged</code>: Required for the container to manipulate network routing and encryption at the kernel level.</li>
+<li><code>-v /lib/modules</code>: Allows the container to use the host’s crypto modules.</li>
+</ul>
+<hr>
+<h2 id="Step-2-Configure-Windows-11"><a href="#Step-2-Configure-Windows-11" class="headerlink" title="Step 2: Configure Windows 11"></a>Step 2: Configure Windows 11</h2><p>Windows makes it easy to add a VPN, but you must select the correct type.</p>
+<ol>
+<li>Go to <strong>Settings &gt; Network &amp; internet &gt; VPN</strong>.</li>
+<li>Click <strong>Add VPN</strong>.</li>
+<li>Fill in the details:<ul>
+<li><strong>VPN provider</strong>: Windows (built-in)</li>
+<li><strong>Connection name</strong>: My Private VPN</li>
+<li><strong>Server name or address</strong>: <code>[Your Server&#39;s Public IP]</code></li>
+<li><strong>VPN type</strong>: <strong>L2TP&#x2F;IPsec with pre-shared key</strong></li>
+<li><strong>Pre-shared key</strong>: <code>[Your_Secret_PreShared_Key]</code></li>
+<li><strong>User name</strong>: <code>vpn_admin</code></li>
+<li><strong>Password</strong>: <code>[Your_Strong_Password]</code></li>
+</ul>
+</li>
+<li>Click <strong>Save</strong>.</li>
+</ol>
+<hr>
+<h2 id="Step-3-The-“Magic-Fix”-for-NAT-Traversal"><a href="#Step-3-The-“Magic-Fix”-for-NAT-Traversal" class="headerlink" title="Step 3: The “Magic Fix” for NAT Traversal"></a>Step 3: The “Magic Fix” for NAT Traversal</h2><p>If your server or your home PC is behind a router (which is almost always the case), Windows might block the connection by default. This is the most common reason for the “Server Not Responding” error.</p>
+<p><strong>To fix this, run this command in Windows Command Prompt (Admin):</strong></p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REG ADD HKLM\SYSTEM\CurrentControlSet\Services\PolicyAgent /v AssumeUDPEncapsulationContextOnSendRule /t REG_DWORD /d <span class="number">2</span> /f</span><br></pre></td></tr></table></figure>
+
+<p><strong>CRITICAL</strong>: You <strong>MUST reboot</strong> your Windows computer after running this command for the change to take effect.</p>
+<hr>
+<h2 id="Step-4-Verification"><a href="#Step-4-Verification" class="headerlink" title="Step 4: Verification"></a>Step 4: Verification</h2><p>Once connected, you can verify your new identity.</p>
+<h3 id="1-Check-your-Public-IP"><a href="#1-Check-your-Public-IP" class="headerlink" title="1. Check your Public IP"></a>1. Check your Public IP</h3><p>Open a terminal (PowerShell) and run:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">curl</span> ifconfig.me</span><br></pre></td></tr></table></figure>
+
+<p>It should now return your <strong>Linux Server’s IP address</strong> instead of your local home IP.</p>
+<h3 id="2-Inspect-your-Internal-VPN-IP"><a href="#2-Inspect-your-Internal-VPN-IP" class="headerlink" title="2. Inspect your Internal VPN IP"></a>2. Inspect your Internal VPN IP</h3><p>Run <code>ipconfig</code>. You will see a new <strong>PPP adapter</strong> with an IP like <code>192.168.42.10</code>. Where did this come from? This is your identity inside the “Private VPN Tunnel.” Your server’s VPN daemon (pppd) assigned this to you so it can route your traffic safely to the internet.</p>
+<hr>
+<h2 id="Frequently-Asked-Questions"><a href="#Frequently-Asked-Questions" class="headerlink" title="Frequently Asked Questions"></a>Frequently Asked Questions</h2><h3 id="What-is-the-difference-between-PSK-and-Password"><a href="#What-is-the-difference-between-PSK-and-Password" class="headerlink" title="What is the difference between PSK and Password?"></a>What is the difference between PSK and Password?</h3><ul>
+<li><strong>Pre-Shared Key (PSK)</strong>: This is like a “Wi-Fi password” for the machine. It builds the secure encrypted tunnel between your PC and the Server.</li>
+<li><strong>User Password</strong>: This identifies <em>you</em> as an authorized user once the tunnel is built. Both are required for maximum security.</li>
+</ul>
+<h3 id="Will-websites-know-my-real-location"><a href="#Will-websites-know-my-real-location" class="headerlink" title="Will websites know my real location?"></a>Will websites know my real location?</h3><p>No. Once connected, all your traffic exits from the Linux server. If your server is in the US and you are in Japan, websites like Google or Netflix will see you as a US-based user.</p>
+<h3 id="Why-is-there-a-slight-delay-when-browsing"><a href="#Why-is-there-a-slight-delay-when-browsing" class="headerlink" title="Why is there a slight delay when browsing?"></a>Why is there a slight delay when browsing?</h3><p>Since your data packets now travel to the server and back (e.g., Japan ➔ USA ➔ Japan), you will notice a higher “Ping” or latency. This is normal for any VPN and depends on the physical distance between you and your server.</p>
+<hr>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Hosting your own VPN server is a great way to gain deep knowledge of networking while securing your digital life. Using Docker and the native Windows client, you get a clean, high-performance solution without the overhead of heavy third-party applications. Happy (and private) surfing!</p>
+</p>
+      <div class="post-button"><a class="btn" href="/2026/01/27/Deploying-Your-Own-High-Performance-VPN-Server-for-Windows-The-Ultimate-Guide/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
+    </div>
+  </div>
+  <div class="lx-entry padding">
+    <div>
+      <h2 class="title"><a href="/2025/08/31/Setting-Up-PostgreSQL-Development-Environment-with-VS-Code-DevContainer-and-Windsurf/">Setting Up PostgreSQL Development Environment with VS Code, DevContainer, and Windsurf</a></h2>
+      <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2025-08-31</span>
+      <p><p>Developing PostgreSQL from source on Windows can be challenging due to the need for numerous build tools and dependencies. Using a development container (DevContainer) provides a consistent, isolated environment that works seamlessly across Windows, macOS, and Linux, eliminating platform-specific setup hassles.</p>
+<p>Here is a simple step-by-step guide for setting up and building PostgreSQL source code with VS Code and a development container, and then using Windsurf to learn PostgreSQL source code.</p>
+<h2 id="Setup-and-Build-PostgreSQL-in-VS-Code"><a href="#Setup-and-Build-PostgreSQL-in-VS-Code" class="headerlink" title="Setup and Build PostgreSQL in VS Code"></a>Setup and Build PostgreSQL in VS Code</h2><h3 id="1-Download-the-Complete-PostgreSQL-Source-Code"><a href="#1-Download-the-Complete-PostgreSQL-Source-Code" class="headerlink" title="1. Download the Complete PostgreSQL Source Code"></a>1. Download the Complete PostgreSQL Source Code</h3><ul>
+<li>Obtain the full PostgreSQL source from the official repository or website. Typically run:<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://git.postgresql.org/git/postgresql.git</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-Create-Required-Directories-and-Files-in-PostgreSQL-Source-Code-Directory"><a href="#2-Create-Required-Directories-and-Files-in-PostgreSQL-Source-Code-Directory" class="headerlink" title="2. Create Required Directories and Files in PostgreSQL Source Code Directory"></a>2. Create Required Directories and Files in PostgreSQL Source Code Directory</h3><ul>
+<li>Create the following directories:<ul>
+<li><code>.vscode</code></li>
+<li><code>.devcontainer</code></li>
+</ul>
+</li>
+<li>Add necessary configuration files inside each directory:<ul>
+<li>Place VS Code workspace settings in <code>.vscode</code></li>
+<li>Add development container configuration files (e.g., <code>devcontainer.json</code> and <code>Dockerfile</code>) in <code>.devcontainer</code>.</li>
+</ul>
+</li>
+</ul>
+<p>Add the following content to the <code>devcontainer.json</code> file:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;PostgreSQL Dev&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;build&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;dockerfile&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Dockerfile&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;customizations&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;vscode&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;extensions&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;ms-vscode.cpptools&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;ms-vscode.cmake-tools&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;Codeium.codeium&quot;</span></span><br><span class="line">      <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;settings&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;editor.formatOnSave&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;files.eol&quot;</span><span class="punctuation">:</span> <span class="string">&quot;\n&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;editor.codeActionsOnSave&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;source.fixAll.eslint&quot;</span><span class="punctuation">:</span> <span class="string">&quot;explicit&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Add the following content to the <code>Dockerfile</code> file:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">22.04</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> apt update &amp;&amp; apt install -y \</span></span><br><span class="line"><span class="language-bash">    build-essential \</span></span><br><span class="line"><span class="language-bash">    flex \</span></span><br><span class="line"><span class="language-bash">    bison \</span></span><br><span class="line"><span class="language-bash">    libreadline-dev \</span></span><br><span class="line"><span class="language-bash">    zlib1g-dev \</span></span><br><span class="line"><span class="language-bash">    pkg-config \</span></span><br><span class="line"><span class="language-bash">    libssl-dev \</span></span><br><span class="line"><span class="language-bash">    libxml2-dev \</span></span><br><span class="line"><span class="language-bash">    libxslt1-dev \</span></span><br><span class="line"><span class="language-bash">    libedit-dev \</span></span><br><span class="line"><span class="language-bash">    libicu-dev \</span></span><br><span class="line"><span class="language-bash">    git \</span></span><br><span class="line"><span class="language-bash">    curl \</span></span><br><span class="line"><span class="language-bash">    &amp;&amp; <span class="built_in">rm</span> -rf /var/lib/apt/lists/*</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ENV</span> CC=/usr/bin/gcc</span><br><span class="line"><span class="keyword">ENV</span> CXX=/usr/bin/g++</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>For editors using the Microsoft C&#x2F;C++ extension, it’s recommended to add a <code>c_cpp_properties.json</code> file to the <code>.vscode</code>.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;configurations&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Linux&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;includePath&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;$&#123;workspaceFolder&#125;/**&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;$&#123;workspaceFolder&#125;/src/include&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;$&#123;workspaceFolder&#125;/src/include/utils&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;$&#123;workspaceFolder&#125;/src/backend&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;$&#123;workspaceFolder&#125;/src/backend/utils&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;/usr/include&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;/usr/local/include&quot;</span></span><br><span class="line">      <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;defines&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;compilerPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/usr/bin/gcc&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;cStandard&quot;</span><span class="punctuation">:</span> <span class="string">&quot;c11&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;cppStandard&quot;</span><span class="punctuation">:</span> <span class="string">&quot;c++14&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;intelliSenseMode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;linux-gcc-x64&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="number">4</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>For editors (e.g., Windsurf) using clangd instead of the Microsoft C&#x2F;C++ extension, it’s recommended to add a <code>.clangd</code> configuration file and a <code>compile_commands.json</code> file to the project root.</p>
+</li>
+</ul>
+<p><u>.clangd</u></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CompileFlags:</span><br><span class="line">  Add: [</span><br><span class="line">    &quot;-I$&#123;workspaceFolder&#125;/src/include&quot;,</span><br><span class="line">    &quot;-I$&#123;workspaceFolder&#125;/src/include/utils&quot;,</span><br><span class="line">    &quot;-I$&#123;workspaceFolder&#125;/src/backend&quot;, </span><br><span class="line">    &quot;-I$&#123;workspaceFolder&#125;/src/backend/utils&quot;,</span><br><span class="line">    &quot;-std=c11&quot;</span><br><span class="line">  ]</span><br></pre></td></tr></table></figure>
+
+<p><u>compile_commands.json</u></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;directory&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/workspaces/postgresql&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;command&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/usr/bin/gcc -I/workspaces/postgresql/src/include -I/workspaces/postgresql/src/backend -c /workspaces/postgresql/src/backend/bootstrap/bootstrap.c -o bootstrap.o&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/workspaces/postgresql/src/backend/bootstrap/bootstrap.c&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;directory&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/workspaces/postgresql&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;command&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/usr/bin/gcc -I/workspaces/postgresql/src/include -I/workspaces/postgresql/src/backend -c /workspaces/postgresql/src/backend/utils/init/globals.c -o globals.o&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/workspaces/postgresql/src/backend/utils/init/globals.c&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>To ensure consistent line endings and proper handling of text and binary files in your PostgreSQL project, add the following content to the<code>.gitattributes</code> file in project root:</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"># Set default behavior to automatically normalize line endings to LF</span><br><span class="line">* text=auto eol=lf</span><br><span class="line"></span><br><span class="line"># Explicitly declare text files to be normalized to LF</span><br><span class="line">*.c text eol=lf</span><br><span class="line">*.h text eol=lf</span><br><span class="line">*.cpp text eol=lf</span><br><span class="line">*.hpp text eol=lf</span><br><span class="line">*.cc text eol=lf</span><br><span class="line">*.hh text eol=lf</span><br><span class="line">*.py text eol=lf</span><br><span class="line">*.sh text eol=lf</span><br><span class="line">*.pl text eol=lf</span><br><span class="line">*.pm text eol=lf</span><br><span class="line">*.sql text eol=lf</span><br><span class="line">Makefile text eol=lf</span><br><span class="line">makefile text eol=lf</span><br><span class="line">*.mk text eol=lf</span><br><span class="line"></span><br><span class="line"># Declare binary files that should not be modified</span><br><span class="line">*.png binary</span><br><span class="line">*.jpg binary</span><br><span class="line">*.gif binary</span><br><span class="line">*.ico binary</span><br><span class="line">*.zip binary</span><br><span class="line">*.tar binary</span><br><span class="line">*.gz binary</span><br><span class="line">*.pdf binary</span><br></pre></td></tr></table></figure>
+
+<p>This configuration will automatically normalize line endings for text files to LF, and protect binary files from unwanted line ending conversions, improving cross-platform compatibility.</p>
+<p>Finnally, the newly created directories and files and modified files should look like this:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">postgresql/</span><br><span class="line">├── All the stuff in the original postgresql source code</span><br><span class="line">├── .devcontainer/</span><br><span class="line">│   ├── devcontainer.json</span><br><span class="line">│   └── Dockerfile</span><br><span class="line">├── .vscode/</span><br><span class="line">│   └── c_cpp_properties.json</span><br><span class="line">├── .gitattributes</span><br><span class="line">├── .clangd</span><br><span class="line">└── compile_commands.json</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-Reopen-Folder-in-Container-VS-Code"><a href="#3-Reopen-Folder-in-Container-VS-Code" class="headerlink" title="3. Reopen Folder in Container (VS Code)"></a>3. Reopen Folder in Container (VS Code)</h3><ul>
+<li>In VS Code, use the “Dev Containers: Reopen in Container” command to open your workspace within the defined development container. If you can’t find this command by Ctrl+Shift+P (or Cmd+Shift+P on macOS), you can install the Dev Containers extension from the VS Code marketplace.</li>
+</ul>
+<h3 id="4-Build-PostgreSQL-in-the-Container"><a href="#4-Build-PostgreSQL-in-the-Container" class="headerlink" title="4. Build PostgreSQL in the Container"></a>4. Build PostgreSQL in the Container</h3><ul>
+<li>In the container’s terminal, execute:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure &amp;&amp; make</span><br></pre></td></tr></table></figure></li>
+<li>This will configure the build and compile all required files, including generated headers such as <code>errcodes.h</code>.</li>
+</ul>
+<p>These steps ensure a stable environment for building and developing PostgreSQL efficiently with VS Code and containers.</p>
+<ul>
+<li><h3 id="Access-this-Devcontainer-from-Windsurf"><a href="#Access-this-Devcontainer-from-Windsurf" class="headerlink" title="Access this Devcontainer from Windsurf"></a>Access this Devcontainer from Windsurf</h3><ul>
+<li>Close VS Code, the devcontainer will also stop automatically. No way to keep it running.</li>
+<li>Use <code>docker ps -a</code> to find the container id of this devcontainer.</li>
+<li>Use <code>docker start &lt;container_id&gt;</code> to start the devcontainer.</li>
+<li>Open Windsurf, use <code>Open a Remote Window -&gt; Attach to Running Container</code> to attach to this devcontainer.</li>
+<li>Windsurf cannot use Microsoft C&#x2F;C++ extension anymore, use clangd instead. Install clangd extension in Windsurf.</li>
+<li>In Windsurf, open the postgresql source code directory, should be <code>/workspaces/postgresql</code>.</li>
+</ul>
+<p><img src="https://s2.loli.net/2025/08/31/qxi1N8VKfdtQ9D3.png" alt="20250831181535"></p>
+<p>Thanks to the Cascade and the latest feature - DeepWiki of Windsurf, you can now enjoy the brand new learning experience powered by AI.</p>
+</li>
+</ul>
+</p>
+      <div class="post-button"><a class="btn" href="/2025/08/31/Setting-Up-PostgreSQL-Development-Environment-with-VS-Code-DevContainer-and-Windsurf/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
+    </div>
+  </div>
+  <div class="lx-entry padding">
+    <div>
+      <h2 class="title"><a href="/2025/04/19/Vibe-Coding-A-10-Day-Journey-from-Zero-to-Building-a-Full-Stack-RSS-Validator-Tool/">Vibe Coding: A 10-Day Journey from Zero to Building a Full-Stack RSS Validator Tool</a></h2>
+      <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2025-04-19</span>
+      <p><p>10 days (2025&#x2F;4&#x2F;8 to 2025&#x2F;4&#x2F;18), From zero to <a target="_blank" rel="noopener" href="https://kamusis-my-opml-sub.deno.dev/">https://kamusis-my-opml-sub.deno.dev/</a></p>
+<p>The code implemented in the entire project so far includes backend and some frontend by Claude 3.7 Sonnet (sometimes Claude 3.5), while a larger portion of the frontend is by OpenAI GPT-4.1 (in Windsurf, this model is currently available for free for a limited time).</p>
+<p>Project URL: <a target="_blank" rel="noopener" href="https://kamusis-my-opml-sub.deno.dev/">https://kamusis-my-opml-sub.deno.dev/</a></p>
+<h2 id="User-Story"><a href="#User-Story" class="headerlink" title="User Story"></a>User Story</h2><p>I’ve been using RSS for like… 15 years now? Over time I’ve somehow ended up with 200+ feed subscriptions. I know RSS isn’t exactly trendy anymore, but a handful of these feeds are still part of my daily routine.</p>
+<p>The problem? My feed list has turned into a total mess:</p>
+<ul>
+<li>Some feeds are completely dead</li>
+<li>Some blogs haven’t been updated in years</li>
+<li>Others post like once every six months</li>
+<li>And a bunch just throw 404s now</li>
+</ul>
+<p>I want to clean it up, but here’s the thing:<br>Going through each one manually sounds like actual hell.<br>My reader (News Explorer) doesn’t have any built-in tools to help with this.<br>I tried Googling things like “rss feed analyze” and “cleanup,” but honestly didn’t come across any useful tools.</p>
+<p>So the mess remains… because there’s just no good way to deal with it. Until I finally decided to just build one myself—well, more like let AI build it for me.</p>
+<h2 id="Background-of-Me"><a href="#Background-of-Me" class="headerlink" title="Background of Me"></a>Background of Me</h2><ul>
+<li>Can read code (sometimes need to rely on AI for interpretation and understanding.)</li>
+<li>Have manually written backend code in the past, but haven’t written extensive backend code in the last twenty years.</li>
+<li>Have never manually written frontend code and have limited knowledge of the basic principles of frontend rendering mechanisms.</li>
+<li>Started learning about JavaScript and TypeScript a month ago. </li>
+<li>A beginner with Deno. Understand the calling sequence and respective responsibilities from components to islands to routes API, then to backend services, and finally to backend logic implementation.</li>
+</ul>
+<h2 id="Tools"><a href="#Tools" class="headerlink" title="Tools"></a>Tools</h2><ul>
+<li>Agentic Coding Editor (Windsurf)</li>
+<li>Design and Code Generater LLM (Claude 3.5&#x2F;3.7 + openAI GPT-4.1)<br>We need a subscription to an Agentic Coding Editor, such as Cursor, Windsurf, or Github Copilot, for design and coding.</li>
+<li>Code Reviewer LLM (Gemini Code Assist)<br>Additionally, we need Gemini Code Assist (currently considered free) to review code and consult on any code-related questions. Gemini Code Assist is also very effective, and it can be said that Gemini is the best model to help you understand code.</li>
+<li>MCP Server (sequential-thinking)</li>
+</ul>
+<h2 id="Process"><a href="#Process" class="headerlink" title="Process"></a>Process</h2><ol>
+<li><p><strong>Design Phase</strong></p>
+<ul>
+<li>Write the design and outline original requirements</li>
+<li>Let AI write the design (experience shows Claude 3.5 + sequential-thinking MCP server works well; theoretically, any LLM with thinking capabilities is better suited for overall design)</li>
+<li>Review the design, which should include implementation details such as interaction flow design, class design, function design, etc.</li>
+<li>If you are trying to develop a full-stack application, you should write design documents for both frontend and backend</li>
+<li>Continue to ask questions and interact with AI until you believe the overall design is reasonable and implementable (This step is not suitable for people who have no programming knowledge at all, but it is very important.)</li>
+</ul>
+</li>
+<li><p><strong>Implementation Planning</strong></p>
+<ul>
+<li>Based on the design, ask AI to write an implementation plan (Claude 3.5 + sequential-thinking MCP server)</li>
+<li>Break it down into steps</li>
+<li>Ask AI to plan steps following a senior programmer’s approach</li>
+<li>Review steps, raise questions until the steps are reasonable (This step is not suitable for people who have no programming knowledge at all, but it is very important.)</li>
+</ul>
+</li>
+<li><p><strong>Implementation</strong></p>
+<ul>
+<li>Strictly follow the steps</li>
+<li>Ask AI to implement functions one by one (Claude 3.5&#x2F;3.7)</li>
+<li>After each function is implemented, ask AI to generate unit tests to ensure they pass</li>
+</ul>
+</li>
+<li><p><strong>Oversee</strong></p>
+<ul>
+<li>If you have no programming experience, you might not be able to understand what the AI is doing or identify potential risks. As a result, you wouldn’t be able to oversee the AI or question its output, and would have to hope the AI makes no mistakes at all. This could make the implementation process much harder down the line.</li>
+<li>Ensure strict monitoring of what AI is actually doing</li>
+<li>For example: AI might implement underlying function calls in test cases rather than generating test cases for the target file, which would make it appear that tests pass when in fact there is no effective testing of the target file<br><img src="https://s2.loli.net/2025/04/18/U7QKqbAi4psHe5k.png" alt="20250418171722"></li>
+<li>Sometimes AI will take the initiative to use mocks for testing; we need to know when it’s appropriate to use mocks in tests and when to test real functionality</li>
+<li>This requires us to know whether we’re doing Integration&#x2F;Component Testing or Pure Unit Testing<br><img src="https://s2.loli.net/2025/04/18/NY75BW2golesZ1z.png" alt="20250418171748"></li>
+</ul>
+</li>
+<li><p><strong>Code Review and Design Update</strong></p>
+<ul>
+<li>Ask another AI to read the generated code (experience shows Gemini Code Assist is very suitable for this work)</li>
+<li>Compare with the original design</li>
+<li>Have AI analyze whether the original design has been fully implemented; if not, what’s missing<ul>
+<li>Evaluate missing content and decide whether to implement it now</li>
+</ul>
+</li>
+<li>Or whether functionality beyond the design has been implemented<ul>
+<li>Evaluate functionality beyond the design and decide whether to reflect it back into the design</li>
+<li>Why update the design? Because subsequent work may need to reference the design document, so ensuring the design document correctly reflects the code logic is a good practice</li>
+<li>You don’t necessarily need to document every single implementation detail (like the specific batch size in batchValidate), but changes to public interfaces and communication protocols are definitely worth updating.<br> <img src="https://s2.loli.net/2025/04/18/lDY7tNzLk3jyqbe.png" alt="20250418171854"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Continuous Review</strong></p>
+<ul>
+<li><p>After completing each requirement, ask AI to review the design document again to understand current progress and what needs to be done<br><img src="https://s2.loli.net/2025/04/18/SGCFPs16RjNYW2w.png" alt="20250418171956"><br><img src="https://s2.loli.net/2025/04/18/4ruVdyUvfnXpRkx.png" alt="20250418172014"><br><img src="https://s2.loli.net/2025/04/18/qFpkw1RolUBz9AK.png" alt="20250418172023"></p>
+</li>
+<li><p>When major milestones are completed or before implementing the next major task, have AI review the completed work and write a new development plan</p>
+</li>
+<li><p>Always read the development plan completed by AI and make manual modifications if necessary<br><img src="https://s2.loli.net/2025/04/18/hDo2LBbfCGdSPAn.png" alt="20250418172046"></p>
+</li>
+<li><p>After reaching a milestone, have AI (preferably a different AI) review progress again<br><img src="https://s2.loli.net/2025/04/18/hbxZ1vydXm4fSjW.png" alt="20250418172133"></p>
+</li>
+</ul>
+</li>
+</ol>
+<p>Repeat the above steps until the entire project is completed.</p>
+<h2 id="Learning-from-the-Project"><a href="#Learning-from-the-Project" class="headerlink" title="Learning from the Project"></a>Learning from the Project</h2><h3 id="Git-and-GitHub"><a href="#Git-and-GitHub" class="headerlink" title="Git and GitHub"></a>Git and GitHub</h3><ul>
+<li>Make good use of git; commit after completing each milestone functionality</li>
+<li>When working on significant, large-scale features—like making a fundamental data structure change from the ground up—it’s safer to use GitHub PRs, even if you’re working solo. Create a issue, create a branch for this issue, make changes, test thoroughly, and merge after confirming everything is correct.</li>
+</ul>
+<h3 id="Debugging"><a href="#Debugging" class="headerlink" title="Debugging"></a>Debugging</h3><p>When debugging, this prompt is very useful: “Important: Try to fix things at the cause, not the symptom.” We need to adopt this mindset ourselves because even if we define this rule in the global rules, AI might still not follow it. When we see AI trying to fix a bug with a method that treats the symptom rather than the cause, we should interrupt and emphasize again that it needs to find the cause, not just fix the symptom. This requires us to have debugging skills, which is why Agentic Coding is currently not suitable for people who have no programming knowledge at all. Creating a familiar Snake game might not require any debugging, but for a real-world software project, if we let AI debug on its own, it might make the program progressively worse.</p>
+<p>The sequential-thinking MCP server is very useful when debugging bugs involving multi-layer call logic. It will check and analyze multiple files in the call path sequentially, typically making it easier to find the root cause. Without thinking capabilities, AI models might not have a clear enough approach to decide which files to check.<br><img src="https://s2.loli.net/2025/04/18/pazwuMm18lTEyAQ.png" alt="20250418172250"><br><img src="https://s2.loli.net/2025/04/18/5iWpbQ4wLzHqAcv.png" alt="20250418193434"></p>
+<p>For completely unfamiliar code sections, if bugs occur, we can only rely on AI to analyze and fix them itself, which significantly increases the frequency of interactions with AI and the cost of using AI. For example, when debugging backend programs, the Windsurf editor spends an average of 5 credits because I can point out possible debugging directions; but once we start debugging frontend pages, such as table flickering during refresh that must be fixed by adjusting CSS, because I have almost no frontend development experience, I have no suggestions or interventions, resulting in an average of 15 credits spent. When multiple modifications to a bug have no effect, rolling back the changes to the beginning stage of the bug and then using the sequential-thinking tool to think and fix will have better results.<br><img src="https://s2.loli.net/2025/04/18/alR9YzpLygPBONq.png" alt="20250418193823"></p>
+<h3 id="Refactoring"><a href="#Refactoring" class="headerlink" title="Refactoring"></a>Refactoring</h3><p>Refactoring is often essential because we don’t review every line of AI-generated code, so we might miss some errors made by the AI. For example, in my project, when implementing a feature, the AI didn’t use the interface previously defined in types.d.ts, but instead created a new interface with a similar name based on its understanding, and continued using this new interface throughout the feature implementation. After discovery, refactoring was necessary.<br><img src="https://s2.loli.net/2025/04/18/TkjuXLp6hPmAoJM.png" alt="20250418193509"><br><img src="https://s2.loli.net/2025/04/18/P4fBlqVZQ7Ht2vK.png" alt="20250418193659"><br><img src="https://s2.loli.net/2025/04/18/m8FJnfNsTbyQh19.png" alt="20250418193708"></p>
+<h3 id="Multi-Model-mutual-argumentation"><a href="#Multi-Model-mutual-argumentation" class="headerlink" title="Multi-Model mutual argumentation"></a>Multi-Model mutual argumentation</h3><p>When an AI offers suggestions and you’re unsure about them, a solid learning trick is to run those ideas by another AI for a second opinion. Take, for example, deciding if an endpoint should be defined with POST or GET.<br>I had Claude 3.7 whip up some code, then passed it over to Gemini for a quick check. Gemini suggested switching to GET, saying it might align better with common standards.<br><img src="https://s2.loli.net/2025/04/18/Kd8O62HauxbGItl.png" alt="20250418194455"></p>
+<p>When sending the suggestion back to Claude 3.7, Claude 3.7 still believed using POST was better.<br><img src="https://s2.loli.net/2025/04/18/RA1uqhJ3MGFTE5r.png" alt="20250418194505"></p>
+<p>When sending Claude 3.7’s reply back to Gemini, Gemini agreed.<br><img src="https://s2.loli.net/2025/04/18/BYc7FXRm1Gh6b5T.png" alt="20250418194515"></p>
+<p>This is a fascinating experience, like being part of a team where you watch two experts share their opinions and eventually reach a consensus.</p>
+<p>I hope in the future there will be a more convenient mechanism for Multi-Model mutual argumentation (rather than manual copy-pasting), which would greatly improve the quality of AI-generated code.</p>
+</p>
+      <div class="post-button"><a class="btn" href="/2025/04/19/Vibe-Coding-A-10-Day-Journey-from-Zero-to-Building-a-Full-Stack-RSS-Validator-Tool/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
+    </div>
+  </div>
+  <div class="lx-entry padding">
+    <div>
+      <h2 class="title"><a href="/2025/04/08/From-Software-Search-to-Code-Generation-The-Agentic-Coding-Revolution/">From Software Search to Code Generation: The Agentic Coding Revolution</a></h2>
+      <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2025-04-08</span>
+      <p><h2 id="User-Story-RSS-Feed-Clean-up-Journey"><a href="#User-Story-RSS-Feed-Clean-up-Journey" class="headerlink" title="User Story: RSS Feed Clean-up Journey"></a>User Story: RSS Feed Clean-up Journey</h2><p>Over the past 15 years, I’ve accumulated a substantial collection of RSS feeds, numbering over 200 subscriptions. While RSS usage has dramatically declined in recent years, some of these feeds remain part of my daily reading routine. However, the collection has become cluttered:</p>
+<ul>
+<li>Many feeds have become completely inaccessible</li>
+<li>Some bloggers have stopped updating their sites</li>
+<li>Certain feeds are still active but rarely updated</li>
+</ul>
+<p><strong>The Challenge:</strong></p>
+<ul>
+<li>Manual verification of each feed would be tedious and time-consuming</li>
+<li>My RSS reader (News Explorer) lacks feed cleanup functionality</li>
+<li>Alternative solutions like Inoreader require paid subscriptions</li>
+<li>The task remained pending due to lack of efficient solutions</li>
+</ul>
+<p><strong>The Agentic Coding Solution:</strong><br>What was previously a daunting task transformed into a manageable project:</p>
+<ul>
+<li>Total time from requirement writing to completion: ~2 hours</li>
+<li>Automated validation of all feeds</li>
+<li>Generated comprehensive statistics and visualizations</li>
+<li>Successfully categorized feeds into active, inactive, and dead</li>
+<li>Pleasant and efficient development experience</li>
+</ul>
+<p>This experience perfectly illustrates how agentic coding can turn a long-postponed task into an achievable solution through clear requirement description and AI-assisted development.</p>
+<h2 id="The-Traditional-Approach"><a href="#The-Traditional-Approach" class="headerlink" title="The Traditional Approach"></a>The Traditional Approach</h2><p>Traditionally, when faced with a specific requirement like validating and analyzing OPML feed subscriptions, the typical workflow would be:</p>
+<ol>
+<li>Search for existing software that might solve the problem</li>
+<li>Evaluate multiple tools and their features</li>
+<li>Choose the closest match, often compromising on exact requirements</li>
+<li>Learn how to use the chosen software</li>
+<li>Deal with limitations and missing features</li>
+</ol>
+<p>This process is time-consuming and often results in settling for a solution that doesn’t perfectly match our needs.</p>
+<h2 id="The-Agentic-Coding-Paradigm"><a href="#The-Agentic-Coding-Paradigm" class="headerlink" title="The Agentic Coding Paradigm"></a>The Agentic Coding Paradigm</h2><p>With agentic coding, the approach transforms dramatically:</p>
+<ol>
+<li>Clearly describe your requirements in natural language</li>
+<li>Let AI understand and break down the problem</li>
+<li>Generate custom code that exactly matches your needs</li>
+<li>Iterate and refine the solution through conversation</li>
+</ol>
+<h3 id="Real-World-Example-OPML-Feed-Validator"><a href="#Real-World-Example-OPML-Feed-Validator" class="headerlink" title="Real-World Example: OPML Feed Validator"></a>Real-World Example: OPML Feed Validator</h3><p>This project demonstrates the power of agentic coding. Instead of searching for an existing OPML feed validator:</p>
+<ul>
+<li><p>We described our need for a tool that could:</p>
+<ul>
+<li>Validate RSS feeds in an OPML file</li>
+<li>Check feed accessibility</li>
+<li>Analyze update frequencies</li>
+<li>Generate meaningful statistics</li>
+<li>Visualize the results</li>
+</ul>
+</li>
+<li><p>The AI agent:</p>
+<ul>
+<li>Designed the system architecture</li>
+<li>Implemented the required functionality</li>
+<li>Created visualization components</li>
+<li>Generated comprehensive documentation</li>
+<li>All while following best practices and proper error handling</li>
+</ul>
+</li>
+</ul>
+<h2 id="Benefits-of-Agentic-Coding"><a href="#Benefits-of-Agentic-Coding" class="headerlink" title="Benefits of Agentic Coding"></a>Benefits of Agentic Coding</h2><ol>
+<li><strong>Perfect Fit</strong>: Solutions are tailored exactly to your requirements</li>
+<li><strong>Rapid Development</strong>: No need to spend time searching and evaluating existing tools</li>
+<li><strong>Full Control</strong>: Complete access to the source code for modifications</li>
+<li><strong>Learning Opportunity</strong>: Understanding how the solution works through generated code</li>
+<li><strong>Cost-Effective</strong>: No need to purchase or subscribe to multiple tools</li>
+<li><strong>Maintenance Freedom</strong>: Ability to modify and extend the solution as needs evolve</li>
+</ol>
+<h2 id="Future-Implications"><a href="#Future-Implications" class="headerlink" title="Future Implications"></a>Future Implications</h2><p>This shift from “finding” to “generating” solutions represents a fundamental change in how we approach software development. As AI continues to evolve:</p>
+<ul>
+<li>Development will become more requirement-driven than tool-driven</li>
+<li>Custom solutions will become as accessible as off-the-shelf software</li>
+<li>The focus will shift from “what exists” to “what’s possible”</li>
+</ul>
+<p>Agentic coding empowers developers and users alike to create exactly what they need, breaking free from the limitations of existing software solutions.</p>
+<h2 id="Lessons-Learned-and-Experience"><a href="#Lessons-Learned-and-Experience" class="headerlink" title="Lessons Learned and Experience"></a>Lessons Learned and Experience</h2><h3 id="1-The-Importance-of-Clear-Requirements"><a href="#1-The-Importance-of-Clear-Requirements" class="headerlink" title="1. The Importance of Clear Requirements"></a>1. The Importance of Clear Requirements</h3><p>Product thinking and clear requirements are crucial for successful AI-assisted development:</p>
+<ul>
+<li><strong>Clear Vision Leads to Better Code</strong>: When requirements are well-defined and specific about how the tool should behave, the AI generates higher quality code</li>
+<li><strong>Product Mindset</strong>: Requirement providers need to have a clear understanding of:<ul>
+<li>Desired user interactions</li>
+<li>Expected outputs and their formats</li>
+<li>Error handling scenarios</li>
+<li>Performance expectations</li>
+</ul>
+</li>
+<li><strong>Iterative Refinement</strong>: Unclear requirements often lead to multiple iterations and code quality issues</li>
+</ul>
+<h3 id="2-Technology-Stack-Selection-Matters"><a href="#2-Technology-Stack-Selection-Matters" class="headerlink" title="2. Technology Stack Selection Matters"></a>2. Technology Stack Selection Matters</h3><p>The choice of programming languages and libraries significantly impacts AI-assisted development success:</p>
+<ul>
+<li><p><strong>Language Popularity Impact</strong>:</p>
+<ul>
+<li>More widely used languages (like Python) often result in better AI-generated code</li>
+<li>Popular languages have more training data and real-world examples</li>
+<li>In this project, while we chose TypeScript with Deno for learning purposes, Python might have been an easier choice</li>
+</ul>
+</li>
+<li><p><strong>Library Selection Strategy</strong>:</p>
+<ul>
+<li>Popular, widely-used libraries lead to better AI comprehension and implementation</li>
+<li>Example from this project:<ul>
+<li>Initial attempt: Using less common <code>deno_chart</code> library resulted in multiple errors</li>
+<li>Successful pivot: Switching to standard SVG generation led to immediate success</li>
+</ul>
+</li>
+<li>Lesson: Prefer mainstream libraries over niche ones when working with AI</li>
+</ul>
+</li>
+</ul>
+<h3 id="Best-Practices-for-AI-Assisted-Development"><a href="#Best-Practices-for-AI-Assisted-Development" class="headerlink" title="Best Practices for AI-Assisted Development"></a>Best Practices for AI-Assisted Development</h3><ol>
+<li><p><strong>Requirements Phase</strong>:</p>
+<ul>
+<li>Invest time in detailed requirement documentation</li>
+<li>Include specific examples of desired behavior</li>
+<li>Define clear success criteria</li>
+</ul>
+</li>
+<li><p><strong>Technology Selection</strong>:</p>
+<ul>
+<li>Consider language popularity and ecosystem maturity</li>
+<li>Choose widely-adopted libraries when possible</li>
+<li>Balance learning goals with development efficiency</li>
+</ul>
+</li>
+<li><p><strong>Development Process</strong>:</p>
+<ul>
+<li>Start with core functionality using proven technologies</li>
+<li>Experiment with newer technologies only after basic features are stable</li>
+<li>Be prepared to pivot when encountering AI limitations with specific technologies</li>
+</ul>
+</li>
+</ol>
+<p>This project serves as a practical example of these lessons, demonstrating both the potential and limitations of AI-assisted development while highlighting the importance of making informed technology choices.</p>
+<p>The project can be found <a target="_blank" rel="noopener" href="https://github.com/kamusis/my-opml-subscriptions">here</a>.</p>
+</p>
+      <div class="post-button"><a class="btn" href="/2025/04/08/From-Software-Search-to-Code-Generation-The-Agentic-Coding-Revolution/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
+    </div>
+  </div>
+  <div class="lx-entry padding">
+    <div>
+      <h2 class="title"><a href="/2025/03/28/Getting-Started-with-Deno-A-Modern-Twist-on-JavaScript-Runtimes/">Getting Started with Deno: A Modern Twist on JavaScript Runtimes</a></h2>
+      <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2025-03-28</span>
+      <p><p>If you’ve been in the JavaScript world for a while, you’ve probably heard of Deno—the runtime that’s been making waves as a “better Node.js.” Built by Ryan Dahl (the original creator of Node.js), Deno takes a fresh approach to running JavaScript and TypeScript, aiming to fix some of Node’s pain points while embracing modern standards. In this post, I’ll walk you through what Deno is, how it works, and how it stacks up against Node.js—especially based on my recent dive into it while tinkering with a Supabase integration.</p>
+<h2 id="What-is-Deno"><a href="#What-is-Deno" class="headerlink" title="What is Deno?"></a>What is Deno?</h2><p>Deno is a secure, modern runtime for JavaScript and TypeScript, launched in 2020. It’s designed to be simple, safe, and developer-friendly, with built-in support for TypeScript, ES Modules, and a standard library—no extra tools required. Think of it as Node.js reimagined with lessons learned from the past decade.</p>
+<p>Here’s a quick taste of Deno in action:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; serve &#125; <span class="keyword">from</span> <span class="string">&quot;https://deno.land/std@0.224.0/http/server.ts&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">serve</span>(<span class="function">(<span class="params">req</span>) =&gt;</span> <span class="keyword">new</span> <span class="title class_">Response</span>(<span class="string">&quot;Hello, Deno!&quot;</span>), &#123; <span class="attr">port</span>: <span class="number">8000</span> &#125;);</span><br></pre></td></tr></table></figure>
+<p>Run it with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deno run --allow-net main.ts</span><br></pre></td></tr></table></figure>
+<p>Boom—a web server in three lines, no <code>npm install</code> or <code>node_modules</code> in sight.</p>
+<h2 id="Key-Features-of-Deno"><a href="#Key-Features-of-Deno" class="headerlink" title="Key Features of Deno"></a>Key Features of Deno</h2><h3 id="1-TypeScript-Out-of-the-Box"><a href="#1-TypeScript-Out-of-the-Box" class="headerlink" title="1. TypeScript Out of the Box"></a>1. TypeScript Out of the Box</h3><p>Deno runs TypeScript natively—no <code>tsconfig.json</code> or <code>tsc</code> needed. Write your <code>.ts</code> file, run it with <code>deno run</code>, and Deno compiles it in memory. Compare that to Node.js, where you’d need <code>typescript</code> installed and a build step (or <code>ts-node</code> for a quicker dev loop).</p>
+<h3 id="2-URL-Based-Imports"><a href="#2-URL-Based-Imports" class="headerlink" title="2. URL-Based Imports"></a>2. URL-Based Imports</h3><p>Forget <code>node_modules</code>. Deno fetches dependencies from URLs:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; load &#125; <span class="keyword">from</span> <span class="string">&quot;https://deno.land/std@0.224.0/dotenv/mod.ts&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>It caches them globally (more on that later) and skips the package manager entirely.</p>
+<h3 id="3-Security-by-Default"><a href="#3-Security-by-Default" class="headerlink" title="3. Security by Default"></a>3. Security by Default</h3><p>Deno won’t let your script touch the network, filesystem, or environment unless you explicitly allow it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deno run --allow-env --allow-read main.ts</span><br></pre></td></tr></table></figure>
+<p>This is a stark contrast to Node.js, where scripts have free rein unless you sandbox them yourself.</p>
+<h3 id="4-Centralized-Dependency-Cache"><a href="#4-Centralized-Dependency-Cache" class="headerlink" title="4. Centralized Dependency Cache"></a>4. Centralized Dependency Cache</h3><p>Deno stores all dependencies in a single global cache (e.g., <code>~/.cache/deno/deps</code> on Unix). Run <code>deno info</code> to see where:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">deno info</span><br><span class="line"><span class="comment"># Outputs: Modules cache: &quot;/home/username/.cache/deno/deps&quot;</span></span><br></pre></td></tr></table></figure>
+<p>No per-project <code>node_modules</code> bloating your disk.</p>
+<h3 id="5-Standard-Library"><a href="#5-Standard-Library" class="headerlink" title="5. Standard Library"></a>5. Standard Library</h3><p>Deno ships with a curated <code>std</code> library (e.g., <code>https://deno.land/std@0.224.0</code>), covering HTTP servers, file I&#x2F;O, and even a <code>dotenv</code> module for <code>.env</code> files—stuff you’d normally grab from npm in Node.js.</p>
+<h2 id="Deno-vs-Node-js-A-Head-to-Head-Comparison"><a href="#Deno-vs-Node-js-A-Head-to-Head-Comparison" class="headerlink" title="Deno vs. Node.js: A Head-to-Head Comparison"></a>Deno vs. Node.js: A Head-to-Head Comparison</h2><p>I recently played with Deno to connect to Supabase, and it highlighted some big differences from Node.js. Here’s how they stack up:</p>
+<h3 id="Dependency-Management"><a href="#Dependency-Management" class="headerlink" title="Dependency Management"></a>Dependency Management</h3><ul>
+<li><strong>Node.js</strong>: Uses <code>npm</code> and <code>package.json</code> to install dependencies into a local <code>node_modules</code> folder per project. Cloning a repo? Run <code>npm install</code> every time.<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @supabase/supabase-js</span><br></pre></td></tr></table></figure></li>
+<li><strong>Deno</strong>: Imports modules via URLs, cached globally at <code>~/.cache/deno/deps</code>. Clone a Deno repo, and you’re ready to run—no install step.<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createClient &#125; <span class="keyword">from</span> <span class="string">&quot;https://esm.sh/@supabase/supabase-js@2.49.3&quot;</span>;</span><br></pre></td></tr></table></figure></li>
+<li><strong>Winner?</strong>: Deno for simplicity, Node.js for isolation (different projects can use different versions of the same module without URL juggling).</li>
+</ul>
+<h3 id="TypeScript-Support"><a href="#TypeScript-Support" class="headerlink" title="TypeScript Support"></a>TypeScript Support</h3><ul>
+<li><strong>Node.js</strong>: Requires setup—install <code>typescript</code>, configure <code>tsconfig.json</code>, and compile to JavaScript (or use <code>ts-node</code>). It’s mature but clunky.</li>
+<li><strong>Deno</strong>: TypeScript runs natively. No config, no build step. Write <code>.ts</code> and go.</li>
+<li><strong>Winner</strong>: Deno, hands down, unless you’re stuck on a legacy Node.js workflow.</li>
+</ul>
+<h3 id="Configuration-Files"><a href="#Configuration-Files" class="headerlink" title="Configuration Files"></a>Configuration Files</h3><ul>
+<li><strong>Node.js</strong>: Relies on <code>package.json</code> for dependencies and scripts, often paired with <code>tsconfig.json</code> for TypeScript.</li>
+<li><strong>Deno</strong>: Optional <code>deno.json</code> for imports and settings, but not required. My Supabase script didn’t need one—just a <code>.env</code> file and <code>std/dotenv</code>.</li>
+<li><strong>Winner</strong>: Deno for minimalism.</li>
+</ul>
+<h3 id="Security"><a href="#Security" class="headerlink" title="Security"></a>Security</h3><ul>
+<li><strong>Node.js</strong>: Open by default. Your script can read files or hit the network without warning.</li>
+<li><strong>Deno</strong>: Locked down. Want to read <code>.env</code>? Add <code>--allow-read</code>. Network access? <code>--allow-net</code>. It forced me to think about permissions when connecting to Supabase.</li>
+<li><strong>Winner</strong>: Deno for safety.</li>
+</ul>
+<h3 id="Ecosystem"><a href="#Ecosystem" class="headerlink" title="Ecosystem"></a>Ecosystem</h3><ul>
+<li><strong>Node.js</strong>: Massive npm ecosystem—hundreds of thousands of packages. Whatever you need, it’s there.</li>
+<li><strong>Deno</strong>: Smaller but growing ecosystem via <code>deno.land/x</code> and CDNs like <code>esm.sh</code>. It worked fine for Supabase, but niche libraries might be missing.</li>
+<li><strong>Winner</strong>: Node.js for sheer volume.</li>
+</ul>
+<h3 id="Learning-Curve"><a href="#Learning-Curve" class="headerlink" title="Learning Curve"></a>Learning Curve</h3><ul>
+<li><strong>Node.js</strong>: Familiar to most JavaScript devs, but the setup (npm, TypeScript, etc.) can overwhelm beginners.</li>
+<li><strong>Deno</strong>: Fresh approach, but URL imports and permissions might feel alien if you’re Node.js-native.</li>
+<li><strong>Winner</strong>: Tie—depends on your background.</li>
+</ul>
+<h2 id="A-Real-World-Example-Supabase-with-Deno"><a href="#A-Real-World-Example-Supabase-with-Deno" class="headerlink" title="A Real-World Example: Supabase with Deno"></a>A Real-World Example: Supabase with Deno</h2><p>Here’s how I set up a Supabase client in Deno:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createClient &#125; <span class="keyword">from</span> <span class="string">&quot;https://esm.sh/@supabase/supabase-js@2.49.3&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; load &#125; <span class="keyword">from</span> <span class="string">&quot;https://deno.land/std@0.224.0/dotenv/mod.ts&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> env = <span class="keyword">await</span> <span class="title function_">load</span>(&#123; <span class="attr">envPath</span>: <span class="string">&quot;./.env&quot;</span> &#125;);</span><br><span class="line"><span class="keyword">const</span> supabaseUrl = env[<span class="string">&quot;SUPABASE_URL&quot;</span>] || <span class="title class_">Deno</span>.<span class="property">env</span>.<span class="title function_">get</span>(<span class="string">&quot;SUPABASE_URL&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> supabaseKey = env[<span class="string">&quot;SUPABASE_ANON_KEY&quot;</span>] || <span class="title class_">Deno</span>.<span class="property">env</span>.<span class="title function_">get</span>(<span class="string">&quot;SUPABASE_ANON_KEY&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!supabaseUrl || !supabaseKey) &#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&quot;Missing SUPABASE_URL or SUPABASE_ANON_KEY&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> supabase = <span class="title function_">createClient</span>(supabaseUrl, supabaseKey);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Supabase client created! Attributes:&quot;</span>, <span class="title class_">Object</span>.<span class="title function_">keys</span>(supabase));</span><br></pre></td></tr></table></figure>
+<p>Run it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deno run --allow-env --allow-read main.ts</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>.env</code> file: <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> (grabbed from Supabase’s dashboard—<em>not</em> my database password!).</li>
+<li>VS Code linting needed the Deno extension and a <code>deno cache main.ts</code> to quiet TypeScript errors.</li>
+</ul>
+<p>In Node.js, I’d have installed <code>@supabase/supabase-js</code> via npm, set up a <code>dotenv</code> package, and skipped the permissions flags. Deno’s way felt leaner but required tweaking for editor support.</p>
+<h2 id="Should-You-Use-Deno"><a href="#Should-You-Use-Deno" class="headerlink" title="Should You Use Deno?"></a>Should You Use Deno?</h2><ul>
+<li><strong>Use Deno if</strong>:<ul>
+<li>You love TypeScript and hate build steps.</li>
+<li>You want a secure, minimal setup for small projects or experiments.</li>
+<li>You’re intrigued by a modern take on JavaScript runtimes.</li>
+</ul>
+</li>
+<li><strong>Stick with Node.js if</strong>:<ul>
+<li>You need the npm ecosystem’s depth.</li>
+<li>You’re working on a legacy project or with a team entrenched in Node.</li>
+<li>You prefer per-project dependency isolation.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Wrapping-Up"><a href="#Wrapping-Up" class="headerlink" title="Wrapping Up"></a>Wrapping Up</h2><p>Deno’s not here to kill Node.js—it’s a different flavor of the same JavaScript pie. After messing with it for Supabase, I’m hooked on its simplicity and TypeScript support, but I’d still reach for Node.js on bigger, ecosystem-heavy projects. Try it yourself—spin up a Deno script, check your cache with <code>deno info</code>, and see if it clicks for you.</p>
+<p>What’s your take? Node.js veteran or Deno newbie? Let me know in the comments!</p>
+<hr>
+<p>This post covers Deno’s core concepts, contrasts it with Node.js, and ties in our Supabase example for a practical angle. Feel free to tweak the tone or add more details if you’re aiming for a specific audience! Want me to adjust anything?</p>
+</p>
+      <div class="post-button"><a class="btn" href="/2025/03/28/Getting-Started-with-Deno-A-Modern-Twist-on-JavaScript-Runtimes/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
+    </div>
+  </div>
+  <div class="lx-entry padding">
+    <div>
+      <h2 class="title"><a href="/2024/12/12/How-to-Generate-a-VSIX-File-from-VS-Code-Extension-Source-Code/">How to Generate a VSIX File from VS Code Extension Source Code</a></h2>
+      <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2024-12-12</span>
+      <p><p>As I’ve been using Windsurf as my primary code editor, I encountered a situation where the vs-picgo extension wasn’t available in the Windsurf marketplace. This necessitated the need to manually package the extension from its source code. This guide documents the process of generating a VSIX file for VS Code extensions, which can then be installed manually in compatible editors like Windsurf.</p>
+<p>In this guide, I’ll walk you through the process of generating a VSIX file from a VS Code extension’s source code. We’ll use the popular <a target="_blank" rel="noopener" href="https://github.com/PicGo/vs-picgo">vs-picgo</a> extension as an example.</p>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><p>Before we begin, make sure you have the following installed:</p>
+<ul>
+<li>Node.js (version 12 or higher)</li>
+<li>npm (comes with Node.js)</li>
+</ul>
+<h2 id="Step-1-Install-Required-Tools"><a href="#Step-1-Install-Required-Tools" class="headerlink" title="Step 1: Install Required Tools"></a>Step 1: Install Required Tools</h2><p>First, we need to install two essential tools:</p>
+<ul>
+<li><code>yarn</code>: A package manager that will handle our dependencies</li>
+<li><code>vsce</code>: The VS Code Extension Manager tool that creates VSIX packages</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install Yarn globally</span></span><br><span class="line">sudo npm install -g yarn</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install vsce globally</span></span><br><span class="line">sudo npm install -g @vscode/vsce</span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-2-Prepare-the-Project"><a href="#Step-2-Prepare-the-Project" class="headerlink" title="Step 2: Prepare the Project"></a>Step 2: Prepare the Project</h2><ol>
+<li><p>Clone or download the extension source code:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/PicGo/vs-picgo.git</span><br><span class="line"><span class="built_in">cd</span> vs-picgo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Install project dependencies:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn install</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>This command will:</p>
+<ul>
+<li>Read the <code>package.json</code> file</li>
+<li>Install all required dependencies</li>
+<li>Create or update the <code>yarn.lock</code> file</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong>: The <code>yarn.lock</code> file is important! Don’t delete it as it ensures consistent installations across different environments.</p>
+</blockquote>
+<h2 id="Step-3-Build-the-Extension"><a href="#Step-3-Build-the-Extension" class="headerlink" title="Step 3: Build the Extension"></a>Step 3: Build the Extension</h2><p>Build the extension using the production build command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn build:prod</span><br></pre></td></tr></table></figure>
+
+<p>This command typically:</p>
+<ul>
+<li>Cleans the previous build output</li>
+<li>Compiles TypeScript&#x2F;JavaScript files</li>
+<li>Bundles all necessary assets</li>
+<li>Creates the <code>dist</code> directory with the compiled code</li>
+</ul>
+<p>In vs-picgo’s case, the build process:</p>
+<ol>
+<li>Uses <code>esbuild</code> for fast bundling</li>
+<li>Creates both extension and webview bundles</li>
+<li>Generates source maps (disabled in production)</li>
+<li>Optimizes the code for production use</li>
+</ol>
+<h2 id="Step-4-Package-the-Extension"><a href="#Step-4-Package-the-Extension" class="headerlink" title="Step 4: Package the Extension"></a>Step 4: Package the Extension</h2><p>Finally, create the VSIX file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vsce package</span><br></pre></td></tr></table></figure>
+
+<p>This command:</p>
+<ol>
+<li>Runs any pre-publish scripts defined in <code>package.json</code></li>
+<li>Validates the extension manifest</li>
+<li>Packages all required files into a VSIX file</li>
+<li>Names the file based on the extension’s name and version (e.g., <code>vs-picgo-2.1.6.vsix</code>)</li>
+</ol>
+<p>The resulting VSIX file will contain:</p>
+<ul>
+<li>Compiled JavaScript files</li>
+<li>Assets (images, CSS, etc.)</li>
+<li>Extension manifest</li>
+<li>Documentation files</li>
+<li>License information</li>
+</ul>
+<h2 id="What’s-Inside-the-VSIX"><a href="#What’s-Inside-the-VSIX" class="headerlink" title="What’s Inside the VSIX?"></a>What’s Inside the VSIX?</h2><p>The VSIX file is essentially a ZIP archive with a specific structure. For vs-picgo, it includes:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">vs-picgo-2.1.6.vsix</span><br><span class="line">├─ [Content_Types].xml </span><br><span class="line">├─ extension.vsixmanifest </span><br><span class="line">└─ extension/</span><br><span class="line">   ├─ LICENSE.txt</span><br><span class="line">   ├─ changelog.md</span><br><span class="line">   ├─ logo.png</span><br><span class="line">   ├─ package.json</span><br><span class="line">   ├─ package.nls.json</span><br><span class="line">   ├─ readme.md</span><br><span class="line">   └─ dist/</span><br><span class="line">      ├─ extension.js</span><br><span class="line">      └─ webview/</span><br><span class="line">         ├─ index.css</span><br><span class="line">         └─ index.js</span><br></pre></td></tr></table></figure>
+
+<h2 id="Installing-the-Extension"><a href="#Installing-the-Extension" class="headerlink" title="Installing the Extension"></a>Installing the Extension</h2><p>You can install the generated VSIX file in VS Code or any compatible editor by:</p>
+<ol>
+<li>Opening VS Code&#x2F;Windsurf&#x2F;Cursor …</li>
+<li>Going to the Extensions view</li>
+<li>Clicking the “…” menu (More Actions)</li>
+<li>Selecting “Install from VSIX…”</li>
+<li>Choosing your generated VSIX file</li>
+</ol>
+<h2 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h2><p>If you encounter any issues:</p>
+<ol>
+<li><p><strong>Missing dist directory error</strong>:</p>
+<ul>
+<li>This is normal on first build</li>
+<li>The build process will create it automatically</li>
+</ul>
+</li>
+<li><p><strong>Dependency errors</strong>:</p>
+<ul>
+<li>Run <code>yarn install</code> again</li>
+<li>Check if you’re using the correct Node.js version</li>
+</ul>
+</li>
+<li><p><strong>VSIX packaging fails</strong>:</p>
+<ul>
+<li>Verify your <code>package.json</code> is valid</li>
+<li>Ensure all required files are present</li>
+<li>Check the extension manifest for errors</li>
+</ul>
+</li>
+</ol>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Building a VS Code extension VSIX file is straightforward once you have the right tools installed. The process mainly involves installing dependencies, building the source code, and packaging everything into a VSIX file.</p>
+<p>Remember to keep your <code>yarn.lock</code> file and always build in production mode before packaging to ensure the best performance and smallest file size for your users.</p>
+<p>Happy extension building! 🚀</p>
+</p>
+      <div class="post-button"><a class="btn" href="/2024/12/12/How-to-Generate-a-VSIX-File-from-VS-Code-Extension-Source-Code/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
+    </div>
+  </div>
+  <div class="lx-entry padding">
+    <div>
+      <h2 class="title"><a href="/2024/11/14/What-is-DBOS-and-What-Should-We-Expect/">What is DBOS and What Should We Expect</a></h2>
+      <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2024-11-14</span>
+      <p><h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>The computing world is witnessing a paradigm shift in how we think about operating systems. A team of researchers has proposed DBOS (Database-Oriented Operating System), a radical reimagining of operating system architecture that puts data management at its core. But what exactly is DBOS, and why should we care?</p>
+<h2 id="What-is-DBOS"><a href="#What-is-DBOS" class="headerlink" title="What is DBOS?"></a>What is DBOS?</h2><p>DBOS is a novel operating system architecture that treats data management as its primary concern rather than traditional OS functions like process management and I&#x2F;O. The key insight behind DBOS is that modern applications are increasingly data-centric, yet our operating systems still follow designs from the 1970s that prioritize computation over data management.</p>
+<p>Instead of treating databases as just another application, DBOS makes database technology the fundamental building block of the operating system itself. This means core OS functions like process scheduling, resource management, and system monitoring are implemented using database principles and technologies.</p>
+<h2 id="Who-is-behind-DBOS"><a href="#Who-is-behind-DBOS" class="headerlink" title="Who is behind DBOS?"></a>Who is behind DBOS?</h2><p>DBOS is a collaborative research project involving almost twenty researchers across multiple institutions including MIT, Stanford, UW-Madison, Google, VMware, and other organizations. The project is notably led by database pioneer Michael Stonebraker, who is an ACM Turing Award winner (2014) and Professor Emeritus at UC Berkeley, currently affiliated with MIT.</p>
+<p>Key institutions and researchers involved include:</p>
+<ul>
+<li>MIT: Michael Stonebraker, Michael Cafarella, Çağatay Demiralp, and others</li>
+<li>Stanford: Matei Zaharia, Christos Kozyrakis, and others</li>
+<li>UW-Madison: Xiangyao Yu</li>
+<li>Industry partners: Researchers from Google, VMware, and other organizations</li>
+</ul>
+<p>The people behind DBOS can be found at <a target="_blank" rel="noopener" href="https://dbos-project.github.io/">DBOS Project</a>.</p>
+<h2 id="Ultimate-Goal"><a href="#Ultimate-Goal" class="headerlink" title="Ultimate Goal"></a>Ultimate Goal</h2><p>The ultimate goal of DBOS is to create an operating system that is data-centric and data-driven, the OS is on top of a DBMS, not like today’s DBMS on top of the OS.<br>ALL system data should reside in the DBMS.</p>
+<ul>
+<li>Replace the “everything is a file” mantra with “everything is a table”</li>
+<li>All system state and metadata stored in relational tables</li>
+<li>All changes to OS state should be through database transactions</li>
+<li>DBMS provides All functions that a DBMS can do, for example, files are blobs and tables in the DBMS.</li>
+<li>SQL-based interface for both application and system data access</li>
+<li>To achieve very high performance, the DBMS must leverage sophisticated caching and parallelization strategies and compile repetitive queries into machine code.</li>
+</ul>
+<h2 id="Benefits"><a href="#Benefits" class="headerlink" title="Benefits"></a>Benefits</h2><ol>
+<li>Strong Security and Privacy</li>
+</ol>
+<ul>
+<li>Native GDPR compliance through data-centric design</li>
+<li>Attribute-based access control (ABAC)</li>
+<li>Complete audit trails and data lineage</li>
+<li>Privacy by design through unified data management</li>
+<li>Fine-grained access control at the data level</li>
+<li>Enhanced monitoring and threat detection</li>
+<li>Simplified compliance with regulatory requirements</li>
+<li>Built-in data encryption and protection mechanisms</li>
+</ul>
+<ol start="2">
+<li>Enhanced Performance and Efficiency</li>
+</ol>
+<ul>
+<li>Optimized resource allocation through database-driven scheduling</li>
+<li>Reduced data movement and copying</li>
+<li>Better cache utilization through database techniques</li>
+<li>Intelligent workload management</li>
+<li>Advanced query optimization for system operations</li>
+<li>Improved resource utilization through data-aware decisions</li>
+<li>Reduced system overhead through unified architecture</li>
+<li>Better support for modern hardware architectures</li>
+</ul>
+<ol start="3">
+<li>Improved Observability and Management</li>
+</ol>
+<ul>
+<li>Comprehensive system-wide monitoring</li>
+<li>Real-time analytics on system performance</li>
+<li>Easy troubleshooting through SQL queries</li>
+<li>Better capacity planning capabilities</li>
+<li>Unified logging and debugging interface</li>
+<li>Historical analysis of system behavior</li>
+<li>Predictive maintenance capabilities</li>
+<li>Simplified system administration</li>
+</ul>
+<ol start="4">
+<li>Advanced Application Support</li>
+</ol>
+<ul>
+<li>Native support for distributed applications</li>
+<li>Better handling of microservices architecture</li>
+<li>Simplified state management</li>
+<li>Enhanced support for modern cloud applications</li>
+<li>Built-in support for data-intensive applications</li>
+<li>Improved consistency guarantees</li>
+<li>Better transaction management</li>
+<li>Simplified development of distributed systems</li>
+</ul>
+<h2 id="Technical-Implementation"><a href="#Technical-Implementation" class="headerlink" title="Technical Implementation"></a>Technical Implementation</h2><p>DBOS proposes implementing core OS functions using database principles:</p>
+<ul>
+<li>Process Management: Processes and their states managed as database tables</li>
+<li>Resource Scheduling: SQL queries and ML for intelligent scheduling decisions</li>
+<li>System Monitoring: Metrics collection and analysis through database queries</li>
+<li>Security: Access control and auditing via database mechanisms</li>
+<li>Storage: File system metadata stored in relational tables</li>
+<li>Networking: Network state and routing managed through database abstractions</li>
+</ul>
+<h2 id="What-Should-We-Expect"><a href="#What-Should-We-Expect" class="headerlink" title="What Should We Expect?"></a>What Should We Expect?</h2><h3 id="Near-term-Impact"><a href="#Near-term-Impact" class="headerlink" title="Near-term Impact"></a>Near-term Impact</h3><ul>
+<li>Proof of Concept: The researchers are working on demonstrating DBOS’s capabilities through specific use cases like log processing and accelerator management.</li>
+<li>Performance Improvements: Early implementations might show significant improvements in data-intensive workloads.</li>
+<li>Development Tools: New tools and frameworks that leverage DBOS’s database-centric approach.</li>
+</ul>
+<h3 id="Long-term-Possibilities"><a href="#Long-term-Possibilities" class="headerlink" title="Long-term Possibilities"></a>Long-term Possibilities</h3><p>Cloud Native Integration: DBOS could become particularly relevant for cloud computing environments where data management is crucial.</p>
+<ul>
+<li>AI&#x2F;ML Operations: Better support for AI and machine learning workloads through intelligent resource management.</li>
+<li>Privacy-First Computing: A new standard for building privacy-compliant systems from the ground up.</li>
+</ul>
+<h3 id="Challenges-Ahead"><a href="#Challenges-Ahead" class="headerlink" title="Challenges Ahead"></a>Challenges Ahead</h3><p>Several technical and practical challenges need to be addressed:</p>
+<ol>
+<li>Performance</li>
+</ol>
+<ul>
+<li>Minimizing database overhead for system operations</li>
+<li>Optimizing query performance for real-time OS operations</li>
+<li>Efficient handling of high-frequency system events</li>
+</ul>
+<ol start="2">
+<li>Compatibility</li>
+</ol>
+<ul>
+<li>Supporting existing applications and system calls</li>
+<li>Maintaining POSIX compliance where needed</li>
+<li>Migration path for legacy systems</li>
+</ul>
+<ol start="3">
+<li>Distributed Systems</li>
+</ol>
+<ul>
+<li>Maintaining consistency across distributed nodes</li>
+<li>Handling network partitions and failures</li>
+<li>Scaling database operations across clusters</li>
+</ul>
+<ol start="4">
+<li>Adoption</li>
+</ol>
+<ul>
+<li>Convincing stakeholders to adopt radical architectural changes</li>
+<li>Training developers in the new paradigm</li>
+<li>Building an ecosystem of compatible tools and applications</li>
+</ul>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>DBOS represents a bold reimagining of operating system design for the data-centric world. While it’s still in its early stages, the potential benefits for security, privacy, and developer productivity make it an exciting project to watch. As data continues to grow in importance, DBOS’s approach might prove to be prescient.<br>The success of DBOS will largely depend on how well it can demonstrate its advantages in real-world scenarios and whether it can overcome the inherent challenges of introducing such a fundamental change to system architecture. For developers, system administrators, and anyone interested in the future of computing, DBOS is definitely worth keeping an eye on.<br>Whether DBOS becomes the next evolution in operating systems or remains an interesting academic exercise, its ideas about putting data management at the center of system design will likely influence future OS development.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ol>
+<li><p>M. Stonebraker et al., “DBOS: A DBMS-oriented Operating System,” <em>Proceedings of the VLDB Endowment</em>, Vol. 15, No. 1, 2021.<br><a target="_blank" rel="noopener" href="https://www.vldb.org/pvldb/vol15/p21-stonebraker.pdf">https://www.vldb.org/pvldb/vol15/p21-stonebraker.pdf</a></p>
+</li>
+<li><p>DBOS Project Official Website, MIT CSAIL and Stanford University.<br><a target="_blank" rel="noopener" href="https://dbos-project.github.io/">https://dbos-project.github.io/</a></p>
+</li>
+<li><p>X. Yu et al., “A Case for Building Operating Systems with Database Technology,” <em>Proceedings of the 12th Conference on Innovative Data Systems Research (CIDR ‘22)</em>, 2022.<br><a target="_blank" rel="noopener" href="https://www.cidrdb.org/cidr2022/papers/p82-yu.pdf">https://www.cidrdb.org/cidr2022/papers/p82-yu.pdf</a></p>
+</li>
+<li><p>DBOS Research Group Publications.<br><a target="_blank" rel="noopener" href="https://dbos-project.github.io/papers/">https://dbos-project.github.io/papers/</a></p>
+</li>
+</ol>
+<p>These references provide detailed technical information about DBOS’s architecture, implementation, and potential impact on the future of operating systems. The papers discuss various aspects from system design to performance evaluation, security considerations, and practical applications.</p>
+</p>
+      <div class="post-button"><a class="btn" href="/2024/11/14/What-is-DBOS-and-What-Should-We-Expect/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
+    </div>
+  </div>
+  <div class="lx-entry padding">
+    <div>
+      <h2 class="title"><a href="/2024/08/21/Some-Misconceptions-About-Database-Performance-Application-Concurrent-Requests-Database-Connections-and-Database-Connection-Pools/">Some Misconceptions About Database Performance - Application Concurrent Requests, Database Connections, and Database Connection Pools</a></h2>
+      <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2024-08-21</span>
+      <p><p>Let’s start with a chart from a database stress test result.</p>
+<p><img src="https://s2.loli.net/2024/08/21/Ra2u1Q9cJNpOlUm.png" alt="1724216413686"></p>
+<p>In the chart above, the X-axis represents the number of concurrent connections, and the Y-axis represents the TPS (Transactions Per Second) provided by the database. The stress testing tool used is pgbench, and the database is a single instance of PostgreSQL 16. TPS_PGDirect represents the TPS when pgbench directly sends the load to PostgreSQL, while TPS_PGBouncer represents the TPS when pgbench sends the load to the PGBouncer database connection pool.</p>
+<p>We can clearly see that when the number of connections exceeds 256, the TPS begins to gradually decline when the load is sent directly to the database. When the number of connections eventually rises to over 8000, the database is almost at a standstill. However, when using PGBouncer, the TPS remains stable and excellent, with the database consistently providing high TPS regardless of the number of connections.</p>
+<p>Many people might conclude from this chart that if the concurrent connections increase beyond a certain threshold, PostgreSQL becomes inadequate, and PGBouncer must be used to improve performance.</p>
+<p>Some users may attempt to conduct various hardware environment combination tests to derive a reference threshold number to guide at what pressure PostgreSQL can cope, and once it exceeds a certain pressure, PGBouncer should be enabled.</p>
+<p>So, is this conclusion correct? And does testing out a threshold number have real guiding significance?</p>
+<h2 id="Understanding-Concurrent-Performance"><a href="#Understanding-Concurrent-Performance" class="headerlink" title="Understanding Concurrent Performance"></a>Understanding Concurrent Performance</h2><p>To determine how many concurrent business requests a database can handle, we should focus on the Y-axis from the test chart above, rather than the X-axis. The Y-axis TPS represents the number of transactions the database can process per second, while the X-axis connection count is merely the database connection number we configured ourselves (which can be simply understood as the max_connections parameter value). We can observe that at 256 connections, the direct database stress test with pgbench allows the database to provide over 50,000 TPS, which is actually almost the highest number in the entire stress test (WITHOUT PGBouncer). Subsequent tests using PGBouncer, this number was not significantly exceeded. Therefore, PGBouncer is not a weapon to improve database performance.</p>
+<p>What is performance? Performance means: for a determined business transaction pressure (how much work a business transaction needs to handle, such as how much CPU, memory, and IO it consumes), the more transactions the database can execute, the higher the performance. In the chart above, this is represented by the Y-axis TPS (Transactions Per Second).</p>
+<p>For example, suppose a user request (Application Request) requires executing 5 transactions from start to finish, and assume these transactions consume similar amounts of time (even if there are differences, we can always get the average transaction runtime in a system). In this case, 50,000 TPS means the database can handle 10,000 user requests per second, which can be simply understood as handling 10,000 concurrent users. If TPS rises to 100,000, the database can handle 20,000 concurrent users; if TPS drops to 10,000, it can only handle 2,000 concurrent users. This is a simple calculation logic, and in this description, we did not mention anything about database connections (User Connections).</p>
+<p>So why does it seem like PGBouncer improves performance when the number of connections continues to increase? Because in this situation, PGBouncer acts as a limiter on database connections, reducing the extra overhead caused by the database&#x2F;operating system handling too many connections, allowing the database and operating system to focus on processing the business requests sent from each connection, and enabling user requests exceeding the connection limit to share database connections. What PGBouncer does is: if your restaurant can only provide 10 tables, then I only allow 10 tables of guests to enter, and other guests have to wait outside.</p>
+<p>However, why should we let 100 tables of guests rush into the restaurant all at once? Without PGBouncer, can’t we control allowing only 10 tables of guests to enter? In modern applications, application-side connection pools are more commonly used, such as connection pools in various middleware software (Weblogic, WebSphere, Tomcat, etc.) or dedicated JDBC connection pools like HikariCP.</p>
+<p>Exceeding the number of connections that can be handled is unnecessary. When the database is already at its peak processing capacity, having more connections will not improve overall processing capability; instead, it will slow down the entire database.</p>
+<p>To summarize the meaning of the chart above more straightforwardly: when the total number of database connections is at 256, the database reaches its peak processing capacity, and direct database connections can provide 50,000 TPS without any connection pool. If 50,000 TPS cannot meet the application’s concurrent performance requirements, increasing the number of connections will not help. But if connections are increased (wrongly, without any other control), a layer of connection pool like PGBouncer can be added as a connection pool buffer to keep performance stable at around 50,000 TPS.</p>
+<p>So, do we have any reason to arbitrarily increase the number of connections? No. What we need to do is: allow the database to open only the number of connections within its processing capacity and enable these connections to be shared by more user requests. When the restaurant size is fixed, the higher the turnover rate, the higher the restaurant’s daily revenue.</p>
+<h2 id="How-to-Ask-Questions-About-Performance"><a href="#How-to-Ask-Questions-About-Performance" class="headerlink" title="How to Ask Questions About Performance"></a>How to Ask Questions About Performance</h2><p>Instead of asking: how can we ensure the database provides sufficient TPS with 4000 connections, we should ask: how can we ensure the database provides 50,000 TPS.</p>
+<p>Because the number of connections is not a performance metric, it is merely a parameter configuration option.</p>
+<p>In the example above, a connection count of 4000 or 8000 is not a fixed value, nor is it an optimized value. We cannot try to do more additional database optimizations on an unoptimized, modifiable parameter setting, as this may lead to a reversal of priorities. If we can already provide maximum processing capacity with 256 fully loaded database connections, why optimize a database with more than 256 connections? We should ensure the database always runs at full capacity with a maximum of 256 connections.</p>
+<p>Now, our question about performance can be more specific. Suppose we have multiple sets of database servers with different configurations; what should the fully loaded connection count be for each set to achieve optimal processing capacity?</p>
+<p>This requires testing. However, we will ultimately find that this fully loaded connection count is usually related only to the database server’s hardware resources, such as the number of CPU cores, CPU speed, memory size, storage speed, and the bandwidth and latency between storage and host.</p>
+<h2 id="Is-Database-Application-Performance-Only-Related-to-Hardware-Resources"><a href="#Is-Database-Application-Performance-Only-Related-to-Hardware-Resources" class="headerlink" title="Is Database Application Performance Only Related to Hardware Resources?"></a>Is Database Application Performance Only Related to Hardware Resources?</h2><p>Of course not. Concurrent performance (P) &#x3D; Hardware processing capability (H) &#x2F; Business transaction pressure (T).</p>
+<p>As mentioned earlier, the performance metric TPS is for a “determined business transaction pressure,” meaning a determined T value.</p>
+<p>When the T value is determined, we can only improve the H value to further enhance the P value. Conversely, there is naturally another optimization approach: reducing the T value. There are various ways to reduce the T value, such as adding necessary indexes, rewriting SQL, using partitioned tables, etc. The optimization plan should be formulated based on where the T value is consumed most, which is another topic.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>To answer the two initial questions:</p>
+<ol>
+<li>If concurrent connections increase beyond a certain threshold, PostgreSQL becomes inadequate, and PGBouncer must be used to improve performance. Is this conclusion correct?</li>
+</ol>
+<p>If we must create more connections to the database than the hardware processing capacity for certain hardware resources, using PGBouncer can stabilize performance. However, we have no reason to create more connections than the hardware processing capacity. We have various means to control the maximum number of connections the database can open, and various middleware solutions can provide connection pools. From this perspective, PGBouncer does not improve database performance; it merely reduces concurrency conflicts, doing what any connection pool software can do.</p>
+<ol start="2">
+<li>Is it meaningful to attempt various hardware environment combination tests to derive a reference threshold number to guide at what pressure PostgreSQL can cope, and once it exceeds a certain pressure, PGBouncer should be enabled?</li>
+</ol>
+<p>It has some significance, but simple stress tests like pgbench are not enough to guide real applications. Concurrent performance (P) &#x3D; Hardware processing capability (H) &#x2F; Business transaction pressure (T). Testing in a determined hardware environment means the H value is fixed, so we should focus on T during testing. The T value provided by pgbench is a very simple transaction pressure (only four tables, simple CRUD operations), and the P value tested under this pressure can only be used as a reference. To guide application deployment, typical transaction pressure of the application itself must be abstracted for testing to have guiding significance.</p>
+</p>
+      <div class="post-button"><a class="btn" href="/2024/08/21/Some-Misconceptions-About-Database-Performance-Application-Concurrent-Requests-Database-Connections-and-Database-Connection-Pools/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
+    </div>
+  </div>
+
+
+<div id="pagination">
+  <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"></a>
+</div>
+
+<footer>
+  <div>
+  Copyright &copy; 2026.<a href="/">Kamus' Notes</a><br>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme <a href="https://lx.js.org" target="_blank">Lx</a><br>
+  </div>
+</footer>
+
+  </div>
+</div>
+</div>
+
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<div class="menu visibility">
+  <div class="menu-head">
+    <span class="layer">
+      <div class="col">
+        <div class="row for-pic">
+          <div class="profile-pic">
+            <a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"/></a>
+          </div>
+        </div>
+        <div class="row for-name">
+          <p>Kamus</p>
+          <span class="tagline">Hello, World!</span>
+        </div>
+      </div>
+    </span>
+  </div>
+  <nav class="menu-container">
+  <ul class="menu-items">
+    <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    <li><a href="/archives/"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+    
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-bookmark fa-fw"></i>Pages</span>
+        <ul>
+          <li><a href="/about/">About</a></li>
+        </ul>
+    </li>
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-link fa-fw"></i>Friends</span>
+        <ul>
+          <li> <a href="https://www.eygle.com/" target="_blank">Eygle</a></li>
+        <li> <a href="https://yangtingkun.net" target="_blank">Laoyang</a></li>
+        </ul>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/local.search.min.js"></script>
+
+</body>
+</html>

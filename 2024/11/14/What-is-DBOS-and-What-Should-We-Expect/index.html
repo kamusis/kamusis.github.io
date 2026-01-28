@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=#58b77a>
+  <title>What is DBOS and What Should We Expect | Kamus&#39; Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  <meta name="description" content="IntroductionThe computing world is witnessing a paradigm shift in how we think about operating systems. A team of researchers has proposed DBOS (Database-Ori...">
+  <link rel="canonical" href="https://www.kamusis.me/2024/11/14/What-is-DBOS-and-What-Should-We-Expect/">
+  <meta property="og:site_name" content="Kamus' Notes">
+  <meta property="og:title" content="What is DBOS and What Should We Expect | Kamus' Notes">
+  <meta property="og:description" content="IntroductionThe computing world is witnessing a paradigm shift in how we think about operating systems. A team of researchers has proposed DBOS (Database-Ori...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.kamusis.me/2024/11/14/What-is-DBOS-and-What-Should-We-Expect/">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="What is DBOS and What Should We Expect | Kamus' Notes">
+  <meta name="twitter:description" content="IntroductionThe computing world is witnessing a paradigm shift in how we think about operating systems. A team of researchers has proposed DBOS (Database-Ori...">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"What is DBOS and What Should We Expect","description":"IntroductionThe computing world is witnessing a paradigm shift in how we think about operating systems. A team of researchers has proposed DBOS (Database-Ori...","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kamusis.me/2024/11/14/What-is-DBOS-and-What-Should-We-Expect/"},"author":{"@type":"Person","name":"Kamus"},"publisher":{"@type":"Person","name":"Kamus"},"datePublished":"2024-11-14T03:38:12.000Z","dateModified":"2024-11-19T17:26:33.000Z","url":"https://www.kamusis.me/2024/11/14/What-is-DBOS-and-What-Should-We-Expect/","image":["https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg"]}</script>
+  <script id="hexo-configurations">
+  var CONFIG = {
+    root: '/',
+    theme: 'lx',
+    version: '0.4.4',
+    localsearch:{
+      "enable": true,
+      "trigger": "auto",
+      "top_n_per_article": 1,
+      "unescape": false,
+      "preload": false
+      },
+    path: 'search.xml'
+  };
+</script>
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/css/main.min.css">
+  
+  <style type="text/css">
+    pre,
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+    html {
+      font-family: sans-serif;
+    }
+    body {
+      font-family: sans-serif;
+    }
+    h1, h2, h3, h4, h5, figure {
+      font-family: sans-serif;
+    }
+    .menu-container{
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "",
+	     });
+	}); 
+	</script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+<body>
+<div class="single">
+<div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Search..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+<div id="page">
+<div class="header">
+  <div id="lx-aside" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg)" data-stellar-background-ratio="0.5">
+    <div class="overlay">
+      <a href="javascript:;" class="popup-trigger" title="search"><i class="menu-item-icon fa fa-search fa-fw"></i></a>
+      <div class="page-title">
+        <div class="avatar"><a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"></a></div>
+        <span>2024-11-14</span>
+        <h2>What is DBOS...</h2>
+        <div class="tags"><i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/DBOS/" rel="tag">DBOS</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Database/" rel="tag">Database</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Operating-System/" rel="tag">Operating System</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/PostgreSQL/" rel="tag">PostgreSQL</a></div>
+        <div class="social-links">
+    <a href="https://github.com/kamusis" target="_blank" title="social-link"><i class="fa fa-github fa-fw"></i></a>
+    <a href="mailto:kamusis@gmail.com" target="_blank" title="social-link"><i class="fa fa-envelope fa-fw"></i></a>
+    <a href="https://www.linkedin.com/in/kamus/" target="_blank" title="social-link"><i class="fa fa-linkedin fa-fw"></i></a>
+    <a href="https://twitter.com/kamusis" target="_blank" title="social-link"><i class="fa fa-twitter fa-fw"></i></a>
+    <a href="https://www.instagram.com/kamusis/" target="_blank" title="social-link"><i class="fa fa-instagram fa-fw"></i></a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="lx-main-content">
+  <div class="lx-post">
+    <div class="lx-entry padding">
+      <div>
+        <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>The computing world is witnessing a paradigm shift in how we think about operating systems. A team of researchers has proposed DBOS (Database-Oriented Operating System), a radical reimagining of operating system architecture that puts data management at its core. But what exactly is DBOS, and why should we care?</p>
+<h2 id="What-is-DBOS"><a href="#What-is-DBOS" class="headerlink" title="What is DBOS?"></a>What is DBOS?</h2><p>DBOS is a novel operating system architecture that treats data management as its primary concern rather than traditional OS functions like process management and I&#x2F;O. The key insight behind DBOS is that modern applications are increasingly data-centric, yet our operating systems still follow designs from the 1970s that prioritize computation over data management.</p>
+<p>Instead of treating databases as just another application, DBOS makes database technology the fundamental building block of the operating system itself. This means core OS functions like process scheduling, resource management, and system monitoring are implemented using database principles and technologies.</p>
+<h2 id="Who-is-behind-DBOS"><a href="#Who-is-behind-DBOS" class="headerlink" title="Who is behind DBOS?"></a>Who is behind DBOS?</h2><p>DBOS is a collaborative research project involving almost twenty researchers across multiple institutions including MIT, Stanford, UW-Madison, Google, VMware, and other organizations. The project is notably led by database pioneer Michael Stonebraker, who is an ACM Turing Award winner (2014) and Professor Emeritus at UC Berkeley, currently affiliated with MIT.</p>
+<p>Key institutions and researchers involved include:</p>
+<ul>
+<li>MIT: Michael Stonebraker, Michael Cafarella, Çağatay Demiralp, and others</li>
+<li>Stanford: Matei Zaharia, Christos Kozyrakis, and others</li>
+<li>UW-Madison: Xiangyao Yu</li>
+<li>Industry partners: Researchers from Google, VMware, and other organizations</li>
+</ul>
+<p>The people behind DBOS can be found at <a target="_blank" rel="noopener" href="https://dbos-project.github.io/">DBOS Project</a>.</p>
+<h2 id="Ultimate-Goal"><a href="#Ultimate-Goal" class="headerlink" title="Ultimate Goal"></a>Ultimate Goal</h2><p>The ultimate goal of DBOS is to create an operating system that is data-centric and data-driven, the OS is on top of a DBMS, not like today’s DBMS on top of the OS.<br>ALL system data should reside in the DBMS.</p>
+<ul>
+<li>Replace the “everything is a file” mantra with “everything is a table”</li>
+<li>All system state and metadata stored in relational tables</li>
+<li>All changes to OS state should be through database transactions</li>
+<li>DBMS provides All functions that a DBMS can do, for example, files are blobs and tables in the DBMS.</li>
+<li>SQL-based interface for both application and system data access</li>
+<li>To achieve very high performance, the DBMS must leverage sophisticated caching and parallelization strategies and compile repetitive queries into machine code.</li>
+</ul>
+<h2 id="Benefits"><a href="#Benefits" class="headerlink" title="Benefits"></a>Benefits</h2><ol>
+<li>Strong Security and Privacy</li>
+</ol>
+<ul>
+<li>Native GDPR compliance through data-centric design</li>
+<li>Attribute-based access control (ABAC)</li>
+<li>Complete audit trails and data lineage</li>
+<li>Privacy by design through unified data management</li>
+<li>Fine-grained access control at the data level</li>
+<li>Enhanced monitoring and threat detection</li>
+<li>Simplified compliance with regulatory requirements</li>
+<li>Built-in data encryption and protection mechanisms</li>
+</ul>
+<ol start="2">
+<li>Enhanced Performance and Efficiency</li>
+</ol>
+<ul>
+<li>Optimized resource allocation through database-driven scheduling</li>
+<li>Reduced data movement and copying</li>
+<li>Better cache utilization through database techniques</li>
+<li>Intelligent workload management</li>
+<li>Advanced query optimization for system operations</li>
+<li>Improved resource utilization through data-aware decisions</li>
+<li>Reduced system overhead through unified architecture</li>
+<li>Better support for modern hardware architectures</li>
+</ul>
+<ol start="3">
+<li>Improved Observability and Management</li>
+</ol>
+<ul>
+<li>Comprehensive system-wide monitoring</li>
+<li>Real-time analytics on system performance</li>
+<li>Easy troubleshooting through SQL queries</li>
+<li>Better capacity planning capabilities</li>
+<li>Unified logging and debugging interface</li>
+<li>Historical analysis of system behavior</li>
+<li>Predictive maintenance capabilities</li>
+<li>Simplified system administration</li>
+</ul>
+<ol start="4">
+<li>Advanced Application Support</li>
+</ol>
+<ul>
+<li>Native support for distributed applications</li>
+<li>Better handling of microservices architecture</li>
+<li>Simplified state management</li>
+<li>Enhanced support for modern cloud applications</li>
+<li>Built-in support for data-intensive applications</li>
+<li>Improved consistency guarantees</li>
+<li>Better transaction management</li>
+<li>Simplified development of distributed systems</li>
+</ul>
+<h2 id="Technical-Implementation"><a href="#Technical-Implementation" class="headerlink" title="Technical Implementation"></a>Technical Implementation</h2><p>DBOS proposes implementing core OS functions using database principles:</p>
+<ul>
+<li>Process Management: Processes and their states managed as database tables</li>
+<li>Resource Scheduling: SQL queries and ML for intelligent scheduling decisions</li>
+<li>System Monitoring: Metrics collection and analysis through database queries</li>
+<li>Security: Access control and auditing via database mechanisms</li>
+<li>Storage: File system metadata stored in relational tables</li>
+<li>Networking: Network state and routing managed through database abstractions</li>
+</ul>
+<h2 id="What-Should-We-Expect"><a href="#What-Should-We-Expect" class="headerlink" title="What Should We Expect?"></a>What Should We Expect?</h2><h3 id="Near-term-Impact"><a href="#Near-term-Impact" class="headerlink" title="Near-term Impact"></a>Near-term Impact</h3><ul>
+<li>Proof of Concept: The researchers are working on demonstrating DBOS’s capabilities through specific use cases like log processing and accelerator management.</li>
+<li>Performance Improvements: Early implementations might show significant improvements in data-intensive workloads.</li>
+<li>Development Tools: New tools and frameworks that leverage DBOS’s database-centric approach.</li>
+</ul>
+<h3 id="Long-term-Possibilities"><a href="#Long-term-Possibilities" class="headerlink" title="Long-term Possibilities"></a>Long-term Possibilities</h3><p>Cloud Native Integration: DBOS could become particularly relevant for cloud computing environments where data management is crucial.</p>
+<ul>
+<li>AI&#x2F;ML Operations: Better support for AI and machine learning workloads through intelligent resource management.</li>
+<li>Privacy-First Computing: A new standard for building privacy-compliant systems from the ground up.</li>
+</ul>
+<h3 id="Challenges-Ahead"><a href="#Challenges-Ahead" class="headerlink" title="Challenges Ahead"></a>Challenges Ahead</h3><p>Several technical and practical challenges need to be addressed:</p>
+<ol>
+<li>Performance</li>
+</ol>
+<ul>
+<li>Minimizing database overhead for system operations</li>
+<li>Optimizing query performance for real-time OS operations</li>
+<li>Efficient handling of high-frequency system events</li>
+</ul>
+<ol start="2">
+<li>Compatibility</li>
+</ol>
+<ul>
+<li>Supporting existing applications and system calls</li>
+<li>Maintaining POSIX compliance where needed</li>
+<li>Migration path for legacy systems</li>
+</ul>
+<ol start="3">
+<li>Distributed Systems</li>
+</ol>
+<ul>
+<li>Maintaining consistency across distributed nodes</li>
+<li>Handling network partitions and failures</li>
+<li>Scaling database operations across clusters</li>
+</ul>
+<ol start="4">
+<li>Adoption</li>
+</ol>
+<ul>
+<li>Convincing stakeholders to adopt radical architectural changes</li>
+<li>Training developers in the new paradigm</li>
+<li>Building an ecosystem of compatible tools and applications</li>
+</ul>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>DBOS represents a bold reimagining of operating system design for the data-centric world. While it’s still in its early stages, the potential benefits for security, privacy, and developer productivity make it an exciting project to watch. As data continues to grow in importance, DBOS’s approach might prove to be prescient.<br>The success of DBOS will largely depend on how well it can demonstrate its advantages in real-world scenarios and whether it can overcome the inherent challenges of introducing such a fundamental change to system architecture. For developers, system administrators, and anyone interested in the future of computing, DBOS is definitely worth keeping an eye on.<br>Whether DBOS becomes the next evolution in operating systems or remains an interesting academic exercise, its ideas about putting data management at the center of system design will likely influence future OS development.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ol>
+<li><p>M. Stonebraker et al., “DBOS: A DBMS-oriented Operating System,” <em>Proceedings of the VLDB Endowment</em>, Vol. 15, No. 1, 2021.<br><a target="_blank" rel="noopener" href="https://www.vldb.org/pvldb/vol15/p21-stonebraker.pdf">https://www.vldb.org/pvldb/vol15/p21-stonebraker.pdf</a></p>
+</li>
+<li><p>DBOS Project Official Website, MIT CSAIL and Stanford University.<br><a target="_blank" rel="noopener" href="https://dbos-project.github.io/">https://dbos-project.github.io/</a></p>
+</li>
+<li><p>X. Yu et al., “A Case for Building Operating Systems with Database Technology,” <em>Proceedings of the 12th Conference on Innovative Data Systems Research (CIDR ‘22)</em>, 2022.<br><a target="_blank" rel="noopener" href="https://www.cidrdb.org/cidr2022/papers/p82-yu.pdf">https://www.cidrdb.org/cidr2022/papers/p82-yu.pdf</a></p>
+</li>
+<li><p>DBOS Research Group Publications.<br><a target="_blank" rel="noopener" href="https://dbos-project.github.io/papers/">https://dbos-project.github.io/papers/</a></p>
+</li>
+</ol>
+<p>These references provide detailed technical information about DBOS’s architecture, implementation, and potential impact on the future of operating systems. The papers discuss various aspects from system design to performance evaluation, security considerations, and practical applications.</p>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="lx-navigation">
+	<div class="lx-cover next lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-l.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2024/12/12/How-to-Generate-a-VSIX-File-from-VS-Code-Extension-Source-Code/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Next</span>
+						<h3>How to ...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+        <div class="lx-cover prev lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-r.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2024/08/21/Some-Misconceptions-About-Database-Performance-Application-Concurrent-Requests-Database-Connections-and-Database-Connection-Pools/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Prev</span>
+						<h3>Some Mi...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+
+</div>
+
+<footer>
+  <div>
+  Copyright &copy; 2026.<a href="/">Kamus' Notes</a><br>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme <a href="https://lx.js.org" target="_blank">Lx</a><br>
+  </div>
+</footer>
+
+</div>
+
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<div class="menu visibility">
+  <div class="menu-head">
+    <span class="layer">
+      <div class="col">
+        <div class="row for-pic">
+          <div class="profile-pic">
+            <a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"/></a>
+          </div>
+        </div>
+        <div class="row for-name">
+          <p>Kamus</p>
+          <span class="tagline">Hello, World!</span>
+        </div>
+      </div>
+    </span>
+  </div>
+  <nav class="menu-container">
+  <ul class="menu-items">
+    <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    <li><a href="/archives/"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+    
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-bookmark fa-fw"></i>Pages</span>
+        <ul>
+          <li><a href="/about/">About</a></li>
+        </ul>
+    </li>
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-link fa-fw"></i>Friends</span>
+        <ul>
+          <li> <a href="https://www.eygle.com/" target="_blank">Eygle</a></li>
+        <li> <a href="https://yangtingkun.net" target="_blank">Laoyang</a></li>
+        </ul>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/local.search.min.js"></script>
+
+</body>
+</html>

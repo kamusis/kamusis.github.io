@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=#58b77a>
+  <title>Exploring Oracle Compatibility in MogDB (Series I) - Data Dictionary | Kamus&#39; Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  <meta name="description" content="Install PTKPTK is the optimal tool for installing the MogDB database (an enterprise-grade commercial distribution based on openGauss) or the openGauss databa...">
+  <link rel="canonical" href="https://www.kamusis.me/2024/06/06/Exploring-Oracle-Compatibility-in-MogDB-Series-I-Data-Dictionary/">
+  <meta property="og:site_name" content="Kamus' Notes">
+  <meta property="og:title" content="Exploring Oracle Compatibility in MogDB (Series I) - Data Dictionary | Kamus' Notes">
+  <meta property="og:description" content="Install PTKPTK is the optimal tool for installing the MogDB database (an enterprise-grade commercial distribution based on openGauss) or the openGauss databa...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.kamusis.me/2024/06/06/Exploring-Oracle-Compatibility-in-MogDB-Series-I-Data-Dictionary/">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Exploring Oracle Compatibility in MogDB (Series I) - Data Dictionary | Kamus' Notes">
+  <meta name="twitter:description" content="Install PTKPTK is the optimal tool for installing the MogDB database (an enterprise-grade commercial distribution based on openGauss) or the openGauss databa...">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Exploring Oracle Compatibility in MogDB (Series I) - Data Dictionary","description":"Install PTKPTK is the optimal tool for installing the MogDB database (an enterprise-grade commercial distribution based on openGauss) or the openGauss databa...","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kamusis.me/2024/06/06/Exploring-Oracle-Compatibility-in-MogDB-Series-I-Data-Dictionary/"},"author":{"@type":"Person","name":"Kamus"},"publisher":{"@type":"Person","name":"Kamus"},"datePublished":"2024-06-06T03:45:38.000Z","dateModified":"2024-06-10T05:32:42.000Z","url":"https://www.kamusis.me/2024/06/06/Exploring-Oracle-Compatibility-in-MogDB-Series-I-Data-Dictionary/","image":["https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg"]}</script>
+  <script id="hexo-configurations">
+  var CONFIG = {
+    root: '/',
+    theme: 'lx',
+    version: '0.4.4',
+    localsearch:{
+      "enable": true,
+      "trigger": "auto",
+      "top_n_per_article": 1,
+      "unescape": false,
+      "preload": false
+      },
+    path: 'search.xml'
+  };
+</script>
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/css/main.min.css">
+  
+  <style type="text/css">
+    pre,
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+    html {
+      font-family: sans-serif;
+    }
+    body {
+      font-family: sans-serif;
+    }
+    h1, h2, h3, h4, h5, figure {
+      font-family: sans-serif;
+    }
+    .menu-container{
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "",
+	     });
+	}); 
+	</script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+<body>
+<div class="single">
+<div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Search..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+<div id="page">
+<div class="header">
+  <div id="lx-aside" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg)" data-stellar-background-ratio="0.5">
+    <div class="overlay">
+      <a href="javascript:;" class="popup-trigger" title="search"><i class="menu-item-icon fa fa-search fa-fw"></i></a>
+      <div class="page-title">
+        <div class="avatar"><a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"></a></div>
+        <span>2024-06-06</span>
+        <h2>Exploring Or...</h2>
+        <div class="tags"><i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/MogDB/" rel="tag">MogDB</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Oracle-Compatibility/" rel="tag">Oracle-Compatibility</a></div>
+        <div class="social-links">
+    <a href="https://github.com/kamusis" target="_blank" title="social-link"><i class="fa fa-github fa-fw"></i></a>
+    <a href="mailto:kamusis@gmail.com" target="_blank" title="social-link"><i class="fa fa-envelope fa-fw"></i></a>
+    <a href="https://www.linkedin.com/in/kamus/" target="_blank" title="social-link"><i class="fa fa-linkedin fa-fw"></i></a>
+    <a href="https://twitter.com/kamusis" target="_blank" title="social-link"><i class="fa fa-twitter fa-fw"></i></a>
+    <a href="https://www.instagram.com/kamusis/" target="_blank" title="social-link"><i class="fa fa-instagram fa-fw"></i></a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="lx-main-content">
+  <div class="lx-post">
+    <div class="lx-entry padding">
+      <div>
+        <h2 id="Install-PTK"><a href="#Install-PTK" class="headerlink" title="Install PTK"></a>Install PTK</h2><p>PTK is the optimal tool for installing the MogDB database (an enterprise-grade commercial distribution based on openGauss) or the openGauss database, offering a seamless and smooth installation experience.</p>
+<p>To install PTK, simply run the following command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --proto <span class="string">&#x27;=https&#x27;</span> --tlsv1.2 -sSf https://cdn-mogdb.enmotech.com/ptk/install.sh | sh</span><br></pre></td></tr></table></figure>
+
+<p>This command will automatically install PTK in the user’s home directory under <code>$HOME/.ptk</code>. This directory will serve as the working directory for PTK, storing cache files, metadata information, cluster configuration information, backup information, and other related files. Additionally, the installation command will add the path <code>$HOME/.ptk/bin</code> to the PATH environment variable in the corresponding shell profile file, enabling the user to use the <code>ptk</code> command directly after logging into the server. In this tutorial, we installed PTK using the root user, although this is not mandatory.</p>
+<p>For more detailed PTK installation instructions, please refer to: <a target="_blank" rel="noopener" href="https://docs.mogdb.io/en/ptk/v1.1/install">PTK Installation Guide</a>.</p>
+<p>The environment used for this series of articles is CentOS 7.6 for x86-64. MogDB must currently run on a Linux operating system. If you wish to install MogDB on macOS or Windows, you can do so using container deployment. For more information, refer to: <a target="_blank" rel="noopener" href="https://docs.mogdb.io/en/mogdb/v5.0/container-based-installation#container-based-mogdb-installation">Container-based MogDB Installation</a></p>
+<p>To check your CentOS version, you can use the following command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat /etc/centos-release</span></span><br><span class="line">CentOS Linux release 7.6.1810 (Core)</span><br></pre></td></tr></table></figure>
+
+<p>MogDB can also run on ARM architecture CPUs. You can list all supported CPU brands using the <code>ptk candidate cpu</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ptk candidate cpu</span></span><br><span class="line">    CPU Model</span><br><span class="line">------------------</span><br><span class="line">  Cortex-ARM64</span><br><span class="line">  Kunpeng-ARM64</span><br><span class="line">  Phythium-ARM64</span><br><span class="line">  Hygon-x64</span><br><span class="line">  Intel-x64</span><br><span class="line">  AMD-x64</span><br><span class="line">  zhaoxin-x64</span><br></pre></td></tr></table></figure>
+
+<p>If PTK notifies you of a new version while running any command, you can upgrade it directly using the <code>ptk self upgrade</code> command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ptk ls</span></span><br><span class="line">  cluster_name | <span class="built_in">id</span> | addr | user | data_dir | db_version | create_time | comment</span><br><span class="line">---------------+----+------+------+----------+------------+-------------+----------</span><br><span class="line">Warning: New version <span class="string">&#x27;1.5.0&#x27;</span> is available, you are using ptk version <span class="string">&#x27;1.1.3&#x27;</span>.</span><br><span class="line">You can upgrade ptk via <span class="built_in">command</span>: <span class="string">&#x27;ptk self upgrade&#x27;</span></span><br><span class="line">You can also <span class="built_in">set</span> environment by <span class="string">&#x27;export PTK_NO_CHECK_VERSION=true&#x27;</span> to <span class="built_in">disable</span> this warning</span><br><span class="line"><span class="comment"># ptk self upgrade</span></span><br><span class="line">INFO[2024-06-06T11:59:01.105] current version: 1.1.3 release, target version: latest</span><br><span class="line">INFO[2024-06-06T11:59:01.105] download package from http://cdn-mogdb.enmotech.com/ptk/latest/ptk_linux_x86_64.tar.gz</span><br><span class="line">INFO[2024-06-06T11:59:01.105] downloading ptk_linux_x86_64.tar.gz ...</span><br><span class="line">&gt; ptk_linux_x86_64.tar.gz: 17.78 MiB / 20.08 MiB [-----------------------------------------------------------------------&gt;_________] 88.52% 27.93 MiB p/s ETA 0s</span><br><span class="line">&gt; ptk_linux_x86_64.tar.gz: 20.08 MiB / 20.08 MiB [---------------------------------------------------------------------------------] 100.00% 29.07 MiB p/s 900ms</span><br><span class="line">INFO[2024-06-06T11:59:02.956] upgrade ptk successfully</span><br><span class="line">[root@mogdb-kernel-0004 ~]<span class="comment"># ptk version</span></span><br><span class="line">PTK Version:    v1.5.0 release</span><br><span class="line">Go Version:     go1.19.10</span><br><span class="line">Build Date:     2024-06-04T17:16:07</span><br><span class="line">Git Hash:       edd5dbb0</span><br><span class="line">OS/Arch:        linux/amd64</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Install-MogDB"><a href="#Install-MogDB" class="headerlink" title="Install MogDB"></a>Install MogDB</h2><p>With PTK, you can easily create multiple MogDB instances on a single server. Each MogDB instance can be assigned to a different operating system user, allowing you to manage multiple database instances with a single PTK installation.</p>
+<p>To quickly create a test database without any configuration, you can use the <code>ptk demo</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ptk demo</span></span><br><span class="line">Cluster Name: <span class="string">&quot;demo_kVP&quot;</span></span><br><span class="line">+--------------+--------------+------------------------------+-------+---------+---------------------------------+----------+</span><br><span class="line">| az(priority) |      ip      |         user(group)          | port  |  role   |            data <span class="built_in">dir</span>             | upstream |</span><br><span class="line">+--------------+--------------+------------------------------+-------+---------+---------------------------------+----------+</span><br><span class="line">| AZ1(1)       | 172.16.0.164 | demo_user_kVP(demo_user_kVP) | 26000 | primary | /home/demo_user_kVP/demodb/data | -        |</span><br><span class="line">+--------------+--------------+------------------------------+-------+---------+---------------------------------+----------+</span><br><span class="line">✔ Is cluster config correct (default=n) [y/n]: y</span><br><span class="line">INFO[2024-06-06T12:12:05.948] start check hostname ...</span><br><span class="line">INFO[2024-06-06T12:12:05.951] check hostname success</span><br><span class="line">INFO[2024-06-06T12:12:05.951] skip check os</span><br><span class="line">INFO[2024-06-06T12:12:05.951] start check distro ...</span><br><span class="line">INFO[2024-06-06T12:12:05.972] check distro success</span><br><span class="line">[....]</span><br><span class="line">Demo Summary:</span><br><span class="line"></span><br><span class="line">Deploy Status:</span><br><span class="line"></span><br><span class="line">  cluste_name |     host     |     user      | port  |    status     | message</span><br><span class="line">--------------+--------------+---------------+-------+---------------+----------</span><br><span class="line">  demo_kVP    | 172.16.0.164 | demo_user_kVP | 26000 | start_success | success</span><br><span class="line"></span><br><span class="line">Database Detail:</span><br><span class="line"></span><br><span class="line">      item      |              value</span><br><span class="line">----------------+----------------------------------</span><br><span class="line">  user_password | Demo&amp;kVP</span><br><span class="line">  db_password   | Demo&amp;kVP</span><br><span class="line">  base_dir      | /home/demo_user_kVP/demodb</span><br><span class="line">  app_dir       | /home/demo_user_kVP/demodb/app</span><br><span class="line">  data_dir      | /home/demo_user_kVP/demodb/data</span><br><span class="line">  tool_dir      | /home/demo_user_kVP/demodb/tool</span><br><span class="line">  tmp_dir       | /home/demo_user_kVP/demodb/tmp</span><br><span class="line"></span><br><span class="line">Mode Compatibility:</span><br><span class="line"></span><br><span class="line">  mode |        database        |        plugins        |               other</span><br><span class="line">-------+------------------------+-----------------------+-------------------------------------</span><br><span class="line">  PG   | postgres_compatibility | none                  |</span><br><span class="line">  A    | oracle_compatibility   | whale[success]        |</span><br><span class="line">       |                        | compat_tools[success] |</span><br><span class="line">       |                        | mogila[success]       | db user: mogdb, password: Demo&amp;kVP</span><br><span class="line"></span><br><span class="line">Plugin Install Details:</span><br><span class="line">  mode |    plugin    | status  |                 reference                 | error</span><br><span class="line">-------+--------------+---------+-------------------------------------------+--------</span><br><span class="line">  A    | whale        | success | https://docs.mogdb.io/zh/mogdb/v3.0/whale |</span><br><span class="line">       | compat_tools | success | https://gitee.com/enmotech/compat-tools   |</span><br><span class="line">       | mogila       | success | https://gitee.com/enmotech/mogila         |</span><br></pre></td></tr></table></figure>
+
+<p>The <code>ptk demo</code> command accomplishes the following tasks:</p>
+<ol>
+<li>Creates an operating system user named <code>demo_user_kVP</code>.</li>
+<li>Creates a single-instance MogDB database of the latest version (currently 5.0.7).</li>
+<li>Sets the database to listen on port 26000. Before running the <code>ptk demo</code> command, ensure that port 26000 is not occupied by other applications.</li>
+<li>Create an initial database user with the same name as the OS user: <code>demo_user_kVP</code>. Also, create a monitor user named <code>mogdb</code>. Both users will have their initial passwords specified in the “Database Detail” section.</li>
+<li>Creates two test databases: <code>oracle_compatibility</code> in Oracle-compatible mode and <code>postgres_compatibility</code> in PostgreSQL-compatible mode.</li>
+<li>For the automatically created <code>oracle_compatibility</code> database, the following enhancements are also performed:<ul>
+<li><p>Installs the mogila dataset. For more information about this dataset, refer to: <a target="_blank" rel="noopener" href="https://docs.mogdb.io/en/mogdb/v5.0/mogila">Using Sample Dataset Mogila</a></p>
+</li>
+<li><p>Installs the <code>whale</code> plugin, which provides extensive Oracle compatibility features. For more information on the Whale plugin, refer to: <a target="_blank" rel="noopener" href="https://docs.mogdb.io/en/mogdb/v5.0/whale">whale</a></p>
+</li>
+<li><p>Installs the <code>compat-tools</code> utility, which supplements the <code>whale</code> plugin with additional Oracle compatibility features that are not yet implemented, such as Oracle-compatible data dictionary views. For more information on <code>compat-tools</code>, refer to: <a target="_blank" rel="noopener" href="https://gitee.com/enmotech/compat-tools">enmotech&#x2F;compat-tools</a></p>
+<p><strong>Note:</strong> <code>compat-tools</code> only work within a single database. This means that if you install compat-tools in the <code>oracle_compatibility</code> database (as is done automatically by the <code>ptk demo</code> command), you will only be able to query the corresponding Oracle-compatible data dictionary views when logged into that database. If you want to use these views in another database, you must install compat-tools in that database as well. For example, if you want to query Oracle-compatible data dictionary views in the <code>postgres</code> database, you need to download <code>compat-tools</code> separately from <a target="_blank" rel="noopener" href="https://gitee.com/enmotech/compat-tools">enmotech&#x2F;compat-tools</a> then run the following command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gsql -h 127.0.0.1 -p 26000 -d postgres -f runMe.sql</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<h2 id="Exploring-Oracle-Compatible-Data-Dictionary-in-MogDB"><a href="#Exploring-Oracle-Compatible-Data-Dictionary-in-MogDB" class="headerlink" title="Exploring Oracle-Compatible Data Dictionary in MogDB"></a>Exploring Oracle-Compatible Data Dictionary in MogDB</h2><p>Switch to the operating system user associated with the demo database. You can log in to the database using the <code>gsql</code> command.</p>
+<p><strong>Note:</strong> If you want to connect to the database remotely, you should use the <code>mogdb</code> user. The <code>ptk demo</code> command creates two users in the database. One starts with <code>demo_user_</code>, which is the initial user. Due to MogDB’s enhanced security features, the initial user is not allowed to connect remotely. The other user is <code>mogdb</code>, which can be used for remote connections. The initial password for the users is displayed at the end of the <code>ptk demo</code> command output. Additionally, you should modify the <code>pg_hba.conf</code> file to allow remote connections. For more information, refer to: <a target="_blank" rel="noopener" href="https://docs.mogdb.io/en/mogdb/v5.0/gsql#connecting-to-a-database-remotely">Connecting to a Database Remotely</a>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ptk ls</span></span><br><span class="line">  cluster_name |  <span class="built_in">id</span>  |        addr        |     user      |            data_dir             |          db_version          |     create_time     | comment</span><br><span class="line">---------------+------+--------------------+---------------+---------------------------------+------------------------------+---------------------+----------</span><br><span class="line">  demo_kVP     | 6001 | 172.16.0.164:26000 | demo_user_kVP | /home/demo_user_kVP/demodb/data | MogDB 5.0.7 (build c4707384) | 2024-06-06T12:12:24 |</span><br><span class="line"><span class="comment"># su - demo_user_kVP</span></span><br><span class="line">$ gsql -d oracle_compatibility -r</span><br><span class="line">gsql ((MogDB <span class="number">5.0</span>.<span class="number">7</span> build c4707384) compiled at <span class="number">2024</span>-<span class="number">05</span>-<span class="number">24</span> <span class="number">10</span>:<span class="number">51</span>:<span class="number">53</span> commit <span class="number">0</span> last mr <span class="number">1804</span> )</span><br><span class="line">Non-SSL connection (SSL connection is recommended when requiring high-security)</span><br><span class="line">Type &quot;help&quot; for help.</span><br><span class="line"></span><br><span class="line">oracle_compatibility=# \dt</span><br><span class="line">                             List of relations</span><br><span class="line"> Schema |     Name      | Type  | Owner |             Storage</span><br><span class="line">--------+---------------+-------+-------+----------------------------------</span><br><span class="line"> public | actor         | table | mogdb | &#123;orientation=row,compression=no&#125;</span><br><span class="line"> public | address       | table | mogdb | &#123;orientation=row,compression=no&#125;</span><br><span class="line"> public | category      | table | mogdb | &#123;orientation=row,compression=no&#125;</span><br><span class="line"> public | city          | table | mogdb | &#123;orientation=row,compression=no&#125;</span><br><span class="line"> public | country       | table | mogdb | &#123;orientation=row,compression=no&#125;</span><br><span class="line"> public | customer      | table | mogdb | &#123;orientation=row,compression=no&#125;</span><br><span class="line"> public | film          | table | mogdb | &#123;orientation=row,compression=no&#125;</span><br><span class="line"> public | film_actor    | table | mogdb | &#123;orientation=row,compression=no&#125;</span><br><span class="line"> public | film_category | table | mogdb | &#123;orientation=row,compression=no&#125;</span><br><span class="line"> public | inventory     | table | mogdb | &#123;orientation=row,compression=no&#125;</span><br><span class="line"> public | language      | table | mogdb | &#123;orientation=row,compression=no&#125;</span><br><span class="line"> public | payment       | table | mogdb | &#123;orientation=row,compression=no&#125;</span><br><span class="line"> public | rental        | table | mogdb | &#123;orientation=row,compression=no&#125;</span><br><span class="line"> public | staff         | table | mogdb | &#123;orientation=row,compression=no&#125;</span><br><span class="line"> public | store         | table | mogdb | &#123;orientation=row,compression=no&#125;</span><br><span class="line">(<span class="number">15</span> rows)</span><br></pre></td></tr></table></figure>
+
+<p>All these tables come from the Mogila test dataset.</p>
+<p>Compat-tools brings a large number of Oracle-compatible data dictionary views (refer to: <a target="_blank" rel="noopener" href="https://gitee.com/enmotech/compat-tools#oracle-compatibility-views">Oracle-Compatible Views</a>). Here are some simple examples.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- sysdate function and dual table is supported</span></span><br><span class="line">oracle_compatibility<span class="operator">=</span># <span class="keyword">select</span> sysdate <span class="keyword">from</span> dual;</span><br><span class="line">       sysdate</span><br><span class="line"><span class="comment">---------------------</span></span><br><span class="line"> <span class="number">2024</span><span class="number">-06</span><span class="number">-06</span> <span class="number">12</span>:<span class="number">47</span>:<span class="number">57</span></span><br><span class="line">(<span class="number">1</span> <span class="type">row</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- V$ views are supported</span></span><br><span class="line">oracle_compatibility<span class="operator">=</span># <span class="keyword">select</span> sid,username,status,program <span class="keyword">from</span> v$session;</span><br><span class="line">      sid       <span class="operator">|</span>   username    <span class="operator">|</span> status <span class="operator">|</span>        program</span><br><span class="line"><span class="comment">----------------+---------------+--------+------------------------</span></span><br><span class="line"> <span class="number">47724487509760</span> <span class="operator">|</span> demo_user_kVP <span class="operator">|</span> active <span class="operator">|</span> gsql</span><br><span class="line"> <span class="number">47724085905152</span> <span class="operator">|</span> demo_user_kVP <span class="operator">|</span> idle   <span class="operator">|</span> WLMArbiter</span><br><span class="line"> <span class="number">47724057593600</span> <span class="operator">|</span> demo_user_kVP <span class="operator">|</span> idle   <span class="operator">|</span> WorkloadMonitor</span><br><span class="line"> <span class="number">47724032427776</span> <span class="operator">|</span> demo_user_kVP <span class="operator">|</span> active <span class="operator">|</span> workload</span><br><span class="line"> <span class="number">47723769759488</span> <span class="operator">|</span> demo_user_kVP <span class="operator">|</span> active <span class="operator">|</span> Asp</span><br><span class="line"> <span class="number">47723818518272</span> <span class="operator">|</span> demo_user_kVP <span class="operator">|</span> idle   <span class="operator">|</span> statement flush thread</span><br><span class="line"> <span class="number">47723696359168</span> <span class="operator">|</span> demo_user_kVP <span class="operator">|</span> idle   <span class="operator">|</span> CfsShrinker</span><br><span class="line"> <span class="number">47723730437888</span> <span class="operator">|</span> demo_user_kVP <span class="operator">|</span> idle   <span class="operator">|</span> WDRSnapshot</span><br><span class="line"> <span class="number">47723597268736</span> <span class="operator">|</span> demo_user_kVP <span class="operator">|</span> idle   <span class="operator">|</span> ApplyLauncher</span><br><span class="line"> <span class="number">47723658610432</span> <span class="operator">|</span> demo_user_kVP <span class="operator">|</span> idle   <span class="operator">|</span> TxnSnapCapturer</span><br><span class="line"> <span class="number">47723563190016</span> <span class="operator">|</span> demo_user_kVP <span class="operator">|</span> active <span class="operator">|</span> JobScheduler</span><br><span class="line">(<span class="number">11</span> <span class="keyword">rows</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- DBA_ views are supported</span></span><br><span class="line">oracle_compatibility<span class="operator">=</span># <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> dba_users;</span><br><span class="line">   username    <span class="operator">|</span> user_id <span class="operator">|</span> password <span class="operator">|</span> account_status <span class="operator">|</span> lock_date <span class="operator">|</span> expiry_date <span class="operator">|</span>   profile</span><br><span class="line"><span class="comment">---------------+---------+----------+----------------+-----------+-------------+--------------</span></span><br><span class="line"> demo_user_kVP <span class="operator">|</span>      <span class="number">10</span> <span class="operator">|</span> <span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> <span class="operator">|</span> NORMAL         <span class="operator">|</span>           <span class="operator">|</span>             <span class="operator">|</span> DEFAULT_POOL</span><br><span class="line"> MOGDB         <span class="operator">|</span>   <span class="number">18720</span> <span class="operator">|</span> <span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> <span class="operator">|</span> NORMAL         <span class="operator">|</span>           <span class="operator">|</span>             <span class="operator">|</span> DEFAULT_POOL</span><br><span class="line">(<span class="number">2</span> <span class="keyword">rows</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- USER_ views are supported</span></span><br><span class="line">oracle_compatibility<span class="operator">=</span># <span class="keyword">select</span> table_name,num_rows,last_analyzed <span class="keyword">from</span> user_tables;</span><br><span class="line">  table_name   <span class="operator">|</span> num_rows <span class="operator">|</span>         last_analyzed</span><br><span class="line"><span class="comment">---------------+----------+-------------------------------</span></span><br><span class="line"> COUNTRY       <span class="operator">|</span>        <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"> CITY          <span class="operator">|</span>      <span class="number">600</span> <span class="operator">|</span> <span class="number">2024</span><span class="number">-06</span><span class="number">-06</span> <span class="number">12</span>:<span class="number">13</span>:<span class="number">24.504009</span><span class="operator">+</span><span class="number">08</span></span><br><span class="line"> ACTOR         <span class="operator">|</span>        <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"> FILM_ACTOR    <span class="operator">|</span>     <span class="number">5462</span> <span class="operator">|</span> <span class="number">2024</span><span class="number">-06</span><span class="number">-06</span> <span class="number">12</span>:<span class="number">13</span>:<span class="number">24.518718</span><span class="operator">+</span><span class="number">08</span></span><br><span class="line"> CATEGORY      <span class="operator">|</span>        <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"> FILM_CATEGORY <span class="operator">|</span>     <span class="number">1000</span> <span class="operator">|</span> <span class="number">2024</span><span class="number">-06</span><span class="number">-06</span> <span class="number">12</span>:<span class="number">13</span>:<span class="number">24.531421</span><span class="operator">+</span><span class="number">08</span></span><br><span class="line"> <span class="keyword">LANGUAGE</span>      <span class="operator">|</span>        <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"> FILM          <span class="operator">|</span>     <span class="number">1000</span> <span class="operator">|</span> <span class="number">2024</span><span class="number">-06</span><span class="number">-06</span> <span class="number">12</span>:<span class="number">13</span>:<span class="number">24.56158</span><span class="operator">+</span><span class="number">08</span></span><br><span class="line"> PAYMENT       <span class="operator">|</span>        <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"> CUSTOMER      <span class="operator">|</span>        <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"> INVENTORY     <span class="operator">|</span>        <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"> RENTAL        <span class="operator">|</span>        <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"> STAFF         <span class="operator">|</span>        <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"> ADDRESS       <span class="operator">|</span>        <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"> STORE         <span class="operator">|</span>        <span class="number">0</span> <span class="operator">|</span></span><br><span class="line">(<span class="number">15</span> <span class="keyword">rows</span>)</span><br><span class="line"></span><br><span class="line">oracle_compatibility<span class="operator">=</span># <span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> CITY;</span><br><span class="line"> count</span><br><span class="line"><span class="comment">-------</span></span><br><span class="line">   <span class="number">600</span></span><br><span class="line">(<span class="number">1</span> <span class="type">row</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- some short name views are supported, like IND, OBJ, COLS </span></span><br><span class="line">oracle_compatibility<span class="operator">=</span># <span class="keyword">select</span> index_name,table_owner,uniqueness,distinct_keys,partitioned <span class="keyword">from</span> ind <span class="keyword">where</span> table_name<span class="operator">=</span><span class="string">&#x27;CITY&#x27;</span>;</span><br><span class="line">    index_name     <span class="operator">|</span> table_owner <span class="operator">|</span> uniqueness <span class="operator">|</span> distinct_keys <span class="operator">|</span> partitioned</span><br><span class="line"><span class="comment">-------------------+-------------+------------+---------------+-------------</span></span><br><span class="line"> CITY_PKEY         <span class="operator">|</span> PUBLIC      <span class="operator">|</span> <span class="keyword">UNIQUE</span>     <span class="operator">|</span>           <span class="number">600</span> <span class="operator">|</span> <span class="keyword">NO</span></span><br><span class="line"> IDX_FK_COUNTRY_ID <span class="operator">|</span> PUBLIC      <span class="operator">|</span> NONUNIQUE  <span class="operator">|</span>           <span class="number">109</span> <span class="operator">|</span> <span class="keyword">NO</span></span><br><span class="line">(<span class="number">2</span> <span class="keyword">rows</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong> Due to significant differences in the underlying structure between MogDB and Oracle, these Oracle-compatible views may not include all the fields present in the corresponding Oracle database views.</p>
+<p><strong>To be continued:</strong></p>
+<p>- Exploring Oracle Compatibility in MogDB (Series II) - System Functions</p>
+<p>- Exploring Oracle Compatibility in MogDB (Series III) - DBMS Packages</p>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="lx-navigation">
+	<div class="lx-cover next lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-l.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2024/06/15/Flashback-Features-in-MogDB/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Next</span>
+						<h3>Flashba...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+        <div class="lx-cover prev lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-r.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2024/06/05/Working-Mechanism-of-synchronous-standby-names-in-MogDB/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Prev</span>
+						<h3>Working...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+
+</div>
+
+<footer>
+  <div>
+  Copyright &copy; 2026.<a href="/">Kamus' Notes</a><br>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme <a href="https://lx.js.org" target="_blank">Lx</a><br>
+  </div>
+</footer>
+
+</div>
+
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<div class="menu visibility">
+  <div class="menu-head">
+    <span class="layer">
+      <div class="col">
+        <div class="row for-pic">
+          <div class="profile-pic">
+            <a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"/></a>
+          </div>
+        </div>
+        <div class="row for-name">
+          <p>Kamus</p>
+          <span class="tagline">Hello, World!</span>
+        </div>
+      </div>
+    </span>
+  </div>
+  <nav class="menu-container">
+  <ul class="menu-items">
+    <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    <li><a href="/archives/"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+    
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-bookmark fa-fw"></i>Pages</span>
+        <ul>
+          <li><a href="/about/">About</a></li>
+        </ul>
+    </li>
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-link fa-fw"></i>Friends</span>
+        <ul>
+          <li> <a href="https://www.eygle.com/" target="_blank">Eygle</a></li>
+        <li> <a href="https://yangtingkun.net" target="_blank">Laoyang</a></li>
+        </ul>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/local.search.min.js"></script>
+
+</body>
+</html>

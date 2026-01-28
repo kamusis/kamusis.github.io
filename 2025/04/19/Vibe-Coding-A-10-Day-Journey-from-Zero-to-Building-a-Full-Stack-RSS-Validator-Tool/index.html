@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=#58b77a>
+  <title>Vibe Coding: A 10-Day Journey from Zero to Building a Full-Stack RSS Validator Tool | Kamus&#39; Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  <meta name="description" content="10 days (2025&#x2F;4&#x2F;8 to 2025&#x2F;4&#x2F;18), From zero to https://kamusis-my-opml-sub.deno.dev/
+The code implemented in the entire project so far inc...">
+  <link rel="canonical" href="https://www.kamusis.me/2025/04/19/Vibe-Coding-A-10-Day-Journey-from-Zero-to-Building-a-Full-Stack-RSS-Validator-Tool/">
+  <meta property="og:site_name" content="Kamus' Notes">
+  <meta property="og:title" content="Vibe Coding: A 10-Day Journey from Zero to Building a Full-Stack RSS Validator Tool | Kamus' Notes">
+  <meta property="og:description" content="10 days (2025&#x2F;4&#x2F;8 to 2025&#x2F;4&#x2F;18), From zero to https://kamusis-my-opml-sub.deno.dev/
+The code implemented in the entire project so far inc...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.kamusis.me/2025/04/19/Vibe-Coding-A-10-Day-Journey-from-Zero-to-Building-a-Full-Stack-RSS-Validator-Tool/">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Vibe Coding: A 10-Day Journey from Zero to Building a Full-Stack RSS Validator Tool | Kamus' Notes">
+  <meta name="twitter:description" content="10 days (2025&#x2F;4&#x2F;8 to 2025&#x2F;4&#x2F;18), From zero to https://kamusis-my-opml-sub.deno.dev/
+The code implemented in the entire project so far inc...">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Vibe Coding: A 10-Day Journey from Zero to Building a Full-Stack RSS Validator Tool","description":"10 days (2025&#x2F;4&#x2F;8 to 2025&#x2F;4&#x2F;18), From zero to https://kamusis-my-opml-sub.deno.dev/\nThe code implemented in the entire project so far inc...","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kamusis.me/2025/04/19/Vibe-Coding-A-10-Day-Journey-from-Zero-to-Building-a-Full-Stack-RSS-Validator-Tool/"},"author":{"@type":"Person","name":"Kamus"},"publisher":{"@type":"Person","name":"Kamus"},"datePublished":"2025-04-19T05:08:11.000Z","dateModified":"2025-05-04T10:16:00.000Z","url":"https://www.kamusis.me/2025/04/19/Vibe-Coding-A-10-Day-Journey-from-Zero-to-Building-a-Full-Stack-RSS-Validator-Tool/","image":["https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg"]}</script>
+  <script id="hexo-configurations">
+  var CONFIG = {
+    root: '/',
+    theme: 'lx',
+    version: '0.4.4',
+    localsearch:{
+      "enable": true,
+      "trigger": "auto",
+      "top_n_per_article": 1,
+      "unescape": false,
+      "preload": false
+      },
+    path: 'search.xml'
+  };
+</script>
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/css/main.min.css">
+  
+  <style type="text/css">
+    pre,
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+    html {
+      font-family: sans-serif;
+    }
+    body {
+      font-family: sans-serif;
+    }
+    h1, h2, h3, h4, h5, figure {
+      font-family: sans-serif;
+    }
+    .menu-container{
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "",
+	     });
+	}); 
+	</script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+<body>
+<div class="single">
+<div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Search..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+<div id="page">
+<div class="header">
+  <div id="lx-aside" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg)" data-stellar-background-ratio="0.5">
+    <div class="overlay">
+      <a href="javascript:;" class="popup-trigger" title="search"><i class="menu-item-icon fa fa-search fa-fw"></i></a>
+      <div class="page-title">
+        <div class="avatar"><a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"></a></div>
+        <span>2025-04-19</span>
+        <h2>Vibe Coding:...</h2>
+        <div class="tags"><i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/AI/" rel="tag">AI</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Agentic-Coding/" rel="tag">Agentic Coding</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Deno/" rel="tag">Deno</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/JavaScript/" rel="tag">JavaScript</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/TypeScript/" rel="tag">TypeScript</a></div>
+        <div class="social-links">
+    <a href="https://github.com/kamusis" target="_blank" title="social-link"><i class="fa fa-github fa-fw"></i></a>
+    <a href="mailto:kamusis@gmail.com" target="_blank" title="social-link"><i class="fa fa-envelope fa-fw"></i></a>
+    <a href="https://www.linkedin.com/in/kamus/" target="_blank" title="social-link"><i class="fa fa-linkedin fa-fw"></i></a>
+    <a href="https://twitter.com/kamusis" target="_blank" title="social-link"><i class="fa fa-twitter fa-fw"></i></a>
+    <a href="https://www.instagram.com/kamusis/" target="_blank" title="social-link"><i class="fa fa-instagram fa-fw"></i></a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="lx-main-content">
+  <div class="lx-post">
+    <div class="lx-entry padding">
+      <div>
+        <p>10 days (2025&#x2F;4&#x2F;8 to 2025&#x2F;4&#x2F;18), From zero to <a target="_blank" rel="noopener" href="https://kamusis-my-opml-sub.deno.dev/">https://kamusis-my-opml-sub.deno.dev/</a></p>
+<p>The code implemented in the entire project so far includes backend and some frontend by Claude 3.7 Sonnet (sometimes Claude 3.5), while a larger portion of the frontend is by OpenAI GPT-4.1 (in Windsurf, this model is currently available for free for a limited time).</p>
+<p>Project URL: <a target="_blank" rel="noopener" href="https://kamusis-my-opml-sub.deno.dev/">https://kamusis-my-opml-sub.deno.dev/</a></p>
+<h2 id="User-Story"><a href="#User-Story" class="headerlink" title="User Story"></a>User Story</h2><p>I’ve been using RSS for like… 15 years now? Over time I’ve somehow ended up with 200+ feed subscriptions. I know RSS isn’t exactly trendy anymore, but a handful of these feeds are still part of my daily routine.</p>
+<p>The problem? My feed list has turned into a total mess:</p>
+<ul>
+<li>Some feeds are completely dead</li>
+<li>Some blogs haven’t been updated in years</li>
+<li>Others post like once every six months</li>
+<li>And a bunch just throw 404s now</li>
+</ul>
+<p>I want to clean it up, but here’s the thing:<br>Going through each one manually sounds like actual hell.<br>My reader (News Explorer) doesn’t have any built-in tools to help with this.<br>I tried Googling things like “rss feed analyze” and “cleanup,” but honestly didn’t come across any useful tools.</p>
+<p>So the mess remains… because there’s just no good way to deal with it. Until I finally decided to just build one myself—well, more like let AI build it for me.</p>
+<h2 id="Background-of-Me"><a href="#Background-of-Me" class="headerlink" title="Background of Me"></a>Background of Me</h2><ul>
+<li>Can read code (sometimes need to rely on AI for interpretation and understanding.)</li>
+<li>Have manually written backend code in the past, but haven’t written extensive backend code in the last twenty years.</li>
+<li>Have never manually written frontend code and have limited knowledge of the basic principles of frontend rendering mechanisms.</li>
+<li>Started learning about JavaScript and TypeScript a month ago. </li>
+<li>A beginner with Deno. Understand the calling sequence and respective responsibilities from components to islands to routes API, then to backend services, and finally to backend logic implementation.</li>
+</ul>
+<h2 id="Tools"><a href="#Tools" class="headerlink" title="Tools"></a>Tools</h2><ul>
+<li>Agentic Coding Editor (Windsurf)</li>
+<li>Design and Code Generater LLM (Claude 3.5&#x2F;3.7 + openAI GPT-4.1)<br>We need a subscription to an Agentic Coding Editor, such as Cursor, Windsurf, or Github Copilot, for design and coding.</li>
+<li>Code Reviewer LLM (Gemini Code Assist)<br>Additionally, we need Gemini Code Assist (currently considered free) to review code and consult on any code-related questions. Gemini Code Assist is also very effective, and it can be said that Gemini is the best model to help you understand code.</li>
+<li>MCP Server (sequential-thinking)</li>
+</ul>
+<h2 id="Process"><a href="#Process" class="headerlink" title="Process"></a>Process</h2><ol>
+<li><p><strong>Design Phase</strong></p>
+<ul>
+<li>Write the design and outline original requirements</li>
+<li>Let AI write the design (experience shows Claude 3.5 + sequential-thinking MCP server works well; theoretically, any LLM with thinking capabilities is better suited for overall design)</li>
+<li>Review the design, which should include implementation details such as interaction flow design, class design, function design, etc.</li>
+<li>If you are trying to develop a full-stack application, you should write design documents for both frontend and backend</li>
+<li>Continue to ask questions and interact with AI until you believe the overall design is reasonable and implementable (This step is not suitable for people who have no programming knowledge at all, but it is very important.)</li>
+</ul>
+</li>
+<li><p><strong>Implementation Planning</strong></p>
+<ul>
+<li>Based on the design, ask AI to write an implementation plan (Claude 3.5 + sequential-thinking MCP server)</li>
+<li>Break it down into steps</li>
+<li>Ask AI to plan steps following a senior programmer’s approach</li>
+<li>Review steps, raise questions until the steps are reasonable (This step is not suitable for people who have no programming knowledge at all, but it is very important.)</li>
+</ul>
+</li>
+<li><p><strong>Implementation</strong></p>
+<ul>
+<li>Strictly follow the steps</li>
+<li>Ask AI to implement functions one by one (Claude 3.5&#x2F;3.7)</li>
+<li>After each function is implemented, ask AI to generate unit tests to ensure they pass</li>
+</ul>
+</li>
+<li><p><strong>Oversee</strong></p>
+<ul>
+<li>If you have no programming experience, you might not be able to understand what the AI is doing or identify potential risks. As a result, you wouldn’t be able to oversee the AI or question its output, and would have to hope the AI makes no mistakes at all. This could make the implementation process much harder down the line.</li>
+<li>Ensure strict monitoring of what AI is actually doing</li>
+<li>For example: AI might implement underlying function calls in test cases rather than generating test cases for the target file, which would make it appear that tests pass when in fact there is no effective testing of the target file<br><img src="https://s2.loli.net/2025/04/18/U7QKqbAi4psHe5k.png" alt="20250418171722"></li>
+<li>Sometimes AI will take the initiative to use mocks for testing; we need to know when it’s appropriate to use mocks in tests and when to test real functionality</li>
+<li>This requires us to know whether we’re doing Integration&#x2F;Component Testing or Pure Unit Testing<br><img src="https://s2.loli.net/2025/04/18/NY75BW2golesZ1z.png" alt="20250418171748"></li>
+</ul>
+</li>
+<li><p><strong>Code Review and Design Update</strong></p>
+<ul>
+<li>Ask another AI to read the generated code (experience shows Gemini Code Assist is very suitable for this work)</li>
+<li>Compare with the original design</li>
+<li>Have AI analyze whether the original design has been fully implemented; if not, what’s missing<ul>
+<li>Evaluate missing content and decide whether to implement it now</li>
+</ul>
+</li>
+<li>Or whether functionality beyond the design has been implemented<ul>
+<li>Evaluate functionality beyond the design and decide whether to reflect it back into the design</li>
+<li>Why update the design? Because subsequent work may need to reference the design document, so ensuring the design document correctly reflects the code logic is a good practice</li>
+<li>You don’t necessarily need to document every single implementation detail (like the specific batch size in batchValidate), but changes to public interfaces and communication protocols are definitely worth updating.<br> <img src="https://s2.loli.net/2025/04/18/lDY7tNzLk3jyqbe.png" alt="20250418171854"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Continuous Review</strong></p>
+<ul>
+<li><p>After completing each requirement, ask AI to review the design document again to understand current progress and what needs to be done<br><img src="https://s2.loli.net/2025/04/18/SGCFPs16RjNYW2w.png" alt="20250418171956"><br><img src="https://s2.loli.net/2025/04/18/4ruVdyUvfnXpRkx.png" alt="20250418172014"><br><img src="https://s2.loli.net/2025/04/18/qFpkw1RolUBz9AK.png" alt="20250418172023"></p>
+</li>
+<li><p>When major milestones are completed or before implementing the next major task, have AI review the completed work and write a new development plan</p>
+</li>
+<li><p>Always read the development plan completed by AI and make manual modifications if necessary<br><img src="https://s2.loli.net/2025/04/18/hDo2LBbfCGdSPAn.png" alt="20250418172046"></p>
+</li>
+<li><p>After reaching a milestone, have AI (preferably a different AI) review progress again<br><img src="https://s2.loli.net/2025/04/18/hbxZ1vydXm4fSjW.png" alt="20250418172133"></p>
+</li>
+</ul>
+</li>
+</ol>
+<p>Repeat the above steps until the entire project is completed.</p>
+<h2 id="Learning-from-the-Project"><a href="#Learning-from-the-Project" class="headerlink" title="Learning from the Project"></a>Learning from the Project</h2><h3 id="Git-and-GitHub"><a href="#Git-and-GitHub" class="headerlink" title="Git and GitHub"></a>Git and GitHub</h3><ul>
+<li>Make good use of git; commit after completing each milestone functionality</li>
+<li>When working on significant, large-scale features—like making a fundamental data structure change from the ground up—it’s safer to use GitHub PRs, even if you’re working solo. Create a issue, create a branch for this issue, make changes, test thoroughly, and merge after confirming everything is correct.</li>
+</ul>
+<h3 id="Debugging"><a href="#Debugging" class="headerlink" title="Debugging"></a>Debugging</h3><p>When debugging, this prompt is very useful: “Important: Try to fix things at the cause, not the symptom.” We need to adopt this mindset ourselves because even if we define this rule in the global rules, AI might still not follow it. When we see AI trying to fix a bug with a method that treats the symptom rather than the cause, we should interrupt and emphasize again that it needs to find the cause, not just fix the symptom. This requires us to have debugging skills, which is why Agentic Coding is currently not suitable for people who have no programming knowledge at all. Creating a familiar Snake game might not require any debugging, but for a real-world software project, if we let AI debug on its own, it might make the program progressively worse.</p>
+<p>The sequential-thinking MCP server is very useful when debugging bugs involving multi-layer call logic. It will check and analyze multiple files in the call path sequentially, typically making it easier to find the root cause. Without thinking capabilities, AI models might not have a clear enough approach to decide which files to check.<br><img src="https://s2.loli.net/2025/04/18/pazwuMm18lTEyAQ.png" alt="20250418172250"><br><img src="https://s2.loli.net/2025/04/18/5iWpbQ4wLzHqAcv.png" alt="20250418193434"></p>
+<p>For completely unfamiliar code sections, if bugs occur, we can only rely on AI to analyze and fix them itself, which significantly increases the frequency of interactions with AI and the cost of using AI. For example, when debugging backend programs, the Windsurf editor spends an average of 5 credits because I can point out possible debugging directions; but once we start debugging frontend pages, such as table flickering during refresh that must be fixed by adjusting CSS, because I have almost no frontend development experience, I have no suggestions or interventions, resulting in an average of 15 credits spent. When multiple modifications to a bug have no effect, rolling back the changes to the beginning stage of the bug and then using the sequential-thinking tool to think and fix will have better results.<br><img src="https://s2.loli.net/2025/04/18/alR9YzpLygPBONq.png" alt="20250418193823"></p>
+<h3 id="Refactoring"><a href="#Refactoring" class="headerlink" title="Refactoring"></a>Refactoring</h3><p>Refactoring is often essential because we don’t review every line of AI-generated code, so we might miss some errors made by the AI. For example, in my project, when implementing a feature, the AI didn’t use the interface previously defined in types.d.ts, but instead created a new interface with a similar name based on its understanding, and continued using this new interface throughout the feature implementation. After discovery, refactoring was necessary.<br><img src="https://s2.loli.net/2025/04/18/TkjuXLp6hPmAoJM.png" alt="20250418193509"><br><img src="https://s2.loli.net/2025/04/18/P4fBlqVZQ7Ht2vK.png" alt="20250418193659"><br><img src="https://s2.loli.net/2025/04/18/m8FJnfNsTbyQh19.png" alt="20250418193708"></p>
+<h3 id="Multi-Model-mutual-argumentation"><a href="#Multi-Model-mutual-argumentation" class="headerlink" title="Multi-Model mutual argumentation"></a>Multi-Model mutual argumentation</h3><p>When an AI offers suggestions and you’re unsure about them, a solid learning trick is to run those ideas by another AI for a second opinion. Take, for example, deciding if an endpoint should be defined with POST or GET.<br>I had Claude 3.7 whip up some code, then passed it over to Gemini for a quick check. Gemini suggested switching to GET, saying it might align better with common standards.<br><img src="https://s2.loli.net/2025/04/18/Kd8O62HauxbGItl.png" alt="20250418194455"></p>
+<p>When sending the suggestion back to Claude 3.7, Claude 3.7 still believed using POST was better.<br><img src="https://s2.loli.net/2025/04/18/RA1uqhJ3MGFTE5r.png" alt="20250418194505"></p>
+<p>When sending Claude 3.7’s reply back to Gemini, Gemini agreed.<br><img src="https://s2.loli.net/2025/04/18/BYc7FXRm1Gh6b5T.png" alt="20250418194515"></p>
+<p>This is a fascinating experience, like being part of a team where you watch two experts share their opinions and eventually reach a consensus.</p>
+<p>I hope in the future there will be a more convenient mechanism for Multi-Model mutual argumentation (rather than manual copy-pasting), which would greatly improve the quality of AI-generated code.</p>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="lx-navigation">
+	<div class="lx-cover next lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-l.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2025/08/31/Setting-Up-PostgreSQL-Development-Environment-with-VS-Code-DevContainer-and-Windsurf/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Next</span>
+						<h3>Setting...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+        <div class="lx-cover prev lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-r.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2025/04/08/From-Software-Search-to-Code-Generation-The-Agentic-Coding-Revolution/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Prev</span>
+						<h3>From So...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+
+</div>
+
+<footer>
+  <div>
+  Copyright &copy; 2026.<a href="/">Kamus' Notes</a><br>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme <a href="https://lx.js.org" target="_blank">Lx</a><br>
+  </div>
+</footer>
+
+</div>
+
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<div class="menu visibility">
+  <div class="menu-head">
+    <span class="layer">
+      <div class="col">
+        <div class="row for-pic">
+          <div class="profile-pic">
+            <a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"/></a>
+          </div>
+        </div>
+        <div class="row for-name">
+          <p>Kamus</p>
+          <span class="tagline">Hello, World!</span>
+        </div>
+      </div>
+    </span>
+  </div>
+  <nav class="menu-container">
+  <ul class="menu-items">
+    <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    <li><a href="/archives/"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+    
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-bookmark fa-fw"></i>Pages</span>
+        <ul>
+          <li><a href="/about/">About</a></li>
+        </ul>
+    </li>
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-link fa-fw"></i>Friends</span>
+        <ul>
+          <li> <a href="https://www.eygle.com/" target="_blank">Eygle</a></li>
+        <li> <a href="https://yangtingkun.net" target="_blank">Laoyang</a></li>
+        </ul>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/local.search.min.js"></script>
+
+</body>
+</html>
