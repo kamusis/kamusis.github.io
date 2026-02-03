@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=#58b77a>
+  <title>Mastering Oracle Database Connectivity for SQLcl MCP Server | Kamus&#39; Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  <meta name="description" content="Mastering Oracle Database Connectivity for SQLcl MCP ServerThe SQLcl MCP Server is a powerful bridge that brings the capabilities of Oracle SQLcl to the worl...">
+  <link rel="canonical" href="https://www.kamusis.me/2026/02/03/Mastering-Oracle-Database-Connectivity-for-SQLcl-MCP-Server/">
+  <meta property="og:site_name" content="Kamus' Notes">
+  <meta property="og:title" content="Mastering Oracle Database Connectivity for SQLcl MCP Server | Kamus' Notes">
+  <meta property="og:description" content="Mastering Oracle Database Connectivity for SQLcl MCP ServerThe SQLcl MCP Server is a powerful bridge that brings the capabilities of Oracle SQLcl to the worl...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.kamusis.me/2026/02/03/Mastering-Oracle-Database-Connectivity-for-SQLcl-MCP-Server/">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Mastering Oracle Database Connectivity for SQLcl MCP Server | Kamus' Notes">
+  <meta name="twitter:description" content="Mastering Oracle Database Connectivity for SQLcl MCP ServerThe SQLcl MCP Server is a powerful bridge that brings the capabilities of Oracle SQLcl to the worl...">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Mastering Oracle Database Connectivity for SQLcl MCP Server","description":"Mastering Oracle Database Connectivity for SQLcl MCP ServerThe SQLcl MCP Server is a powerful bridge that brings the capabilities of Oracle SQLcl to the worl...","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kamusis.me/2026/02/03/Mastering-Oracle-Database-Connectivity-for-SQLcl-MCP-Server/"},"author":{"@type":"Person","name":"Kamus"},"publisher":{"@type":"Person","name":"Kamus"},"datePublished":"2026-02-03T06:07:17.000Z","dateModified":"2026-02-03T06:26:45.780Z","url":"https://www.kamusis.me/2026/02/03/Mastering-Oracle-Database-Connectivity-for-SQLcl-MCP-Server/","image":["https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg"]}</script>
+  <script id="hexo-configurations">
+  var CONFIG = {
+    root: '/',
+    theme: 'lx',
+    version: '0.4.4',
+    localsearch:{
+      "enable": true,
+      "trigger": "auto",
+      "top_n_per_article": 1,
+      "unescape": false,
+      "preload": false
+      },
+    path: 'search.xml'
+  };
+</script>
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/css/main.min.css">
+  
+  <style type="text/css">
+    pre,
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+    html {
+      font-family: sans-serif;
+    }
+    body {
+      font-family: sans-serif;
+    }
+    h1, h2, h3, h4, h5, figure {
+      font-family: sans-serif;
+    }
+    .menu-container{
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "",
+	     });
+	}); 
+	</script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+<body>
+<div class="single">
+<div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Search..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+<div id="page">
+<div class="header">
+  <div id="lx-aside" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg)" data-stellar-background-ratio="0.5">
+    <div class="overlay">
+      <a href="javascript:;" class="popup-trigger" title="search"><i class="menu-item-icon fa fa-search fa-fw"></i></a>
+      <div class="page-title">
+        <div class="avatar"><a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"></a></div>
+        <span>2026-02-03</span>
+        <h2>Mastering Or...</h2>
+        <div class="tags"><i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/AI/" rel="tag">AI</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Database-Connectivity/" rel="tag">Database Connectivity</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/MCP/" rel="tag">MCP</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Oracle/" rel="tag">Oracle</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/SQLcl/" rel="tag">SQLcl</a></div>
+        <div class="social-links">
+    <a href="https://github.com/kamusis" target="_blank" title="social-link"><i class="fa fa-github fa-fw"></i></a>
+    <a href="mailto:kamusis@gmail.com" target="_blank" title="social-link"><i class="fa fa-envelope fa-fw"></i></a>
+    <a href="https://www.linkedin.com/in/kamus/" target="_blank" title="social-link"><i class="fa fa-linkedin fa-fw"></i></a>
+    <a href="https://twitter.com/kamusis" target="_blank" title="social-link"><i class="fa fa-twitter fa-fw"></i></a>
+    <a href="https://www.instagram.com/kamusis/" target="_blank" title="social-link"><i class="fa fa-instagram fa-fw"></i></a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="lx-main-content">
+  <div class="lx-post">
+    <div class="lx-entry padding">
+      <div>
+        <h1 id="Mastering-Oracle-Database-Connectivity-for-SQLcl-MCP-Server"><a href="#Mastering-Oracle-Database-Connectivity-for-SQLcl-MCP-Server" class="headerlink" title="Mastering Oracle Database Connectivity for SQLcl MCP Server"></a>Mastering Oracle Database Connectivity for SQLcl MCP Server</h1><p>The <strong>SQLcl MCP Server</strong> is a powerful bridge that brings the capabilities of Oracle SQLcl to the world of AI agents and large language models (LLMs). By leveraging the <strong>Model Context Protocol (MCP)</strong>, it allows your AI environment to interact directly with Oracle Databases. However, for this interaction to be seamless and secure, proper connection management is essential.</p>
+<p>In this post, we’ll explore how to configure and persist database connections using the SQLcl connection store, ensuring your MCP server is always ready to execute queries.</p>
+<hr>
+<h2 id="Prerequisites-Getting-SQLcl"><a href="#Prerequisites-Getting-SQLcl" class="headerlink" title="Prerequisites: Getting SQLcl"></a>Prerequisites: Getting SQLcl</h2><p>Before you can configure your connections, you need to have SQLcl installed on your system. </p>
+<p>To download the latest version using a direct link, go to:<br><a target="_blank" rel="noopener" href="https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip">https://download.oracle.com/otn_software&#x2F;java&#x2F;sqldeveloper&#x2F;sqlcl-latest.zip</a></p>
+<p>This direct link is particularly useful for automating the setup as part of a script or a container build process.</p>
+<h3 id="Installation-and-Extraction"><a href="#Installation-and-Extraction" class="headerlink" title="Installation and Extraction"></a>Installation and Extraction</h3><p>Once the download is complete, simply unzip the package to your desired location:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Example for Linux/macOS</span></span><br><span class="line">unzip sqlcl-latest.zip -d ~/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Add to your PATH</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:~/sqlcl/bin</span><br></pre></td></tr></table></figure>
+
+<p>For Windows users, you can use your favorite extraction tool and add the <code>bin</code> directory to your System Environment Variables.</p>
+<hr>
+<h2 id="The-Heart-of-the-Configuration-dbtools"><a href="#The-Heart-of-the-Configuration-dbtools" class="headerlink" title="The Heart of the Configuration: ~/.dbtools"></a>The Heart of the Configuration: <code>~/.dbtools</code></h2><p>The SQLcl MCP Server doesn’t just “guess” how to connect to your database. It relies on a standardized connection store located in your <code>~/.dbtools</code> directory. This directory acts as the central repository for your saved connection descriptors and credentials.</p>
+<p>To manage these connections, we use two primary tools within SQLcl:</p>
+<ul>
+<li><code>connect</code>: The standard command to establish a session.</li>
+<li><code>connmgr</code>: The Connection Manager used to list, save, and organize your connections.</li>
+</ul>
+<hr>
+<h2 id="Step-by-Step-Persistent-Connection-Setup"><a href="#Step-by-Step-Persistent-Connection-Setup" class="headerlink" title="Step-by-Step: Persistent Connection Setup"></a>Step-by-Step: Persistent Connection Setup</h2><p>Setting up a connection involves moving from a “one-off” login to a “stored” configuration that the MCP server can reuse.</p>
+<h3 id="1-Launch-SQLcl"><a href="#1-Launch-SQLcl" class="headerlink" title="1. Launch SQLcl"></a>1. Launch SQLcl</h3><p>Start by opening SQLcl without a specific connection to enter the interactive shell:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">❯ sql /nolog</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Configure-Cloud-Credentials-for-Autonomous-Databases"><a href="#2-Configure-Cloud-Credentials-for-Autonomous-Databases" class="headerlink" title="2. Configure Cloud Credentials (for Autonomous Databases)"></a>2. Configure Cloud Credentials (for Autonomous Databases)</h3><p>If you are connecting to an Oracle Autonomous Database (ADB), you likely have a wallet file. Use the <code>SET CLOUDCONFIG</code> command to point SQLcl to your wallet:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span><span class="operator">&gt;</span> <span class="keyword">SET</span> CLOUDCONFIG <span class="operator">/</span>home<span class="operator">/</span>kamus<span class="operator">/</span>Wallet_AORA23AI_OSAKA.zip</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-Establish-and-Save-the-Connection"><a href="#3-Establish-and-Save-the-Connection" class="headerlink" title="3. Establish and Save the Connection"></a>3. Establish and Save the Connection</h3><p>This is the most critical step. You need to connect and then tell SQLcl to <strong>persist</strong> this connection with the password so the MCP server can use it later without manual intervention.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span><span class="operator">&gt;</span> <span class="keyword">connect</span> admin<span class="variable">@aora23ai_high</span></span><br><span class="line">Password? (<span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span>?) <span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span></span><br><span class="line">Connected.</span><br><span class="line"></span><br><span class="line"><span class="comment">-- Save the connection with a recognizable name (e.g., sqlcl_mcp)</span></span><br><span class="line"><span class="keyword">SQL</span><span class="operator">&gt;</span> conn <span class="operator">-</span>save sqlcl_mcp <span class="operator">-</span>savepwd admin<span class="variable">@aora23ai_high</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>-save sqlcl_mcp</code>: Assigns a friendly alias to this connection.</li>
+<li><code>-savepwd</code>: Stores the password securely in the connection store.</li>
+</ul>
+<h3 id="4-Verify-with-Connection-Manager"><a href="#4-Verify-with-Connection-Manager" class="headerlink" title="4. Verify with Connection Manager"></a>4. Verify with Connection Manager</h3><p>Once saved, you can verify that the connection is correctly registered in the store:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span><span class="operator">&gt;</span> connmgr list</span><br><span class="line">.</span><br><span class="line">└── sqlcl_mcp</span><br></pre></td></tr></table></figure>
+
+<p>Now, the entry <code>sqlcl_mcp</code> contains the username, the TNS descriptor, and the encrypted password, all mapped to a single name.</p>
+<hr>
+<h2 id="Putting-it-into-Action-An-Agent-Interaction"><a href="#Putting-it-into-Action-An-Agent-Interaction" class="headerlink" title="Putting it into Action: An Agent Interaction"></a>Putting it into Action: An Agent Interaction</h2><p>Once your connections are saved, an AI agent can autonomously discover and use them. Here’s a look at how an interaction unfolds when an agent needs to connect to your database:</p>
+<h3 id="The-Discovery-Phase"><a href="#The-Discovery-Phase" class="headerlink" title="The Discovery Phase"></a>The Discovery Phase</h3><blockquote>
+<p><strong>User</strong>: Use SQLcl MCP to connect to my database.</p>
+<p><strong>Agent</strong>: I need to connect to your database using SQLcl MCP. Let me check for available connections.</p>
+<p><em>The agent first tries a common default name:</em><br><code>mcp__sqlcl__connect(connection_name: &quot;orcl&quot;)</code> → ❌ <strong>Error</strong>: Connection not found.</p>
+<p><strong>Agent</strong>: I couldn’t find a default connection. Could you specify the name? Or I can try to find it myself.</p>
+<p><strong>User</strong>: List connections by yourself.</p>
+<p><strong>Agent</strong>: Scanning available connections…<br><code>mcp__sqlcl__list-connections(show_details: true)</code> → ✅ <strong>Found</strong>: <code>sqlcl_mcp</code></p>
+</blockquote>
+<h3 id="Establishing-the-Connection"><a href="#Establishing-the-Connection" class="headerlink" title="Establishing the Connection"></a>Establishing the Connection</h3><blockquote>
+<p><strong>Agent</strong>: Great! I found a saved connection named <code>sqlcl_mcp</code>. Establishing the session now…<br><code>mcp__sqlcl__connect(connection_name: &quot;sqlcl_mcp&quot;)</code> → ✅ <strong>Success</strong>!</p>
+<p><strong>Agent</strong>: Connected successfully to Oracle Database 23ai in READ WRITE mode.</p>
+</blockquote>
+<h3 id="Querying-Data"><a href="#Querying-Data" class="headerlink" title="Querying Data"></a>Querying Data</h3><blockquote>
+<p><strong>User</strong>: List my tables.</p>
+<p><strong>Agent</strong>: Let me retrieve the list of tables for you.<br><code>mcp__sqlcl__run-sql(sql: &quot;SELECT owner, table_name FROM all_tables ...&quot;)</code></p>
+<p><strong>Agent</strong>: You have several tables in your <code>ADMIN</code> schema:</p>
+<ul>
+<li><strong>Movies &amp; Entertainment</strong>: <code>MOVIES</code>, <code>ACTORS</code>, <code>STREAMS</code>, <code>GENRE</code></li>
+<li><strong>Business</strong>: <code>CUSTOMER</code>, <code>PIZZA_SHOP</code></li>
+<li><strong>System&#x2F;Logs</strong>: <code>DBTOOLS$EXECUTION_HISTORY</code>, <code>DBTOOLS$MCP_LOG</code></li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="Why-This-Matters-for-AI-Agents"><a href="#Why-This-Matters-for-AI-Agents" class="headerlink" title="Why This Matters for AI Agents"></a>Why This Matters for AI Agents</h2><p>When an AI agent (like Antigravity or any MCP-compatible client) uses the SQLcl MCP server, it needs a reliable way to authenticate. By naming your connection <code>sqlcl_mcp</code> (or any name you prefer), you can simply tell your MCP server to use that specific alias.</p>
+<p>This setup offers several benefits:</p>
+<ol>
+<li><strong>Security</strong>: Passwords are not stored in plain text in your agent’s configuration files.</li>
+<li><strong>Simplicity</strong>: You don’t need to pass complex TNS strings or wallet paths every time.</li>
+<li><strong>Portability</strong>: Your connection details stay in your local <code>~/.dbtools</code> directory, while your code&#x2F;agent configurations remain clean.</li>
+</ol>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Persisting your connections is the final piece of the puzzle in building a robust AI-to-Database workflow. By mastering the <code>connmgr</code> and the <code>-save</code> flags in SQLcl, you ensure that your SQLcl MCP Server is a reliable, high-performance gateway to your Oracle data.</p>
+<p><strong>Happy Querying!</strong></p>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="lx-navigation">
+	<div class="lx-cover next lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-l.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="#">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Next</span>
+						<h3>No newer post</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+        <div class="lx-cover prev lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-r.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2026/02/01/Moltbook-The-Rise-of-the-Agentic-Economy-Silicon-Sovereignty/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Prev</span>
+						<h3>Moltboo...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+
+</div>
+
+<footer>
+  <div>
+  Copyright &copy; 2026.<a href="/">Kamus' Notes</a><br>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme <a href="https://lx.js.org" target="_blank">Lx</a><br>
+  </div>
+</footer>
+
+</div>
+
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<div class="menu visibility">
+  <div class="menu-head">
+    <span class="layer">
+      <div class="col">
+        <div class="row for-pic">
+          <div class="profile-pic">
+            <a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"/></a>
+          </div>
+        </div>
+        <div class="row for-name">
+          <p>Kamus</p>
+          <span class="tagline">Hello, World!</span>
+        </div>
+      </div>
+    </span>
+  </div>
+  <nav class="menu-container">
+  <ul class="menu-items">
+    <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    <li><a href="/archives/"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+    
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-bookmark fa-fw"></i>Pages</span>
+        <ul>
+          <li><a href="/about/">About</a></li>
+        </ul>
+    </li>
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-link fa-fw"></i>Friends</span>
+        <ul>
+          <li> <a href="https://www.eygle.com/" target="_blank">Eygle</a></li>
+        <li> <a href="https://yangtingkun.net" target="_blank">Laoyang</a></li>
+        </ul>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/local.search.min.js"></script>
+
+</body>
+</html>

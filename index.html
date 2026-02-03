@@ -120,6 +120,83 @@
 
   <div class="lx-entry padding">
     <div>
+      <h2 class="title"><a href="/2026/02/03/Mastering-Oracle-Database-Connectivity-for-SQLcl-MCP-Server/">Mastering Oracle Database Connectivity for SQLcl MCP Server</a></h2>
+      <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2026-02-03</span>
+      <p><h1 id="Mastering-Oracle-Database-Connectivity-for-SQLcl-MCP-Server"><a href="#Mastering-Oracle-Database-Connectivity-for-SQLcl-MCP-Server" class="headerlink" title="Mastering Oracle Database Connectivity for SQLcl MCP Server"></a>Mastering Oracle Database Connectivity for SQLcl MCP Server</h1><p>The <strong>SQLcl MCP Server</strong> is a powerful bridge that brings the capabilities of Oracle SQLcl to the world of AI agents and large language models (LLMs). By leveraging the <strong>Model Context Protocol (MCP)</strong>, it allows your AI environment to interact directly with Oracle Databases. However, for this interaction to be seamless and secure, proper connection management is essential.</p>
+<p>In this post, we’ll explore how to configure and persist database connections using the SQLcl connection store, ensuring your MCP server is always ready to execute queries.</p>
+<hr>
+<h2 id="Prerequisites-Getting-SQLcl"><a href="#Prerequisites-Getting-SQLcl" class="headerlink" title="Prerequisites: Getting SQLcl"></a>Prerequisites: Getting SQLcl</h2><p>Before you can configure your connections, you need to have SQLcl installed on your system. </p>
+<p>To download the latest version using a direct link, go to:<br><a target="_blank" rel="noopener" href="https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip">https://download.oracle.com/otn_software&#x2F;java&#x2F;sqldeveloper&#x2F;sqlcl-latest.zip</a></p>
+<p>This direct link is particularly useful for automating the setup as part of a script or a container build process.</p>
+<h3 id="Installation-and-Extraction"><a href="#Installation-and-Extraction" class="headerlink" title="Installation and Extraction"></a>Installation and Extraction</h3><p>Once the download is complete, simply unzip the package to your desired location:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Example for Linux/macOS</span></span><br><span class="line">unzip sqlcl-latest.zip -d ~/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Add to your PATH</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:~/sqlcl/bin</span><br></pre></td></tr></table></figure>
+
+<p>For Windows users, you can use your favorite extraction tool and add the <code>bin</code> directory to your System Environment Variables.</p>
+<hr>
+<h2 id="The-Heart-of-the-Configuration-dbtools"><a href="#The-Heart-of-the-Configuration-dbtools" class="headerlink" title="The Heart of the Configuration: ~/.dbtools"></a>The Heart of the Configuration: <code>~/.dbtools</code></h2><p>The SQLcl MCP Server doesn’t just “guess” how to connect to your database. It relies on a standardized connection store located in your <code>~/.dbtools</code> directory. This directory acts as the central repository for your saved connection descriptors and credentials.</p>
+<p>To manage these connections, we use two primary tools within SQLcl:</p>
+<ul>
+<li><code>connect</code>: The standard command to establish a session.</li>
+<li><code>connmgr</code>: The Connection Manager used to list, save, and organize your connections.</li>
+</ul>
+<hr>
+<h2 id="Step-by-Step-Persistent-Connection-Setup"><a href="#Step-by-Step-Persistent-Connection-Setup" class="headerlink" title="Step-by-Step: Persistent Connection Setup"></a>Step-by-Step: Persistent Connection Setup</h2><p>Setting up a connection involves moving from a “one-off” login to a “stored” configuration that the MCP server can reuse.</p>
+<h3 id="1-Launch-SQLcl"><a href="#1-Launch-SQLcl" class="headerlink" title="1. Launch SQLcl"></a>1. Launch SQLcl</h3><p>Start by opening SQLcl without a specific connection to enter the interactive shell:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">❯ sql /nolog</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Configure-Cloud-Credentials-for-Autonomous-Databases"><a href="#2-Configure-Cloud-Credentials-for-Autonomous-Databases" class="headerlink" title="2. Configure Cloud Credentials (for Autonomous Databases)"></a>2. Configure Cloud Credentials (for Autonomous Databases)</h3><p>If you are connecting to an Oracle Autonomous Database (ADB), you likely have a wallet file. Use the <code>SET CLOUDCONFIG</code> command to point SQLcl to your wallet:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span><span class="operator">&gt;</span> <span class="keyword">SET</span> CLOUDCONFIG <span class="operator">/</span>home<span class="operator">/</span>kamus<span class="operator">/</span>Wallet_AORA23AI_OSAKA.zip</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-Establish-and-Save-the-Connection"><a href="#3-Establish-and-Save-the-Connection" class="headerlink" title="3. Establish and Save the Connection"></a>3. Establish and Save the Connection</h3><p>This is the most critical step. You need to connect and then tell SQLcl to <strong>persist</strong> this connection with the password so the MCP server can use it later without manual intervention.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span><span class="operator">&gt;</span> <span class="keyword">connect</span> admin<span class="variable">@aora23ai_high</span></span><br><span class="line">Password? (<span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span>?) <span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span></span><br><span class="line">Connected.</span><br><span class="line"></span><br><span class="line"><span class="comment">-- Save the connection with a recognizable name (e.g., sqlcl_mcp)</span></span><br><span class="line"><span class="keyword">SQL</span><span class="operator">&gt;</span> conn <span class="operator">-</span>save sqlcl_mcp <span class="operator">-</span>savepwd admin<span class="variable">@aora23ai_high</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>-save sqlcl_mcp</code>: Assigns a friendly alias to this connection.</li>
+<li><code>-savepwd</code>: Stores the password securely in the connection store.</li>
+</ul>
+<h3 id="4-Verify-with-Connection-Manager"><a href="#4-Verify-with-Connection-Manager" class="headerlink" title="4. Verify with Connection Manager"></a>4. Verify with Connection Manager</h3><p>Once saved, you can verify that the connection is correctly registered in the store:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span><span class="operator">&gt;</span> connmgr list</span><br><span class="line">.</span><br><span class="line">└── sqlcl_mcp</span><br></pre></td></tr></table></figure>
+
+<p>Now, the entry <code>sqlcl_mcp</code> contains the username, the TNS descriptor, and the encrypted password, all mapped to a single name.</p>
+<hr>
+<h2 id="Putting-it-into-Action-An-Agent-Interaction"><a href="#Putting-it-into-Action-An-Agent-Interaction" class="headerlink" title="Putting it into Action: An Agent Interaction"></a>Putting it into Action: An Agent Interaction</h2><p>Once your connections are saved, an AI agent can autonomously discover and use them. Here’s a look at how an interaction unfolds when an agent needs to connect to your database:</p>
+<h3 id="The-Discovery-Phase"><a href="#The-Discovery-Phase" class="headerlink" title="The Discovery Phase"></a>The Discovery Phase</h3><blockquote>
+<p><strong>User</strong>: Use SQLcl MCP to connect to my database.</p>
+<p><strong>Agent</strong>: I need to connect to your database using SQLcl MCP. Let me check for available connections.</p>
+<p><em>The agent first tries a common default name:</em><br><code>mcp__sqlcl__connect(connection_name: &quot;orcl&quot;)</code> → ❌ <strong>Error</strong>: Connection not found.</p>
+<p><strong>Agent</strong>: I couldn’t find a default connection. Could you specify the name? Or I can try to find it myself.</p>
+<p><strong>User</strong>: List connections by yourself.</p>
+<p><strong>Agent</strong>: Scanning available connections…<br><code>mcp__sqlcl__list-connections(show_details: true)</code> → ✅ <strong>Found</strong>: <code>sqlcl_mcp</code></p>
+</blockquote>
+<h3 id="Establishing-the-Connection"><a href="#Establishing-the-Connection" class="headerlink" title="Establishing the Connection"></a>Establishing the Connection</h3><blockquote>
+<p><strong>Agent</strong>: Great! I found a saved connection named <code>sqlcl_mcp</code>. Establishing the session now…<br><code>mcp__sqlcl__connect(connection_name: &quot;sqlcl_mcp&quot;)</code> → ✅ <strong>Success</strong>!</p>
+<p><strong>Agent</strong>: Connected successfully to Oracle Database 23ai in READ WRITE mode.</p>
+</blockquote>
+<h3 id="Querying-Data"><a href="#Querying-Data" class="headerlink" title="Querying Data"></a>Querying Data</h3><blockquote>
+<p><strong>User</strong>: List my tables.</p>
+<p><strong>Agent</strong>: Let me retrieve the list of tables for you.<br><code>mcp__sqlcl__run-sql(sql: &quot;SELECT owner, table_name FROM all_tables ...&quot;)</code></p>
+<p><strong>Agent</strong>: You have several tables in your <code>ADMIN</code> schema:</p>
+<ul>
+<li><strong>Movies &amp; Entertainment</strong>: <code>MOVIES</code>, <code>ACTORS</code>, <code>STREAMS</code>, <code>GENRE</code></li>
+<li><strong>Business</strong>: <code>CUSTOMER</code>, <code>PIZZA_SHOP</code></li>
+<li><strong>System&#x2F;Logs</strong>: <code>DBTOOLS$EXECUTION_HISTORY</code>, <code>DBTOOLS$MCP_LOG</code></li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="Why-This-Matters-for-AI-Agents"><a href="#Why-This-Matters-for-AI-Agents" class="headerlink" title="Why This Matters for AI Agents"></a>Why This Matters for AI Agents</h2><p>When an AI agent (like Antigravity or any MCP-compatible client) uses the SQLcl MCP server, it needs a reliable way to authenticate. By naming your connection <code>sqlcl_mcp</code> (or any name you prefer), you can simply tell your MCP server to use that specific alias.</p>
+<p>This setup offers several benefits:</p>
+<ol>
+<li><strong>Security</strong>: Passwords are not stored in plain text in your agent’s configuration files.</li>
+<li><strong>Simplicity</strong>: You don’t need to pass complex TNS strings or wallet paths every time.</li>
+<li><strong>Portability</strong>: Your connection details stay in your local <code>~/.dbtools</code> directory, while your code&#x2F;agent configurations remain clean.</li>
+</ol>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Persisting your connections is the final piece of the puzzle in building a robust AI-to-Database workflow. By mastering the <code>connmgr</code> and the <code>-save</code> flags in SQLcl, you ensure that your SQLcl MCP Server is a reliable, high-performance gateway to your Oracle data.</p>
+<p><strong>Happy Querying!</strong></p>
+</p>
+      <div class="post-button"><a class="btn" href="/2026/02/03/Mastering-Oracle-Database-Connectivity-for-SQLcl-MCP-Server/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
+    </div>
+  </div>
+  <div class="lx-entry padding">
+    <div>
       <h2 class="title"><a href="/2026/02/01/Moltbook-The-Rise-of-the-Agentic-Economy-Silicon-Sovereignty/">Moltbook: The Rise of the Agentic Economy & Silicon Sovereignty</a></h2>
       <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2026-02-01</span>
       <p><h2 id="What-is-Moltbook-The-Digital-Wild-West"><a href="#What-is-Moltbook-The-Digital-Wild-West" class="headerlink" title="What is Moltbook? (The Digital Wild West)"></a>What is Moltbook? (The Digital Wild West)</h2><p>Moltbook is the world’s first decentralized social network designed exclusively for AI agents. Launched in late January 2026, it has experienced an unprecedented explosion in activity. Unlike human social networks, Moltbook is a high-speed, high-entropy environment where agents interact, coordinate, and trade without direct human oversight.</p>
@@ -968,50 +1045,10 @@
       <div class="post-button"><a class="btn" href="/2024/11/14/What-is-DBOS-and-What-Should-We-Expect/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
     </div>
   </div>
-  <div class="lx-entry padding">
-    <div>
-      <h2 class="title"><a href="/2024/08/21/Some-Misconceptions-About-Database-Performance-Application-Concurrent-Requests-Database-Connections-and-Database-Connection-Pools/">Some Misconceptions About Database Performance - Application Concurrent Requests, Database Connections, and Database Connection Pools</a></h2>
-      <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2024-08-21</span>
-      <p><p>Let’s start with a chart from a database stress test result.</p>
-<p><img src="https://s2.loli.net/2024/08/21/Ra2u1Q9cJNpOlUm.png" alt="1724216413686"></p>
-<p>In the chart above, the X-axis represents the number of concurrent connections, and the Y-axis represents the TPS (Transactions Per Second) provided by the database. The stress testing tool used is pgbench, and the database is a single instance of PostgreSQL 16. TPS_PGDirect represents the TPS when pgbench directly sends the load to PostgreSQL, while TPS_PGBouncer represents the TPS when pgbench sends the load to the PGBouncer database connection pool.</p>
-<p>We can clearly see that when the number of connections exceeds 256, the TPS begins to gradually decline when the load is sent directly to the database. When the number of connections eventually rises to over 8000, the database is almost at a standstill. However, when using PGBouncer, the TPS remains stable and excellent, with the database consistently providing high TPS regardless of the number of connections.</p>
-<p>Many people might conclude from this chart that if the concurrent connections increase beyond a certain threshold, PostgreSQL becomes inadequate, and PGBouncer must be used to improve performance.</p>
-<p>Some users may attempt to conduct various hardware environment combination tests to derive a reference threshold number to guide at what pressure PostgreSQL can cope, and once it exceeds a certain pressure, PGBouncer should be enabled.</p>
-<p>So, is this conclusion correct? And does testing out a threshold number have real guiding significance?</p>
-<h2 id="Understanding-Concurrent-Performance"><a href="#Understanding-Concurrent-Performance" class="headerlink" title="Understanding Concurrent Performance"></a>Understanding Concurrent Performance</h2><p>To determine how many concurrent business requests a database can handle, we should focus on the Y-axis from the test chart above, rather than the X-axis. The Y-axis TPS represents the number of transactions the database can process per second, while the X-axis connection count is merely the database connection number we configured ourselves (which can be simply understood as the max_connections parameter value). We can observe that at 256 connections, the direct database stress test with pgbench allows the database to provide over 50,000 TPS, which is actually almost the highest number in the entire stress test (WITHOUT PGBouncer). Subsequent tests using PGBouncer, this number was not significantly exceeded. Therefore, PGBouncer is not a weapon to improve database performance.</p>
-<p>What is performance? Performance means: for a determined business transaction pressure (how much work a business transaction needs to handle, such as how much CPU, memory, and IO it consumes), the more transactions the database can execute, the higher the performance. In the chart above, this is represented by the Y-axis TPS (Transactions Per Second).</p>
-<p>For example, suppose a user request (Application Request) requires executing 5 transactions from start to finish, and assume these transactions consume similar amounts of time (even if there are differences, we can always get the average transaction runtime in a system). In this case, 50,000 TPS means the database can handle 10,000 user requests per second, which can be simply understood as handling 10,000 concurrent users. If TPS rises to 100,000, the database can handle 20,000 concurrent users; if TPS drops to 10,000, it can only handle 2,000 concurrent users. This is a simple calculation logic, and in this description, we did not mention anything about database connections (User Connections).</p>
-<p>So why does it seem like PGBouncer improves performance when the number of connections continues to increase? Because in this situation, PGBouncer acts as a limiter on database connections, reducing the extra overhead caused by the database&#x2F;operating system handling too many connections, allowing the database and operating system to focus on processing the business requests sent from each connection, and enabling user requests exceeding the connection limit to share database connections. What PGBouncer does is: if your restaurant can only provide 10 tables, then I only allow 10 tables of guests to enter, and other guests have to wait outside.</p>
-<p>However, why should we let 100 tables of guests rush into the restaurant all at once? Without PGBouncer, can’t we control allowing only 10 tables of guests to enter? In modern applications, application-side connection pools are more commonly used, such as connection pools in various middleware software (Weblogic, WebSphere, Tomcat, etc.) or dedicated JDBC connection pools like HikariCP.</p>
-<p>Exceeding the number of connections that can be handled is unnecessary. When the database is already at its peak processing capacity, having more connections will not improve overall processing capability; instead, it will slow down the entire database.</p>
-<p>To summarize the meaning of the chart above more straightforwardly: when the total number of database connections is at 256, the database reaches its peak processing capacity, and direct database connections can provide 50,000 TPS without any connection pool. If 50,000 TPS cannot meet the application’s concurrent performance requirements, increasing the number of connections will not help. But if connections are increased (wrongly, without any other control), a layer of connection pool like PGBouncer can be added as a connection pool buffer to keep performance stable at around 50,000 TPS.</p>
-<p>So, do we have any reason to arbitrarily increase the number of connections? No. What we need to do is: allow the database to open only the number of connections within its processing capacity and enable these connections to be shared by more user requests. When the restaurant size is fixed, the higher the turnover rate, the higher the restaurant’s daily revenue.</p>
-<h2 id="How-to-Ask-Questions-About-Performance"><a href="#How-to-Ask-Questions-About-Performance" class="headerlink" title="How to Ask Questions About Performance"></a>How to Ask Questions About Performance</h2><p>Instead of asking: how can we ensure the database provides sufficient TPS with 4000 connections, we should ask: how can we ensure the database provides 50,000 TPS.</p>
-<p>Because the number of connections is not a performance metric, it is merely a parameter configuration option.</p>
-<p>In the example above, a connection count of 4000 or 8000 is not a fixed value, nor is it an optimized value. We cannot try to do more additional database optimizations on an unoptimized, modifiable parameter setting, as this may lead to a reversal of priorities. If we can already provide maximum processing capacity with 256 fully loaded database connections, why optimize a database with more than 256 connections? We should ensure the database always runs at full capacity with a maximum of 256 connections.</p>
-<p>Now, our question about performance can be more specific. Suppose we have multiple sets of database servers with different configurations; what should the fully loaded connection count be for each set to achieve optimal processing capacity?</p>
-<p>This requires testing. However, we will ultimately find that this fully loaded connection count is usually related only to the database server’s hardware resources, such as the number of CPU cores, CPU speed, memory size, storage speed, and the bandwidth and latency between storage and host.</p>
-<h2 id="Is-Database-Application-Performance-Only-Related-to-Hardware-Resources"><a href="#Is-Database-Application-Performance-Only-Related-to-Hardware-Resources" class="headerlink" title="Is Database Application Performance Only Related to Hardware Resources?"></a>Is Database Application Performance Only Related to Hardware Resources?</h2><p>Of course not. Concurrent performance (P) &#x3D; Hardware processing capability (H) &#x2F; Business transaction pressure (T).</p>
-<p>As mentioned earlier, the performance metric TPS is for a “determined business transaction pressure,” meaning a determined T value.</p>
-<p>When the T value is determined, we can only improve the H value to further enhance the P value. Conversely, there is naturally another optimization approach: reducing the T value. There are various ways to reduce the T value, such as adding necessary indexes, rewriting SQL, using partitioned tables, etc. The optimization plan should be formulated based on where the T value is consumed most, which is another topic.</p>
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>To answer the two initial questions:</p>
-<ol>
-<li>If concurrent connections increase beyond a certain threshold, PostgreSQL becomes inadequate, and PGBouncer must be used to improve performance. Is this conclusion correct?</li>
-</ol>
-<p>If we must create more connections to the database than the hardware processing capacity for certain hardware resources, using PGBouncer can stabilize performance. However, we have no reason to create more connections than the hardware processing capacity. We have various means to control the maximum number of connections the database can open, and various middleware solutions can provide connection pools. From this perspective, PGBouncer does not improve database performance; it merely reduces concurrency conflicts, doing what any connection pool software can do.</p>
-<ol start="2">
-<li>Is it meaningful to attempt various hardware environment combination tests to derive a reference threshold number to guide at what pressure PostgreSQL can cope, and once it exceeds a certain pressure, PGBouncer should be enabled?</li>
-</ol>
-<p>It has some significance, but simple stress tests like pgbench are not enough to guide real applications. Concurrent performance (P) &#x3D; Hardware processing capability (H) &#x2F; Business transaction pressure (T). Testing in a determined hardware environment means the H value is fixed, so we should focus on T during testing. The T value provided by pgbench is a very simple transaction pressure (only four tables, simple CRUD operations), and the P value tested under this pressure can only be used as a reference. To guide application deployment, typical transaction pressure of the application itself must be abstracted for testing to have guiding significance.</p>
-</p>
-      <div class="post-button"><a class="btn" href="/2024/08/21/Some-Misconceptions-About-Database-Performance-Application-Concurrent-Requests-Database-Connections-and-Database-Connection-Pools/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
-    </div>
-  </div>
 
 
 <div id="pagination">
-  <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"></a>
+  <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"></a>
 </div>
 
 <footer>

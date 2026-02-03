@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=#58b77a>
+  <title>Kamus&#39; Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  <meta name="description" content="Expert insights and practical tips on openGauss, MogDB, Oracle, Linux, and cloud-native technologies. Elevate your database management and system administration skills with in-depth technical articles, tutorials, and best practices for real-world challenges.">
+  <link rel="canonical" href="https://www.kamusis.me/page/3/">
+  <meta property="og:site_name" content="Kamus' Notes">
+  <meta property="og:title" content="Kamus' Notes">
+  <meta property="og:description" content="Expert insights and practical tips on openGauss, MogDB, Oracle, Linux, and cloud-native technologies. Elevate your database management and system administration skills with in-depth technical articles, tutorials, and best practices for real-world challenges.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.kamusis.me/page/3/">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/cover.min.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kamus' Notes">
+  <meta name="twitter:description" content="Expert insights and practical tips on openGauss, MogDB, Oracle, Linux, and cloud-native technologies. Elevate your database management and system administration skills with in-depth technical articles, tutorials, and best practices for real-world challenges.">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/cover.min.jpeg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Kamus' Notes","url":"https://www.kamusis.me/"}</script>
+  <script id="hexo-configurations">
+  var CONFIG = {
+    root: '/',
+    theme: 'lx',
+    version: '0.4.4',
+    localsearch:{
+      "enable": true,
+      "trigger": "auto",
+      "top_n_per_article": 1,
+      "unescape": false,
+      "preload": false
+      },
+    path: 'search.xml'
+  };
+</script>
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/css/main.min.css">
+  
+  <style type="text/css">
+    pre,
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+    html {
+      font-family: sans-serif;
+    }
+    body {
+      font-family: sans-serif;
+    }
+    h1, h2, h3, h4, h5, figure {
+      font-family: sans-serif;
+    }
+    .menu-container{
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "",
+	     });
+	}); 
+	</script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+<body>
+<div id="page">
+<div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Search..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+<div class="header">
+  <div id="lx-aside" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/cover.min.jpeg)">
+    <div class="overlay">
+      <a href="javascript:;" class="popup-trigger" title="search"><i class="menu-item-icon fa fa-search fa-fw"></i></a>
+      <div class="featured">
+        <div class="avatar"><a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"></a></div>
+        <span>Kamus</span>
+        <h1>Kamus' Notes</h1>
+        <span>面朝大海，春暖花开</span>
+        <div class="social-links">
+    <a href="https://github.com/kamusis" target="_blank" title="social-link"><i class="fa fa-github fa-fw"></i></a>
+    <a href="mailto:kamusis@gmail.com" target="_blank" title="social-link"><i class="fa fa-envelope fa-fw"></i></a>
+    <a href="https://www.linkedin.com/in/kamus/" target="_blank" title="social-link"><i class="fa fa-linkedin fa-fw"></i></a>
+    <a href="https://twitter.com/kamusis" target="_blank" title="social-link"><i class="fa fa-twitter fa-fw"></i></a>
+    <a href="https://www.instagram.com/kamusis/" target="_blank" title="social-link"><i class="fa fa-instagram fa-fw"></i></a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="lx-main-content">
+  <div class="lx-post">
+
+  <div class="lx-entry padding">
+    <div>
+      <h2 class="title"><a href="/2024/05/27/Unlocking-the-Power-Key-Features-of-MogDB/">Unlocking the Power: Key Features of MogDB</a></h2>
+      <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2024-05-27</span>
+      <p><h2 id="Introduction-to-MogDB"><a href="#Introduction-to-MogDB" class="headerlink" title="Introduction to MogDB"></a>Introduction to MogDB</h2><p><a target="_blank" rel="noopener" href="https://www.mogdb.io/">MogDB</a> is a cutting-edge distributed relational database management system that offers an array of powerful features designed to meet the needs of modern businesses. With its high performance, availability, maintainability, compatibility, and AI capabilities, MogDB stands out as a top choice for database administrators, developers, and IT professionals.</p>
+<p>One of the key selling points of MogDB is its ability to deliver exceptional performance. This is achieved through various innovative features such as the <a target="_blank" rel="noopener" href="https://docs.mogdb.io/en/mogdb/v2.0/2-optimizer-cost-constants/">Cost-Based Optimizer</a> (CBO) optimizer, which intelligently chooses the most efficient execution plans for queries. Additionally, MogDB utilizes a <a target="_blank" rel="noopener" href="https://docs.mogdb.io/en/mogdb/v3.1/3-vectorized-engine/">vectorized engine</a> that processes data in batches instead of row by row, resulting in significant performance improvements. The <a target="_blank" rel="noopener" href="https://docs.mogdb.io/en/mogdb/v3.0/5-adaptive-compression">adaptive compression</a> feature further enhances performance by reducing storage requirements and minimizing I&#x2F;O operations.</p>
+<p>In terms of availability, MogDB offers robust solutions to ensure uninterrupted access to critical data. It supports <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Master-slave_replication">master-slave replication</a>, allowing for automatic failover in case of primary node failure. <a target="_blank" rel="noopener" href="https://docs.mogdb.io/en/mogdb/v2.1/2-logical-replication">Logical replication</a> enables real-time data synchronization across multiple databases, while <a target="_blank" rel="noopener" href="https://docs.mogdb.io/en/mogdb/v2.1/5-physical-backup">physical backup</a> provides reliable data protection. <a target="_blank" rel="noopener" href="https://docs.mogdb.io/en/mogdb/v3.0/9-delayed-replay">Delayed replay</a> allows for easy recovery from accidental data corruption or deletion.</p>
+<p>Maintaining a database can be complex and time-consuming. However, MogDB simplifies this process with its advanced maintainability features. The <a target="_blank" rel="noopener" href="https://docs.mogdb.io/en/mogdb/v3.0/upgrade-guide/">grey upgrade</a> feature allows for seamless upgrades without interrupting service availability. <a target="_blank" rel="noopener" href="https://docs.mogdb.io/en/mogdb/v3.1/3-slow-sql-diagnosis">Slow SQL diagnosis</a> helps identify and optimize poorly performing queries, improving overall system efficiency. <a target="_blank" rel="noopener" href="https://docs.mogdb.io/en/mogdb/v2.1/5-system-kpi-aided-diagnosis/">System KPI diagnosis</a> provides insights into system health and performance metrics, enabling proactive maintenance and troubleshooting. Fault diagnosis helps pinpoint issues quickly and accurately.</p>
+<p>Compatibility is another area where MogDB excels. It supports various SQL features and ensures compatibility with popular database systems such as Oracle and MySQL. This makes it easier for organizations to migrate their existing applications or leverage their existing SQL knowledge without major modifications.</p>
+<p>MogDB also boasts impressive AI capabilities that set it apart from traditional databases. The AI4DB feature enables autonomous database operations, automating routine tasks and optimizing performance based on machine learning algorithms. DB4AI allows for database-driven AI, empowering organizations to leverage their data for advanced analytics and machine learning applications. Additionally, the ABO optimizer intelligently adapts query execution plans based on real-time data statistics, further enhancing performance.</p>
+<h2 id="High-Performance-Features"><a href="#High-Performance-Features" class="headerlink" title="High Performance Features"></a>High Performance Features</h2><p>MogDB is designed to deliver exceptional performance, ensuring that your database operations run smoothly and efficiently. With its cutting-edge features, MogDB offers unparalleled speed and optimization capabilities.</p>
+<p>One of the key high-performance features of MogDB is the Cost-Based Optimizer (CBO). This optimizer leverages advanced algorithms and statistical models to determine the most efficient execution plan for queries. By analyzing query statistics and data distribution, the CBO can make intelligent decisions on how to execute queries in the most optimal way. This results in faster query processing times and improved overall performance.</p>
+<p>In addition to the CBO optimizer, MogDB also utilizes a vectorized engine. This engine takes advantage of modern CPU architectures by performing operations on entire vectors of data at once, rather than processing individual elements sequentially. As a result, complex queries that involve large datasets can be executed more quickly and efficiently.</p>
+<p>Another feature that contributes to MogDB’s high performance is adaptive compression. This feature dynamically adjusts the level of compression applied to data based on its characteristics and usage patterns. By compressing data when it is not actively being accessed or modified, MogDB can reduce storage requirements and improve I&#x2F;O performance. When data needs to be accessed or modified, it is decompressed on-the-fly for seamless operations.</p>
+<p>Parallel query optimization is yet another powerful feature offered by MogDB. This feature allows queries to be divided into smaller tasks that can be executed simultaneously across multiple cores or nodes in a distributed environment. By leveraging parallelism, MogDB can significantly speed up query processing times for large datasets or complex queries.</p>
+<p>With these high-performance features combined, MogDB ensures that your database operations are lightning-fast and efficient. Whether you’re running simple CRUD operations or complex analytical queries, you can rely on MogDB to deliver exceptional performance every time.</p>
+<p>It’s worth noting that while these high-performance features greatly enhance the speed and efficiency of MogDB, they do not compromise on data integrity or reliability. MogDB is built with a strong focus on ACID (Atomicity, Consistency, Isolation, Durability) principles, ensuring that your data remains consistent and reliable even under high-performance workloads.</p>
+<h2 id="High-Availability-Features"><a href="#High-Availability-Features" class="headerlink" title="High Availability Features"></a>High Availability Features</h2><p>Ensuring high availability is crucial for any database management system, and MogDB excels in this aspect with its robust set of features. Let’s dive into the key high availability features that make MogDB a reliable choice for businesses.</p>
+<p><strong>Master-slave replication for data redundancy</strong></p>
+<p>MogDB offers master-slave replication, a powerful feature that enhances data redundancy and fault tolerance. With this feature, changes made to the master node are automatically replicated to one or more slave nodes. In the event of a failure or outage on the master node, one of the slave nodes can seamlessly take over as the new master, ensuring uninterrupted service availability. This replication mechanism not only provides data redundancy but also improves read scalability by allowing read operations to be distributed across multiple nodes.</p>
+<p><strong>Logical replication for real-time data synchronization</strong></p>
+<p>In addition to master-slave replication, MogDB supports logical replication, enabling real-time data synchronization between databases. This feature allows specific tables or even subsets of tables to be replicated from one database instance to another. By capturing and propagating changes at the logical level rather than replicating entire physical blocks, logical replication minimizes network traffic and reduces latency. It enables businesses to maintain up-to-date replicas of their databases for reporting purposes or offloading read-intensive workloads without impacting the performance of the primary database.</p>
+<p><strong>Physical backup for data protection</strong></p>
+<p>Data protection is paramount in any database system, and MogDB addresses this need through its physical backup feature. With physical backups, administrators can create full copies of their databases at a specific point in time. These backups capture both the schema and data files, ensuring comprehensive recovery options in case of hardware failures, user errors, or other catastrophic events. MogDB’s physical backup mechanism provides flexibility by allowing backups to be stored on different storage devices or even transferred to remote locations for disaster recovery purposes.</p>
+<p><strong>Delayed replay for data recovery</strong></p>
+<p>MogDB includes a delayed replay feature that allows administrators to recover data from a specific point in time. This feature is particularly useful in scenarios where accidental data deletions or modifications occur and need to be rolled back. By leveraging the transaction log, MogDB can replay changes up until a certain point, effectively restoring the database to its state prior to the incident. The delayed replay feature provides an additional layer of protection against human errors or malicious activities, ensuring that businesses can quickly recover from data-related incidents.</p>
+<p>In summary, MogDB offers a comprehensive set of high availability features that guarantee reliability and continuous operation for businesses. The master-slave replication ensures data redundancy and read scalability, while logical replication enables real-time data synchronization for reporting or offloading purposes. Physical backups and delayed replay provide robust data protection mechanisms, allowing administrators to recover from hardware failures or user errors effectively. With these high availability features, MogDB empowers organizations with the confidence that their critical databases will remain accessible and resilient even in the face of unexpected challenges.</p>
+<p>*[E-A-T]: Expertise, Authoritativeness, Trustworthiness</p>
+<h2 id="Maintainability-Features"><a href="#Maintainability-Features" class="headerlink" title="Maintainability Features"></a>Maintainability Features</h2><p>Maintainability is a crucial aspect of any database management system, and MogDB excels in this area with its array of innovative features. These features are designed to ensure seamless system updates, optimize performance, monitor and analyze system KPIs, and resolve any potential faults. Let’s explore these maintainability features in detail.</p>
+<p>One of the standout maintainability features of MogDB is the grey upgrade capability. This feature allows for seamless system updates without interrupting ongoing operations. With grey upgrade, administrators can apply patches, upgrades, or even major version changes to MogDB without causing downtime or disrupting user access. This ensures that businesses can keep their databases up-to-date with the latest enhancements and security fixes while minimizing any potential disruptions to their operations.</p>
+<p>Another essential maintainability feature offered by MogDB is slow SQL diagnosis. Slow SQL queries can significantly impact database performance and user experience. MogDB addresses this issue by providing comprehensive tools for identifying and optimizing slow SQL queries. The system analyzes query execution plans, identifies bottlenecks, and suggests optimizations to improve query performance. By pinpointing problematic queries and optimizing them, administrators can enhance overall database performance and ensure smooth operation.</p>
+<p>System KPI diagnosis is another vital component of MogDB’s maintainability arsenal. Monitoring key performance indicators (KPIs) is crucial for understanding the health and efficiency of a database system. MogDB provides robust tools for monitoring and analyzing various KPIs such as CPU utilization, memory usage, disk I&#x2F;O, network traffic, and more. Administrators can set up custom alerts based on predefined thresholds to proactively identify any anomalies or potential issues before they impact the system’s performance or availability.</p>
+<p>In addition to diagnosing slow SQL queries and monitoring KPIs, MogDB also offers fault diagnosis capabilities. When an issue arises within the database system, it is essential to quickly identify the root cause and resolve it efficiently. MogDB provides advanced diagnostic tools that help administrators identify and troubleshoot various types of faults, including hardware failures, network issues, software bugs, or configuration problems. By quickly identifying and resolving faults, administrators can minimize downtime and ensure the continuous availability of their database system.</p>
+<h2 id="Compatibility-Features"><a href="#Compatibility-Features" class="headerlink" title="Compatibility Features"></a>Compatibility Features</h2><p>MogDB offers a wide range of compatibility features that make it a versatile and flexible choice for database administrators, developers, and IT professionals. One of the key compatibility features is its support for various SQL features. With MogDB, you can leverage the full power of SQL and take advantage of advanced querying capabilities to meet your specific business needs.</p>
+<p>In addition to its support for SQL features, MogDB also provides seamless compatibility with Oracle databases. This compatibility feature allows for easy migration from Oracle to MogDB without any major disruptions or changes to your existing applications. The transition process is smooth and hassle-free, ensuring that you can quickly start benefiting from the high-performance and highly available nature of MogDB.</p>
+<p>Another compatibility feature offered by MogDB is its support for MySQL databases. This means that you can seamlessly integrate MogDB into your existing MySQL infrastructure without any major modifications. Whether you are running applications that rely on MySQL or have data stored in MySQL databases, MogDB ensures a seamless integration process, allowing you to leverage the advanced capabilities and performance enhancements provided by MogDB.</p>
+<p>The compatibility features of MogDB not only enable smooth transitions and integrations but also ensure that your existing applications continue to function seamlessly with minimal changes required. This level of compatibility reduces the effort and time required for migration or integration projects, allowing you to focus on other critical aspects of your business.</p>
+<p>With its comprehensive set of compatibility features, MogDB provides a robust solution that meets the diverse needs of different industries and applications. Whether you are working with complex SQL queries, migrating from Oracle databases, or integrating with MySQL infrastructure, MogDB offers the flexibility and reliability needed to ensure a successful deployment.</p>
+<h2 id="AI-Capabilities"><a href="#AI-Capabilities" class="headerlink" title="AI Capabilities"></a>AI Capabilities</h2><p>MogDB stands out among other distributed relational database management systems due to its advanced AI capabilities. These capabilities empower organizations to leverage the power of artificial intelligence for autonomous database operations, database-driven AI, and improved performance through the ABO optimizer.</p>
+<h3 id="AI4DB-for-Autonomous-Database-Operations"><a href="#AI4DB-for-Autonomous-Database-Operations" class="headerlink" title="AI4DB for Autonomous Database Operations"></a>AI4DB for Autonomous Database Operations</h3><p>With MogDB’s AI4DB feature, organizations can enhance their operational efficiency by automating various database tasks. This includes automated performance tuning, query optimization, and workload management. The AI algorithms embedded within MogDB continuously monitor the system’s performance metrics and automatically adjust configurations to optimize resource allocation and improve overall database performance.</p>
+<p>AI4DB also plays a crucial role in self-healing mechanisms. It can detect anomalies or potential issues within the database environment and take proactive measures to resolve them before they impact critical business operations. By leveraging machine learning algorithms, MogDB can identify patterns in historical data and predict potential failures or bottlenecks, allowing administrators to take preventive actions.</p>
+<p>Furthermore, AI4DB enables intelligent data compression techniques that optimize storage utilization without compromising query performance. By analyzing data access patterns and applying advanced compression algorithms, MogDB reduces storage costs while ensuring fast data retrieval.</p>
+<h3 id="DB4AI-for-Database-Driven-AI"><a href="#DB4AI-for-Database-Driven-AI" class="headerlink" title="DB4AI for Database-Driven AI"></a>DB4AI for Database-Driven AI</h3><p>MogDB’s DB4AI feature allows organizations to seamlessly integrate their databases with artificial intelligence applications. This empowers businesses to unlock valuable insights from their vast amounts of structured and unstructured data.</p>
+<p>By providing native support for popular machine learning frameworks such as TensorFlow and PyTorch, MogDB simplifies the process of training and deploying AI models directly within the database environment. This eliminates the need for complex data pipelines or costly data transfers between different systems.</p>
+<p>With DB4AI, organizations can leverage the full potential of their databases by performing real-time analytics on large volumes of data. They can train predictive models using historical data stored in MogDB and make accurate predictions based on real-time information ingested into the database. This enables businesses to make data-driven decisions faster and gain a competitive edge in today’s fast-paced market.</p>
+<h3 id="ABO-Optimizer-for-Improved-Performance"><a href="#ABO-Optimizer-for-Improved-Performance" class="headerlink" title="ABO Optimizer for Improved Performance"></a>ABO Optimizer for Improved Performance</h3><p>MogDB’s AI capabilities extend to its query optimization engine through the Adaptive Bitwise Optimization (ABO) optimizer. This innovative feature leverages machine learning techniques to intelligently optimize query execution plans based on historical performance data.</p>
+<p>The ABO optimizer continuously analyzes query patterns, execution statistics, and system resources to identify optimal query plans. By learning from past experiences, it can adaptively adjust execution strategies to improve overall query performance. This results in faster response times and more efficient resource utilization.</p>
+<p>Furthermore, the ABO optimizer reduces the need for manual tuning by automatically selecting the most appropriate join methods, access paths, and index usage based on the characteristics of each query. This simplifies database administration tasks and allows administrators to focus on higher-level optimizations rather than fine-tuning individual queries.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>The key features of MogDB make it a powerful and versatile option for database administrators, developers, and IT professionals. Its high performance capabilities, such as the CBO optimizer, vectorized engine, adaptive compression, and parallel query optimization, ensure that users can process large amounts of data quickly and efficiently. This is crucial in today’s fast-paced business environment where time is of the essence.</p>
+<p>Furthermore, MogDB offers high availability features that guarantee uninterrupted access to critical data. The master-slave replication, logical replication, physical backup, and delayed replay functionalities ensure that data is always accessible even in the event of system failures or disasters. This level of reliability instills confidence in users and provides peace of mind knowing that their data is safe.</p>
+<p>Maintainability is another key aspect of MogDB. With features like grey upgrade, slow SQL diagnosis, system KPI diagnosis, and fault diagnosis tools, administrators can easily identify and resolve issues within the database system. This streamlines maintenance processes and minimizes downtime for businesses.</p>
+<p>Compatibility with various SQL features as well as Oracle and MySQL compatibility allows for seamless integration with existing systems and applications. This eliminates the need for extensive modifications or rewrites when migrating from other database management systems to MogDB.</p>
+<p>In addition to these impressive features, MogDB also offers AI capabilities through AI4DB for autonomous database operations and DB4AI for database-driven AI. These advanced capabilities enable users to leverage artificial intelligence technologies within their databases to enhance performance and gain valuable insights from their data.</p>
+<p>Overall, MogDB stands out as a highly performant, highly available, easy-to-use distributed relational database management system with a wide range of features tailored to meet the needs of modern businesses. Its compatibility with existing systems and applications combined with its AI capabilities make it an attractive choice for organizations across industries. Whether you are a database administrator looking for improved performance or a developer seeking seamless integration options, MogDB has you covered. Trust in MogDB to unlock the power of your data.</p>
+</p>
+      <div class="post-button"><a class="btn" href="/2024/05/27/Unlocking-the-Power-Key-Features-of-MogDB/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
+    </div>
+  </div>
+
+
+<div id="pagination">
+  <a class="extend prev" rel="prev" href="/page/2/"></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+</div>
+
+<footer>
+  <div>
+  Copyright &copy; 2026.<a href="/">Kamus' Notes</a><br>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme <a href="https://lx.js.org" target="_blank">Lx</a><br>
+  </div>
+</footer>
+
+  </div>
+</div>
+</div>
+
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<div class="menu visibility">
+  <div class="menu-head">
+    <span class="layer">
+      <div class="col">
+        <div class="row for-pic">
+          <div class="profile-pic">
+            <a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"/></a>
+          </div>
+        </div>
+        <div class="row for-name">
+          <p>Kamus</p>
+          <span class="tagline">Hello, World!</span>
+        </div>
+      </div>
+    </span>
+  </div>
+  <nav class="menu-container">
+  <ul class="menu-items">
+    <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    <li><a href="/archives/"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+    
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-bookmark fa-fw"></i>Pages</span>
+        <ul>
+          <li><a href="/about/">About</a></li>
+        </ul>
+    </li>
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-link fa-fw"></i>Friends</span>
+        <ul>
+          <li> <a href="https://www.eygle.com/" target="_blank">Eygle</a></li>
+        <li> <a href="https://yangtingkun.net" target="_blank">Laoyang</a></li>
+        </ul>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/local.search.min.js"></script>
+
+</body>
+</html>
