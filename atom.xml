@@ -70,9 +70,9 @@
     
     
     
-    <category term="Oracle" scheme="https://www.kamusis.me/tags/Oracle/"/>
-    
     <category term="AI" scheme="https://www.kamusis.me/tags/AI/"/>
+    
+    <category term="Oracle" scheme="https://www.kamusis.me/tags/Oracle/"/>
     
     <category term="SQLcl" scheme="https://www.kamusis.me/tags/SQLcl/"/>
     
@@ -241,6 +241,8 @@
     
     
     
+    <category term="AI" scheme="https://www.kamusis.me/tags/AI/"/>
+    
     <category term="Deno" scheme="https://www.kamusis.me/tags/Deno/"/>
     
     <category term="JavaScript" scheme="https://www.kamusis.me/tags/JavaScript/"/>
@@ -248,8 +250,6 @@
     <category term="TypeScript" scheme="https://www.kamusis.me/tags/TypeScript/"/>
     
     <category term="Agentic Coding" scheme="https://www.kamusis.me/tags/Agentic-Coding/"/>
-    
-    <category term="AI" scheme="https://www.kamusis.me/tags/AI/"/>
     
   </entry>
   
@@ -274,6 +274,8 @@
     
     
     
+    <category term="AI" scheme="https://www.kamusis.me/tags/AI/"/>
+    
     <category term="Deno" scheme="https://www.kamusis.me/tags/Deno/"/>
     
     <category term="JavaScript" scheme="https://www.kamusis.me/tags/JavaScript/"/>
@@ -281,8 +283,6 @@
     <category term="TypeScript" scheme="https://www.kamusis.me/tags/TypeScript/"/>
     
     <category term="Agentic Coding" scheme="https://www.kamusis.me/tags/Agentic-Coding/"/>
-    
-    <category term="AI" scheme="https://www.kamusis.me/tags/AI/"/>
     
   </entry>
   
