@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://www.kamusis.me/2026/02/03/Mastering-Oracle-Database-Connectivity-for-SQLcl-MCP-Server/</loc>
+    <loc>https://www.kamusis.me/2026/02/22/Built-in-Multi-Agent-Grok-4-2-0-When-LLMs-Learn-Self-Play-and-Real-Time-Evolution/</loc>
     
     <lastmod>2026-02-25</lastmod>
     
@@ -11,9 +11,9 @@
   </url>
   
   <url>
-    <loc>https://www.kamusis.me/2026/02/22/Built-in-Multi-Agent-Grok-4-2-0-When-LLMs-Learn-Self-Play-and-Real-Time-Evolution/</loc>
+    <loc>https://www.kamusis.me/2026/02/03/Mastering-Oracle-Database-Connectivity-for-SQLcl-MCP-Server/</loc>
     
-    <lastmod>2026-02-22</lastmod>
+    <lastmod>2026-02-25</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -227,41 +227,6 @@
 
   
   <url>
-    <loc>https://www.kamusis.me/tags/AI/</loc>
-    <lastmod>2026-02-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.kamusis.me/tags/LLM/</loc>
-    <lastmod>2026-02-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.kamusis.me/tags/Grok/</loc>
-    <lastmod>2026-02-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.kamusis.me/tags/Multi-Agent/</loc>
-    <lastmod>2026-02-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.kamusis.me/tags/xAI/</loc>
-    <lastmod>2026-02-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.kamusis.me/tags/VPN/</loc>
     <lastmod>2026-02-25</lastmod>
     <changefreq>weekly</changefreq>
@@ -367,6 +332,41 @@
   </url>
   
   <url>
+    <loc>https://www.kamusis.me/tags/AI/</loc>
+    <lastmod>2026-02-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.kamusis.me/tags/LLM/</loc>
+    <lastmod>2026-02-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.kamusis.me/tags/Grok/</loc>
+    <lastmod>2026-02-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.kamusis.me/tags/Multi-Agent/</loc>
+    <lastmod>2026-02-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.kamusis.me/tags/xAI/</loc>
+    <lastmod>2026-02-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.kamusis.me/tags/Oracle-Compatibility/</loc>
     <lastmod>2026-02-25</lastmod>
     <changefreq>weekly</changefreq>
@@ -444,14 +444,7 @@
   </url>
   
   <url>
-    <loc>https://www.kamusis.me/tags/Hexo/</loc>
-    <lastmod>2026-02-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.kamusis.me/tags/Github-Pages/</loc>
+    <loc>https://www.kamusis.me/tags/Windows/</loc>
     <lastmod>2026-02-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -459,13 +452,6 @@
   
   <url>
     <loc>https://www.kamusis.me/tags/WSL/</loc>
-    <lastmod>2026-02-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.kamusis.me/tags/Windows/</loc>
     <lastmod>2026-02-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -493,7 +479,14 @@
   </url>
   
   <url>
-    <loc>https://www.kamusis.me/tags/Database-Migration/</loc>
+    <loc>https://www.kamusis.me/tags/Hexo/</loc>
+    <lastmod>2026-02-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.kamusis.me/tags/Github-Pages/</loc>
     <lastmod>2026-02-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -508,20 +501,6 @@
   
   <url>
     <loc>https://www.kamusis.me/tags/moltbook/</loc>
-    <lastmod>2026-02-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.kamusis.me/tags/Database/</loc>
-    <lastmod>2026-02-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.kamusis.me/tags/Performance/</loc>
     <lastmod>2026-02-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -550,6 +529,27 @@
   
   <url>
     <loc>https://www.kamusis.me/tags/AI-Coding/</loc>
+    <lastmod>2026-02-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.kamusis.me/tags/Database-Migration/</loc>
+    <lastmod>2026-02-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.kamusis.me/tags/Database/</loc>
+    <lastmod>2026-02-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.kamusis.me/tags/Performance/</loc>
     <lastmod>2026-02-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
