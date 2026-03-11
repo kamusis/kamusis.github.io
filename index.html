@@ -120,6 +120,174 @@
 
   <div class="lx-entry padding">
     <div>
+      <h2 class="title"><a href="/2026/03/11/Layered-Intelligence-in-the-AI-Era-The-Design-Philosophy-of-Agent-Skill-Architecture/">Layered Intelligence in the AI Era: The Design Philosophy of Agent-Skill Architecture</a></h2>
+      <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2026-03-11</span>
+      <p><h1 id="Layered-Intelligence-in-the-AI-Era-The-Design-Philosophy-of-Agent-Skill-Architecture"><a href="#Layered-Intelligence-in-the-AI-Era-The-Design-Philosophy-of-Agent-Skill-Architecture" class="headerlink" title="Layered Intelligence in the AI Era: The Design Philosophy of Agent-Skill Architecture"></a>Layered Intelligence in the AI Era: The Design Philosophy of Agent-Skill Architecture</h1><h2 id="Introduction-A-Database-Operations-Scenario"><a href="#Introduction-A-Database-Operations-Scenario" class="headerlink" title="Introduction: A Database Operations Scenario"></a>Introduction: A Database Operations Scenario</h2><p>It’s 3:00 AM, and a production database alert goes off.</p>
+<p><strong>The Traditional Approach</strong> (Status Quo):</p>
+<ol>
+<li>The On-call DBA is woken up by a phone call.</li>
+<li>VPN connection → Jump Server → Production Server.</li>
+<li>Manually execute 10+ diagnostic SQL queries.</li>
+<li>Stare at dense query results in a terminal window.</li>
+<li>Rely on intuition to identify the problem, perhaps digging through documentation or historical tickets.</li>
+<li>Organize the data and write a diagnostic report.</li>
+<li><strong>Total elapsed time: 30-60 minutes</strong>, while praying for no human error.</li>
+</ol>
+<p><strong>With a Generic AI Assistant</strong> (An incremental improvement):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; ChatGPT, <span class="built_in">help</span> me analyze the performance issues on this database.</span><br><span class="line">&gt; [Paste a mountain of SQL query results]</span><br><span class="line"></span><br><span class="line"><span class="comment"># AI Reply: Based on the information provided, it might be...</span></span><br><span class="line"><span class="comment"># But the AI doesn&#x27;t know which SQL to execute next.</span></span><br><span class="line"><span class="comment"># It can&#x27;t connect directly to the database.</span></span><br><span class="line"><span class="comment"># And it can&#x27;t analyze multiple dimensions in parallel.</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>The Agent-Skill Architecture</strong> (Our solution):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; Background: Start yashandb-ops agent, check <span class="string">&#x27;dev-kamus&#x27;</span> database space usage.</span><br><span class="line">&gt; Also, start a yashandb-ops agent to check database <span class="built_in">wait</span> events.</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2 minutes later, two complete diagnostic reports are presented simultaneously.</span></span><br><span class="line"><span class="comment"># Including: data analysis, root cause diagnosis, optimization suggestions, and executable SQL.</span></span><br></pre></td></tr></table></figure>
+
+<p>This isn’t science fiction; it’s a real-world scenario we just verified. Reducing the time from 30 minutes to 2 minutes, from serial to parallel, and from manual judgment to intelligent analysis—behind it all is a meticulously designed <strong>Agent-Skill Layered Architecture</strong>.</p>
+<h2 id="I-The-Three-Eras-of-Operations"><a href="#I-The-Three-Eras-of-Operations" class="headerlink" title="I. The Three Eras of Operations"></a>I. The Three Eras of Operations</h2><h3 id="1-1-The-Traditional-Era-Manual-Scripts-Manually-Coded-Products"><a href="#1-1-The-Traditional-Era-Manual-Scripts-Manually-Coded-Products" class="headerlink" title="1.1 The Traditional Era: Manual + Scripts + Manually Coded Products"></a>1.1 The Traditional Era: Manual + Scripts + Manually Coded Products</h3><p>Most enterprises today use mature operations products, yet we still consider this the “Traditional Era.” Moving from manual commands to scripts and UIs is progress, but the capability behind these products remains <strong>manually engineered</strong>, not <strong>autonomously understood and invoked by machines</strong>.</p>
+<p>Let’s look at the evolution: Purely manual → Scripting → Operations Products.</p>
+<p><strong>The DBA’s Manual Workflow</strong>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># DBA hand-cranked workflow</span></span><br><span class="line">$ ssh dba@prod-db-server</span><br><span class="line">$ sqlplus / as sysdba</span><br><span class="line"></span><br><span class="line">SQL&gt; -- Check tablespaces</span><br><span class="line">SQL&gt; SELECT tablespace_name, ...</span><br><span class="line">     -- 50 lines of SQL</span><br><span class="line"></span><br><span class="line">SQL&gt; -- Check <span class="built_in">wait</span> events</span><br><span class="line">SQL&gt; SELECT wait_class, event, ...</span><br><span class="line">     -- Another 50 lines of SQL</span><br><span class="line"><span class="comment"># Then manually organize data in Excel, write reports...</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>The Scripting Attempt</strong>:<br>Scripts solved repetition but introduced new problems:</p>
+<ul>
+<li><strong>Lack of Intelligence</strong>: Rigid execution without the ability to adjust based on results.</li>
+<li><strong>Maintenance Hell</strong>: SQL logic scattered across various script files.</li>
+<li><strong>Unreadable Results</strong>: Output is raw text and requires manual interpretation.</li>
+<li><strong>Zero Interaction</strong>: Cannot drill down based on initial findings.</li>
+</ul>
+<p>Platform like <code>pgAdmin</code>, <code>Oracle Enterprise Manager</code>, or <code>Prometheus + Grafana</code> encapsulate scripts into a friendlier UI, but the core remains: experts <strong>hard-code the logic line by line</strong>.</p>
+<p>In essence, the traditional paradigm is:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">if Metric A &gt; Threshold:</span><br><span class="line">    Alert</span><br><span class="line">elif Metric B is abnormal:</span><br><span class="line">    Show predefined dashboard</span><br><span class="line">else:</span><br><span class="line">    Wait for human judgment</span><br></pre></td></tr></table></figure>
+
+<p>These systems handle only what the designer anticipated. They can “display” but not “understand”; “alert” but not “diagnose”.</p>
+<p><strong>The Divide</strong>: The difference between the traditional era and the AI era isn’t “whether you have automated products,” but rather <strong>“is the capability hard-coded, or is it encapsulated into a Skill that an Agent can invoke dynamically?”</strong></p>
+<h3 id="1-2-The-Generic-AI-Assistant-Era-Intelligent-but-Not-Professional"><a href="#1-2-The-Generic-AI-Assistant-Era-Intelligent-but-Not-Professional" class="headerlink" title="1.2 The Generic AI Assistant Era: Intelligent, but Not Professional"></a>1.2 The Generic AI Assistant Era: Intelligent, but Not Professional</h3><p>ChatGPT and Claude give DBAs hope, but practical issues remain:</p>
+<ul>
+<li><strong>No Active Execution</strong>: AI acts as “advanced documentation,” requiring humans to run SQL and paste results.</li>
+<li><strong>Context Pollution</strong>: Long query results fill the context window, causing the AI to lose the thread.</li>
+<li><strong>Lack of Domain Depth</strong>: Generic AI knows “what” things are but lacks specific diagnostic SQLs and expert optimization experience.</li>
+<li><strong>Serial Execution</strong>: Cannot handle multiple dimensions (space, performance, locks) simultaneously in a single chat thread.</li>
+</ul>
+<p><strong>The RAG Limitation</strong>: Many look to RAG (Retrieval-Augmented Generation) as the final answer. While RAG increases knowledge density, it solves <strong>Knowledge Retrieval</strong>, not <strong>Execution and Orchestration</strong>. RAG is a vital component, but not the ultimate architecture. It moves AI from “generic answers” to “documented answers,” but not yet to “task completion.”</p>
+<h3 id="1-3-The-Agent-Skill-Architecture-Era-Professional-Intelligent-Parallel"><a href="#1-3-The-Agent-Skill-Architecture-Era-Professional-Intelligent-Parallel" class="headerlink" title="1.3 The Agent-Skill Architecture Era: Professional + Intelligent + Parallel"></a>1.3 The Agent-Skill Architecture Era: Professional + Intelligent + Parallel</h3><p>This is the architecture we are introducing. Here is a comparison:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Dimension</th>
+<th align="left">Traditional Ops</th>
+<th align="left">Generic AI Assistant</th>
+<th align="left">Agent-Skill Architecture</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Execution</strong></td>
+<td align="left">Manual</td>
+<td align="left">AI Guided, Human Executed</td>
+<td align="left">AI Auto-Executed</td>
+</tr>
+<tr>
+<td align="left"><strong>Knowledge Depth</strong></td>
+<td align="left">Individual Experience</td>
+<td align="left">Generic Knowledge</td>
+<td align="left">Domain Expert Level</td>
+</tr>
+<tr>
+<td align="left"><strong>Parallelism</strong></td>
+<td align="left">None (one pair of hands)</td>
+<td align="left">None (Serial chat)</td>
+<td align="left">Native Support</td>
+</tr>
+<tr>
+<td align="left"><strong>Response Speed</strong></td>
+<td align="left">30-60 minutes</td>
+<td align="left">15-30 minutes</td>
+<td align="left">2-5 minutes</td>
+</tr>
+<tr>
+<td align="left"><strong>Consistency</strong></td>
+<td align="left">Varies by person</td>
+<td align="left">Decent</td>
+<td align="left">Fully Consistent</td>
+</tr>
+<tr>
+<td align="left"><strong>Error Rate</strong></td>
+<td align="left">Medium (Fatigue&#x2F;Skill)</td>
+<td align="left">Medium (Understanding)</td>
+<td align="left">Low (Standardized Flow)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="II-The-Architecture-Dilemma-of-Generic-Assistants"><a href="#II-The-Architecture-Dilemma-of-Generic-Assistants" class="headerlink" title="II. The Architecture Dilemma of Generic Assistants"></a>II. The Architecture Dilemma of Generic Assistants</h2><p>The problem isn’t just “intelligence.” It’s that the monolithic architecture of generic assistants isn’t designed for professional task execution. It mixes understanding, reasoning, knowledge calling, and tool use into a single flow. Professional database ops requires multi-step diagnosis and dynamic decision-making that a single chat thread can’t reliably handle.</p>
+<hr>
+<h2 id="III-Agent-Skill-Architecture-Layered-Intelligence"><a href="#III-Agent-Skill-Architecture-Layered-Intelligence" class="headerlink" title="III. Agent-Skill Architecture: Layered Intelligence"></a>III. Agent-Skill Architecture: Layered Intelligence</h2><p>Our solution is a three-layer architecture:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">flowchart TD</span><br><span class="line">    UI[&quot;User Interface Layer&lt;br/&gt;Natural Language Interaction, Task Scheduling&quot;]</span><br><span class="line">    ORCH[&quot;Orchestrator Agent Layer&lt;br/&gt;Task Understanding, Routing, Parallel Coordination&quot;]</span><br><span class="line"></span><br><span class="line">    subgraph EXEC[&quot;Specialized Agent Layer&quot;]</span><br><span class="line">        A[&quot;Ops Agent A&lt;br/&gt;Specialized Executor&quot;]</span><br><span class="line">        B[&quot;Ops Agent B&lt;br/&gt;Specialized Executor&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    subgraph SA[&quot;Skills for Agent A&quot;]</span><br><span class="line">        S1[&quot;Skill 1&quot;]</span><br><span class="line">        S2[&quot;Skill 2&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    subgraph SB[&quot;Skills for Agent B&quot;]</span><br><span class="line">        S3[&quot;Skill 3&quot;]</span><br><span class="line">        S4[&quot;Skill 4&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    UI --&gt; ORCH</span><br><span class="line">    ORCH --&gt; A</span><br><span class="line">    ORCH --&gt; B</span><br><span class="line">    A --&gt; S1</span><br><span class="line">    A --&gt; S2</span><br><span class="line">    B --&gt; S3</span><br><span class="line">    B --&gt; S4</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-1-Layer-1-The-Orchestrator-编排者"><a href="#3-1-Layer-1-The-Orchestrator-编排者" class="headerlink" title="3.1 Layer 1: The Orchestrator (编排者)"></a>3.1 Layer 1: The Orchestrator (编排者)</h3><p><strong>Responsibility</strong>: Understand user intent, decompose complex tasks, and route them to the appropriate executors.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">OrchestratorAgent</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Orchestrator: Responsible for task understanding and distribution.</span></span><br><span class="line"><span class="string">    Contains no specific implementation, only intelligent routing.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">route_task</span>(<span class="params">self, user_request</span>):</span><br><span class="line">        <span class="comment"># Intent identification</span></span><br><span class="line">        intent = self.understand_intent(user_request)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Task decomposition</span></span><br><span class="line">        <span class="keyword">if</span> intent.is_complex():</span><br><span class="line">            subtasks = self.decompose(intent)</span><br><span class="line">            <span class="comment"># Parallel distribution</span></span><br><span class="line">            <span class="keyword">return</span> self.dispatch_parallel(subtasks)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># Single task routing</span></span><br><span class="line">            <span class="keyword">return</span> self.dispatch_single(intent)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">dispatch_parallel</span>(<span class="params">self, subtasks</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;Start multiple Agents in parallel&quot;&quot;&quot;</span></span><br><span class="line">        agents = []</span><br><span class="line">        <span class="keyword">for</span> task <span class="keyword">in</span> subtasks:</span><br><span class="line">            agent = self.create_agent(</span><br><span class="line">                <span class="built_in">type</span>=task.agent_type,</span><br><span class="line">                prompt=task.description,</span><br><span class="line">                run_in_background=<span class="literal">True</span></span><br><span class="line">            )</span><br><span class="line">            agents.append(agent)</span><br><span class="line">        <span class="keyword">return</span> agents</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-Layer-2-Specialized-Agent-专项执行器"><a href="#3-2-Layer-2-Specialized-Agent-专项执行器" class="headerlink" title="3.2 Layer 2: Specialized Agent (专项执行器)"></a>3.2 Layer 2: Specialized Agent (专项执行器)</h3><p><strong>Responsibility</strong>: Execute tasks within a specific domain by calling the relevant Skills.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">YashanDBOpsAgent</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    YashanDB Ops Agent.</span></span><br><span class="line"><span class="string">    Analyzes intent and selects the right Skill.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.skills = &#123;</span><br><span class="line">            <span class="string">&#x27;space&#x27;</span>: YashanDBSpaceSkill(),</span><br><span class="line">            <span class="string">&#x27;wait_events&#x27;</span>: YashanDBWaitEventsSkill(),</span><br><span class="line">            <span class="string">&#x27;locks&#x27;</span>: YashanDBLocksSkill(),</span><br><span class="line">            <span class="string">&#x27;health&#x27;</span>: YashanDBHealthSkill(),</span><br><span class="line">            <span class="comment"># ... more skills</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">execute</span>(<span class="params">self, task_description</span>):</span><br><span class="line">        intent = self.analyze_intent(task_description)</span><br><span class="line">        skill_name = self.select_skill(intent)</span><br><span class="line">        skill = self.skills[skill_name]</span><br><span class="line">        params = self.extract_parameters(task_description)</span><br><span class="line">        <span class="keyword">return</span> skill.execute(**params)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-Layer-3-Skill-技能模块"><a href="#3-3-Layer-3-Skill-技能模块" class="headerlink" title="3.3 Layer 3: Skill (技能模块)"></a>3.3 Layer 3: Skill (技能模块)</h3><p><strong>Responsibility</strong>: Encapsulate specific professional knowledge and execution logic.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">YashanDBSpaceSkill</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Database Space Analysis Skill.</span></span><br><span class="line"><span class="string">    Encapsulates diagnostic logic and expertise.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">execute</span>(<span class="params">self, db_connection</span>):</span><br><span class="line">        report = SpaceReport()</span><br><span class="line">        <span class="comment"># 1. Analyze tablespace usage (Professional SQL queries)</span></span><br><span class="line">        <span class="comment"># 2. Check datafile and autoextend status</span></span><br><span class="line">        <span class="comment"># 3. Analyze large segments (Top N)</span></span><br><span class="line">        <span class="comment"># 4. Detect fragmented tables</span></span><br><span class="line">        <span class="comment"># 5. Generate intelligent recommendations with SQL</span></span><br><span class="line">        <span class="keyword">return</span> report</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="IV-Architectural-Advantages-Why-This-Design"><a href="#IV-Architectural-Advantages-Why-This-Design" class="headerlink" title="IV. Architectural Advantages: Why This Design?"></a>IV. Architectural Advantages: Why This Design?</h2><h3 id="4-1-Separation-of-Concerns"><a href="#4-1-Separation-of-Concerns" class="headerlink" title="4.1 Separation of Concerns"></a>4.1 Separation of Concerns</h3><p>Every layer does one thing. Orchestrator routes, Agent calls, and Skill executes professional diagnosis logic.</p>
+<h3 id="4-2-Parallel-Execution"><a href="#4-2-Parallel-Execution" class="headerlink" title="4.2 Parallel Execution"></a>4.2 Parallel Execution</h3><p>In real tests:</p>
+<ul>
+<li>Space check: 99s</li>
+<li>Wait event analysis: 110s</li>
+<li><strong>Parallel Total: 110s</strong> (vs 209s for sequential)</li>
+</ul>
+<h3 id="4-3-Context-Isolation-and-Depth"><a href="#4-3-Context-Isolation-and-Depth" class="headerlink" title="4.3 Context Isolation and Depth"></a>4.3 Context Isolation and Depth</h3><p>Each Skill has its own context window. The “Space Skill” window is not polluted by lock data or general coding knowledge, keeping the AI focused on expert database metrics.</p>
+<h3 id="4-4-Extensibility-and-Evolution"><a href="#4-4-Extensibility-and-Evolution" class="headerlink" title="4.4 Extensibility and Evolution"></a>4.4 Extensibility and Evolution</h3><p>Adding new functionality takes three simple steps:</p>
+<ol>
+<li>Create a new Skill (e.g., <code>IndexAdvisorSkill</code>).</li>
+<li>Register it to the Agent.</li>
+<li>Update Orchestrator routing (often automatic).</li>
+</ol>
+<hr>
+<h2 id="V-AI-Era-Design-Philosophy"><a href="#V-AI-Era-Design-Philosophy" class="headerlink" title="V. AI Era Design Philosophy"></a>V. AI Era Design Philosophy</h2><h3 id="5-1-From-“General”-to-“Precise”"><a href="#5-1-From-“General”-to-“Precise”" class="headerlink" title="5.1 From “General” to “Precise”"></a>5.1 From “General” to “Precise”</h3><p>Traditional software seeks “monolithic” apps. AI era needs modular intelligence.</p>
+<h3 id="5-2-Conway’s-Law-in-AI-Architecture"><a href="#5-2-Conway’s-Law-in-AI-Architecture" class="headerlink" title="5.2 Conway’s Law in AI Architecture"></a>5.2 Conway’s Law in AI Architecture</h3><p>Melvin Conway stated that systems reflect organization structure. In AI:<br>Expert Mindset → Skill Modules → Agent Boundaries → Orchestrator Routing.<br>Our system mirrors the DBA’s specialized mindset: Space, Performance, Locks.</p>
+<h3 id="5-3-Unix-Philosophy-Reborn"><a href="#5-3-Unix-Philosophy-Reborn" class="headerlink" title="5.3 Unix Philosophy Reborn"></a>5.3 Unix Philosophy Reborn</h3><ol>
+<li><strong>Do one thing well</strong> (Specialized skills).</li>
+<li><strong>Design for composition</strong> (Agents combine skills).<br>Every Skill is like a Unix command—focused and reusable.</li>
+</ol>
+<hr>
+<h2 id="VI-Real-World-Case-Database-Diagnosis-in-Two-Minutes"><a href="#VI-Real-World-Case-Database-Diagnosis-in-Two-Minutes" class="headerlink" title="VI. Real-World Case: Database Diagnosis in Two Minutes"></a>VI. Real-World Case: Database Diagnosis in Two Minutes</h2><h3 id="6-1-User-Input"><a href="#6-1-User-Input" class="headerlink" title="6.1 User Input"></a>6.1 User Input</h3><p>“Start yashandb-ops agents in background to check space and wait events on dev-kamus.”</p>
+<h3 id="6-2-Orchestrator-Processing"><a href="#6-2-Orchestrator-Processing" class="headerlink" title="6.2 Orchestrator Processing"></a>6.2 Orchestrator Processing</h3><p>It identifies <code>intent_1</code> (space) and <code>intent_2</code> (wait events) and dispatches them to parallel background agents.</p>
+<h3 id="6-3-Agent-Skill-Execution"><a href="#6-3-Agent-Skill-Execution" class="headerlink" title="6.3 Agent &amp; Skill Execution"></a>6.3 Agent &amp; Skill Execution</h3><p><code>Agent 1</code> calls the <code>SpaceSkill</code>. It queries tablespace usage, file status, large objects, and fragmentation. It then synthesizes these into a structured <code>SpaceReport</code>. <code>Agent 2</code> does the same for wait events simultaneously.</p>
+<h3 id="6-4-Result-Presentation"><a href="#6-4-Result-Presentation" class="headerlink" title="6.4 Result Presentation"></a>6.4 Result Presentation</h3><p>110 seconds later, the user receives structured reports with warnings (e.g., SYSTEM tablespace at 80.1%) and actionable SQL recommendations.</p>
+<hr>
+<h2 id="VII-Design-Principles-Best-Practices"><a href="#VII-Design-Principles-Best-Practices" class="headerlink" title="VII. Design Principles &amp; Best Practices"></a>VII. Design Principles &amp; Best Practices</h2><h3 id="7-1-Skill-Design-Principles"><a href="#7-1-Skill-Design-Principles" class="headerlink" title="7.1 Skill Design Principles"></a>7.1 Skill Design Principles</h3><ol>
+<li><strong>Single Responsibility (SRP)</strong>: Avoid “God Skills”.</li>
+<li><strong>Interface Consistency</strong>:<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BaseSkill</span>(<span class="title class_ inherited__">ABC</span>):</span><br><span class="line"><span class="meta">    @abstractmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">execute</span>(<span class="params">self, **params</span>) -&gt; Report:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;Execute and return structured report&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure></li>
+<li><strong>Knowledge Encapsulation</strong>: Encapsulate <strong>Declarative</strong> (SQL), <strong>Procedural</strong> (Flows), and <strong>Empirical</strong> (Best practices) knowledge.</li>
+</ol>
+<h3 id="7-2-Agent-Design-Principles"><a href="#7-2-Agent-Design-Principles" class="headerlink" title="7.2 Agent Design Principles"></a>7.2 Agent Design Principles</h3><ol>
+<li><strong>Domain Focus</strong>: One agent per database type (PostgreSQL vs MySQL).</li>
+<li><strong>Statelessness</strong>: Let Skills or external storage manage state.</li>
+</ol>
+<h3 id="7-3-Orchestrator-Design-Principles"><a href="#7-3-Orchestrator-Design-Principles" class="headerlink" title="7.3 Orchestrator Design Principles"></a>7.3 Orchestrator Design Principles</h3><ol>
+<li><strong>Intelligent Routing</strong>: Understand dependencies and automate parallelism.</li>
+<li><strong>Graceful Fallback</strong>: Downgrade from specialized agents to generic handlers or human escalation if an agent fails.</li>
+</ol>
+<hr>
+<h2 id="VIII-Future-Outlook-Self-Evolving-Systems"><a href="#VIII-Future-Outlook-Self-Evolving-Systems" class="headerlink" title="VIII. Future Outlook: Self-Evolving Systems"></a>VIII. Future Outlook: Self-Evolving Systems</h2><h3 id="8-1-Auto-Generation-of-Skills"><a href="#8-1-Auto-Generation-of-Skills" class="headerlink" title="8.1 Auto-Generation of Skills"></a>8.1 Auto-Generation of Skills</h3><p>The Orchestrator could generate a new <code>DeadlockDetectionSkill</code> on the fly by processing documentation and existing lock knowledge.</p>
+<h3 id="8-2-Collaborative-Agent-Networks"><a href="#8-2-Collaborative-Agent-Networks" class="headerlink" title="8.2 Collaborative Agent Networks"></a>8.2 Collaborative Agent Networks</h3><p>Agents interacting to share context.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">flowchart TD</span><br><span class="line">    U[&quot;User Request&quot;]</span><br><span class="line">    O[&quot;Orchestrator&quot;]</span><br><span class="line">    A[&quot;Agent A&quot;]</span><br><span class="line">    B[&quot;Agent B&quot;]</span><br><span class="line">    C[&quot;Agent C&quot;]</span><br><span class="line">    D[&quot;Agent D&quot;]</span><br><span class="line"></span><br><span class="line">    U --&gt; O</span><br><span class="line">    O --&gt; A</span><br><span class="line">    O --&gt; B</span><br><span class="line">    O --&gt; C</span><br><span class="line">    A --&gt; D</span><br><span class="line">    B --&gt; D</span><br><span class="line">    C --&gt; D</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-3-Continuous-Knowledge-Accumulation"><a href="#8-3-Continuous-Knowledge-Accumulation" class="headerlink" title="8.3 Continuous Knowledge Accumulation"></a>8.3 Continuous Knowledge Accumulation</h3><p>Every execution is a learning opportunity.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">EvolvingSkill</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">execute</span>(<span class="params">self, **params</span>):</span><br><span class="line">        result = self.core_logic(**params)</span><br><span class="line">        self.log_execution(params, result)</span><br><span class="line">        feedback = self.collect_feedback(result)</span><br><span class="line">        <span class="keyword">if</span> feedback.is_positive():</span><br><span class="line">            self.knowledge_base.reinforce(params, result)</span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="IX-Conclusion-Architecture-as-Philosophy"><a href="#IX-Conclusion-Architecture-as-Philosophy" class="headerlink" title="IX. Conclusion: Architecture as Philosophy"></a>IX. Conclusion: Architecture as Philosophy</h2><p>The Agent-Skill architecture is about <strong>Divide and Conquer</strong>, <strong>Professionalism</strong>, and <strong>Compositional Innovation</strong>. It ensures AI is deeper, faster, more isolated, and ready to evolve.</p>
+<p><strong>Tech Stack</strong>: Claude 4.6 (Sonnet) + Agent SDK + yashandb-cli + Python</p>
+<hr>
+<p><em>Interested in AI architecture? Follow my blog at kamusis.me for more deep dives.</em></p>
+</p>
+      <div class="post-button"><a class="btn" href="/2026/03/11/Layered-Intelligence-in-the-AI-Era-The-Design-Philosophy-of-Agent-Skill-Architecture/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
+    </div>
+  </div>
+  <div class="lx-entry padding">
+    <div>
       <h2 class="title"><a href="/2026/02/22/Built-in-Multi-Agent-Grok-4-2-0-When-LLMs-Learn-Self-Play-and-Real-Time-Evolution/">Built-in Multi-Agent Grok 4.2.0: When LLMs Learn Self-Play and Real-Time Evolution</a></h2>
       <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2026-02-22</span>
       <p><h1 id="Built-in-Multi-Agent-Grok-4-2-0-When-LLMs-Learn-Self-Play-and-Real-Time-Evolution"><a href="#Built-in-Multi-Agent-Grok-4-2-0-When-LLMs-Learn-Self-Play-and-Real-Time-Evolution" class="headerlink" title="Built-in Multi-Agent Grok 4.2.0: When LLMs Learn Self-Play and Real-Time Evolution"></a>Built-in Multi-Agent Grok 4.2.0: When LLMs Learn Self-Play and Real-Time Evolution</h1><h2 id="Introduction-A-Turning-Point-in-AI-Reasoning-Paradigms"><a href="#Introduction-A-Turning-Point-in-AI-Reasoning-Paradigms" class="headerlink" title="Introduction: A Turning Point in AI Reasoning Paradigms"></a>Introduction: A Turning Point in AI Reasoning Paradigms</h2><p>On February 17, 2026, xAI launched the public beta of Grok 4.2.0 (often referred to as Grok 4.20). Over the past year, most of the noise in the LLM world has been about bigger models and bigger context windows. Grok 4.2.0 is interesting for a different reason: it treats reasoning as a coordinated process rather than a single, monolithic pass.</p>
@@ -834,115 +1002,6 @@
 <p>This post covers Deno’s core concepts, contrasts it with Node.js, and ties in our Supabase example for a practical angle. Feel free to tweak the tone or add more details if you’re aiming for a specific audience! Want me to adjust anything?</p>
 </p>
       <div class="post-button"><a class="btn" href="/2025/03/28/Getting-Started-with-Deno-A-Modern-Twist-on-JavaScript-Runtimes/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
-    </div>
-  </div>
-  <div class="lx-entry padding">
-    <div>
-      <h2 class="title"><a href="/2024/12/12/How-to-Generate-a-VSIX-File-from-VS-Code-Extension-Source-Code/">How to Generate a VSIX File from VS Code Extension Source Code</a></h2>
-      <span class="lx-post-detail"><i class="fa fa-calendar-o"></i> 2024-12-12</span>
-      <p><p>As I’ve been using Windsurf as my primary code editor, I encountered a situation where the vs-picgo extension wasn’t available in the Windsurf marketplace. This necessitated the need to manually package the extension from its source code. This guide documents the process of generating a VSIX file for VS Code extensions, which can then be installed manually in compatible editors like Windsurf.</p>
-<p>In this guide, I’ll walk you through the process of generating a VSIX file from a VS Code extension’s source code. We’ll use the popular <a target="_blank" rel="noopener" href="https://github.com/PicGo/vs-picgo">vs-picgo</a> extension as an example.</p>
-<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><p>Before we begin, make sure you have the following installed:</p>
-<ul>
-<li>Node.js (version 12 or higher)</li>
-<li>npm (comes with Node.js)</li>
-</ul>
-<h2 id="Step-1-Install-Required-Tools"><a href="#Step-1-Install-Required-Tools" class="headerlink" title="Step 1: Install Required Tools"></a>Step 1: Install Required Tools</h2><p>First, we need to install two essential tools:</p>
-<ul>
-<li><code>yarn</code>: A package manager that will handle our dependencies</li>
-<li><code>vsce</code>: The VS Code Extension Manager tool that creates VSIX packages</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install Yarn globally</span></span><br><span class="line">sudo npm install -g yarn</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install vsce globally</span></span><br><span class="line">sudo npm install -g @vscode/vsce</span><br></pre></td></tr></table></figure>
-
-<h2 id="Step-2-Prepare-the-Project"><a href="#Step-2-Prepare-the-Project" class="headerlink" title="Step 2: Prepare the Project"></a>Step 2: Prepare the Project</h2><ol>
-<li><p>Clone or download the extension source code:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/PicGo/vs-picgo.git</span><br><span class="line"><span class="built_in">cd</span> vs-picgo</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Install project dependencies:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn install</span><br></pre></td></tr></table></figure></li>
-</ol>
-<p>This command will:</p>
-<ul>
-<li>Read the <code>package.json</code> file</li>
-<li>Install all required dependencies</li>
-<li>Create or update the <code>yarn.lock</code> file</li>
-</ul>
-<blockquote>
-<p><strong>Note</strong>: The <code>yarn.lock</code> file is important! Don’t delete it as it ensures consistent installations across different environments.</p>
-</blockquote>
-<h2 id="Step-3-Build-the-Extension"><a href="#Step-3-Build-the-Extension" class="headerlink" title="Step 3: Build the Extension"></a>Step 3: Build the Extension</h2><p>Build the extension using the production build command:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn build:prod</span><br></pre></td></tr></table></figure>
-
-<p>This command typically:</p>
-<ul>
-<li>Cleans the previous build output</li>
-<li>Compiles TypeScript&#x2F;JavaScript files</li>
-<li>Bundles all necessary assets</li>
-<li>Creates the <code>dist</code> directory with the compiled code</li>
-</ul>
-<p>In vs-picgo’s case, the build process:</p>
-<ol>
-<li>Uses <code>esbuild</code> for fast bundling</li>
-<li>Creates both extension and webview bundles</li>
-<li>Generates source maps (disabled in production)</li>
-<li>Optimizes the code for production use</li>
-</ol>
-<h2 id="Step-4-Package-the-Extension"><a href="#Step-4-Package-the-Extension" class="headerlink" title="Step 4: Package the Extension"></a>Step 4: Package the Extension</h2><p>Finally, create the VSIX file:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vsce package</span><br></pre></td></tr></table></figure>
-
-<p>This command:</p>
-<ol>
-<li>Runs any pre-publish scripts defined in <code>package.json</code></li>
-<li>Validates the extension manifest</li>
-<li>Packages all required files into a VSIX file</li>
-<li>Names the file based on the extension’s name and version (e.g., <code>vs-picgo-2.1.6.vsix</code>)</li>
-</ol>
-<p>The resulting VSIX file will contain:</p>
-<ul>
-<li>Compiled JavaScript files</li>
-<li>Assets (images, CSS, etc.)</li>
-<li>Extension manifest</li>
-<li>Documentation files</li>
-<li>License information</li>
-</ul>
-<h2 id="What’s-Inside-the-VSIX"><a href="#What’s-Inside-the-VSIX" class="headerlink" title="What’s Inside the VSIX?"></a>What’s Inside the VSIX?</h2><p>The VSIX file is essentially a ZIP archive with a specific structure. For vs-picgo, it includes:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">vs-picgo-2.1.6.vsix</span><br><span class="line">├─ [Content_Types].xml </span><br><span class="line">├─ extension.vsixmanifest </span><br><span class="line">└─ extension/</span><br><span class="line">   ├─ LICENSE.txt</span><br><span class="line">   ├─ changelog.md</span><br><span class="line">   ├─ logo.png</span><br><span class="line">   ├─ package.json</span><br><span class="line">   ├─ package.nls.json</span><br><span class="line">   ├─ readme.md</span><br><span class="line">   └─ dist/</span><br><span class="line">      ├─ extension.js</span><br><span class="line">      └─ webview/</span><br><span class="line">         ├─ index.css</span><br><span class="line">         └─ index.js</span><br></pre></td></tr></table></figure>
-
-<h2 id="Installing-the-Extension"><a href="#Installing-the-Extension" class="headerlink" title="Installing the Extension"></a>Installing the Extension</h2><p>You can install the generated VSIX file in VS Code or any compatible editor by:</p>
-<ol>
-<li>Opening VS Code&#x2F;Windsurf&#x2F;Cursor …</li>
-<li>Going to the Extensions view</li>
-<li>Clicking the “…” menu (More Actions)</li>
-<li>Selecting “Install from VSIX…”</li>
-<li>Choosing your generated VSIX file</li>
-</ol>
-<h2 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h2><p>If you encounter any issues:</p>
-<ol>
-<li><p><strong>Missing dist directory error</strong>:</p>
-<ul>
-<li>This is normal on first build</li>
-<li>The build process will create it automatically</li>
-</ul>
-</li>
-<li><p><strong>Dependency errors</strong>:</p>
-<ul>
-<li>Run <code>yarn install</code> again</li>
-<li>Check if you’re using the correct Node.js version</li>
-</ul>
-</li>
-<li><p><strong>VSIX packaging fails</strong>:</p>
-<ul>
-<li>Verify your <code>package.json</code> is valid</li>
-<li>Ensure all required files are present</li>
-<li>Check the extension manifest for errors</li>
-</ul>
-</li>
-</ol>
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Building a VS Code extension VSIX file is straightforward once you have the right tools installed. The process mainly involves installing dependencies, building the source code, and packaging everything into a VSIX file.</p>
-<p>Remember to keep your <code>yarn.lock</code> file and always build in production mode before packaging to ensure the best performance and smallest file size for your users.</p>
-<p>Happy extension building! 🚀</p>
-</p>
-      <div class="post-button"><a class="btn" href="/2024/12/12/How-to-Generate-a-VSIX-File-from-VS-Code-Extension-Source-Code/" rel="noopener"><i class="fa fa-angle-double-right fa-fw"></i>Read More</a></div>
     </div>
   </div>
 
