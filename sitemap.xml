@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.kamusis.me/2026/09/07/Why-Mopheus-Truly-Unifies-Dev-and-Ops/</loc>
+    
+    <lastmod>2026-09-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.kamusis.me/2026/03/11/Layered-Intelligence-in-the-AI-Era-The-Design-Philosophy-of-Agent-Skill-Architecture/</loc>
     
     <lastmod>2026-03-11</lastmod>
@@ -622,6 +631,41 @@
   
   <url>
     <loc>https://www.kamusis.me/tags/ipset/</loc>
+    <lastmod>2026-09-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.kamusis.me/tags/DevOps/</loc>
+    <lastmod>2026-09-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.kamusis.me/tags/AIDevOps/</loc>
+    <lastmod>2026-09-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.kamusis.me/tags/Mopheus/</loc>
+    <lastmod>2026-09-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.kamusis.me/tags/AI-Agents/</loc>
+    <lastmod>2026-09-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.kamusis.me/tags/Software-Engineering/</loc>
     <lastmod>2026-09-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
