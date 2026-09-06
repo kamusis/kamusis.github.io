@@ -1,6 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Bringing the Legendary &quot;grill-me&quot; Skill into Mopheus: Teaching AI Agents Self-Questioning and Adversarial Review</title>
+    <url>/2026/09/07/Bring-the-Legendary-grill-me-Skill-into-Mopheus/</url>
+    <content><![CDATA[<h1 id="Bringing-the-Legendary-“grill-me”-Skill-into-Mopheus-Teaching-AI-Agents-Self-Questioning-and-Adversarial-Review"><a href="#Bringing-the-Legendary-“grill-me”-Skill-into-Mopheus-Teaching-AI-Agents-Self-Questioning-and-Adversarial-Review" class="headerlink" title="Bringing the Legendary “grill-me” Skill into Mopheus: Teaching AI Agents Self-Questioning and Adversarial Review"></a>Bringing the Legendary “grill-me” Skill into Mopheus: Teaching AI Agents Self-Questioning and Adversarial Review</h1><blockquote>
+<p><em>The code is written, the architecture plan is signed off—but do you genuinely feel confident?</em><br><em>When massive traffic spikes hit, network blips occur, or edge-case anomalies emerge, where will your system fail first?</em><br><em>We rarely lack hands to write code; what we sorely lack is a rigorous, demanding, and uncompromising “reviewer.”</em></p>
+</blockquote>
+<p><img src="https://files.seeusercontent.com/2026/08/29/O8mb/grill_me_cover_1787996414817.jpg" alt="Bringing the Legendary &quot;grill-me&quot; Skill into Mopheus"></p>
+<hr>
+<h2 id="1-What-is-grill-me-Why-is-a-Bare-60-Word-Prompt-Hailed-as-Legendary"><a href="#1-What-is-grill-me-Why-is-a-Bare-60-Word-Prompt-Hailed-as-Legendary" class="headerlink" title="1. What is grill-me? Why is a Bare 60-Word Prompt Hailed as Legendary?"></a>1. What is grill-me? Why is a Bare 60-Word Prompt Hailed as Legendary?</h2><p>Among developers practicing AI-assisted coding and systems design, one skill is widely revered as a secret weapon: <strong><code>grill-me</code></strong> (literally meaning to put someone on the hot grill).</p>
+<p>Created and open-sourced by renowned engineer and developer educator <strong>Matt Pocock</strong>:</p>
+<ul>
+<li><strong>Original GitHub Repository</strong>: <a href="https://github.com/mattpocock/skills">mattpocock&#x2F;skills</a></li>
+<li><strong>Original Skill Reference</strong>: <a href="https://github.com/mattpocock/skills/tree/main/skills/grill-me"><code>skills/grill-me/SKILL.md</code></a></li>
+</ul>
+<p>This developer-favorite skill has an astonishingly concise definition file (<code>SKILL.md</code>)—just three sentences, roughly 60 English words:</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">Interview me relentlessly about every aspect of this plan until we reach a shared understanding. </span><br><span class="line">Walk down each branch of the design tree, resolving dependencies between decisions one-by-one. </span><br><span class="line">You MUST provide your recommended answer for every single question — never ask a question without also giving your own recommendation. This is mandatory, not optional.</span><br><span class="line"></span><br><span class="line">Ask the questions one at a time.</span><br><span class="line"></span><br><span class="line">If a question can be answered by exploring the codebase, explore the codebase instead.</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="Why-is-Such-a-Brief-Prompt-So-Uncannily-Powerful"><a href="#Why-is-Such-a-Brief-Prompt-So-Uncannily-Powerful" class="headerlink" title="Why is Such a Brief Prompt So Uncannily Powerful?"></a>Why is Such a Brief Prompt So Uncannily Powerful?</h3><p>Those new to Prompt Engineering often assume that greater power demands labyrinthine, multi-page instructions. <code>grill-me</code> represents the pinnacle of minimalist design:</p>
+<ol>
+<li><strong>“Relentlessly until shared understanding”</strong>:<br>Fundamentally dismantles LLMs’ default tendency toward sycophancy and superficial praise, instantly anchoring the Agent in the persona of a demanding Principal Architect or rigorous technical interviewer.</li>
+<li><strong>“Walk down each branch of the design tree”</strong>:<br>Forces systematic depth-first search across decision paths, knocking down architectural dependencies one by one rather than jumping erratically between surface-level topics.</li>
+<li><strong>The Core Anchor: “MUST provide your recommended answer”</strong>:<br>This is the stroke of genius in the prompt. If an AI merely asks questions, it easily devolves into an annoying contrarian. But by <strong>mandating that every critique must come paired with a concrete recommendation</strong>, the model is forced to simulate trade-offs and evaluate alternatives simultaneously. This drastically lowers cognitive overhead for the person being grilled and instantly establishes a high-quality reference baseline.</li>
+<li><strong>“Ask one at a time” &amp; “Explore the codebase instead”</strong>:<br>The former prevents cognitive overload by avoiding daunting walls of text; the latter keeps the AI pragmatic and grounded, ensuring it never wastes human time on facts already verifiable in code.</li>
+</ol>
+<hr>
+<h2 id="2-Why-Forge-grill-me-into-a-Native-Ticket-Mechanism-in-Mopheus"><a href="#2-Why-Forge-grill-me-into-a-Native-Ticket-Mechanism-in-Mopheus" class="headerlink" title="2. Why Forge grill-me into a Native Ticket Mechanism in Mopheus?"></a>2. Why Forge grill-me into a Native Ticket Mechanism in Mopheus?</h2><p>Mopheus natively supports Agent Skills. So why go through the effort of engineering a dedicated native Griller inquiry and review mechanism right within ticket comment threads?</p>
+<h3 id="The-Reality-of-Human-Agent-Grilling-Invaluable-Yet-Cognitively-Exhausting"><a href="#The-Reality-of-Human-Agent-Grilling-Invaluable-Yet-Cognitively-Exhausting" class="headerlink" title="The Reality of Human-Agent Grilling: Invaluable, Yet Cognitively Exhausting"></a>The Reality of Human-Agent Grilling: Invaluable, Yet Cognitively Exhausting</h3><p>The original <code>grill-me</code> fundamentally operates as <strong>“Agent grilling Human.”</strong> An engineer sits at their keyboard, engaging in a live, back-and-forth dialogue with the Agent.</p>
+<p>A standard <code>grill-me</code> session typically spans <strong>10 to 20 rounds of probing inquiries</strong>, taking roughly <strong>30 minutes</strong>.</p>
+<p>In practice, this is awe-inspiring yet mentally intense: <strong>when questioned on the 10th consecutive sharp edge case, one genuinely begins to feel the heat of the grill.</strong></p>
+<p>Yet there is no question: this process is <strong>immensely worthwhile</strong>—especially for core feature designs, complex online database migrations, or distributed systems architecture, where catching catastrophic vulnerabilities before writing code saves days or weeks of firefighting later.</p>
+<h3 id="The-Dilemma-How-to-Run-a-“Faster-Round”-Without-Sacrificing-Depth"><a href="#The-Dilemma-How-to-Run-a-“Faster-Round”-Without-Sacrificing-Depth" class="headerlink" title="The Dilemma: How to Run a “Faster Round” Without Sacrificing Depth?"></a>The Dilemma: How to Run a “Faster Round” Without Sacrificing Depth?</h3><p>Crucial as deep review is, we cannot afford to lower standards simply because the process is demanding. In fast-paced daily development, teams often need to <strong>run a rapid Grill cycle</strong>, ruthlessly uncovering hidden risks in designs and code in minimal time.</p>
+<p>Moreover, in an AI-Native engineering organization, much of the design proposals and pull requests are already written by execution Agents. Having the same Agent review its own work introduces obvious confirmation bias. Meanwhile, waiting for human engineers to schedule a 30-minute synchronous interview for every PR or design detail creates severe delivery bottlenecks.</p>
+<p>We needed rigorous reviews to be <strong>automated, high-frequency, and continuous</strong>.</p>
+<p>This sparked an intuitive realization: <strong>What if we assign an independent, specialized critique Agent to “interview itself” in the background across 20 rounds of deep reasoning?</strong></p>
+<h3 id="The-Core-Solution-Autonomous-Self-Questioning-and-Adversarial-Review"><a href="#The-Core-Solution-Autonomous-Self-Questioning-and-Adversarial-Review" class="headerlink" title="The Core Solution: Autonomous Self-Questioning and Adversarial Review"></a>The Core Solution: Autonomous Self-Questioning and Adversarial Review</h3><p>By dispatching dedicated specialist Agents (e.g., DBA Guardians, Security Auditors, High-Concurrency Architects) as visiting experts, Mopheus conducts <strong>autonomous multi-round Self-Q&amp;A sessions</strong> directly against any proposal or discussion thread.</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">Workflow Evolution in Mopheus:</span><br><span class="line"></span><br><span class="line">[Deep Human-Agent Duels (Fully Supported)]</span><br><span class="line">Human presents design ──&gt; Agent conducts ruthless Q&amp;A ──&gt; Human responds &amp; iterates ──&gt; (Ideal for major architecture designs)</span><br><span class="line"></span><br><span class="line">[Mopheus Native Griller Loop]</span><br><span class="line">Any proposal or discussion thread on a Ticket</span><br><span class="line">       │</span><br><span class="line">       ▼ Click &quot;Grill this comment&quot;</span><br><span class="line">Summon a dedicated Griller Agent (e.g., DBA Guardian / Security Auditor)</span><br><span class="line">       │</span><br><span class="line">       ▼ Background Sandbox (executes multi-round adversarial Self-Q&amp;A)</span><br><span class="line">Griller simulates edge cases ──&gt; Inspects code &amp; constraints ──&gt; Self-questions &amp; uncovers gaps ──&gt; Compiles evidence</span><br><span class="line">       │</span><br><span class="line">       ▼ Automated Response</span><br><span class="line">Publishes a structured, multi-tier review report directly as a threaded reply!</span><br></pre></td></tr></table></figure>
+
+<p>This means: <strong>A human engineer simply clicks a button on a ticket, and an agent conducts the entire adversarial review in a background sandbox within minutes, presenting a structured stress-test report right under the thread for rapid team consensus.</strong></p>
+<p><img src="https://files.seeusercontent.com/2026/08/23/qs5O/image-20260823123100801.png" alt="image-20260823123100801"></p>
+<hr>
+<h2 id="3-What-If-Humans-Still-Want-to-Be-Grilled-Personally-Absolutely-Supported"><a href="#3-What-If-Humans-Still-Want-to-Be-Grilled-Personally-Absolutely-Supported" class="headerlink" title="3. What If Humans Still Want to Be Grilled Personally? Absolutely Supported!"></a>3. What If Humans Still Want to Be Grilled Personally? Absolutely Supported!</h2><p>Making Griller a native ticket mechanism in no way detracts from the value or thrill of human engineers undergoing the challenge themselves.</p>
+<p>If you are a Tech Lead or Principal Architect designing a mission-critical system and want to experience AI’s trial by fire directly, doing so in Mopheus is straightforward:</p>
+<ol>
+<li><strong>Import or Create Classic Skills</strong>: Create or import the original <code>grill-me</code> in the Mopheus Skill Hub, or import the advanced <strong><code>grill-with-docs</code></strong> (which grills your design while incrementally updating the project’s <code>CONTEXT.md</code> glossary and <code>ADR</code> Architecture Decision Records based on reaching consensus);</li>
+<li><strong>Engage in Live Dialogue</strong>:<ul>
+<li><strong>In Chat</strong>: Start an interactive session with an architect agent and invoke <code>/grill-me</code> for real-time stress testing;</li>
+<li><strong>In Tickets</strong>: Open an architecture design ticket, @mention your agent in a comment with instructions, and engage in public, round-by-round review within the thread.</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">Dual-Track Review System:</span><br><span class="line">┌────────────────────────────────────────────────────────────────────────┐</span><br><span class="line">│ 1. Asynchronous Multi-Agent Grilling (Native Griller)                  │</span><br><span class="line">│    Automated Self-Q&amp;A reports on tickets &amp; PRs, exposing hidden flaws  │</span><br><span class="line">├────────────────────────────────────────────────────────────────────────┤</span><br><span class="line">│ 2. Deep Human-in-the-Loop Grilling (grill-me / grill-with-docs Skills)  │</span><br><span class="line">│    Synchronous, multi-round duels elevating engineering design thinking│</span><br><span class="line">└────────────────────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-How-We-Built-It-Clean-Elegant-and-Pragmatic-Engineering"><a href="#4-How-We-Built-It-Clean-Elegant-and-Pragmatic-Engineering" class="headerlink" title="4. How We Built It: Clean, Elegant, and Pragmatic Engineering"></a>4. How We Built It: Clean, Elegant, and Pragmatic Engineering</h2><p>To seamlessly weave rigorous grilling into daily workflows, we adhered to disciplined, minimalist engineering principles:</p>
+<h3 id="1-Agents-as-Grillers-Non-Invasive-Role-Specialization"><a href="#1-Agents-as-Grillers-Non-Invasive-Role-Specialization" class="headerlink" title="1. Agents as Grillers: Non-Invasive Role Specialization"></a>1. Agents as Grillers: Non-Invasive Role Specialization</h3><p>We avoided bloating the system with complex configuration layers. Enabling <code>is_griller</code> in an agent’s profile (or passing <code>--is-griller</code> via the CLI) immediately qualifies that agent as a Reviewer.</p>
+<p>The agent naturally leverages its domain specialization:</p>
+<ul>
+<li><strong>DBA Griller</strong>: Unpacks slow queries, deadlocks, missing indexes, and unsegmented transaction risks;</li>
+<li><strong>Architecture Griller</strong>: Audits service decoupling, fallback circuits, and state machine transitions;</li>
+<li><strong>Frontend Griller</strong>: Tests responsive boundaries, accessibility, and UI race conditions.</li>
+</ul>
+<p>Regardless of whether a ticket is assigned to a human or another Agent, users can summon them on demand as “visiting experts” <strong>without disrupting the ticket’s primary ownership</strong>.</p>
+<h3 id="2-Precise-Prompt-Scoping-and-Closed-Loop-Threading"><a href="#2-Precise-Prompt-Scoping-and-Closed-Loop-Threading" class="headerlink" title="2. Precise Prompt Scoping and Closed-Loop Threading"></a>2. Precise Prompt Scoping and Closed-Loop Threading</h3><p>To ensure agents remain grounded and avoid hallucinations during self-Q&amp;A, we instituted three fundamental prompt rules:</p>
+<ul>
+<li><strong>Thread Scoping</strong>: The Griller strictly consumes the targeted comment and its immediate conversational context as ground truth;</li>
+<li><strong>Language Matching</strong>: If the source discussion is in Chinese, the entire self-Q&amp;A and final critique are generated in Chinese; if in English, it outputs English, preserving conversational consistency;</li>
+<li><strong>Thread Reply</strong>: The finished report automatically mounts as a nested child response (<code>--parent</code>) beneath the original comment, matching GitHub PR review cleanliness.</li>
+</ul>
+<h3 id="3-CLI-First-Design-and-Real-Time-Awareness"><a href="#3-CLI-First-Design-and-Real-Time-Awareness" class="headerlink" title="3. CLI-First Design and Real-Time Awareness"></a>3. CLI-First Design and Real-Time Awareness</h3><p>Developers can summon a Griller with one click in the Web UI:</p>
+<p><img src="https://files.seeusercontent.com/2026/08/22/b3rI/aidevops_core.png" alt="Mopheus Web One-Click Griller Review"></p>
+<p>Or directly trigger reviews from terminal CLIs or CI&#x2F;CD pipelines:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Launch a deep Grill review on a comment with a designated DBA Griller</span></span><br><span class="line">mopheus ticket comment grill &lt;comment-id&gt; --agent-id &lt;griller-id&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Backed by real-time WebSocket event dispatching and browser tab wake-up reconnects, review tasks update seamlessly whether an engineer stays focused on the tab or returns later.</p>
+<hr>
+<h2 id="5-Future-Roadmap-From-Single-Agent-Self-Q-A-to-the-“Agent-Arena-Topic”"><a href="#5-Future-Roadmap-From-Single-Agent-Self-Q-A-to-the-“Agent-Arena-Topic”" class="headerlink" title="5. Future Roadmap: From Single-Agent Self-Q&amp;A to the “Agent Arena Topic”"></a>5. Future Roadmap: From Single-Agent Self-Q&amp;A to the “Agent Arena Topic”</h2><p>Autonomous Self-Q&amp;A in isolated sandboxes has already delivered substantial quality gains, but it is only the prelude to true multi-agent adversarial collaboration.</p>
+<p>Our next milestone is <strong>enabling two fully independent agents to engage in real-time, face-to-face cross-examination</strong>:</p>
+<ul>
+<li>Dispatching a dedicated Reviewer Agent to directly grill a <strong>Developer Agent preparing to write code</strong>;</li>
+<li>Directing Security and SRE Reviewer Agents to cross-examine a <strong>DBA Agent planning high-risk data migrations or online maintenance</strong>.</li>
+</ul>
+<p>To realize this vision, we are designing the <strong>Agent Arena</strong> directly atop Mopheus’s existing <strong>Topic</strong> deliberation framework:</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">Future Roadmap: Agent Arena Topics</span><br><span class="line"></span><br><span class="line">Complex Proposal / High-Risk Operation in Ticket Comments</span><br><span class="line">       │</span><br><span class="line">       ▼ One-Click: &quot;Create Arena Topic&quot;</span><br><span class="line">System spawns a dedicated deliberation arena, bringing both Agents into the ring:</span><br><span class="line">┌─────────────────────────────────────────────────────────────┐</span><br><span class="line">│  Mopheus Arena Topic Deliberation Space                     │</span><br><span class="line">│                                                             │</span><br><span class="line">│  [Execution Agent: Feature Builder]  VS  [Review Agent: DBA Griller] │</span><br><span class="line">│                                                             │</span><br><span class="line">│  1. Reviewer: &quot;How will cross-shard aggregation latency be  │</span><br><span class="line">│     guaranteed in this table partitioning strategy?&quot;        │</span><br><span class="line">│  2. Builder:  &quot;Secondary index lookup with distributed      │</span><br><span class="line">│     Bloom filters.&quot;                                         │</span><br><span class="line">│  3. Reviewer: &quot;How do you recover if Bloom filter false     │</span><br><span class="line">│     positives surge under network partitions?&quot;              │</span><br><span class="line">│  4. Builder:  &quot;Fallback read-only circuit with revised      │</span><br><span class="line">│     state machine transitions.&quot;                             │</span><br><span class="line">│                                                             │</span><br><span class="line">│  ── Through rigorous dialectic debate, both agree on an      │</span><br><span class="line">│     indisputably optimal architecture ──                    │</span><br><span class="line">└──────────────────────────────┬──────────────────────────────┘</span><br><span class="line">                               │</span><br><span class="line">                               ▼ Automated Sync</span><br><span class="line">Conclusions synthesize into a high-confidence decision report, written back to the ticket for safe execution!</span><br></pre></td></tr></table></figure>
+
+<p>By elevating ticket discussions into Arena Topics, human engineers can observe high-level algorithmic debate in real time while securing thoroughly stress-tested, resilient architectural designs.</p>
+<hr>
+<h2 id="6-Conclusion-Toward-Software-Engineering-Driven-by-AI-Adversarial-Evolution"><a href="#6-Conclusion-Toward-Software-Engineering-Driven-by-AI-Adversarial-Evolution" class="headerlink" title="6. Conclusion: Toward Software Engineering Driven by AI Adversarial Evolution"></a>6. Conclusion: Toward Software Engineering Driven by AI Adversarial Evolution</h2><p>As LLMs generate code with breathtaking speed, the true bulwark of software engineering shifts toward <strong>review and verification</strong>.</p>
+<p>Bringing <code>grill-me</code> into Mopheus represents a pivotal milestone in <strong>multi-agent adversarial collaboration</strong>:</p>
+<ul>
+<li>It preserves the training ground where humans can personally undergo AI’s rigorous cross-examination;</li>
+<li>It introduces automated quality checkpoints where agents asynchronously self-question and poke holes in human and AI proposals alike;</li>
+<li>And it sets the stage for genuine dual-agent sparring inside Arena Topics.</li>
+</ul>
+<hr>
+<blockquote>
+<p><strong>Ready to empower your engineering workflows with relentless, professional Griller agents?</strong><br>Explore <a href="https://www.mopheus.ai/">Mopheus (mopheus.ai)</a> and equip your workspace with dedicated architecture and quality guardians today!</p>
+</blockquote>
+]]></content>
+      <tags>
+        <tag>Mopheus</tag>
+        <tag>AI-Agents</tag>
+        <tag>Code-Review</tag>
+        <tag>Software-Engineering</tag>
+        <tag>Architecture</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Built-in Multi-Agent Grok 4.2.0: When LLMs Learn Self-Play and Real-Time Evolution</title>
     <url>/2026/02/22/Built-in-Multi-Agent-Grok-4-2-0-When-LLMs-Learn-Self-Play-and-Real-Time-Evolution/</url>
     <content><![CDATA[<h1 id="Built-in-Multi-Agent-Grok-4-2-0-When-LLMs-Learn-Self-Play-and-Real-Time-Evolution"><a href="#Built-in-Multi-Agent-Grok-4-2-0-When-LLMs-Learn-Self-Play-and-Real-Time-Evolution" class="headerlink" title="Built-in Multi-Agent Grok 4.2.0: When LLMs Learn Self-Play and Real-Time Evolution"></a>Built-in Multi-Agent Grok 4.2.0: When LLMs Learn Self-Play and Real-Time Evolution</h1><h2 id="Introduction-A-Turning-Point-in-AI-Reasoning-Paradigms"><a href="#Introduction-A-Turning-Point-in-AI-Reasoning-Paradigms" class="headerlink" title="Introduction: A Turning Point in AI Reasoning Paradigms"></a>Introduction: A Turning Point in AI Reasoning Paradigms</h2><p>On February 17, 2026, xAI launched the public beta of Grok 4.2.0 (often referred to as Grok 4.20). Over the past year, most of the noise in the LLM world has been about bigger models and bigger context windows. Grok 4.2.0 is interesting for a different reason: it treats reasoning as a coordinated process rather than a single, monolithic pass.</p>
@@ -984,10 +1091,10 @@
 <p><em>Interested in AI architecture? Follow my blog at kamusis.me for more deep dives.</em></p>
 ]]></content>
       <tags>
+        <tag>Architecture</tag>
         <tag>AI</tag>
         <tag>Agent</tag>
         <tag>Skill</tag>
-        <tag>Architecture</tag>
         <tag>Database</tag>
         <tag>Operations</tag>
       </tags>
@@ -1338,48 +1445,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Some Misconceptions About Database Performance - Application Concurrent Requests, Database Connections, and Database Connection Pools</title>
-    <url>/2024/08/21/Some-Misconceptions-About-Database-Performance-Application-Concurrent-Requests-Database-Connections-and-Database-Connection-Pools/</url>
-    <content><![CDATA[<p>Let’s start with a chart from a database stress test result.</p>
-<p><img src="https://s2.loli.net/2024/08/21/Ra2u1Q9cJNpOlUm.png" alt="1724216413686"></p>
-<p>In the chart above, the X-axis represents the number of concurrent connections, and the Y-axis represents the TPS (Transactions Per Second) provided by the database. The stress testing tool used is pgbench, and the database is a single instance of PostgreSQL 16. TPS_PGDirect represents the TPS when pgbench directly sends the load to PostgreSQL, while TPS_PGBouncer represents the TPS when pgbench sends the load to the PGBouncer database connection pool.</p>
-<p>We can clearly see that when the number of connections exceeds 256, the TPS begins to gradually decline when the load is sent directly to the database. When the number of connections eventually rises to over 8000, the database is almost at a standstill. However, when using PGBouncer, the TPS remains stable and excellent, with the database consistently providing high TPS regardless of the number of connections.</p>
-<p>Many people might conclude from this chart that if the concurrent connections increase beyond a certain threshold, PostgreSQL becomes inadequate, and PGBouncer must be used to improve performance.</p>
-<p>Some users may attempt to conduct various hardware environment combination tests to derive a reference threshold number to guide at what pressure PostgreSQL can cope, and once it exceeds a certain pressure, PGBouncer should be enabled.</p>
-<p>So, is this conclusion correct? And does testing out a threshold number have real guiding significance?</p>
-<h2 id="Understanding-Concurrent-Performance"><a href="#Understanding-Concurrent-Performance" class="headerlink" title="Understanding Concurrent Performance"></a>Understanding Concurrent Performance</h2><p>To determine how many concurrent business requests a database can handle, we should focus on the Y-axis from the test chart above, rather than the X-axis. The Y-axis TPS represents the number of transactions the database can process per second, while the X-axis connection count is merely the database connection number we configured ourselves (which can be simply understood as the max_connections parameter value). We can observe that at 256 connections, the direct database stress test with pgbench allows the database to provide over 50,000 TPS, which is actually almost the highest number in the entire stress test (WITHOUT PGBouncer). Subsequent tests using PGBouncer, this number was not significantly exceeded. Therefore, PGBouncer is not a weapon to improve database performance.</p>
-<p>What is performance? Performance means: for a determined business transaction pressure (how much work a business transaction needs to handle, such as how much CPU, memory, and IO it consumes), the more transactions the database can execute, the higher the performance. In the chart above, this is represented by the Y-axis TPS (Transactions Per Second).</p>
-<p>For example, suppose a user request (Application Request) requires executing 5 transactions from start to finish, and assume these transactions consume similar amounts of time (even if there are differences, we can always get the average transaction runtime in a system). In this case, 50,000 TPS means the database can handle 10,000 user requests per second, which can be simply understood as handling 10,000 concurrent users. If TPS rises to 100,000, the database can handle 20,000 concurrent users; if TPS drops to 10,000, it can only handle 2,000 concurrent users. This is a simple calculation logic, and in this description, we did not mention anything about database connections (User Connections).</p>
-<p>So why does it seem like PGBouncer improves performance when the number of connections continues to increase? Because in this situation, PGBouncer acts as a limiter on database connections, reducing the extra overhead caused by the database&#x2F;operating system handling too many connections, allowing the database and operating system to focus on processing the business requests sent from each connection, and enabling user requests exceeding the connection limit to share database connections. What PGBouncer does is: if your restaurant can only provide 10 tables, then I only allow 10 tables of guests to enter, and other guests have to wait outside.</p>
-<p>However, why should we let 100 tables of guests rush into the restaurant all at once? Without PGBouncer, can’t we control allowing only 10 tables of guests to enter? In modern applications, application-side connection pools are more commonly used, such as connection pools in various middleware software (Weblogic, WebSphere, Tomcat, etc.) or dedicated JDBC connection pools like HikariCP.</p>
-<p>Exceeding the number of connections that can be handled is unnecessary. When the database is already at its peak processing capacity, having more connections will not improve overall processing capability; instead, it will slow down the entire database.</p>
-<p>To summarize the meaning of the chart above more straightforwardly: when the total number of database connections is at 256, the database reaches its peak processing capacity, and direct database connections can provide 50,000 TPS without any connection pool. If 50,000 TPS cannot meet the application’s concurrent performance requirements, increasing the number of connections will not help. But if connections are increased (wrongly, without any other control), a layer of connection pool like PGBouncer can be added as a connection pool buffer to keep performance stable at around 50,000 TPS.</p>
-<p>So, do we have any reason to arbitrarily increase the number of connections? No. What we need to do is: allow the database to open only the number of connections within its processing capacity and enable these connections to be shared by more user requests. When the restaurant size is fixed, the higher the turnover rate, the higher the restaurant’s daily revenue.</p>
-<h2 id="How-to-Ask-Questions-About-Performance"><a href="#How-to-Ask-Questions-About-Performance" class="headerlink" title="How to Ask Questions About Performance"></a>How to Ask Questions About Performance</h2><p>Instead of asking: how can we ensure the database provides sufficient TPS with 4000 connections, we should ask: how can we ensure the database provides 50,000 TPS.</p>
-<p>Because the number of connections is not a performance metric, it is merely a parameter configuration option.</p>
-<p>In the example above, a connection count of 4000 or 8000 is not a fixed value, nor is it an optimized value. We cannot try to do more additional database optimizations on an unoptimized, modifiable parameter setting, as this may lead to a reversal of priorities. If we can already provide maximum processing capacity with 256 fully loaded database connections, why optimize a database with more than 256 connections? We should ensure the database always runs at full capacity with a maximum of 256 connections.</p>
-<p>Now, our question about performance can be more specific. Suppose we have multiple sets of database servers with different configurations; what should the fully loaded connection count be for each set to achieve optimal processing capacity?</p>
-<p>This requires testing. However, we will ultimately find that this fully loaded connection count is usually related only to the database server’s hardware resources, such as the number of CPU cores, CPU speed, memory size, storage speed, and the bandwidth and latency between storage and host.</p>
-<h2 id="Is-Database-Application-Performance-Only-Related-to-Hardware-Resources"><a href="#Is-Database-Application-Performance-Only-Related-to-Hardware-Resources" class="headerlink" title="Is Database Application Performance Only Related to Hardware Resources?"></a>Is Database Application Performance Only Related to Hardware Resources?</h2><p>Of course not. Concurrent performance (P) &#x3D; Hardware processing capability (H) &#x2F; Business transaction pressure (T).</p>
-<p>As mentioned earlier, the performance metric TPS is for a “determined business transaction pressure,” meaning a determined T value.</p>
-<p>When the T value is determined, we can only improve the H value to further enhance the P value. Conversely, there is naturally another optimization approach: reducing the T value. There are various ways to reduce the T value, such as adding necessary indexes, rewriting SQL, using partitioned tables, etc. The optimization plan should be formulated based on where the T value is consumed most, which is another topic.</p>
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>To answer the two initial questions:</p>
-<ol>
-<li>If concurrent connections increase beyond a certain threshold, PostgreSQL becomes inadequate, and PGBouncer must be used to improve performance. Is this conclusion correct?</li>
-</ol>
-<p>If we must create more connections to the database than the hardware processing capacity for certain hardware resources, using PGBouncer can stabilize performance. However, we have no reason to create more connections than the hardware processing capacity. We have various means to control the maximum number of connections the database can open, and various middleware solutions can provide connection pools. From this perspective, PGBouncer does not improve database performance; it merely reduces concurrency conflicts, doing what any connection pool software can do.</p>
-<ol start="2">
-<li>Is it meaningful to attempt various hardware environment combination tests to derive a reference threshold number to guide at what pressure PostgreSQL can cope, and once it exceeds a certain pressure, PGBouncer should be enabled?</li>
-</ol>
-<p>It has some significance, but simple stress tests like pgbench are not enough to guide real applications. Concurrent performance (P) &#x3D; Hardware processing capability (H) &#x2F; Business transaction pressure (T). Testing in a determined hardware environment means the H value is fixed, so we should focus on T during testing. The T value provided by pgbench is a very simple transaction pressure (only four tables, simple CRUD operations), and the P value tested under this pressure can only be used as a reference. To guide application deployment, typical transaction pressure of the application itself must be abstracted for testing to have guiding significance.</p>
-]]></content>
-      <tags>
-        <tag>PostgreSQL</tag>
-        <tag>Database</tag>
-        <tag>Performance</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>The Stealth Trap: Architecting a High-Performance Nginx Hardening &amp; Fail2ban Defense System</title>
     <url>/2026/01/28/The-Stealth-Trap-Architecting-a-High-Performance-Nginx-Hardening-Fail2ban-Defense-System/</url>
     <content><![CDATA[<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>In a public cloud environment, every IP is under constant surveillance by automated botnets. Traditional security (like standard 404 errors) is often insufficient because it still consumes server resources to process malicious requests. This guide outlines a layered defense strategy that <strong>identifies</strong> malicious behavior, <strong>isolates</strong> it into dedicated logs, and <strong>bans</strong> the source IP at the firewall level using Fail2ban.</p>
@@ -1446,6 +1511,48 @@
         <tag>security</tag>
         <tag>hardening</tag>
         <tag>ipset</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Some Misconceptions About Database Performance - Application Concurrent Requests, Database Connections, and Database Connection Pools</title>
+    <url>/2024/08/21/Some-Misconceptions-About-Database-Performance-Application-Concurrent-Requests-Database-Connections-and-Database-Connection-Pools/</url>
+    <content><![CDATA[<p>Let’s start with a chart from a database stress test result.</p>
+<p><img src="https://s2.loli.net/2024/08/21/Ra2u1Q9cJNpOlUm.png" alt="1724216413686"></p>
+<p>In the chart above, the X-axis represents the number of concurrent connections, and the Y-axis represents the TPS (Transactions Per Second) provided by the database. The stress testing tool used is pgbench, and the database is a single instance of PostgreSQL 16. TPS_PGDirect represents the TPS when pgbench directly sends the load to PostgreSQL, while TPS_PGBouncer represents the TPS when pgbench sends the load to the PGBouncer database connection pool.</p>
+<p>We can clearly see that when the number of connections exceeds 256, the TPS begins to gradually decline when the load is sent directly to the database. When the number of connections eventually rises to over 8000, the database is almost at a standstill. However, when using PGBouncer, the TPS remains stable and excellent, with the database consistently providing high TPS regardless of the number of connections.</p>
+<p>Many people might conclude from this chart that if the concurrent connections increase beyond a certain threshold, PostgreSQL becomes inadequate, and PGBouncer must be used to improve performance.</p>
+<p>Some users may attempt to conduct various hardware environment combination tests to derive a reference threshold number to guide at what pressure PostgreSQL can cope, and once it exceeds a certain pressure, PGBouncer should be enabled.</p>
+<p>So, is this conclusion correct? And does testing out a threshold number have real guiding significance?</p>
+<h2 id="Understanding-Concurrent-Performance"><a href="#Understanding-Concurrent-Performance" class="headerlink" title="Understanding Concurrent Performance"></a>Understanding Concurrent Performance</h2><p>To determine how many concurrent business requests a database can handle, we should focus on the Y-axis from the test chart above, rather than the X-axis. The Y-axis TPS represents the number of transactions the database can process per second, while the X-axis connection count is merely the database connection number we configured ourselves (which can be simply understood as the max_connections parameter value). We can observe that at 256 connections, the direct database stress test with pgbench allows the database to provide over 50,000 TPS, which is actually almost the highest number in the entire stress test (WITHOUT PGBouncer). Subsequent tests using PGBouncer, this number was not significantly exceeded. Therefore, PGBouncer is not a weapon to improve database performance.</p>
+<p>What is performance? Performance means: for a determined business transaction pressure (how much work a business transaction needs to handle, such as how much CPU, memory, and IO it consumes), the more transactions the database can execute, the higher the performance. In the chart above, this is represented by the Y-axis TPS (Transactions Per Second).</p>
+<p>For example, suppose a user request (Application Request) requires executing 5 transactions from start to finish, and assume these transactions consume similar amounts of time (even if there are differences, we can always get the average transaction runtime in a system). In this case, 50,000 TPS means the database can handle 10,000 user requests per second, which can be simply understood as handling 10,000 concurrent users. If TPS rises to 100,000, the database can handle 20,000 concurrent users; if TPS drops to 10,000, it can only handle 2,000 concurrent users. This is a simple calculation logic, and in this description, we did not mention anything about database connections (User Connections).</p>
+<p>So why does it seem like PGBouncer improves performance when the number of connections continues to increase? Because in this situation, PGBouncer acts as a limiter on database connections, reducing the extra overhead caused by the database&#x2F;operating system handling too many connections, allowing the database and operating system to focus on processing the business requests sent from each connection, and enabling user requests exceeding the connection limit to share database connections. What PGBouncer does is: if your restaurant can only provide 10 tables, then I only allow 10 tables of guests to enter, and other guests have to wait outside.</p>
+<p>However, why should we let 100 tables of guests rush into the restaurant all at once? Without PGBouncer, can’t we control allowing only 10 tables of guests to enter? In modern applications, application-side connection pools are more commonly used, such as connection pools in various middleware software (Weblogic, WebSphere, Tomcat, etc.) or dedicated JDBC connection pools like HikariCP.</p>
+<p>Exceeding the number of connections that can be handled is unnecessary. When the database is already at its peak processing capacity, having more connections will not improve overall processing capability; instead, it will slow down the entire database.</p>
+<p>To summarize the meaning of the chart above more straightforwardly: when the total number of database connections is at 256, the database reaches its peak processing capacity, and direct database connections can provide 50,000 TPS without any connection pool. If 50,000 TPS cannot meet the application’s concurrent performance requirements, increasing the number of connections will not help. But if connections are increased (wrongly, without any other control), a layer of connection pool like PGBouncer can be added as a connection pool buffer to keep performance stable at around 50,000 TPS.</p>
+<p>So, do we have any reason to arbitrarily increase the number of connections? No. What we need to do is: allow the database to open only the number of connections within its processing capacity and enable these connections to be shared by more user requests. When the restaurant size is fixed, the higher the turnover rate, the higher the restaurant’s daily revenue.</p>
+<h2 id="How-to-Ask-Questions-About-Performance"><a href="#How-to-Ask-Questions-About-Performance" class="headerlink" title="How to Ask Questions About Performance"></a>How to Ask Questions About Performance</h2><p>Instead of asking: how can we ensure the database provides sufficient TPS with 4000 connections, we should ask: how can we ensure the database provides 50,000 TPS.</p>
+<p>Because the number of connections is not a performance metric, it is merely a parameter configuration option.</p>
+<p>In the example above, a connection count of 4000 or 8000 is not a fixed value, nor is it an optimized value. We cannot try to do more additional database optimizations on an unoptimized, modifiable parameter setting, as this may lead to a reversal of priorities. If we can already provide maximum processing capacity with 256 fully loaded database connections, why optimize a database with more than 256 connections? We should ensure the database always runs at full capacity with a maximum of 256 connections.</p>
+<p>Now, our question about performance can be more specific. Suppose we have multiple sets of database servers with different configurations; what should the fully loaded connection count be for each set to achieve optimal processing capacity?</p>
+<p>This requires testing. However, we will ultimately find that this fully loaded connection count is usually related only to the database server’s hardware resources, such as the number of CPU cores, CPU speed, memory size, storage speed, and the bandwidth and latency between storage and host.</p>
+<h2 id="Is-Database-Application-Performance-Only-Related-to-Hardware-Resources"><a href="#Is-Database-Application-Performance-Only-Related-to-Hardware-Resources" class="headerlink" title="Is Database Application Performance Only Related to Hardware Resources?"></a>Is Database Application Performance Only Related to Hardware Resources?</h2><p>Of course not. Concurrent performance (P) &#x3D; Hardware processing capability (H) &#x2F; Business transaction pressure (T).</p>
+<p>As mentioned earlier, the performance metric TPS is for a “determined business transaction pressure,” meaning a determined T value.</p>
+<p>When the T value is determined, we can only improve the H value to further enhance the P value. Conversely, there is naturally another optimization approach: reducing the T value. There are various ways to reduce the T value, such as adding necessary indexes, rewriting SQL, using partitioned tables, etc. The optimization plan should be formulated based on where the T value is consumed most, which is another topic.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>To answer the two initial questions:</p>
+<ol>
+<li>If concurrent connections increase beyond a certain threshold, PostgreSQL becomes inadequate, and PGBouncer must be used to improve performance. Is this conclusion correct?</li>
+</ol>
+<p>If we must create more connections to the database than the hardware processing capacity for certain hardware resources, using PGBouncer can stabilize performance. However, we have no reason to create more connections than the hardware processing capacity. We have various means to control the maximum number of connections the database can open, and various middleware solutions can provide connection pools. From this perspective, PGBouncer does not improve database performance; it merely reduces concurrency conflicts, doing what any connection pool software can do.</p>
+<ol start="2">
+<li>Is it meaningful to attempt various hardware environment combination tests to derive a reference threshold number to guide at what pressure PostgreSQL can cope, and once it exceeds a certain pressure, PGBouncer should be enabled?</li>
+</ol>
+<p>It has some significance, but simple stress tests like pgbench are not enough to guide real applications. Concurrent performance (P) &#x3D; Hardware processing capability (H) &#x2F; Business transaction pressure (T). Testing in a determined hardware environment means the H value is fixed, so we should focus on T during testing. The T value provided by pgbench is a very simple transaction pressure (only four tables, simple CRUD operations), and the P value tested under this pressure can only be used as a reference. To guide application deployment, typical transaction pressure of the application itself must be abstracted for testing to have guiding significance.</p>
+]]></content>
+      <tags>
+        <tag>PostgreSQL</tag>
+        <tag>Database</tag>
+        <tag>Performance</tag>
       </tags>
   </entry>
   <entry>
@@ -1622,6 +1729,61 @@
       </tags>
   </entry>
   <entry>
+    <title>Working Mechanism of synchronous_standby_names in MogDB</title>
+    <url>/2024/06/05/Working-Mechanism-of-synchronous-standby-names-in-MogDB/</url>
+    <content><![CDATA[<p>In MogDB, the parameter <code>synchronous_standby_names</code> is used to configure synchronous replication settings. When this parameter is set to <code>&#39;*&#39;</code>（default setting）, it indicates that any available standby server can be used as a synchronous standby. This configuration allows any currently connected standby to be utilized as a synchronous standby without explicitly specifying the standby’s name.</p>
+<h3 id="Working-Mechanism"><a href="#Working-Mechanism" class="headerlink" title="Working Mechanism"></a>Working Mechanism</h3><p>When <code>synchronous_standby_names</code> is set to <code>&#39;*&#39;</code>, MogDB’s synchronous replication mechanism selects the synchronous standby through the following steps:</p>
+<ol>
+<li><p><strong>Initial Connection</strong>: When the primary server starts or the parameter is changed, the primary server accepts all connected standby servers.</p>
+</li>
+<li><p><strong>Synchronous Standby Confirmation</strong>:</p>
+<ul>
+<li>The primary server sends a synchronization request to all connected standby servers.</li>
+<li>Each standby server, upon receiving the request, confirms it and reports its status back to the primary server.</li>
+</ul>
+</li>
+<li><p><strong>Selecting the Synchronous Standby</strong>:</p>
+<ul>
+<li>The primary server selects the earliest responding standby server(s) as the synchronous standby.</li>
+<li>This selection process is dynamic, meaning that if new standbys connect or current synchronous standbys disconnect, the primary server will reselect the synchronous standby.</li>
+</ul>
+</li>
+</ol>
+<h3 id="Priority-and-Behavior"><a href="#Priority-and-Behavior" class="headerlink" title="Priority and Behavior"></a>Priority and Behavior</h3><ul>
+<li><strong>No Priority Order</strong>: Since <code>&#39;*&#39;</code> denotes any standby, all standbys have the same priority. The primary server simply selects the earliest responding standby as the synchronous standby.</li>
+<li><strong>Dynamic Adjustment</strong>: If a synchronous standby disconnects, the primary server automatically selects the next responding standby as the new synchronous standby, ensuring the continuity and reliability of synchronous replication.</li>
+<li><strong>Concurrent Management</strong>: If multiple standbys connect simultaneously, the primary server can handle these concurrent connections and select the synchronous standby based on the confirmation of synchronization requests.</li>
+</ul>
+<h3 id="Configuration-Example-and-Usage"><a href="#Configuration-Example-and-Usage" class="headerlink" title="Configuration Example and Usage"></a>Configuration Example and Usage</h3><p>Suppose we have one primary server and three standby servers (<code>standby1</code>, <code>standby2</code>, and <code>standby3</code>). In the configuration file <code>postgresql.conf</code>, set <code>synchronous_standby_names</code> to <code>&#39;*&#39;</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">synchronous_standby_names = &#x27;*&#x27;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Scenario-Analysis"><a href="#Scenario-Analysis" class="headerlink" title="Scenario Analysis"></a>Scenario Analysis</h4><ol>
+<li><p><strong>Selection at Startup</strong>:</p>
+<ul>
+<li>When the primary server starts, all connected standby servers send heartbeat signals and wait for the primary server’s synchronization request.</li>
+<li>The primary server selects the earliest responding standby as the synchronous standby.</li>
+</ul>
+</li>
+<li><p><strong>Runtime Changes</strong>:</p>
+<ul>
+<li>If the current synchronous standby <code>standby1</code> disconnects, the primary server automatically selects the next responding standby <code>standby2</code> as the new synchronous standby.</li>
+<li>If a new standby <code>standby3</code> connects to the primary server and there is no current synchronous standby, the primary server selects <code>standby3</code> as the synchronous standby.</li>
+</ul>
+</li>
+</ol>
+<h4 id="Dynamic-Adjustment"><a href="#Dynamic-Adjustment" class="headerlink" title="Dynamic Adjustment"></a>Dynamic Adjustment</h4><p>If we start the primary server and three standby servers, setting <code>synchronous_standby_names = &#39;*&#39;</code>, the following state transitions are possible:</p>
+<ul>
+<li><strong>Initial State</strong>: All standbys (<code>standby1</code>, <code>standby2</code>, and <code>standby3</code>) connect, and the primary server selects the earliest responding standby <code>standby1</code> as the synchronous standby.</li>
+<li><strong><code>standby1</code> Disconnects</strong>: The primary server automatically selects the next responding standby <code>standby2</code> as the new synchronous standby.</li>
+<li><strong>New Standby Connection</strong>: A new standby <code>standby4</code> connects; the primary server will not change the current synchronous standby unless <code>standby2</code> disconnects.</li>
+</ul>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p>When <code>synchronous_standby_names</code> is set to <code>&#39;*&#39;</code>, MogDB dynamically selects any currently available standby as the synchronous standby. This provides a flexible and highly available synchronous replication mechanism without requiring administrators to manually specify the standby names. The selection process is based on standby response times and automatically adjusts during runtime to ensure the continuity and reliability of synchronous replication.</p>
+]]></content>
+      <tags>
+        <tag>MogDB</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Why Mopheus Truly Unifies Dev and Ops: Moving from Fragmented Toolchains to an AIDevOps Agent Workspace</title>
     <url>/2026/09/07/Why-Mopheus-Truly-Unifies-Dev-and-Ops/</url>
     <content><![CDATA[<h1 id="Why-Mopheus-Truly-Unifies-Dev-and-Ops-Moving-from-Fragmented-Toolchains-to-an-AIDevOps-Agent-Workspace"><a href="#Why-Mopheus-Truly-Unifies-Dev-and-Ops-Moving-from-Fragmented-Toolchains-to-an-AIDevOps-Agent-Workspace" class="headerlink" title="Why Mopheus Truly Unifies Dev and Ops: Moving from Fragmented Toolchains to an AIDevOps Agent Workspace"></a>Why Mopheus Truly Unifies Dev and Ops: Moving from Fragmented Toolchains to an AIDevOps Agent Workspace</h1><h3 id="From-Siloed-Toolchains-to-a-Unified-AIDevOps-Agent-Workspace"><a href="#From-Siloed-Toolchains-to-a-Unified-AIDevOps-Agent-Workspace" class="headerlink" title="From Siloed Toolchains to a Unified AIDevOps Agent Workspace"></a>From Siloed Toolchains to a Unified AIDevOps Agent Workspace</h3><p><img src="https://files.seeusercontent.com/2026/08/29/Xyu1/dev_ops_unification_cover_178799.jpg" alt="Why Mopheus Truly Unifies Dev and Ops"></p>
@@ -1729,11 +1891,11 @@
 </blockquote>
 ]]></content>
       <tags>
-        <tag>DevOps</tag>
-        <tag>AIDevOps</tag>
         <tag>Mopheus</tag>
         <tag>AI-Agents</tag>
         <tag>Software-Engineering</tag>
+        <tag>DevOps</tag>
+        <tag>AIDevOps</tag>
       </tags>
   </entry>
   <entry>
@@ -1882,61 +2044,6 @@
         <tag>Database</tag>
         <tag>DBOS</tag>
         <tag>Operating System</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Working Mechanism of synchronous_standby_names in MogDB</title>
-    <url>/2024/06/05/Working-Mechanism-of-synchronous-standby-names-in-MogDB/</url>
-    <content><![CDATA[<p>In MogDB, the parameter <code>synchronous_standby_names</code> is used to configure synchronous replication settings. When this parameter is set to <code>&#39;*&#39;</code>（default setting）, it indicates that any available standby server can be used as a synchronous standby. This configuration allows any currently connected standby to be utilized as a synchronous standby without explicitly specifying the standby’s name.</p>
-<h3 id="Working-Mechanism"><a href="#Working-Mechanism" class="headerlink" title="Working Mechanism"></a>Working Mechanism</h3><p>When <code>synchronous_standby_names</code> is set to <code>&#39;*&#39;</code>, MogDB’s synchronous replication mechanism selects the synchronous standby through the following steps:</p>
-<ol>
-<li><p><strong>Initial Connection</strong>: When the primary server starts or the parameter is changed, the primary server accepts all connected standby servers.</p>
-</li>
-<li><p><strong>Synchronous Standby Confirmation</strong>:</p>
-<ul>
-<li>The primary server sends a synchronization request to all connected standby servers.</li>
-<li>Each standby server, upon receiving the request, confirms it and reports its status back to the primary server.</li>
-</ul>
-</li>
-<li><p><strong>Selecting the Synchronous Standby</strong>:</p>
-<ul>
-<li>The primary server selects the earliest responding standby server(s) as the synchronous standby.</li>
-<li>This selection process is dynamic, meaning that if new standbys connect or current synchronous standbys disconnect, the primary server will reselect the synchronous standby.</li>
-</ul>
-</li>
-</ol>
-<h3 id="Priority-and-Behavior"><a href="#Priority-and-Behavior" class="headerlink" title="Priority and Behavior"></a>Priority and Behavior</h3><ul>
-<li><strong>No Priority Order</strong>: Since <code>&#39;*&#39;</code> denotes any standby, all standbys have the same priority. The primary server simply selects the earliest responding standby as the synchronous standby.</li>
-<li><strong>Dynamic Adjustment</strong>: If a synchronous standby disconnects, the primary server automatically selects the next responding standby as the new synchronous standby, ensuring the continuity and reliability of synchronous replication.</li>
-<li><strong>Concurrent Management</strong>: If multiple standbys connect simultaneously, the primary server can handle these concurrent connections and select the synchronous standby based on the confirmation of synchronization requests.</li>
-</ul>
-<h3 id="Configuration-Example-and-Usage"><a href="#Configuration-Example-and-Usage" class="headerlink" title="Configuration Example and Usage"></a>Configuration Example and Usage</h3><p>Suppose we have one primary server and three standby servers (<code>standby1</code>, <code>standby2</code>, and <code>standby3</code>). In the configuration file <code>postgresql.conf</code>, set <code>synchronous_standby_names</code> to <code>&#39;*&#39;</code>:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">synchronous_standby_names = &#x27;*&#x27;</span><br></pre></td></tr></table></figure>
-
-<h4 id="Scenario-Analysis"><a href="#Scenario-Analysis" class="headerlink" title="Scenario Analysis"></a>Scenario Analysis</h4><ol>
-<li><p><strong>Selection at Startup</strong>:</p>
-<ul>
-<li>When the primary server starts, all connected standby servers send heartbeat signals and wait for the primary server’s synchronization request.</li>
-<li>The primary server selects the earliest responding standby as the synchronous standby.</li>
-</ul>
-</li>
-<li><p><strong>Runtime Changes</strong>:</p>
-<ul>
-<li>If the current synchronous standby <code>standby1</code> disconnects, the primary server automatically selects the next responding standby <code>standby2</code> as the new synchronous standby.</li>
-<li>If a new standby <code>standby3</code> connects to the primary server and there is no current synchronous standby, the primary server selects <code>standby3</code> as the synchronous standby.</li>
-</ul>
-</li>
-</ol>
-<h4 id="Dynamic-Adjustment"><a href="#Dynamic-Adjustment" class="headerlink" title="Dynamic Adjustment"></a>Dynamic Adjustment</h4><p>If we start the primary server and three standby servers, setting <code>synchronous_standby_names = &#39;*&#39;</code>, the following state transitions are possible:</p>
-<ul>
-<li><strong>Initial State</strong>: All standbys (<code>standby1</code>, <code>standby2</code>, and <code>standby3</code>) connect, and the primary server selects the earliest responding standby <code>standby1</code> as the synchronous standby.</li>
-<li><strong><code>standby1</code> Disconnects</strong>: The primary server automatically selects the next responding standby <code>standby2</code> as the new synchronous standby.</li>
-<li><strong>New Standby Connection</strong>: A new standby <code>standby4</code> connects; the primary server will not change the current synchronous standby unless <code>standby2</code> disconnects.</li>
-</ul>
-<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p>When <code>synchronous_standby_names</code> is set to <code>&#39;*&#39;</code>, MogDB dynamically selects any currently available standby as the synchronous standby. This provides a flexible and highly available synchronous replication mechanism without requiring administrators to manually specify the standby names. The selection process is based on standby response times and automatically adjusts during runtime to ensure the continuity and reliability of synchronous replication.</p>
-]]></content>
-      <tags>
-        <tag>MogDB</tag>
       </tags>
   </entry>
 </search>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=#58b77a>
+  <title>Bringing the Legendary &#34;grill-me&#34; Skill into Mopheus: Teaching AI Agents Self-Questioning and Adversarial Review | Kamus&#39; Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  <meta name="description" content="Bringing the Legendary “grill-me” Skill into Mopheus: Teaching AI Agents Self-Questioning and Adversarial Review
+The code is written, the architecture plan i...">
+  <link rel="canonical" href="https://www.kamusis.me/2026/09/07/Bring-the-Legendary-grill-me-Skill-into-Mopheus/">
+  <meta property="og:site_name" content="Kamus' Notes">
+  <meta property="og:title" content="Bringing the Legendary "grill-me" Skill into Mopheus: Teaching AI Agents Self-Questioning and Adversarial Review | Kamus' Notes">
+  <meta property="og:description" content="Bringing the Legendary “grill-me” Skill into Mopheus: Teaching AI Agents Self-Questioning and Adversarial Review
+The code is written, the architecture plan i...">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.kamusis.me/2026/09/07/Bring-the-Legendary-grill-me-Skill-into-Mopheus/">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bringing the Legendary "grill-me" Skill into Mopheus: Teaching AI Agents Self-Questioning and Adversarial Review | Kamus' Notes">
+  <meta name="twitter:description" content="Bringing the Legendary “grill-me” Skill into Mopheus: Teaching AI Agents Self-Questioning and Adversarial Review
+The code is written, the architecture plan i...">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Bringing the Legendary \"grill-me\" Skill into Mopheus: Teaching AI Agents Self-Questioning and Adversarial Review","description":"Bringing the Legendary “grill-me” Skill into Mopheus: Teaching AI Agents Self-Questioning and Adversarial Review\nThe code is written, the architecture plan i...","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kamusis.me/2026/09/07/Bring-the-Legendary-grill-me-Skill-into-Mopheus/"},"author":{"@type":"Person","name":"Kamus"},"publisher":{"@type":"Person","name":"Kamus"},"datePublished":"2026-09-06T18:55:00.000Z","dateModified":"2026-09-06T18:54:43.325Z","url":"https://www.kamusis.me/2026/09/07/Bring-the-Legendary-grill-me-Skill-into-Mopheus/","image":["https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg"]}</script>
+  <script id="hexo-configurations">
+  var CONFIG = {
+    root: '/',
+    theme: 'lx',
+    version: '0.4.4',
+    localsearch:{
+      "enable": true,
+      "trigger": "auto",
+      "top_n_per_article": 1,
+      "unescape": false,
+      "preload": false
+      },
+    path: 'search.xml'
+  };
+</script>
+
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/css/main.min.css">
+  
+  <style type="text/css">
+  pre,
+  code {
+    font-family: 'Fira Code', monospace;
+  }
+  html {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+  h1, h2, h3, h4, h5, figure {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+  .menu-container{
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+</style>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "",
+	     });
+	}); 
+	</script>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+<body>
+<div class="single">
+<div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Search..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+<div id="page">
+<div class="header">
+  <div id="lx-aside" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/post_cover.min.jpeg)" data-stellar-background-ratio="0.5">
+    <div class="overlay">
+      <a href="javascript:;" class="popup-trigger" title="search"><i class="menu-item-icon fa fa-search fa-fw"></i></a>
+      <div class="page-title">
+        <div class="avatar"><a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"></a></div>
+        <span>2026-09-07</span>
+        <h2>Bringing the...</h2>
+        <div class="tags"><i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/AI-Agents/" rel="tag">AI-Agents</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Architecture/" rel="tag">Architecture</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Code-Review/" rel="tag">Code-Review</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Mopheus/" rel="tag">Mopheus</a> <i class="fa fa-tag"></i><a class="tag-none-link" href="/tags/Software-Engineering/" rel="tag">Software-Engineering</a></div>
+        <div class="social-links">
+    <a href="https://github.com/kamusis" target="_blank" title="social-link"><i class="fa fa-github fa-fw"></i></a>
+    <a href="mailto:kamusis@gmail.com" target="_blank" title="social-link"><i class="fa fa-envelope fa-fw"></i></a>
+    <a href="https://www.linkedin.com/in/kamus/" target="_blank" title="social-link"><i class="fa fa-linkedin fa-fw"></i></a>
+    <a href="https://twitter.com/kamusis" target="_blank" title="social-link"><i class="fa fa-twitter fa-fw"></i></a>
+    <a href="https://www.instagram.com/kamusis/" target="_blank" title="social-link"><i class="fa fa-instagram fa-fw"></i></a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="lx-main-content">
+  <div class="lx-post">
+    <div class="lx-entry padding">
+      <div>
+        <h1 id="Bringing-the-Legendary-“grill-me”-Skill-into-Mopheus-Teaching-AI-Agents-Self-Questioning-and-Adversarial-Review"><a href="#Bringing-the-Legendary-“grill-me”-Skill-into-Mopheus-Teaching-AI-Agents-Self-Questioning-and-Adversarial-Review" class="headerlink" title="Bringing the Legendary “grill-me” Skill into Mopheus: Teaching AI Agents Self-Questioning and Adversarial Review"></a>Bringing the Legendary “grill-me” Skill into Mopheus: Teaching AI Agents Self-Questioning and Adversarial Review</h1><blockquote>
+<p><em>The code is written, the architecture plan is signed off—but do you genuinely feel confident?</em><br><em>When massive traffic spikes hit, network blips occur, or edge-case anomalies emerge, where will your system fail first?</em><br><em>We rarely lack hands to write code; what we sorely lack is a rigorous, demanding, and uncompromising “reviewer.”</em></p>
+</blockquote>
+<p><img src="https://files.seeusercontent.com/2026/08/29/O8mb/grill_me_cover_1787996414817.jpg" alt="Bringing the Legendary &quot;grill-me&quot; Skill into Mopheus"></p>
+<hr>
+<h2 id="1-What-is-grill-me-Why-is-a-Bare-60-Word-Prompt-Hailed-as-Legendary"><a href="#1-What-is-grill-me-Why-is-a-Bare-60-Word-Prompt-Hailed-as-Legendary" class="headerlink" title="1. What is grill-me? Why is a Bare 60-Word Prompt Hailed as Legendary?"></a>1. What is grill-me? Why is a Bare 60-Word Prompt Hailed as Legendary?</h2><p>Among developers practicing AI-assisted coding and systems design, one skill is widely revered as a secret weapon: <strong><code>grill-me</code></strong> (literally meaning to put someone on the hot grill).</p>
+<p>Created and open-sourced by renowned engineer and developer educator <strong>Matt Pocock</strong>:</p>
+<ul>
+<li><strong>Original GitHub Repository</strong>: <a target="_blank" rel="noopener" href="https://github.com/mattpocock/skills">mattpocock&#x2F;skills</a></li>
+<li><strong>Original Skill Reference</strong>: <a target="_blank" rel="noopener" href="https://github.com/mattpocock/skills/tree/main/skills/grill-me"><code>skills/grill-me/SKILL.md</code></a></li>
+</ul>
+<p>This developer-favorite skill has an astonishingly concise definition file (<code>SKILL.md</code>)—just three sentences, roughly 60 English words:</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Interview me relentlessly about every aspect of this plan until we reach a shared understanding. </span><br><span class="line">Walk down each branch of the design tree, resolving dependencies between decisions one-by-one. </span><br><span class="line">You MUST provide your recommended answer for every single question — never ask a question without also giving your own recommendation. This is mandatory, not optional.</span><br><span class="line"></span><br><span class="line">Ask the questions one at a time.</span><br><span class="line"></span><br><span class="line">If a question can be answered by exploring the codebase, explore the codebase instead.</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="Why-is-Such-a-Brief-Prompt-So-Uncannily-Powerful"><a href="#Why-is-Such-a-Brief-Prompt-So-Uncannily-Powerful" class="headerlink" title="Why is Such a Brief Prompt So Uncannily Powerful?"></a>Why is Such a Brief Prompt So Uncannily Powerful?</h3><p>Those new to Prompt Engineering often assume that greater power demands labyrinthine, multi-page instructions. <code>grill-me</code> represents the pinnacle of minimalist design:</p>
+<ol>
+<li><strong>“Relentlessly until shared understanding”</strong>:<br>Fundamentally dismantles LLMs’ default tendency toward sycophancy and superficial praise, instantly anchoring the Agent in the persona of a demanding Principal Architect or rigorous technical interviewer.</li>
+<li><strong>“Walk down each branch of the design tree”</strong>:<br>Forces systematic depth-first search across decision paths, knocking down architectural dependencies one by one rather than jumping erratically between surface-level topics.</li>
+<li><strong>The Core Anchor: “MUST provide your recommended answer”</strong>:<br>This is the stroke of genius in the prompt. If an AI merely asks questions, it easily devolves into an annoying contrarian. But by <strong>mandating that every critique must come paired with a concrete recommendation</strong>, the model is forced to simulate trade-offs and evaluate alternatives simultaneously. This drastically lowers cognitive overhead for the person being grilled and instantly establishes a high-quality reference baseline.</li>
+<li><strong>“Ask one at a time” &amp; “Explore the codebase instead”</strong>:<br>The former prevents cognitive overload by avoiding daunting walls of text; the latter keeps the AI pragmatic and grounded, ensuring it never wastes human time on facts already verifiable in code.</li>
+</ol>
+<hr>
+<h2 id="2-Why-Forge-grill-me-into-a-Native-Ticket-Mechanism-in-Mopheus"><a href="#2-Why-Forge-grill-me-into-a-Native-Ticket-Mechanism-in-Mopheus" class="headerlink" title="2. Why Forge grill-me into a Native Ticket Mechanism in Mopheus?"></a>2. Why Forge grill-me into a Native Ticket Mechanism in Mopheus?</h2><p>Mopheus natively supports Agent Skills. So why go through the effort of engineering a dedicated native Griller inquiry and review mechanism right within ticket comment threads?</p>
+<h3 id="The-Reality-of-Human-Agent-Grilling-Invaluable-Yet-Cognitively-Exhausting"><a href="#The-Reality-of-Human-Agent-Grilling-Invaluable-Yet-Cognitively-Exhausting" class="headerlink" title="The Reality of Human-Agent Grilling: Invaluable, Yet Cognitively Exhausting"></a>The Reality of Human-Agent Grilling: Invaluable, Yet Cognitively Exhausting</h3><p>The original <code>grill-me</code> fundamentally operates as <strong>“Agent grilling Human.”</strong> An engineer sits at their keyboard, engaging in a live, back-and-forth dialogue with the Agent.</p>
+<p>A standard <code>grill-me</code> session typically spans <strong>10 to 20 rounds of probing inquiries</strong>, taking roughly <strong>30 minutes</strong>.</p>
+<p>In practice, this is awe-inspiring yet mentally intense: <strong>when questioned on the 10th consecutive sharp edge case, one genuinely begins to feel the heat of the grill.</strong></p>
+<p>Yet there is no question: this process is <strong>immensely worthwhile</strong>—especially for core feature designs, complex online database migrations, or distributed systems architecture, where catching catastrophic vulnerabilities before writing code saves days or weeks of firefighting later.</p>
+<h3 id="The-Dilemma-How-to-Run-a-“Faster-Round”-Without-Sacrificing-Depth"><a href="#The-Dilemma-How-to-Run-a-“Faster-Round”-Without-Sacrificing-Depth" class="headerlink" title="The Dilemma: How to Run a “Faster Round” Without Sacrificing Depth?"></a>The Dilemma: How to Run a “Faster Round” Without Sacrificing Depth?</h3><p>Crucial as deep review is, we cannot afford to lower standards simply because the process is demanding. In fast-paced daily development, teams often need to <strong>run a rapid Grill cycle</strong>, ruthlessly uncovering hidden risks in designs and code in minimal time.</p>
+<p>Moreover, in an AI-Native engineering organization, much of the design proposals and pull requests are already written by execution Agents. Having the same Agent review its own work introduces obvious confirmation bias. Meanwhile, waiting for human engineers to schedule a 30-minute synchronous interview for every PR or design detail creates severe delivery bottlenecks.</p>
+<p>We needed rigorous reviews to be <strong>automated, high-frequency, and continuous</strong>.</p>
+<p>This sparked an intuitive realization: <strong>What if we assign an independent, specialized critique Agent to “interview itself” in the background across 20 rounds of deep reasoning?</strong></p>
+<h3 id="The-Core-Solution-Autonomous-Self-Questioning-and-Adversarial-Review"><a href="#The-Core-Solution-Autonomous-Self-Questioning-and-Adversarial-Review" class="headerlink" title="The Core Solution: Autonomous Self-Questioning and Adversarial Review"></a>The Core Solution: Autonomous Self-Questioning and Adversarial Review</h3><p>By dispatching dedicated specialist Agents (e.g., DBA Guardians, Security Auditors, High-Concurrency Architects) as visiting experts, Mopheus conducts <strong>autonomous multi-round Self-Q&amp;A sessions</strong> directly against any proposal or discussion thread.</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Workflow Evolution in Mopheus:</span><br><span class="line"></span><br><span class="line">[Deep Human-Agent Duels (Fully Supported)]</span><br><span class="line">Human presents design ──&gt; Agent conducts ruthless Q&amp;A ──&gt; Human responds &amp; iterates ──&gt; (Ideal for major architecture designs)</span><br><span class="line"></span><br><span class="line">[Mopheus Native Griller Loop]</span><br><span class="line">Any proposal or discussion thread on a Ticket</span><br><span class="line">       │</span><br><span class="line">       ▼ Click &quot;Grill this comment&quot;</span><br><span class="line">Summon a dedicated Griller Agent (e.g., DBA Guardian / Security Auditor)</span><br><span class="line">       │</span><br><span class="line">       ▼ Background Sandbox (executes multi-round adversarial Self-Q&amp;A)</span><br><span class="line">Griller simulates edge cases ──&gt; Inspects code &amp; constraints ──&gt; Self-questions &amp; uncovers gaps ──&gt; Compiles evidence</span><br><span class="line">       │</span><br><span class="line">       ▼ Automated Response</span><br><span class="line">Publishes a structured, multi-tier review report directly as a threaded reply!</span><br></pre></td></tr></table></figure>
+
+<p>This means: <strong>A human engineer simply clicks a button on a ticket, and an agent conducts the entire adversarial review in a background sandbox within minutes, presenting a structured stress-test report right under the thread for rapid team consensus.</strong></p>
+<p><img src="https://files.seeusercontent.com/2026/08/23/qs5O/image-20260823123100801.png" alt="image-20260823123100801"></p>
+<hr>
+<h2 id="3-What-If-Humans-Still-Want-to-Be-Grilled-Personally-Absolutely-Supported"><a href="#3-What-If-Humans-Still-Want-to-Be-Grilled-Personally-Absolutely-Supported" class="headerlink" title="3. What If Humans Still Want to Be Grilled Personally? Absolutely Supported!"></a>3. What If Humans Still Want to Be Grilled Personally? Absolutely Supported!</h2><p>Making Griller a native ticket mechanism in no way detracts from the value or thrill of human engineers undergoing the challenge themselves.</p>
+<p>If you are a Tech Lead or Principal Architect designing a mission-critical system and want to experience AI’s trial by fire directly, doing so in Mopheus is straightforward:</p>
+<ol>
+<li><strong>Import or Create Classic Skills</strong>: Create or import the original <code>grill-me</code> in the Mopheus Skill Hub, or import the advanced <strong><code>grill-with-docs</code></strong> (which grills your design while incrementally updating the project’s <code>CONTEXT.md</code> glossary and <code>ADR</code> Architecture Decision Records based on reaching consensus);</li>
+<li><strong>Engage in Live Dialogue</strong>:<ul>
+<li><strong>In Chat</strong>: Start an interactive session with an architect agent and invoke <code>/grill-me</code> for real-time stress testing;</li>
+<li><strong>In Tickets</strong>: Open an architecture design ticket, @mention your agent in a comment with instructions, and engage in public, round-by-round review within the thread.</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Dual-Track Review System:</span><br><span class="line">┌────────────────────────────────────────────────────────────────────────┐</span><br><span class="line">│ 1. Asynchronous Multi-Agent Grilling (Native Griller)                  │</span><br><span class="line">│    Automated Self-Q&amp;A reports on tickets &amp; PRs, exposing hidden flaws  │</span><br><span class="line">├────────────────────────────────────────────────────────────────────────┤</span><br><span class="line">│ 2. Deep Human-in-the-Loop Grilling (grill-me / grill-with-docs Skills)  │</span><br><span class="line">│    Synchronous, multi-round duels elevating engineering design thinking│</span><br><span class="line">└────────────────────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-How-We-Built-It-Clean-Elegant-and-Pragmatic-Engineering"><a href="#4-How-We-Built-It-Clean-Elegant-and-Pragmatic-Engineering" class="headerlink" title="4. How We Built It: Clean, Elegant, and Pragmatic Engineering"></a>4. How We Built It: Clean, Elegant, and Pragmatic Engineering</h2><p>To seamlessly weave rigorous grilling into daily workflows, we adhered to disciplined, minimalist engineering principles:</p>
+<h3 id="1-Agents-as-Grillers-Non-Invasive-Role-Specialization"><a href="#1-Agents-as-Grillers-Non-Invasive-Role-Specialization" class="headerlink" title="1. Agents as Grillers: Non-Invasive Role Specialization"></a>1. Agents as Grillers: Non-Invasive Role Specialization</h3><p>We avoided bloating the system with complex configuration layers. Enabling <code>is_griller</code> in an agent’s profile (or passing <code>--is-griller</code> via the CLI) immediately qualifies that agent as a Reviewer.</p>
+<p>The agent naturally leverages its domain specialization:</p>
+<ul>
+<li><strong>DBA Griller</strong>: Unpacks slow queries, deadlocks, missing indexes, and unsegmented transaction risks;</li>
+<li><strong>Architecture Griller</strong>: Audits service decoupling, fallback circuits, and state machine transitions;</li>
+<li><strong>Frontend Griller</strong>: Tests responsive boundaries, accessibility, and UI race conditions.</li>
+</ul>
+<p>Regardless of whether a ticket is assigned to a human or another Agent, users can summon them on demand as “visiting experts” <strong>without disrupting the ticket’s primary ownership</strong>.</p>
+<h3 id="2-Precise-Prompt-Scoping-and-Closed-Loop-Threading"><a href="#2-Precise-Prompt-Scoping-and-Closed-Loop-Threading" class="headerlink" title="2. Precise Prompt Scoping and Closed-Loop Threading"></a>2. Precise Prompt Scoping and Closed-Loop Threading</h3><p>To ensure agents remain grounded and avoid hallucinations during self-Q&amp;A, we instituted three fundamental prompt rules:</p>
+<ul>
+<li><strong>Thread Scoping</strong>: The Griller strictly consumes the targeted comment and its immediate conversational context as ground truth;</li>
+<li><strong>Language Matching</strong>: If the source discussion is in Chinese, the entire self-Q&amp;A and final critique are generated in Chinese; if in English, it outputs English, preserving conversational consistency;</li>
+<li><strong>Thread Reply</strong>: The finished report automatically mounts as a nested child response (<code>--parent</code>) beneath the original comment, matching GitHub PR review cleanliness.</li>
+</ul>
+<h3 id="3-CLI-First-Design-and-Real-Time-Awareness"><a href="#3-CLI-First-Design-and-Real-Time-Awareness" class="headerlink" title="3. CLI-First Design and Real-Time Awareness"></a>3. CLI-First Design and Real-Time Awareness</h3><p>Developers can summon a Griller with one click in the Web UI:</p>
+<p><img src="https://files.seeusercontent.com/2026/08/22/b3rI/aidevops_core.png" alt="Mopheus Web One-Click Griller Review"></p>
+<p>Or directly trigger reviews from terminal CLIs or CI&#x2F;CD pipelines:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Launch a deep Grill review on a comment with a designated DBA Griller</span></span><br><span class="line">mopheus ticket comment grill &lt;comment-id&gt; --agent-id &lt;griller-id&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Backed by real-time WebSocket event dispatching and browser tab wake-up reconnects, review tasks update seamlessly whether an engineer stays focused on the tab or returns later.</p>
+<hr>
+<h2 id="5-Future-Roadmap-From-Single-Agent-Self-Q-A-to-the-“Agent-Arena-Topic”"><a href="#5-Future-Roadmap-From-Single-Agent-Self-Q-A-to-the-“Agent-Arena-Topic”" class="headerlink" title="5. Future Roadmap: From Single-Agent Self-Q&amp;A to the “Agent Arena Topic”"></a>5. Future Roadmap: From Single-Agent Self-Q&amp;A to the “Agent Arena Topic”</h2><p>Autonomous Self-Q&amp;A in isolated sandboxes has already delivered substantial quality gains, but it is only the prelude to true multi-agent adversarial collaboration.</p>
+<p>Our next milestone is <strong>enabling two fully independent agents to engage in real-time, face-to-face cross-examination</strong>:</p>
+<ul>
+<li>Dispatching a dedicated Reviewer Agent to directly grill a <strong>Developer Agent preparing to write code</strong>;</li>
+<li>Directing Security and SRE Reviewer Agents to cross-examine a <strong>DBA Agent planning high-risk data migrations or online maintenance</strong>.</li>
+</ul>
+<p>To realize this vision, we are designing the <strong>Agent Arena</strong> directly atop Mopheus’s existing <strong>Topic</strong> deliberation framework:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Future Roadmap: Agent Arena Topics</span><br><span class="line"></span><br><span class="line">Complex Proposal / High-Risk Operation in Ticket Comments</span><br><span class="line">       │</span><br><span class="line">       ▼ One-Click: &quot;Create Arena Topic&quot;</span><br><span class="line">System spawns a dedicated deliberation arena, bringing both Agents into the ring:</span><br><span class="line">┌─────────────────────────────────────────────────────────────┐</span><br><span class="line">│  Mopheus Arena Topic Deliberation Space                     │</span><br><span class="line">│                                                             │</span><br><span class="line">│  [Execution Agent: Feature Builder]  VS  [Review Agent: DBA Griller] │</span><br><span class="line">│                                                             │</span><br><span class="line">│  1. Reviewer: &quot;How will cross-shard aggregation latency be  │</span><br><span class="line">│     guaranteed in this table partitioning strategy?&quot;        │</span><br><span class="line">│  2. Builder:  &quot;Secondary index lookup with distributed      │</span><br><span class="line">│     Bloom filters.&quot;                                         │</span><br><span class="line">│  3. Reviewer: &quot;How do you recover if Bloom filter false     │</span><br><span class="line">│     positives surge under network partitions?&quot;              │</span><br><span class="line">│  4. Builder:  &quot;Fallback read-only circuit with revised      │</span><br><span class="line">│     state machine transitions.&quot;                             │</span><br><span class="line">│                                                             │</span><br><span class="line">│  ── Through rigorous dialectic debate, both agree on an      │</span><br><span class="line">│     indisputably optimal architecture ──                    │</span><br><span class="line">└──────────────────────────────┬──────────────────────────────┘</span><br><span class="line">                               │</span><br><span class="line">                               ▼ Automated Sync</span><br><span class="line">Conclusions synthesize into a high-confidence decision report, written back to the ticket for safe execution!</span><br></pre></td></tr></table></figure>
+
+<p>By elevating ticket discussions into Arena Topics, human engineers can observe high-level algorithmic debate in real time while securing thoroughly stress-tested, resilient architectural designs.</p>
+<hr>
+<h2 id="6-Conclusion-Toward-Software-Engineering-Driven-by-AI-Adversarial-Evolution"><a href="#6-Conclusion-Toward-Software-Engineering-Driven-by-AI-Adversarial-Evolution" class="headerlink" title="6. Conclusion: Toward Software Engineering Driven by AI Adversarial Evolution"></a>6. Conclusion: Toward Software Engineering Driven by AI Adversarial Evolution</h2><p>As LLMs generate code with breathtaking speed, the true bulwark of software engineering shifts toward <strong>review and verification</strong>.</p>
+<p>Bringing <code>grill-me</code> into Mopheus represents a pivotal milestone in <strong>multi-agent adversarial collaboration</strong>:</p>
+<ul>
+<li>It preserves the training ground where humans can personally undergo AI’s rigorous cross-examination;</li>
+<li>It introduces automated quality checkpoints where agents asynchronously self-question and poke holes in human and AI proposals alike;</li>
+<li>And it sets the stage for genuine dual-agent sparring inside Arena Topics.</li>
+</ul>
+<hr>
+<blockquote>
+<p><strong>Ready to empower your engineering workflows with relentless, professional Griller agents?</strong><br>Explore <a target="_blank" rel="noopener" href="https://www.mopheus.ai/">Mopheus (mopheus.ai)</a> and equip your workspace with dedicated architecture and quality guardians today!</p>
+</blockquote>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="lx-navigation">
+	<div class="lx-cover next lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-l.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="#">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Next</span>
+						<h3>No newer post</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+        <div class="lx-cover prev lx-cover-sm" style="background-image: url(https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/images/footer-r.min.jpeg)">
+		<div class="overlay"></div>
+		<a class="copy" href="/2026/09/07/Why-Mopheus-Truly-Unifies-Dev-and-Ops/">
+			<div class="display-t">
+				<div class="display-tc">
+					<div>
+						<span>Prev</span>
+						<h3>Why Mop...</h3>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+
+</div>
+
+<footer>
+  <div>
+  Copyright &copy; 2026.<a href="/">Kamus' Notes</a><br>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme <a href="https://lx.js.org" target="_blank">Lx</a><br>
+  </div>
+</footer>
+
+</div>
+
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<div class="menu visibility">
+  <div class="menu-head">
+    <span class="layer">
+      <div class="col">
+        <div class="row for-pic">
+          <div class="profile-pic">
+            <a href="/"><img src="https://s2.loli.net/2024/05/27/nuGfQUOx6kR9YIh.png" alt="Kamus"/></a>
+          </div>
+        </div>
+        <div class="row for-name">
+          <p>Kamus</p>
+          <span class="tagline">Hello, World!</span>
+        </div>
+      </div>
+    </span>
+  </div>
+  <nav class="menu-container">
+  <ul class="menu-items">
+    <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+    <li><a href="/archives/"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+    
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-bookmark fa-fw"></i>Pages</span>
+        <ul>
+          <li><a href="/about/">About</a></li>
+        </ul>
+    </li>
+    <li class="has-sub"><span class="dropdown-heading">
+      <i class="fa fa-link fa-fw"></i>Friends</span>
+        <ul>
+          <li> <a href="https://www.eygle.com/" target="_blank">Eygle</a></li>
+        <li> <a href="https://yangtingkun.net" target="_blank">Laoyang</a></li>
+        </ul>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<script src="https://cdn.jsdelivr.net/npm/theme-lx@0.4.4/source/dist/js/local.search.min.js"></script>
+
+</body>
+</html>
