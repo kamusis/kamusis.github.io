@@ -120,11 +120,11 @@ background: var(--dia-bg);
 </g>
 
 <!-- Downward Orthogonal Distribution from Hub -->
-<path d="M 780,96 V 156" stroke="var(--dia-muted)" stroke-width="1.2"/>
-<path d="M 780,156 H 130" stroke="var(--dia-muted)" stroke-width="1.2"/>
-<path d="M 130,156 V 196" stroke="var(--dia-success)" stroke-width="1.2" marker-end="url(#arr-suc)"/>
-<path d="M 450,156 V 196" stroke="var(--dia-danger)" stroke-width="1.2" marker-end="url(#arr-dan)"/>
-<path d="M 780,156 V 196" stroke="var(--dia-muted)" stroke-width="1.2" marker-end="url(#arr-m)"/>
+<path d="M 780,96 V 156" fill="none" stroke="var(--dia-muted)" stroke-width="1.2"/>
+<path d="M 780,156 H 130" fill="none" stroke="var(--dia-muted)" stroke-width="1.2"/>
+<path d="M 130,156 V 196" fill="none" stroke="var(--dia-success)" stroke-width="1.2" marker-end="url(#arr-suc)"/>
+<path d="M 450,156 V 196" fill="none" stroke="var(--dia-danger)" stroke-width="1.2" marker-end="url(#arr-dan)"/>
+<path d="M 780,156 V 196" fill="none" stroke="var(--dia-muted)" stroke-width="1.2" marker-end="url(#arr-m)"/>
 
 <!-- Branch A: Clean State (Determinism) -->
 <g transform="translate(10, 200)">

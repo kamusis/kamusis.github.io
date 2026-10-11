@@ -138,8 +138,8 @@ background: var(--dia-bg);
 </g>
 
 <!-- Split Connectors Col 3 -> Col 4 -->
-<path d="M 700,140 H 740 V 100 H 750" stroke="var(--dia-success)" stroke-width="1.2" marker-end="url(#arr-ssuc)"/>
-<path d="M 700,210 H 740 V 250 H 750" stroke="var(--dia-danger)" stroke-width="1.2" marker-end="url(#arr-sdan)"/>
+<path d="M 700,140 H 740 V 100 H 750" fill="none" stroke="var(--dia-success)" stroke-width="1.2" marker-end="url(#arr-ssuc)"/>
+<path d="M 700,210 H 740 V 250 H 750" fill="none" stroke="var(--dia-danger)" stroke-width="1.2" marker-end="url(#arr-sdan)"/>
 
 <!-- Column 4: Verdict & Action -->
 <!-- Outcome A: Clean & Verified -->

@@ -1,0 +1,291 @@
+<svg viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="axon-redesign-title axon-redesign-desc">
+  <title id="axon-redesign-title">Axon Central Hub and Spoke Architecture</title>
+  <desc id="axon-redesign-desc">Comprehensive radial architecture diagram illustrating the central Axon Hub synchronizing skills, workflows, commands, and rules bidirectionally with a remote Git repository and fanning out via native symlinks to modern AI coding agents including Claude Code, Cursor, Devin, Antigravity, Codex, Qoder, and custom agents.</desc>
+
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap');
+      .txt-sans { font-family: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .txt-mono { font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
+    </style>
+
+    <pattern id="arch-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="0.9" fill="rgba(15, 23, 42, 0.07)"/>
+    </pattern>
+
+    <marker id="m-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#64748b"/>
+    </marker>
+    <marker id="m-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#f59e0b"/>
+    </marker>
+    <marker id="m-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#3b82f6"/>
+    </marker>
+  </defs>
+
+  <!-- Background with subtle dot grid -->
+  <rect width="1000" height="700" fill="#f8fafc"/>
+  <rect width="1000" height="700" fill="url(#arch-grid)"/>
+
+  <!-- ================= TOP: Remote Git Repository ================= -->
+  <g transform="translate(350, 24)">
+    <rect width="300" height="76" rx="10" fill="#ffffff" stroke="rgba(15, 23, 42, 0.16)" stroke-width="1.2"/>
+    <!-- Git Cloud Icon -->
+    <g transform="translate(18, 20)">
+      <path d="M28 14c0-5.52-4.48-10-10-10-4.42 0-8.17 2.86-9.5 6.86A7.002 7.002 0 0 0 2 17c0 3.87 3.13 7 7 7h18c3.31 0 6-2.69 6-6 0-3.08-2.32-5.63-5.32-5.95-.34-.03-.68-.05-1.02-.05-.23 0-.45.02-.66.05z" fill="rgba(59, 130, 246, 0.08)" stroke="#3b82f6" stroke-width="1.4"/>
+      <!-- Git branch inside cloud -->
+      <circle cx="16" cy="12" r="2" fill="#3b82f6"/>
+      <circle cx="12" cy="18" r="2" fill="#3b82f6"/>
+      <circle cx="20" cy="18" r="2" fill="#3b82f6"/>
+      <path d="M16 14v4M16 16h4" stroke="#3b82f6" stroke-width="1.2"/>
+    </g>
+    <text x="62" y="34" fill="#0f172a" font-size="13" font-weight="700" class="txt-sans">Remote Git Repository</text>
+    <text x="62" y="50" fill="#64748b" font-size="8.5" class="txt-mono">GitHub · GitLab · Self-Hosted Origin</text>
+    <text x="62" y="64" fill="#94a3b8" font-size="8" class="txt-mono">axon-hub.git (main branch)</text>
+  </g>
+
+  <!-- ================= PIPE: Remote <-> Axon Hub ================= -->
+  <!-- Vertical bidirectional line -->
+  <path d="M 500,100 V 256" stroke="#0f172a" stroke-width="1.6" stroke-dasharray="4,3"/>
+  <!-- Bidirectional arrowheads -->
+  <polygon points="500,102 496,110 504,110" fill="#0f172a"/>
+  <polygon points="500,254 496,246 504,246" fill="#0f172a"/>
+
+  <!-- Sync Pill -->
+  <g transform="translate(425, 148)">
+    <rect width="150" height="24" rx="12" fill="#0f172a"/>
+    <text x="75" y="15" fill="#ffffff" font-size="9.5" font-weight="700" class="txt-mono" text-anchor="middle">axon sync</text>
+  </g>
+  <!-- Diff Sub-Pill -->
+  <g transform="translate(390, 180)">
+    <rect width="220" height="18" rx="4" fill="#ffffff" stroke="rgba(15, 23, 42, 0.12)" stroke-width="0.8"/>
+    <text x="110" y="12" fill="#64748b" font-size="7.5" font-weight="600" class="txt-mono" text-anchor="middle">asset diffs: +skills/ ~workflows/ -rules/</text>
+  </g>
+
+  <!-- ================= RADIAL SPOKE CONNECTORS ================= -->
+  <!-- Top-Left Spoke (to Claude Code) -->
+  <path d="M 360,285 L 240,185" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <rect x="270" y="220" width="56" height="15" rx="3" fill="#ffffff" stroke="rgba(15, 23, 42, 0.1)" stroke-width="0.6"/>
+  <text x="298" y="230" fill="#64748b" font-size="7" font-weight="600" class="txt-mono" text-anchor="middle">symlink</text>
+
+  <!-- Mid-Left Spoke (to Devin) -->
+  <path d="M 330,365 L 220,365" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <rect x="245" y="357" width="56" height="15" rx="3" fill="#ffffff" stroke="rgba(15, 23, 42, 0.1)" stroke-width="0.6"/>
+  <text x="273" y="367" fill="#64748b" font-size="7" font-weight="600" class="txt-mono" text-anchor="middle">symlink</text>
+
+  <!-- Bottom-Left Spoke (to Antigravity) -->
+  <path d="M 360,455 L 240,555" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <rect x="270" y="495" width="56" height="15" rx="3" fill="#ffffff" stroke="rgba(15, 23, 42, 0.1)" stroke-width="0.6"/>
+  <text x="298" y="505" fill="#64748b" font-size="7" font-weight="600" class="txt-mono" text-anchor="middle">symlink</text>
+
+  <!-- Bottom Mid-Left Spoke (to Codex) -->
+  <path d="M 430,480 L 370,580" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <rect x="372" y="520" width="56" height="15" rx="3" fill="#ffffff" stroke="rgba(15, 23, 42, 0.1)" stroke-width="0.6"/>
+  <text x="400" y="530" fill="#64748b" font-size="7" font-weight="600" class="txt-mono" text-anchor="middle">symlink</text>
+
+  <!-- Bottom Mid-Right Spoke (to OpenCode) -->
+  <path d="M 570,480 L 630,580" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <rect x="572" y="520" width="56" height="15" rx="3" fill="#ffffff" stroke="rgba(15, 23, 42, 0.1)" stroke-width="0.6"/>
+  <text x="600" y="530" fill="#64748b" font-size="7" font-weight="600" class="txt-mono" text-anchor="middle">symlink</text>
+
+  <!-- Bottom-Right Spoke (to Any Custom Agent - ACCENT) -->
+  <path d="M 640,455 L 760,555" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="4,2"/>
+  <rect x="674" y="495" width="56" height="15" rx="3" fill="#ffffff" stroke="#f59e0b" stroke-width="0.8"/>
+  <text x="702" y="505" fill="#b45309" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">symlink</text>
+
+  <!-- Mid-Right Spoke (to Qoder) -->
+  <path d="M 670,365 L 780,365" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <rect x="698" y="357" width="56" height="15" rx="3" fill="#ffffff" stroke="rgba(15, 23, 42, 0.1)" stroke-width="0.6"/>
+  <text x="726" y="367" fill="#64748b" font-size="7" font-weight="600" class="txt-mono" text-anchor="middle">symlink</text>
+
+  <!-- Top-Right Spoke (to Cursor) -->
+  <path d="M 640,285 L 760,185" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <rect x="674" y="220" width="56" height="15" rx="3" fill="#ffffff" stroke="rgba(15, 23, 42, 0.1)" stroke-width="0.6"/>
+  <text x="702" y="230" fill="#64748b" font-size="7" font-weight="600" class="txt-mono" text-anchor="middle">symlink</text>
+
+
+  <!-- ================= CENTER: AXON HUB ================= -->
+  <g transform="translate(330, 260)">
+    <!-- Outer authoritative card -->
+    <rect width="340" height="220" rx="16" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+    
+    <!-- Header Strip -->
+    <g transform="translate(20, 20)">
+      <!-- Git Branch Monogram -->
+      <circle cx="12" cy="8" r="3" fill="#0f172a"/>
+      <circle cx="6" cy="18" r="3" fill="#0f172a"/>
+      <circle cx="18" cy="18" r="3" fill="#0f172a"/>
+      <path d="M12 11v4M12 13h6" stroke="#0f172a" stroke-width="1.6"/>
+      
+      <text x="32" y="16" fill="#0f172a" font-size="16" font-weight="700" class="txt-mono">~/.axon/repo/</text>
+    </g>
+    
+    <text x="52" y="58" fill="#64748b" font-size="7.5" font-weight="600" class="txt-mono" letter-spacing="0.1em">CENTRAL HUB · SINGLE SOURCE OF TRUTH</text>
+    <path d="M 20,68 H 320" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+
+    <!-- 4 Canonical Asset Categories (Grid) -->
+    <!-- 1. skills/ -->
+    <g transform="translate(20, 78)">
+      <rect width="144" height="42" rx="6" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+      <text x="12" y="18" fill="#0f172a" font-size="10" font-weight="700" class="txt-mono">📁 skills/</text>
+      <text x="12" y="32" fill="#64748b" font-size="7.5" class="txt-sans">Modular agent abilities</text>
+    </g>
+    <!-- 2. workflows/ -->
+    <g transform="translate(176, 78)">
+      <rect width="144" height="42" rx="6" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+      <text x="12" y="18" fill="#0f172a" font-size="10" font-weight="700" class="txt-mono">📁 workflows/</text>
+      <text x="12" y="32" fill="#64748b" font-size="7.5" class="txt-sans">Multi-step execution SOPs</text>
+    </g>
+    <!-- 3. commands/ -->
+    <g transform="translate(20, 128)">
+      <rect width="144" height="42" rx="6" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+      <text x="12" y="18" fill="#0f172a" font-size="10" font-weight="700" class="txt-mono">📁 commands/</text>
+      <text x="12" y="32" fill="#64748b" font-size="7.5" class="txt-sans">Executable CLI scripts</text>
+    </g>
+    <!-- 4. rules/ -->
+    <g transform="translate(176, 128)">
+      <rect width="144" height="42" rx="6" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+      <text x="12" y="18" fill="#0f172a" font-size="10" font-weight="700" class="txt-mono">📁 rules/</text>
+      <text x="12" y="32" fill="#64748b" font-size="7.5" class="txt-sans">System &amp; safety guardrails</text>
+    </g>
+
+    <!-- Manifest & Governance Bar -->
+    <g transform="translate(20, 180)">
+      <rect width="300" height="26" rx="4" fill="rgba(15, 23, 42, 0.03)" stroke="rgba(15, 23, 42, 0.08)" stroke-width="0.8"/>
+      <text x="12" y="16" fill="#475569" font-size="8" font-weight="600" class="txt-mono">axon.vendors.yaml</text>
+      <text x="145" y="16" fill="#94a3b8" font-size="8" class="txt-mono">·</text>
+      <text x="160" y="16" fill="#475569" font-size="8" font-weight="600" class="txt-mono">global_rules.md</text>
+      <text x="288" y="16" fill="#10b981" font-size="7.5" font-weight="700" class="txt-mono" text-anchor="end">READY</text>
+    </g>
+  </g>
+
+
+  <!-- ================= 8 PERIMETER SPOKES ================= -->
+
+  <!-- SPOKE 1: Claude Code (Top-Left) -->
+  <g transform="translate(40, 110)">
+    <rect width="200" height="76" rx="8" fill="#ffffff" stroke="rgba(15, 23, 42, 0.16)" stroke-width="1.2"/>
+    <!-- Anthropic Terracotta Spark Icon -->
+    <g transform="translate(14, 14)">
+      <rect width="24" height="24" rx="5" fill="#fef3c7"/>
+      <!-- 8-ray minimal spark -->
+      <path d="M12 4v16M4 12h16M6.3 6.3l11.4 11.4M6.3 17.7L17.7 6.3" stroke="#d97706" stroke-width="2" stroke-linecap="round"/>
+    </g>
+    <text x="46" y="24" fill="#0f172a" font-size="12" font-weight="700" class="txt-sans">Claude Code</text>
+    <rect x="135" y="14" width="52" height="14" rx="2" fill="rgba(217, 119, 6, 0.1)"/>
+    <text x="161" y="24" fill="#d97706" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">ANTHROPIC</text>
+    <text x="14" y="49" fill="#64748b" font-size="8.5" class="txt-mono">~/.claude/skills/</text>
+    <text x="14" y="63" fill="#64748b" font-size="8.5" class="txt-mono">~/.claude/CLAUDE.md</text>
+  </g>
+
+  <!-- SPOKE 2: Devin (Mid-Left) [Formerly Windsurf] -->
+  <g transform="translate(20, 325)">
+    <rect width="200" height="76" rx="8" fill="#ffffff" stroke="rgba(15, 23, 42, 0.16)" stroke-width="1.2"/>
+    <!-- Devin Emerald Box Icon -->
+    <g transform="translate(14, 14)">
+      <rect width="24" height="24" rx="5" fill="#ecfdf5"/>
+      <path d="M6 7h7c3 0 5 2 5 5s-2 5-5 5H6V7z" fill="none" stroke="#059669" stroke-width="2"/>
+    </g>
+    <text x="46" y="24" fill="#0f172a" font-size="12" font-weight="700" class="txt-sans">Devin</text>
+    <rect x="130" y="14" width="58" height="14" rx="2" fill="rgba(5, 150, 105, 0.1)"/>
+    <text x="159" y="24" fill="#059669" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">COGNITION</text>
+    <text x="14" y="49" fill="#64748b" font-size="8" class="txt-mono">~/.codeium/windsurf/</text>
+    <text x="14" y="63" fill="#64748b" font-size="8.5" class="txt-mono">├── skills/ &amp; rules/</text>
+  </g>
+
+  <!-- SPOKE 3: Antigravity (Bottom-Left) [Replaced Gemini] -->
+  <g transform="translate(40, 540)">
+    <rect width="200" height="76" rx="8" fill="#ffffff" stroke="rgba(15, 23, 42, 0.16)" stroke-width="1.2"/>
+    <!-- DeepMind Indigo Orbital Icon -->
+    <g transform="translate(14, 14)">
+      <rect width="24" height="24" rx="5" fill="#f5f3ff"/>
+      <circle cx="12" cy="12" r="5" fill="none" stroke="#7c3aed" stroke-width="2"/>
+      <circle cx="12" cy="5" r="2" fill="#7c3aed"/>
+    </g>
+    <text x="46" y="24" fill="#0f172a" font-size="12" font-weight="700" class="txt-sans">Antigravity</text>
+    <rect x="132" y="14" width="55" height="14" rx="2" fill="rgba(124, 58, 237, 0.1)"/>
+    <text x="159" y="24" fill="#7c3aed" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">DEEPMIND</text>
+    <text x="14" y="49" fill="#64748b" font-size="8.5" class="txt-mono">~/.gemini/config/</text>
+    <text x="14" y="63" fill="#64748b" font-size="8.5" class="txt-mono">├── skills/ &amp; workflows/</text>
+  </g>
+
+  <!-- SPOKE 4: Codex (Bottom Mid-Left) -->
+  <g transform="translate(260, 580)">
+    <rect width="180" height="76" rx="8" fill="#ffffff" stroke="rgba(15, 23, 42, 0.16)" stroke-width="1.2"/>
+    <!-- OpenAI Green Swirl/Prompt Icon -->
+    <g transform="translate(14, 14)">
+      <rect width="24" height="24" rx="5" fill="#f0fdf4"/>
+      <path d="M7 10l3 3-3 3M13 16h4" stroke="#16a34a" stroke-width="1.8" stroke-linecap="round"/>
+    </g>
+    <text x="46" y="24" fill="#0f172a" font-size="12" font-weight="700" class="txt-sans">Codex</text>
+    <rect x="122" y="14" width="46" height="14" rx="2" fill="rgba(22, 163, 74, 0.1)"/>
+    <text x="145" y="24" fill="#16a34a" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">OPENAI</text>
+    <text x="14" y="49" fill="#64748b" font-size="8.5" class="txt-mono">~/.codex/skills/</text>
+    <text x="14" y="63" fill="#64748b" font-size="8.5" class="txt-mono">~/.codex/instructions</text>
+  </g>
+
+  <!-- SPOKE 5: OpenCode / Roo Code (Bottom Mid-Right) -->
+  <g transform="translate(560, 580)">
+    <rect width="180" height="76" rx="8" fill="#ffffff" stroke="rgba(15, 23, 42, 0.16)" stroke-width="1.2"/>
+    <!-- Open Tooling Code Brackets Icon -->
+    <g transform="translate(14, 14)">
+      <rect width="24" height="24" rx="5" fill="#f8fafc"/>
+      <path d="M9 8L5 12l4 4M15 8l4 4-4 4" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/>
+    </g>
+    <text x="46" y="24" fill="#0f172a" font-size="12" font-weight="700" class="txt-sans">OpenCode / Roo</text>
+    <rect x="125" y="14" width="42" height="14" rx="2" fill="rgba(71, 85, 105, 0.1)"/>
+    <text x="146" y="24" fill="#475569" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">OPEN</text>
+    <text x="14" y="49" fill="#64748b" font-size="8.5" class="txt-mono">~/.opencode/skills/</text>
+    <text x="14" y="63" fill="#64748b" font-size="8.5" class="txt-mono">~/.roo/custom-modes/</text>
+  </g>
+
+  <!-- SPOKE 6: Any Custom AI Agent (Bottom-Right) [HERO HIGHLIGHT CARD] -->
+  <g transform="translate(760, 540)">
+    <rect width="200" height="76" rx="8" fill="rgba(245, 158, 11, 0.05)" stroke="#f59e0b" stroke-width="1.6"/>
+    <!-- Star / Extensible Spark Icon -->
+    <g transform="translate(14, 14)">
+      <rect width="24" height="24" rx="5" fill="#fef3c7"/>
+      <path d="M12 4l2.5 5.5L20 12l-5.5 2.5L12 20l-2.5-5.5L4 12l5.5-2.5z" fill="#f59e0b"/>
+    </g>
+    <text x="46" y="24" fill="#b45309" font-size="12" font-weight="700" class="txt-sans">Any Custom Agent</text>
+    <rect x="122" y="14" width="65" height="14" rx="2" fill="#ffffff" stroke="#f59e0b" stroke-width="0.8"/>
+    <text x="154" y="24" fill="#b45309" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">100% AGNOSTIC</text>
+    <text x="14" y="49" fill="#0f172a" font-size="8.5" font-weight="500" class="txt-mono">~/.myagent/skills/</text>
+    <text x="14" y="63" fill="#b45309" font-size="8" font-weight="600" class="txt-mono">Defined in axon.yaml</text>
+  </g>
+
+  <!-- SPOKE 7: Qoder (Mid-Right) -->
+  <g transform="translate(780, 325)">
+    <rect width="200" height="76" rx="8" fill="#ffffff" stroke="rgba(15, 23, 42, 0.16)" stroke-width="1.2"/>
+    <!-- Qoder Cyan Badge Icon -->
+    <g transform="translate(14, 14)">
+      <rect width="24" height="24" rx="5" fill="#eff6ff"/>
+      <circle cx="12" cy="12" r="6" fill="none" stroke="#2563eb" stroke-width="2"/>
+      <path d="M16 16l3 3" stroke="#2563eb" stroke-width="2"/>
+    </g>
+    <text x="46" y="24" fill="#0f172a" font-size="12" font-weight="700" class="txt-sans">Qoder</text>
+    <rect x="135" y="14" width="52" height="14" rx="2" fill="rgba(37, 99, 235, 0.1)"/>
+    <text x="161" y="24" fill="#2563eb" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">QODERWORK</text>
+    <text x="14" y="49" fill="#64748b" font-size="8.5" class="txt-mono">~/.qoder/skills/</text>
+    <text x="14" y="63" fill="#64748b" font-size="8.5" class="txt-mono">~/.qoder/rules/</text>
+  </g>
+
+  <!-- SPOKE 8: Cursor (Top-Right) -->
+  <g transform="translate(760, 110)">
+    <rect width="200" height="76" rx="8" fill="#ffffff" stroke="rgba(15, 23, 42, 0.16)" stroke-width="1.2"/>
+    <!-- Cursor Isometric Cube Icon -->
+    <g transform="translate(14, 14)">
+      <rect width="24" height="24" rx="5" fill="#f1f5f9"/>
+      <!-- 3D Cube -->
+      <path d="M12 4L6 8v8l6 4 6-4V8z" fill="none" stroke="#0f172a" stroke-width="1.6"/>
+      <path d="M12 4v16M6 8l6 4 6-4" stroke="#0f172a" stroke-width="1.2"/>
+    </g>
+    <text x="46" y="24" fill="#0f172a" font-size="12" font-weight="700" class="txt-sans">Cursor</text>
+    <rect x="132" y="14" width="55" height="14" rx="2" fill="rgba(15, 23, 42, 0.08)"/>
+    <text x="159" y="24" fill="#0f172a" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">ANYSPHERE</text>
+    <text x="14" y="49" fill="#64748b" font-size="8.5" class="txt-mono">~/.cursor/rules/</text>
+    <text x="14" y="63" fill="#64748b" font-size="8.5" class="txt-mono">~/.cursor/skills/</text>
+  </g>
+
+</svg>
