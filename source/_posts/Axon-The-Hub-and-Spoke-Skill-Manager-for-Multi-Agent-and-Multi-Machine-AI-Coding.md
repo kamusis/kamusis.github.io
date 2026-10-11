@@ -92,6 +92,10 @@ Managing external skills using traditional Git submodules introduces fragile det
 
 Axon solves this with a **complete vendor management lifecycle** coupled with **in-tree provenance tracking**.
 
+<p class="text-center" style="margin: 2rem 0;">
+  <img src="/img/axon-vendor-lifecycle.svg" alt="Axon Vendor Skill Lifecycle and Provenance" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);" />
+</p>
+
 ### The Hub Vendor Manifest (`axon.vendors.yaml`)
 
 Vendors are declared in `axon.vendors.yaml` located at the root of the Hub Git repository:
@@ -214,7 +218,11 @@ Running `axon init` on a machine with existing skills protects your data at ever
 
 ### Non-Destructive Forward-Commit Rollback (`axon rollback`)
 
-When an experimental prompt update or automated agent edit degrades a skill, developers need a reliable way to revert:
+When an experimental prompt update or automated agent edit degrades a skill, traditional `git reset --hard` creates catastrophic cluster drift by rewriting history and dropping commits. Axon replaces this with **surgical forward-commit rollbacks**:
+
+<p class="text-center" style="margin: 2rem 0;">
+  <img src="/img/axon-rollback-mechanism.svg" alt="Axon Non-Destructive Rollback Mechanism" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);" />
+</p>
 
 ```bash
 # Browse recent commit history for a specific skill
@@ -227,17 +235,19 @@ axon rollback db-tuning
 axon rollback db-tuning --revision 7c2a1b0
 ```
 
-`axon rollback` **never rewrites history**. It generates an inverted patch and records a new forward commit. Subsequent `axon sync` commands propagate the revert cleanly across your cluster without push rejections or detached HEADs.
+By extracting the historical snapshot of only the targeted asset directory and recording a new forward commit ($C_4$), peer assets remain untouched and subsequent `axon sync` runs across all cluster nodes fast-forward cleanly without conflict.
 
 ---
 
 ## 4. Security Auditing & Diagnostics
 
-Because modern agent skills often bundle executable scripts (`.sh`, `.py`, `.js`), unvetted prompts and community skills present genuine security attack surfaces.
-
 ### AI-Powered Security Auditing (`axon audit`)
 
-Axon includes a static analysis and LLM-assisted security engine to audit skills before execution:
+Because modern agent skills often bundle executable scripts (`.sh`, `.py`, `.js`), unvetted community packages present genuine security attack surfaces. Axon implements a **two-stage audit pipeline** that combines deterministic static pattern scanning with LLM contextual reasoning:
+
+<p class="text-center" style="margin: 2rem 0;">
+  <img src="/img/axon-security-pipeline.svg" alt="Axon Two-Stage Security Audit Pipeline" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);" />
+</p>
 
 ```bash
 # Scan the entire Hub

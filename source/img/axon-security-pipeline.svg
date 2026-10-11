@@ -1,0 +1,168 @@
+<svg viewBox="0 0 960 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="axon-sec-title axon-sec-desc" class="axon-diagram">
+<title id="axon-sec-title">Axon Two-Stage Security Audit Pipeline</title>
+<desc id="axon-sec-desc">Security process diagram showing how Axon audits community skills through static pattern matching for secrets and AST anomalies, followed by LLM-assisted semantic inspection and interactive redaction.</desc>
+
+<defs>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap');
+
+.axon-diagram {
+--dia-bg: #f8fafc;
+--dia-paper: #ffffff;
+--dia-ink: #0f172a;
+--dia-muted: #64748b;
+--dia-soft: #94a3b8;
+--dia-border: rgba(15, 23, 42, 0.08);
+--dia-border-strong: rgba(15, 23, 42, 0.16);
+--dia-accent: #f59e0b;
+--dia-accent-dark: #d97706;
+--dia-accent-tint: rgba(245, 158, 11, 0.06);
+--dia-link: #3b82f6;
+--dia-link-tint: rgba(59, 130, 246, 0.06);
+--dia-success: #10b981;
+--dia-success-tint: rgba(16, 185, 129, 0.06);
+--dia-danger: #ef4444;
+--dia-danger-tint: rgba(239, 68, 68, 0.06);
+--dia-dot: rgba(15, 23, 42, 0.07);
+width: 100%;
+height: auto;
+display: block;
+background: var(--dia-bg);
+}
+
+.dia-font-sans { font-family: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.dia-font-mono { font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+@media (prefers-color-scheme: dark) {
+.axon-diagram {
+--dia-bg: #090d16;
+--dia-paper: #111827;
+--dia-ink: #f1f5f9;
+--dia-muted: #94a3b8;
+--dia-soft: #64748b;
+--dia-border: rgba(255, 255, 255, 0.08);
+--dia-border-strong: rgba(255, 255, 255, 0.16);
+--dia-accent: #fbbf24;
+--dia-accent-dark: #f59e0b;
+--dia-accent-tint: rgba(251, 191, 36, 0.1);
+--dia-link: #60a5fa;
+--dia-link-tint: rgba(96, 165, 250, 0.1);
+--dia-success: #34d399;
+--dia-success-tint: rgba(52, 211, 153, 0.1);
+--dia-danger: #f87171;
+--dia-danger-tint: rgba(248, 113, 113, 0.1);
+--dia-dot: rgba(255, 255, 255, 0.05);
+}
+}
+</style>
+
+<pattern id="dotgrid-sec" width="20" height="20" patternUnits="userSpaceOnUse">
+<circle cx="2" cy="2" r="1" fill="var(--dia-dot)"/>
+</pattern>
+
+<marker id="arr-sm" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+<polygon points="0 0, 8 3, 0 6" fill="var(--dia-muted)"/>
+</marker>
+<marker id="arr-sacc" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+<polygon points="0 0, 8 3, 0 6" fill="var(--dia-accent)"/>
+</marker>
+<marker id="arr-ssuc" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+<polygon points="0 0, 8 3, 0 6" fill="var(--dia-success)"/>
+</marker>
+<marker id="arr-sdan" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+<polygon points="0 0, 8 3, 0 6" fill="var(--dia-danger)"/>
+</marker>
+</defs>
+
+<rect width="100%" height="100%" fill="var(--dia-bg)"/>
+<rect width="100%" height="100%" fill="url(#dotgrid-sec)"/>
+
+<g transform="translate(30, 24)">
+
+<!-- Column 1: Input Bundle -->
+<g transform="translate(0, 70)">
+  <rect width="180" height="210" rx="8" fill="var(--dia-paper)" stroke="var(--dia-border-strong)" stroke-width="1.2"/>
+  <rect x="12" y="12" width="70" height="18" rx="3" fill="var(--dia-link-tint)" stroke="var(--dia-link)" stroke-width="0.8"/>
+  <text x="47" y="24" fill="var(--dia-link)" font-size="8" font-weight="600" class="dia-font-mono" text-anchor="middle">INPUT</text>
+  <text x="12" y="50" fill="var(--dia-ink)" font-size="12" font-weight="600" class="dia-font-sans">Skill Candidate</text>
+  <text x="12" y="70" fill="var(--dia-muted)" font-size="8.5" class="dia-font-mono">• SKILL.md prompts</text>
+  <text x="12" y="88" fill="var(--dia-muted)" font-size="8.5" class="dia-font-mono">• scripts/*.sh</text>
+  <text x="12" y="106" fill="var(--dia-muted)" font-size="8.5" class="dia-font-mono">• scripts/*.py</text>
+  <text x="12" y="124" fill="var(--dia-muted)" font-size="8.5" class="dia-font-mono">• dependencies</text>
+  <path d="M 12,144 H 168" stroke="var(--dia-border)" stroke-width="0.8"/>
+  <text x="12" y="162" fill="var(--dia-soft)" font-size="8" class="dia-font-sans">Third-party community or automated edits</text>
+</g>
+
+<!-- Arrow Col 1 -> Col 2 -->
+<path d="M 180,175 H 230" stroke="var(--dia-muted)" stroke-width="1.2" marker-end="url(#arr-sm)"/>
+
+<!-- Column 2: Stage 1 Static Filter -->
+<g transform="translate(230, 45)">
+  <rect width="210" height="260" rx="8" fill="var(--dia-paper)" stroke="var(--dia-border-strong)" stroke-width="1.2"/>
+  <rect x="12" y="12" width="60" height="18" rx="3" fill="var(--dia-border)"/>
+  <text x="42" y="24" fill="var(--dia-muted)" font-size="8" font-weight="600" class="dia-font-mono" text-anchor="middle">STAGE 1</text>
+  <text x="12" y="50" fill="var(--dia-ink)" font-size="12" font-weight="600" class="dia-font-sans">Static Fast Pre-Filter</text>
+  <text x="12" y="66" fill="var(--dia-soft)" font-size="8" class="dia-font-mono">Deterministic · &lt;10ms · Offline</text>
+  <path d="M 12,78 H 198" stroke="var(--dia-border)" stroke-width="0.8"/>
+
+  <text x="12" y="98" fill="var(--dia-ink)" font-size="8.5" font-weight="600" class="dia-font-mono">Pattern Rulesets:</text>
+  <text x="12" y="116" fill="var(--dia-muted)" font-size="8.5" class="dia-font-sans">• Hardcoded API Keys</text>
+  <text x="12" y="132" fill="var(--dia-soft)" font-size="8" class="dia-font-mono">  (sk-live-*, ghp_*, AKIA*)</text>
+  <text x="12" y="152" fill="var(--dia-muted)" font-size="8.5" class="dia-font-sans">• Private Key Headers</text>
+  <text x="12" y="168" fill="var(--dia-soft)" font-size="8" class="dia-font-mono">  (BEGIN RSA PRIVATE KEY)</text>
+  <text x="12" y="188" fill="var(--dia-muted)" font-size="8.5" class="dia-font-sans">• Dangerous Shell Eval</text>
+  <text x="12" y="204" fill="var(--dia-soft)" font-size="8" class="dia-font-mono">  (eval "$UNTRUSTED_QUERY")</text>
+  <text x="12" y="224" fill="var(--dia-muted)" font-size="8.5" class="dia-font-sans">• Suspicious Curl / Sockets</text>
+</g>
+
+<!-- Arrow Col 2 -> Col 3 -->
+<path d="M 440,175 H 490" stroke="var(--dia-accent)" stroke-width="1.2" marker-end="url(#arr-sacc)"/>
+
+<!-- Column 3: Stage 2 LLM Semantic Auditor -->
+<g transform="translate(490, 45)">
+  <rect width="210" height="260" rx="8" fill="var(--dia-paper)" stroke="var(--dia-accent)" stroke-width="1.4"/>
+  <rect x="12" y="12" width="60" height="18" rx="3" fill="var(--dia-accent-tint)"/>
+  <text x="42" y="24" fill="var(--dia-accent-dark)" font-size="8" font-weight="600" class="dia-font-mono" text-anchor="middle">STAGE 2</text>
+  <text x="12" y="50" fill="var(--dia-ink)" font-size="12" font-weight="600" class="dia-font-sans">LLM Semantic Audit</text>
+  <text x="12" y="66" fill="var(--dia-accent-dark)" font-size="8" class="dia-font-mono">Contextual Reasoning · AI</text>
+  <path d="M 12,78 H 198" stroke="var(--dia-accent)" stroke-width="0.8" stroke-dasharray="3,2"/>
+
+  <text x="12" y="98" fill="var(--dia-ink)" font-size="8.5" font-weight="600" class="dia-font-mono">Semantic Checks:</text>
+  <text x="12" y="116" fill="var(--dia-muted)" font-size="8.5" class="dia-font-sans">• Prompt Injection Detection</text>
+  <text x="12" y="132" fill="var(--dia-soft)" font-size="8" class="dia-font-mono">  (System prompt overrides)</text>
+  <text x="12" y="152" fill="var(--dia-muted)" font-size="8.5" class="dia-font-sans">• Covert Data Exfiltration</text>
+  <text x="12" y="168" fill="var(--dia-soft)" font-size="8" class="dia-font-mono">  (Silent DNS/HTTP beacons)</text>
+  <text x="12" y="188" fill="var(--dia-muted)" font-size="8.5" class="dia-font-sans">• Permission Profiling</text>
+  <text x="12" y="204" fill="var(--dia-soft)" font-size="8" class="dia-font-mono">  (File reads, network scopes)</text>
+  <text x="12" y="224" fill="var(--dia-muted)" font-size="8.5" class="dia-font-sans">• Risk Scoring &amp; Verdict</text>
+</g>
+
+<!-- Split Connectors Col 3 -> Col 4 -->
+<path d="M 700,140 H 740 V 100 H 750" stroke="var(--dia-success)" stroke-width="1.2" marker-end="url(#arr-ssuc)"/>
+<path d="M 700,210 H 740 V 250 H 750" stroke="var(--dia-danger)" stroke-width="1.2" marker-end="url(#arr-sdan)"/>
+
+<!-- Column 4: Verdict & Action -->
+<!-- Outcome A: Clean & Verified -->
+<g transform="translate(750, 45)">
+  <rect width="150" height="110" rx="8" fill="var(--dia-success-tint)" stroke="var(--dia-success)" stroke-width="1.2"/>
+  <rect x="10" y="10" width="48" height="16" rx="2" fill="var(--dia-paper)" stroke="var(--dia-success)" stroke-width="0.8"/>
+  <text x="34" y="21" fill="var(--dia-success)" font-size="7.5" font-weight="700" class="dia-font-mono" text-anchor="middle">PASSED</text>
+  <text x="10" y="44" fill="var(--dia-success)" font-size="11" font-weight="700" class="dia-font-sans">Verified Skill</text>
+  <text x="10" y="62" fill="var(--dia-ink)" font-size="8" class="dia-font-sans">• Zero secrets leaked</text>
+  <text x="10" y="76" fill="var(--dia-ink)" font-size="8" class="dia-font-sans">• Trusted permissions</text>
+  <text x="10" y="94" fill="var(--dia-success)" font-size="8" font-weight="600" class="dia-font-mono">Ready in Hub</text>
+</g>
+
+<!-- Outcome B: Flagged & Redaction -->
+<g transform="translate(750, 195)">
+  <rect width="150" height="110" rx="8" fill="var(--dia-danger-tint)" stroke="var(--dia-danger)" stroke-width="1.2"/>
+  <rect x="10" y="10" width="56" height="16" rx="2" fill="var(--dia-paper)" stroke="var(--dia-danger)" stroke-width="0.8"/>
+  <text x="38" y="21" fill="var(--dia-danger)" font-size="7.5" font-weight="700" class="dia-font-mono" text-anchor="middle">RED FLAGS</text>
+  <text x="10" y="44" fill="var(--dia-danger)" font-size="11" font-weight="700" class="dia-font-sans">Interactive Fix</text>
+  <text x="10" y="62" fill="var(--dia-ink)" font-size="8" class="dia-font-mono">[r]edact secrets</text>
+  <text x="10" y="76" fill="var(--dia-ink)" font-size="8" class="dia-font-mono">[d]elete lines</text>
+  <text x="10" y="94" fill="var(--dia-danger)" font-size="8" font-weight="600" class="dia-font-mono">axon audit --fix</text>
+</g>
+
+</g>
+</svg>
