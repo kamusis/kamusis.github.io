@@ -48,6 +48,17 @@ post:
     enable: true
     headingSelector: "h1,h2,h3,h4,h5,h6"
     collapseDepth: 0
+  copyright:
+    enable: true
+    license: 'BY-NC-SA'
+    author:
+      enable: true
+    post_date:
+      enable: true
+      format: "LL"
+    update_date:
+      enable: false
+      format: "LL"
 
 # ---------------------------------------------------------------
 # 四季主题独立页：同机位、同画风，四时景致流转与专属诗意文案
