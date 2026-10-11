@@ -114,9 +114,9 @@ fun_features:
 # 颜色系统（柔和纸气质感底色，告别生冷灰）
 color:
   body_bg_color: "#f9fafb"
-  body_bg_color_dark: "#0f172a"
+  body_bg_color_dark: "#0b1120"
   board_color: "#ffffff"
-  board_color_dark: "#1e293b"
+  board_color_dark: "#111827"
   text_color: "#334155"
   text_color_dark: "#cbd5e1"
   post_heading_color: "#0f172a"

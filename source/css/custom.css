@@ -10,13 +10,25 @@
   --font-mono: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-body, html {
+html {
+  min-height: 100%;
+  background-color: #f9fafb;
+}
+
+body {
+  min-height: 100vh;
+  height: auto !important;
   font-family: var(--font-sans) !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   color: #334155;
   background-color: #f9fafb;
+}
+
+main {
+  min-height: 100%;
+  background-color: transparent;
 }
 
 /* --------------------------------------------------------------------------
@@ -272,9 +284,73 @@ pre, code, .markdown-body pre, .markdown-body code, .highlight {
 /* --------------------------------------------------------------------------
    7. 暗黑模式优雅适配 (Deep Slate, No Harsh High-Contrast)
    -------------------------------------------------------------------------- */
-[data-user-color-scheme='dark'] body {
-  background-color: #0b1120;
+html[data-user-color-scheme='dark'],
+[data-user-color-scheme='dark'],
+[data-user-color-scheme='dark'] body,
+[data-user-color-scheme='dark'] main {
+  background-color: #0b1120 !important;
   color: #cbd5e1;
+}
+
+[data-user-color-scheme='dark'] .container-fluid,
+[data-user-color-scheme='dark'] .side-col,
+[data-user-color-scheme='dark'] #board-ctn {
+  background-color: transparent !important;
+}
+
+/* 兼容系统暗色偏好（用户未手动点击切换模式时） */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-user-color-scheme='light']),
+  :root:not([data-user-color-scheme='light']) html,
+  :root:not([data-user-color-scheme='light']) body,
+  :root:not([data-user-color-scheme='light']) main {
+    background-color: #0b1120 !important;
+    color: #cbd5e1;
+  }
+
+  :root:not([data-user-color-scheme='light']) .container-fluid,
+  :root:not([data-user-color-scheme='light']) .side-col,
+  :root:not([data-user-color-scheme='light']) #board-ctn {
+    background-color: transparent !important;
+  }
+
+  :root:not([data-user-color-scheme='light']) #board {
+    background-color: #111827;
+    border-color: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  }
+
+  :root:not([data-user-color-scheme='light']) .markdown-body {
+    color: #cbd5e1;
+  }
+
+  :root:not([data-user-color-scheme='light']) h1,
+  :root:not([data-user-color-scheme='light']) h2,
+  :root:not([data-user-color-scheme='light']) h3,
+  :root:not([data-user-color-scheme='light']) h4,
+  :root:not([data-user-color-scheme='light']) .markdown-body h1,
+  :root:not([data-user-color-scheme='light']) .markdown-body h2,
+  :root:not([data-user-color-scheme='light']) .markdown-body h3,
+  :root:not([data-user-color-scheme='light']) .index-header {
+    color: #f1f5f9;
+  }
+
+  :root:not([data-user-color-scheme='light']) .markdown-body strong,
+  :root:not([data-user-color-scheme='light']) .markdown-body b {
+    color: #f8fafc;
+  }
+
+  :root:not([data-user-color-scheme='light']) .markdown-body blockquote {
+    background-color: #1e293b;
+    border-left-color: #475569;
+    color: #94a3b8;
+  }
+
+  :root:not([data-user-color-scheme='light']) .markdown-body code:not([class*="language-"]) {
+    background-color: #1e293b;
+    color: #e2e8f0;
+    border-color: rgba(255, 255, 255, 0.06);
+  }
 }
 
 [data-user-color-scheme='dark'] #board {
