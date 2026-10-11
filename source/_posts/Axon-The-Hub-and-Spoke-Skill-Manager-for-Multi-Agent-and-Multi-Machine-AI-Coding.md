@@ -29,7 +29,9 @@ To solve this fragmentation, we built **[Axon](https://github.com/kamusis/axon-c
 
 Instead of treating each AI editor as an isolated island, Axon decouples skill storage from editor consumption through a **Hub-and-Spoke** architecture.
 
-![Axon How It Works](https://files.seeusercontent.com/2026/02/28/rnQ5/vscode_picgo_1772260135208.jpeg)
+<p class="text-center" style="margin: 2rem 0;">
+  <img src="/img/axon-hub-and-spoke.svg" alt="Axon Hub-and-Spoke Architecture" style="width: 100%; max-width: 1000px; height: auto; border-radius: 12px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);" />
+</p>
 
 ### Core Components
 
@@ -37,10 +39,6 @@ Instead of treating each AI editor as an isolated island, Axon decouples skill s
 2. **The Spokes (Filesystem Symlinks)**: Rather than duplicating files or running background file-sync daemons, Axon establishes filesystem symlinks from each tool's expected configuration directory directly into subdirectories of the Hub.
 3. **Hub Manifest (`axon.vendors.yaml`)**: An in-tree specification inside the Hub repository declaring external third-party skill repositories, automatically shared across machines via Git.
 4. **The Remote Repository**: A private or public Git repository configured as the Hub's upstream origin, enabling cross-machine synchronization.
-
-<p class="text-center" style="margin: 2rem 0;">
-  <img src="/img/axon-architecture.svg" alt="Axon Hub-and-Spoke Architecture" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);" />
-</p>
 
 ### Directory Targets vs. File Targets
 
