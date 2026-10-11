@@ -28,7 +28,7 @@ I'm currently serving as Vice President at [Enmotech (Beijing) Information Techn
 - 📚 Database Knowledge Sharer
 
 ### Contact Me
-- 📧 Mail: kamus@gmail.com
+- 📧 Mail: me@kamusis.me
 - 🐙 Github: [kamusis](https://github.com/kamusis)
 - 💼 LinkedIn: [Leyi Zhang](https://www.linkedin.com/in/kamus)
 - 🐦 X: [@kamusis](https://twitter.com/kamusis)

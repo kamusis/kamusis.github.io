@@ -99,7 +99,7 @@ about:
     - { class: "iconfont icon-github-fill", link: "https://github.com/kamusis", tip: "GitHub" }
     - { class: "iconfont icon-twitter-fill", link: "https://twitter.com/kamusis", tip: "Twitter / X" }
     - { class: "iconfont icon-linkedin-fill", link: "https://www.linkedin.com/in/kamus/", tip: "LinkedIn" }
-    - { class: "iconfont icon-mail", link: "mailto:kamusis@gmail.com", tip: "Email" }
+    - { class: "iconfont icon-mail", link: "mailto:me@kamusis.me", tip: "Email" }
 
 # 其他独立页面与404
 page:
