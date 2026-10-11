@@ -46,7 +46,7 @@ post:
       format: "{} min read"
   toc:
     enable: true
-    headingSelector: "h1,h2,h3,h4,h5,h6"
+    headingSelector: "h2,h3,h4,h5"
     collapseDepth: 0
   copyright:
     enable: true

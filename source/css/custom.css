@@ -471,3 +471,32 @@ html[data-user-color-scheme='dark'],
   background-color: #3b82f6;
   color: #ffffff;
 }
+
+/* --------------------------------------------------------------------------
+   9. 目录导航强化与防截断修复 (Table of Contents Hierarchy & Anti-clamping)
+   -------------------------------------------------------------------------- */
+/* 解除 li 容器上的误切断，确保下级子目录 ol 永远完整展开且不被隐藏 */
+.toc-list-item {
+  display: block !important;
+  -webkit-line-clamp: unset !important;
+  overflow: visible !important;
+  margin-bottom: 0.25rem;
+}
+
+/* 将 2 行折叠精确限制在超链接文本本身，并提供良好阅读间距 */
+.tocbot-link {
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.45 !important;
+  padding: 0.15rem 0 !important;
+}
+
+/* 二级子目录缩进与字体微调 */
+.tocbot-list ol {
+  padding-left: 1.1rem !important;
+  margin-top: 0.2rem !important;
+}
+
