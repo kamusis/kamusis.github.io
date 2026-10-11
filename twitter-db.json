@@ -1,0 +1,86 @@
+{
+  "published": [],
+  "to-destroy": [],
+  "to-publish": [
+    {
+      "title": "How to build blog site by using Hexo in Windows WSL and deploy to GitHub Pages",
+      "permalink": "http://kamusis.github.io/2024/05/27/How-to-build-blog-site-by-using-Hexo-in-Windows-WSL-and-deploy-to-GitHub-Pages/",
+      "hexoPublished": true,
+      "tags": [
+        "Hexo",
+        "Github Pages",
+        "WSL"
+      ]
+    },
+    {
+      "title": "How to Find the Corresponding Session in MogDB/openGauss from OS Thread ID",
+      "permalink": "http://kamusis.github.io/2024/05/27/How-to-Find-the-Corresponding-Session-in-MogDB-openGauss-from-OS-Thread-ID/",
+      "hexoPublished": true,
+      "tags": [
+        "MogDB"
+      ]
+    },
+    {
+      "title": "MogDB ASH: Unveiling the Active Session History for Powerful Database Performance Tuning",
+      "permalink": "http://kamusis.github.io/2024/05/27/MogDB-ASH-Unveiling-the-Active-Session-History-for-Powerful-Database-Performance-Tuning/",
+      "hexoPublished": true,
+      "tags": [
+        "MogDB"
+      ]
+    },
+    {
+      "title": "How to move WSL distro in Windows 11 to another drive",
+      "permalink": "http://kamusis.github.io/2024/05/27/How-to-move-WSL-distro-in-Windows-11-to-another-drive/",
+      "hexoPublished": true,
+      "tags": [
+        "WSL",
+        "Windows"
+      ]
+    },
+    {
+      "title": "Unlocking the Power: Key Features of MogDB",
+      "permalink": "http://kamusis.github.io/2024/05/27/Unlocking-the-Power-Key-Features-of-MogDB/",
+      "hexoPublished": true,
+      "tags": [
+        "MogDB"
+      ]
+    },
+    {
+      "title": "Ensuring Data Integrity: How Major Databases Handle Partial Writes and Atomic Operations",
+      "permalink": "http://kamusis.github.io/2024/05/30/Ensuring-Data-Integrity-How-Major-Databases-Handle-Partial-Writes-and-Atomic-Operations/",
+      "hexoPublished": true,
+      "tags": [
+        "MogDB",
+        "Oracle",
+        "openGauss",
+        "PostgreSQL",
+        "MySQL",
+        "Partial Writes"
+      ]
+    },
+    {
+      "title": "MTK: The Ultimate Tool for Seamlessly Migrating Oracle Databases to MogDB",
+      "permalink": "http://kamusis.github.io/2024/06/03/MTK-The-Ultimate-Tool-for-Seamlessly-Migrating-Oracle-Databases-to-MogDB/",
+      "hexoPublished": true,
+      "tags": [
+        "MogDB",
+        "Oracle",
+        "Database Migration"
+      ]
+    },
+    {
+      "title": "Working Mechanism of synchronous_standby_names in MogDB",
+      "permalink": "http://kamusis.github.io/2024/06/05/Working-Mechanism-of-synchronous-standby-names-in-MogDB/",
+      "hexoPublished": true,
+      "tags": [
+        "MogDB"
+      ]
+    },
+    {
+      "title": "About me",
+      "permalink": "http://kamusis.github.io/about/index.html",
+      "hexoPublished": true,
+      "tags": []
+    }
+  ]
+}

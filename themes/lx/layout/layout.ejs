@@ -1,0 +1,157 @@
+<% var pageTitle = page.title || '';
+if (is_archive()) pageTitle = __('pagetitle.archive');
+if (is_tag()) pageTitle = __('pagetitle.tag') + '-' + page.tag;
+if (is_category()) pageTitle = __('pagetitle.category') + '-' + page.category;
+if (pageTitle == '') {
+    pageTitle = config.title;
+} else {
+    pageTitle += ' | ' + config.title;
+}
+var siteUrl = (config.url || '').replace(/\/$/, '');
+var pagePath = page.canonical_path || page.path || '';
+var canonicalUrl = siteUrl + url_for(pagePath);
+
+var pageDescription = config.description || '';
+if (is_post() || page.layout === 'post') {
+    if (page.excerpt && page.excerpt.length) {
+        pageDescription = truncate(strip_html(page.excerpt), { length: 160 });
+    } else if (page.content && page.content.length) {
+        pageDescription = truncate(strip_html(page.content), { length: 160 });
+    }
+}
+
+var imageCandidate = page.cover || page.banner || page.thumbnail || page.image;
+if (!imageCandidate && page.photos && page.photos.length) imageCandidate = page.photos[0];
+if (!imageCandidate) imageCandidate = (is_post() || page.layout === 'post') ? theme.postcover : theme.cover;
+
+var ogImageUrl = '';
+if (imageCandidate) {
+    if (/^https?:\/\//i.test(imageCandidate)) {
+        ogImageUrl = imageCandidate;
+    } else {
+        ogImageUrl = siteUrl + url_for(imageCandidate);
+    }
+}
+
+var ogType = (is_post() || page.layout === 'post') ? 'article' : 'website';
+var twitterCard = ogImageUrl ? 'summary_large_image' : 'summary';
+
+var jsonLd = null;
+if (is_post() || page.layout === 'post') {
+    jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: page.title || config.title,
+        description: pageDescription,
+        mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': canonicalUrl
+        },
+        author: {
+            '@type': 'Person',
+            name: config.author
+        },
+        publisher: {
+            '@type': 'Person',
+            name: config.author
+        },
+        datePublished: page.date ? page.date.toISOString() : undefined,
+        dateModified: page.updated ? page.updated.toISOString() : (page.date ? page.date.toISOString() : undefined),
+        url: canonicalUrl
+    };
+    if (ogImageUrl) jsonLd.image = [ogImageUrl];
+} else {
+    jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: config.title,
+        url: siteUrl + url_for('/')
+    };
+}
+var js = theme.base_file.js;
+var css = theme.base_file.css;
+%><!DOCTYPE html>
+<html <%if(config.language.length){%>lang="<%-config.language.substring(0,2)%>"<%}%>>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content=<%- theme.theme_color%>>
+  <title><%=pageTitle%></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="<%- config.author%>">
+  <meta name="keywords" content="<%- config.keywords%>">
+  <meta name="description" content="<%- pageDescription%>">
+  <link rel="canonical" href="<%- canonicalUrl %>">
+  <meta property="og:site_name" content="<%- config.title %>">
+  <meta property="og:title" content="<%- pageTitle %>">
+  <meta property="og:description" content="<%- pageDescription %>">
+  <meta property="og:type" content="<%- ogType %>">
+  <meta property="og:url" content="<%- canonicalUrl %>">
+  <% if (ogImageUrl) { %><meta property="og:image" content="<%- ogImageUrl %>"><% } %>
+  <meta name="twitter:card" content="<%- twitterCard %>">
+  <meta name="twitter:title" content="<%- pageTitle %>">
+  <meta name="twitter:description" content="<%- pageDescription %>">
+  <% if (ogImageUrl) { %><meta name="twitter:image" content="<%- ogImageUrl %>"><% } %>
+  <% if (jsonLd) { %><script type="application/ld+json"><%- JSON.stringify(jsonLd).replace(/</g, '\\u003c') %></script><% } %>
+  <%- partial('partials/config')%>
+  <link rel="shortcut icon" href="<%- url_for(theme.favicon)%>">
+  <link rel="stylesheet" href="<%= css%>">
+  <% if(theme.custom_css) {%><link rel="stylesheet" href="/css/custom.css"><%}%>
+  <%-partial('partials/font')%>
+  <script src="<%= theme.base_file.jquery_cdn%>"></script>
+  <script src="<%= js%>jquery.jside.menu.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	$(".menu-container").jSideMenu({
+	    jSidePosition: "position-right",
+	    jSideSticky: true,
+	    jSideSkin: "<%- theme.menu_theme%>",
+	     });
+	}); 
+	</script>
+  <%-partial('third-party/analytics/index')%>
+  <%- font()%>
+  <link rel="stylesheet" href="<%= theme.font_awesome%>">
+<%- theme.custom_head%>
+</head>
+<body>
+<%- body %>
+<button class="hamburger hamburger--arrow-r" type="button" title="menu">
+    <div class="hamburger-box">
+      <div class="hamburger-inner"></div>
+    </div>
+</button>
+<%- partial('partials/menu')%>
+<div class="gototop js-top">
+  <a href="#" class="js-gotop"><i class="fa fa-arrow-up"></i></a>
+</div>
+<script src="<%= js%>jquery.easing.min.js"></script>
+<script>
+(function () {
+	"use strict";
+	var goToTop = function() {
+		$(".js-gotop").on("click", function(event){
+			event.preventDefault();
+			$("html, body").animate({
+				scrollTop: $("html").offset().top
+			}, 500, "easeInOutExpo");
+			return false;
+		});
+		$(window).scroll(function(){
+			var $win = $(window);
+			if ($win.scrollTop() > 200) {
+				$(".js-top").addClass("active");
+			} else {
+				$(".js-top").removeClass("active");
+			}
+		});
+	};
+	$(function(){
+		goToTop();
+	});
+}());
+</script>
+<%if (theme.local_search.enable) {%><script src="<%= js%>local.search.min.js"></script><%}%>
+<%if (theme.comment.enable) {%><%- partial('third-party/comment')%><%}%>
+<%if (theme.mathjax.enable) {%><%if (page.mathjax) {%><%- partial('third-party/mathjax')%><%}%><%}%></body>
+</html>

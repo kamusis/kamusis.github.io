@@ -1,0 +1,73 @@
+# ---------------------------------------------------------------
+# NexT Theme Configuration
+# Reference: https://theme-next.js.org/docs/theme-settings/
+# ---------------------------------------------------------------
+
+# Schemes
+# Schemes options: Muse | Mist | Pisces | Gemini
+scheme: Gemini
+
+# 解决两端对齐把英文单词间距强行拉散的问题（必须设为 left）
+text_align:
+  desktop: left
+  mobile: left
+
+# 修复字体栈：英文与系统UI字体优先，避免中文字体抢先解析导致单引号/撇号产生巨大空格
+font:
+  enable: true
+  host: ''
+  global:
+    external: false
+    family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif
+  headings:
+    external: false
+    family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif
+  posts:
+    external: false
+    family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif
+  codes:
+    external: false
+    family: Consolas, Monaco, "SFMono-Regular", Menlo, "Courier New", monospace
+
+# Dark Mode
+darkmode: false
+
+# Menu Settings
+menu:
+  home: / || fa fa-home
+  archives: /archives/ || fa fa-archive
+  categories: /categories/ || fa fa-th
+  tags: /tags/ || fa fa-tags
+  about: /about/ || fa fa-user
+
+# Codeblock Settings
+codeblock:
+  theme:
+    light: default
+    dark: stackoverflow-dark
+  copy_button:
+    enable: true
+    style: default
+    show_result: true
+
+# Table of Contents
+toc:
+  enable: true
+  number: true
+  wrap: false
+  expand_all: true
+  max_depth: 4
+
+# Local search (powered by hexo-generator-searchdb)
+local_search:
+  enable: true
+  trigger: auto
+  top_n_per_article: 1
+  unescape: false
+  preload: false
+
+# Back to top
+back2top:
+  enable: true
+  sidebar: false
+  scrollpercent: true

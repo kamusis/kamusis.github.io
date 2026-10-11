@@ -1,0 +1,24 @@
+# Hexo generated files and cache
+.deploy*/
+public/
+db.json
+*.log
+_multiconfig.yml
+
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS metadata
+.DS_Store
+Thumbs.db
+*:Zone.Identifier
+
+# IDE and Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
