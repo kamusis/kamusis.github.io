@@ -60,12 +60,12 @@ Instead of treating each AI editor as an isolated island, Axon decouples skill s
        |                     |                     |               |
        | symlink             | symlink             | symlink       | symlink
        v                     v                     v               v
-+--------------+     +---------------+     +---------------+     +--------+
-| Claude Code  |     |     Devin     |     |  Antigravity  |     | Codex  |
-| ~/.claude/   |     | ~/.codeium/   |     | ~/.gemini/    |     |~/.codex|
-|  skills/     |     |   windsurf/   |     |   config/     |     | skills/|
-|  CLAUDE.md   |     |   skills/     |     |   skills/     |     | AGENTS |
-+--------------+     +---------------+     +---------------+     +--------+
++--------------+     +---------------+     +---------------+     +--------------+
+| Claude Code  |     |     Devin     |     |  Antigravity  |     |  Any Custom  |
+| ~/.claude/   |     | ~/.codeium/   |     | ~/.gemini/    |     |   AI Agent   |
+|  skills/     |     |   windsurf/   |     |   config/     |     | ~/.myagent/  |
+|  CLAUDE.md   |     |   skills/     |     |   skills/     |     |   skills/    |
++--------------+     +---------------+     +---------------+     +--------------+
 ```
 
 ### Directory Targets vs. File Targets
@@ -104,8 +104,8 @@ Running `axon link custom-db-agent` immediately bridges the new tool to your cen
 ### Zero-Latency Consistency without Daemon Overhead
 
 Background file-syncing services often introduce race conditions, file-locking contention, and high CPU usage. By relying on native filesystem symlinks:
-- **Zero Latency**: When an AI agent modifies a skill in Claude Code, the file in `~/.axon/repo/skills/` updates immediately.
-- **Immediate Cross-Tool Visibility**: Devin, Cursor, Antigravity, and Codex read the updated content on their next access.
+- **Zero Latency**: When an AI agent modifies a skill in any tool, the canonical file in `~/.axon/repo/skills/` updates immediately.
+- **Immediate Cross-Tool Visibility**: All connected agents and editors—whether standard tools or proprietary in-house bots—read the updated content on their next access.
 - **Zero Background Resource Cost**: No daemon threads, polling loops, or memory overhead.
 
 ---
@@ -382,8 +382,8 @@ axon sync
 As agentic software engineering matures, the skills, workflows, and rules we author for our AI assistants are becoming core developer assets. Managing them as transient, unversioned local files in disconnected editor directories creates configuration drift, maintenance overhead, and security blind spots.
 
 With a Git-backed Hub-and-Spoke architecture, Axon provides:
-- **Instant Consistency**: Write or update a skill once, and use it immediately across **Claude Code, Devin, Cursor, Antigravity, Codex, Roo Code, and Qoder**.
-- **Universal Extensibility**: Completely agent-agnostic architecture allowing any custom CLI agent or in-house AI tool to be plugged in via simple YAML declarations.
+- **Instant Consistency**: Author or update a skill, command, or prompt rule once, and have it immediately active across every AI agent and editor in your workflow—whether mainstream clients or bespoke in-house assistants.
+- **Universal Extensibility**: Completely agent-agnostic architecture where adding any new AI client, CLI assistant, or custom daemon is as simple as defining a path in `axon.yaml`.
 - **Complete Vendor Lifecycle**: Add, check, list, sync, and eject third-party community skills with in-tree provenance and dirty destination protection.
 - **Asset-Level Observability**: Track changes as semantic skill units rather than raw commit hashes.
 - **Cluster Synchronization**: Keep laptops, workstations, and remote dev servers synchronized with safe, rebase-backed Git operations.
