@@ -3,10 +3,10 @@ title: >-
   Axon: The Hub-and-Spoke Skill Manager for Multi-Agent and Multi-Machine AI
   Coding
 date: 2026-10-11 20:55:00
-tags: [AI, Agent, Skill, CLI, Developer-Tools, Architecture, Claude, Windsurf, Antigravity, Open-Source]
+tags: [AI, Agent, Skill, CLI, Developer-Tools, Architecture, Claude, Devin, Cursor, Open-Source]
 ---
 
-As developers incorporate AI into their daily workflows, their toolchains rarely converge on a single client. An engineer might rely on **Claude Code** for fast terminal-driven tasks, **Windsurf** or **Cursor** for multi-file code editing, **Google Gemini / Antigravity** for deep architectural analysis, and specialized CLI agents for database administration or infrastructure tasks.
+As developers incorporate AI into their daily workflows, their toolchains rarely converge on a single client. An engineer might rely on **Claude Code** for fast terminal-driven tasks, **Devin** or **Cursor** for multi-file code editing, **Antigravity** for deep architectural analysis, and specialized CLI agents for database administration or infrastructure tasks.
 
 Furthermore, modern engineering workflows are distributed across heterogeneous machines: a MacBook for travel, a high-performance workstation for local builds, and remote Linux servers or WSL clusters for production-like execution.
 
@@ -14,10 +14,10 @@ While utilizing multiple AI coding assistants maximizes flexibility, it introduc
 
 Every AI coding environment defines its own proprietary configuration directory:
 - Claude Code reads from `~/.claude/skills/`, `~/.claude/commands/`, `~/.claude/rules/`, and `~/.claude/CLAUDE.md`
-- Windsurf reads from `~/.codeium/windsurf/skills/`, `global_workflows/`, and `memories/global_rules.md`
-- Antigravity and Gemini CLI read from `~/.gemini/config/skills/`, `global_workflows/`, and `~/.gemini/GEMINI.md`
+- Devin reads from `~/.codeium/windsurf/skills/`, `global_workflows/`, and `memories/global_rules.md`
+- Antigravity reads from `~/.gemini/config/skills/`, `global_workflows/`, and global rule configurations
 - OpenAI Codex reads from `~/.codex/skills/` and `~/.codex/AGENTS.md`
-- Roo Code, Trae, Qoder, and Kiro maintain similar bespoke directories
+- Roo Code, Cursor, Trae, Qoder, and Kiro maintain similar bespoke directories
 
 When you engineer an effective debugging skill, slash command, or prompt rule in one editor, those improvements remain locked in that tool's directory. Over time, prompt definitions diverge across machines, community skills fall out of date, and unversioned secrets risk leaking into local files.
 
@@ -61,10 +61,10 @@ Instead of treating each AI editor as an isolated island, Axon decouples skill s
        | symlink             | symlink             | symlink       | symlink
        v                     v                     v               v
 +--------------+     +---------------+     +---------------+     +--------+
-| Claude Code  |     |   Windsurf    |     |  Antigravity  |     | Codex  |
-| ~/.claude/   |     | ~/.codeium/   |     |   / Gemini    |     |~/.codex|
-|  skills/     |     |   windsurf/   |     |  ~/.gemini/   |     | skills/|
-|  CLAUDE.md   |     |   skills/     |     |   config/     |     | AGENTS |
+| Claude Code  |     |     Devin     |     |  Antigravity  |     | Codex  |
+| ~/.claude/   |     | ~/.codeium/   |     | ~/.gemini/    |     |~/.codex|
+|  skills/     |     |   windsurf/   |     |   config/     |     | skills/|
+|  CLAUDE.md   |     |   skills/     |     |   skills/     |     | AGENTS |
 +--------------+     +---------------+     +---------------+     +--------+
 ```
 
@@ -76,14 +76,36 @@ Axon handles two distinct integration patterns natively:
 2. **File Targets**: Fans out a single central rulebook (`global_rules.md`) to multiple tool-specific filenames:
    - `~/.claude/CLAUDE.md` $\rightarrow$ `Hub/global_rules.md`
    - `~/.codex/AGENTS.md` $\rightarrow$ `Hub/global_rules.md`
-   - `~/.gemini/GEMINI.md` $\rightarrow$ `Hub/global_rules.md`
    - `~/.codeium/windsurf/memories/global_rules.md` $\rightarrow$ `Hub/global_rules.md`
+
+### 100% Agent-Agnostic: Starter Templates vs. Arbitrary Custom Agents
+
+A common misconception is that Axon only works with a fixed list of mainstream tools. In reality, **Axon is completely agent-agnostic**.
+
+The out-of-the-box configurations generated during `axon init` (such as Claude Code, Devin, Cursor, Antigravity, Roo Code) are simply **convenient starter templates**. Axon can synchronize skills, rules, and workflows for **any AI agent, CLI utility, or proprietary internal tool** you use.
+
+Adding support for any custom agent requires only a quick entry in `~/.axon/axon.yaml`:
+
+```yaml
+targets:
+  - name: custom-db-agent
+    source: skills                      # Hub category: skills, workflows, commands, or rules
+    destination: ~/.db-agent/skills     # Absolute path where your agent expects skills
+    type: directory                     # directory or file
+
+  - name: custom-agent-rules
+    source: global_rules.md             # Canonical single source of truth
+    destination: ~/.db-agent/RULES.md   # Agent-specific prompt / system instruction file
+    type: file
+```
+
+Running `axon link custom-db-agent` immediately bridges the new tool to your central Hub. Whether you use commercially available tools or proprietary in-house AI agents, Axon treats them all uniformly.
 
 ### Zero-Latency Consistency without Daemon Overhead
 
 Background file-syncing services often introduce race conditions, file-locking contention, and high CPU usage. By relying on native filesystem symlinks:
 - **Zero Latency**: When an AI agent modifies a skill in Claude Code, the file in `~/.axon/repo/skills/` updates immediately.
-- **Immediate Cross-Tool Visibility**: Windsurf, Cursor, Antigravity, and Codex read the updated content on their next access.
+- **Immediate Cross-Tool Visibility**: Devin, Cursor, Antigravity, and Codex read the updated content on their next access.
 - **Zero Background Resource Cost**: No daemon threads, polling loops, or memory overhead.
 
 ---
@@ -168,7 +190,7 @@ This delivers two major advantages:
 
 ### 2.4 Safety Guards: Concurrency Locks & Dirty Destination Protection
 
-To protect developer workflows in multi-terminal environments, Axon incorporates two critical safeguards:
+To protect developer workflows in multi-terminal environments, Axon incorporates critical safeguards:
 
 - **Dirty Destination Guard**: If you make uncommitted manual modifications inside a vendored directory, `axon vendor sync` halts immediately with an actionable warning. It refuses to overwrite local modifications unless explicitly commanded with `--force`.
 - **Concurrency Locking**: Axon implements inter-process file locking (`src/internal/vendor/lock.go`) on both the vendor cache (`~/.axon/cache/vendors`) and the Hub repo during sync operations, preventing race conditions or corruptions from parallel terminal runs.
@@ -207,7 +229,7 @@ Running `axon init` on a machine with existing skills protects your data at ever
 - **Conflict Isolation**: Files with matching names but differing contents are both preserved:
   ```
   skills/db-expert.md
-  skills/db-expert.conflict-windsurf.md
+  skills/db-expert.conflict-devin.md
   ```
 - **Backup Verification**: Real directories are moved into `~/.axon/backups/<target>_<timestamp>/` before symlinks are established. Running `axon unlink` restores those backups verbatim.
 
@@ -360,7 +382,8 @@ axon sync
 As agentic software engineering matures, the skills, workflows, and rules we author for our AI assistants are becoming core developer assets. Managing them as transient, unversioned local files in disconnected editor directories creates configuration drift, maintenance overhead, and security blind spots.
 
 With a Git-backed Hub-and-Spoke architecture, Axon provides:
-- **Instant Consistency**: Write or update a skill once, and use it immediately across **Claude Code, Windsurf, Cursor, Antigravity, Gemini, Codex, Roo Code, and Qoder**.
+- **Instant Consistency**: Write or update a skill once, and use it immediately across **Claude Code, Devin, Cursor, Antigravity, Codex, Roo Code, and Qoder**.
+- **Universal Extensibility**: Completely agent-agnostic architecture allowing any custom CLI agent or in-house AI tool to be plugged in via simple YAML declarations.
 - **Complete Vendor Lifecycle**: Add, check, list, sync, and eject third-party community skills with in-tree provenance and dirty destination protection.
 - **Asset-Level Observability**: Track changes as semantic skill units rather than raw commit hashes.
 - **Cluster Synchronization**: Keep laptops, workstations, and remote dev servers synchronized with safe, rebase-backed Git operations.
