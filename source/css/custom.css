@@ -473,30 +473,195 @@ html[data-user-color-scheme='dark'],
 }
 
 /* --------------------------------------------------------------------------
-   9. 目录导航强化与防截断修复 (Table of Contents Hierarchy & Anti-clamping)
+   9. 方案 A：现代工程导轨树目录 (Modern Guide Rail TOC — Vercel / Tailwind Style)
    -------------------------------------------------------------------------- */
-/* 解除 li 容器上的误切断，确保下级子目录 ol 永远完整展开且不被隐藏 */
+/* 1. 彻底拔除错位折叠小箭头与占位符，消灭所有横向锯齿和错位 */
+.toc-toggle,
+.toc-toggle-placeholder {
+  display: none !important;
+}
+
+/* 2. 侧边栏与目录容器定位 */
+.sidebar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 5rem;
+  padding-top: 1.5rem !important;
+}
+
+#toc {
+  width: 100%;
+}
+
+.toc-header {
+  font-family: var(--font-sans);
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+[data-user-color-scheme='dark'] .toc-header {
+  color: #64748b;
+}
+
+/* 3. 极细贯通导轨线 (1.5px Track) */
+.toc-body {
+  max-height: 80vh;
+  overflow-y: auto;
+  padding-left: 2px;
+}
+
+.toc-body > ol.tocbot-list {
+  border-left: 1.5px solid rgba(0, 0, 0, 0.08);
+  padding-left: 0.85rem !important;
+  margin: 0 !important;
+  position: relative;
+}
+
+[data-user-color-scheme='dark'] .toc-body > ol.tocbot-list {
+  border-left-color: rgba(255, 255, 255, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-user-color-scheme='light']) .toc-body > ol.tocbot-list {
+    border-left-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* 4. 条目容器与严格悬挂对齐 */
 .toc-list-item {
   display: block !important;
+  position: relative;
   -webkit-line-clamp: unset !important;
   overflow: visible !important;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.4rem;
+  padding: 0 !important;
 }
 
-/* 将 2 行折叠精确限制在超链接文本本身，并提供良好阅读间距 */
+/* 消除原主题粗糙悬空的 ::before 黄色断线 */
+.toc-list-item::before,
+.toc-list-item.is-active-li::before {
+  display: none !important;
+}
+
+/* 5. 链接文字：紧凑、精致、防换行撕裂 */
 .tocbot-link {
-  display: -webkit-box !important;
-  -webkit-box-orient: vertical !important;
-  -webkit-line-clamp: 2 !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
+  display: block !important;
+  word-break: break-word;
   line-height: 1.45 !important;
-  padding: 0.15rem 0 !important;
+  padding: 0.12rem 0 !important;
+  text-decoration: none !important;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-line-clamp: unset !important;
 }
 
-/* 二级子目录缩进与字体微调 */
-.tocbot-list ol {
-  padding-left: 1.1rem !important;
-  margin-top: 0.2rem !important;
+/* 主章节 (H2)：500 Medium，沉静主色 */
+.tocbot-link.node-name--H2 {
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #475569;
 }
+
+[data-user-color-scheme='dark'] .tocbot-link.node-name--H2 {
+  color: #cbd5e1;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-user-color-scheme='light']) .tocbot-link.node-name--H2 {
+    color: #cbd5e1;
+  }
+}
+
+/* 子章节 (H3 / H4)：更小字号、稍浅次级色 */
+.tocbot-link.node-name--H3,
+.tocbot-link.node-name--H4 {
+  font-size: 0.76rem !important;
+  font-weight: 400 !important;
+  color: #64748b;
+  line-height: 1.4 !important;
+}
+
+[data-user-color-scheme='dark'] .tocbot-link.node-name--H3,
+[data-user-color-scheme='dark'] .tocbot-link.node-name--H4 {
+  color: #94a3b8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-user-color-scheme='light']) .tocbot-link.node-name--H3,
+  :root:not([data-user-color-scheme='light']) .tocbot-link.node-name--H4 {
+    color: #94a3b8;
+  }
+}
+
+/* 嵌套子目录缩进与细辅导线 */
+.tocbot-list ol {
+  padding-left: 0.85rem !important;
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.35rem !important;
+  list-style: none !important;
+  border-left: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-user-color-scheme='dark'] .tocbot-list ol {
+  border-left-color: rgba(255, 255, 255, 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-user-color-scheme='light']) .tocbot-list ol {
+    border-left-color: rgba(255, 255, 255, 0.06);
+  }
+}
+
+/* 6. 悬停与活跃态：温润琥珀微光与导轨贴线指示条 */
+.tocbot-link:hover {
+  color: #d97706 !important;
+}
+
+[data-user-color-scheme='dark'] .tocbot-link:hover {
+  color: #fde047 !important;
+}
+
+/* 顶层 H2 活跃态导轨滑块指示条 */
+.toc-body > ol.tocbot-list > li.toc-list-item.is-active-li > a.tocbot-link {
+  color: #d97706 !important;
+  font-weight: 600 !important;
+}
+
+.toc-body > ol.tocbot-list > li.toc-list-item.is-active-li::after {
+  content: "";
+  position: absolute;
+  left: -0.85rem;
+  top: 0.15rem;
+  bottom: 0.15rem;
+  width: 2px;
+  background-color: #f59e0b;
+  border-radius: 2px;
+}
+
+[data-user-color-scheme='dark'] .toc-body > ol.tocbot-list > li.toc-list-item.is-active-li > a.tocbot-link {
+  color: #fbbf24 !important;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.25);
+}
+
+[data-user-color-scheme='dark'] .toc-body > ol.tocbot-list > li.toc-list-item.is-active-li::after {
+  background-color: #fbbf24;
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.45);
+}
+
+/* 子级 H3 活跃态 */
+.tocbot-active-link {
+  font-weight: 550 !important;
+  color: #d97706 !important;
+}
+
+[data-user-color-scheme='dark'] .tocbot-active-link {
+  color: #fbbf24 !important;
+}
+
 
