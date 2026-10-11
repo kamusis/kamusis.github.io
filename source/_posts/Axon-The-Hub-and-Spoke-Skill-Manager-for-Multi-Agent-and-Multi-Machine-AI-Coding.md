@@ -8,24 +8,24 @@ tags: [AI, Agent, Skill, CLI, Developer-Tools, Architecture, Claude, Windsurf, A
 
 As developers incorporate AI into their daily workflows, their toolchains rarely converge on a single client. An engineer might rely on **Claude Code** for fast terminal-driven tasks, **Windsurf** or **Cursor** for multi-file code editing, **Google Gemini / Antigravity** for deep architectural analysis, and specialized CLI agents for database administration or infrastructure tasks.
 
-Furthermore, development environments are inherently distributed. A typical workflow spans a MacBook for travel, a high-performance workstation for local builds, and remote Linux servers or WSL for production-like verification.
+Furthermore, modern engineering workflows are distributed across heterogeneous machines: a MacBook for travel, a high-performance workstation for local builds, and remote Linux servers or WSL clusters for production-like execution.
 
-While using multiple AI coding tools boosts flexibility, it introduces a severe operational challenge: **configuration fragmentation and skill drift**.
+While utilizing multiple AI coding assistants maximizes flexibility, it introduces a severe operational friction: **configuration fragmentation and skill drift**.
 
 Every AI coding environment defines its own proprietary configuration directory:
-- Claude Code reads from `~/.claude/skills/`, `~/.claude/commands/`, and `~/.claude/CLAUDE.md`
+- Claude Code reads from `~/.claude/skills/`, `~/.claude/commands/`, `~/.claude/rules/`, and `~/.claude/CLAUDE.md`
 - Windsurf reads from `~/.codeium/windsurf/skills/`, `global_workflows/`, and `memories/global_rules.md`
-- Antigravity and Gemini CLI read from `~/.gemini/config/skills/` and `~/.gemini/GEMINI.md`
+- Antigravity and Gemini CLI read from `~/.gemini/config/skills/`, `global_workflows/`, and `~/.gemini/GEMINI.md`
 - OpenAI Codex reads from `~/.codex/skills/` and `~/.codex/AGENTS.md`
 - Roo Code, Trae, Qoder, and Kiro maintain similar bespoke directories
 
-When you refine a complex debugging skill or prompt rule in one editor, those improvements do not propagate to your other tools or machines. Developers often resort to manual copy-pasting, ad-hoc shell scripts, or cumbersome dotfile managers. Over time, prompt definitions diverge, external community skills fall out of date, and sensitive API keys risk leaking into unversioned local files.
+When you engineer an effective debugging skill, slash command, or prompt rule in one editor, those improvements remain locked in that tool's directory. Over time, prompt definitions diverge across machines, community skills fall out of date, and unversioned secrets risk leaking into local files.
 
-To resolve this fragmentation, we built **[Axon](https://github.com/kamusis/axon-cli)**—an open-source, Git-backed, hub-and-spoke skill manager written in Go.
+To solve this fragmentation, we built **[Axon](https://github.com/kamusis/axon-cli)**—an open-source, Git-backed, hub-and-spoke skill manager written in Go.
 
 ---
 
-## 1. Architectural Philosophy: The Hub-and-Spoke Model
+## 1. Architectural Foundation: The Hub-and-Spoke Model
 
 Instead of treating each AI editor as an isolated island, Axon decouples skill storage from editor consumption through a **Hub-and-Spoke** architecture.
 
@@ -33,9 +33,10 @@ Instead of treating each AI editor as an isolated island, Axon decouples skill s
 
 ### Core Components
 
-1. **The Hub (`~/.axon/repo/`)**: A canonical, local Git repository that stores all skills, reusable workflows, slash commands, and global rules in standard formats. It acts as the single source of truth across all tools.
-2. **The Spokes (Filesystem Symlinks)**: Rather than duplicating files or running complex background file-watchers, Axon establishes filesystem symlinks from each tool's expected configuration directory directly into subdirectories of the Hub.
-3. **The Remote Repository**: A private or public Git repository (e.g., GitHub or GitLab) configured as the Hub's upstream origin, enabling cross-machine synchronization.
+1. **The Hub (`~/.axon/repo/`)**: A canonical, local Git repository that stores all skills, reusable workflows, slash commands, rules, and global instructions. It serves as the single source of truth across all tools.
+2. **The Spokes (Filesystem Symlinks)**: Rather than duplicating files or running background file-sync daemons, Axon establishes filesystem symlinks from each tool's expected configuration directory directly into subdirectories of the Hub.
+3. **Hub Manifest (`axon.vendors.yaml`)**: An in-tree specification inside the Hub repository declaring external third-party skill repositories, automatically shared across machines via Git.
+4. **The Remote Repository**: A private or public Git repository configured as the Hub's upstream origin, enabling cross-machine synchronization.
 
 ```
 +-------------------------------------------------------------------------+
@@ -43,16 +44,18 @@ Instead of treating each AI editor as an isolated island, Axon decouples skill s
 |                     (GitHub / GitLab / Self-Hosted)                     |
 +-------------------------------------------------------------------------+
                                      ^
-                                     |  axon sync
+                                     |  axon sync (asset-level diffs)
                                      v
 +-------------------------------------------------------------------------+
 |                     Axon Hub (~/.axon/repo/)                            |
+|                                                                         |
+|   axon.vendors.yaml  <-- Shared manifest for external community skills  |
 |                                                                         |
 |   skills/               workflows/            commands/    rules/       |
 |   ├── db-tuning/        ├── review.md         ├── mop      ├── code.md  |
 |   └── web-search/       └── deploy.md         └── git-pr   └── security |
 |                                                                         |
-|   global_rules.md  <-- Single source for unified agent system rules     |
+|   global_rules.md    <-- Fanned out to tool-specific rule filenames     |
 +-------------------------------------------------------------------------+
        |                     |                     |               |
        | symlink             | symlink             | symlink       | symlink
@@ -65,117 +68,200 @@ Instead of treating each AI editor as an isolated island, Axon decouples skill s
 +--------------+     +---------------+     +---------------+     +--------+
 ```
 
-### Why Symlinks Outperform File Sync Daemons
+### Directory Targets vs. File Targets
 
-File-syncing background daemons or bidirectional file copiers frequently encounter race conditions, file locking issues, and partial-write corruptions when multiple editors are open simultaneously. 
+Axon handles two distinct integration patterns natively:
 
-By utilizing native operating system symlinks:
-- **Zero Latency**: When an AI agent modifies or writes a skill in Claude Code, the underlying file in `~/.axon/repo/skills/` updates immediately.
-- **Instant Consistency**: Windsurf, Antigravity, and Codex observe the change on their next file read without intermediate synchronization steps.
-- **Zero Resource Footprint**: There are no persistent background daemons consuming CPU cycles or memory.
+1. **Directory Targets**: Maps entire categories (`skills`, `workflows`, `commands`, `rules`) directly to editor directories (e.g., `~/.claude/skills` $\rightarrow$ `Hub/skills`).
+2. **File Targets**: Fans out a single central rulebook (`global_rules.md`) to multiple tool-specific filenames:
+   - `~/.claude/CLAUDE.md` $\rightarrow$ `Hub/global_rules.md`
+   - `~/.codex/AGENTS.md` $\rightarrow$ `Hub/global_rules.md`
+   - `~/.gemini/GEMINI.md` $\rightarrow$ `Hub/global_rules.md`
+   - `~/.codeium/windsurf/memories/global_rules.md` $\rightarrow$ `Hub/global_rules.md`
+
+### Zero-Latency Consistency without Daemon Overhead
+
+Background file-syncing services often introduce race conditions, file-locking contention, and high CPU usage. By relying on native filesystem symlinks:
+- **Zero Latency**: When an AI agent modifies a skill in Claude Code, the file in `~/.axon/repo/skills/` updates immediately.
+- **Immediate Cross-Tool Visibility**: Windsurf, Cursor, Antigravity, and Codex read the updated content on their next access.
+- **Zero Background Resource Cost**: No daemon threads, polling loops, or memory overhead.
 
 ---
 
-## 2. Core Capabilities & Engineering Details
+## 2. External Skill Lifecycle & In-Tree Provenance
 
-Axon is engineered to handle real-world developer workflows, from initial migration to multi-machine convergence and security enforcement.
+In multi-agent environments, engineers frequently import skills from external GitHub repositories—such as Anthropic's public skills, curated OpenAI prompts, or specialized community utilities.
 
-### 2.1 Non-Destructive Bootstrapping & Collision Handling
+Managing external skills using traditional Git submodules introduces fragile detached HEAD states and recursive clone hurdles. Conversely, manually copying files loses all upstream lineage. 
 
-When running on an existing development machine, AI tool directories are often populated with pre-existing, heterogeneous skills. Running `axon init` followed by `axon link` handles this gracefully:
+Axon solves this with a **complete vendor management lifecycle** coupled with **in-tree provenance tracking**.
 
-- **MD5 Deduplication**: If multiple editors contain identical copies of a skill, Axon retains a single canonical copy in the Hub.
-- **Content-Conflict Preservation**: If two tools contain different files with the same name, Axon preserves both by appending a deterministic collision suffix:
+### 2.1 The Hub Vendor Manifest (`axon.vendors.yaml`)
+
+Vendors are declared in `axon.vendors.yaml` located at the root of the Hub Git repository:
+
+```yaml
+# ~/.axon/repo/axon.vendors.yaml
+version: 1
+vendors:
+  - name: book-to-skill
+    repo: https://github.com/virgiliojr94/book-to-skill.git
+    subdir: .
+    dest: skills/book-to-skill
+    ref: master
+  - name: anthropic-customer-support
+    repo: https://github.com/anthropics/anthropic-quickstarts.git
+    subdir: computer-use-demo
+    dest: skills/customer-support
+    ref: v0.2.0
+```
+
+Because `axon.vendors.yaml` is version-controlled inside the Hub repo, running `axon sync` across your laptop and workstation ensures all machines stay aligned on the exact same vendor declarations.
+
+### 2.2 Declarative Lifecycle Operations
+
+Axon provides a dedicated suite of subcommands to manage the complete lifecycle of third-party assets:
+
+```bash
+# 1. Add an external vendor (with optional subdir, ref, and destination)
+axon vendor add https://github.com/anthropics/skills.git skills/skill-creator \
+  --subdir skills/skill-creator \
+  --ref main
+
+# 2. Inspect configured vendors and their local sync health (offline)
+axon vendor list
+
+# 3. Check for upstream updates across all vendors without altering local disk
+axon vendor check
+
+# 4. Mirror files via sparse-checkout into the Hub
+axon vendor sync
+
+# 5. Eject a vendored skill to manage it as first-party code
+axon vendor eject skills/skill-creator
+```
+
+```text
+$ axon vendor list
+NAME                        DEST                     REF     STATUS              REPO
+book-to-skill               skills/book-to-skill     master  synced (7d2a8f10)   github.com/virgiliojr94/book-to-skill
+anthropic-customer-support  skills/customer-support  v0.2.0  synced (4c1b9e22)   github.com/anthropics/anthropic-quickstarts
+diagram-design              skills/diagram-design    main    missing dest        github.com/cathrynlavery/diagram-design
+```
+
+### 2.3 In-Tree Provenance (`.axon-vendor.yaml`)
+
+When Axon mirrors an external vendor, it writes a lightweight metadata file directly into the destination directory:
+
+```yaml
+# ~/.axon/repo/skills/book-to-skill/.axon-vendor.yaml
+repo: https://github.com/virgiliojr94/book-to-skill.git
+ref: master
+commit: 7d2a8f103b4c1a2d3e4f5a6b7c8d9e0f1a2b3c4d
+subdir: .
+synced_at: 2026-10-11T12:00:00Z
+```
+
+This delivers two major advantages:
+1. **Self-Describing Lineage**: Commands like `axon list` automatically render `[vendor]` badges, and `axon inspect <skill>` displays upstream origin, commit hash, and sync timestamp.
+2. **Deterministic Skipping**: When running `axon vendor sync`, Axon compares the upstream commit SHA against the in-tree `.axon-vendor.yaml`. If upstream has not changed, redundant downloads and disk writes are completely bypassed.
+
+### 2.4 Safety Guards: Concurrency Locks & Dirty Destination Protection
+
+To protect developer workflows in multi-terminal environments, Axon incorporates two critical safeguards:
+
+- **Dirty Destination Guard**: If you make uncommitted manual modifications inside a vendored directory, `axon vendor sync` halts immediately with an actionable warning. It refuses to overwrite local modifications unless explicitly commanded with `--force`.
+- **Concurrency Locking**: Axon implements inter-process file locking (`src/internal/vendor/lock.go`) on both the vendor cache (`~/.axon/cache/vendors`) and the Hub repo during sync operations, preventing race conditions or corruptions from parallel terminal runs.
+- **Clean Ejection (`axon vendor eject`)**: If you need to heavily customize an imported community skill, `axon vendor eject <dest>` strips `.axon-vendor.yaml` and removes the manifest entry while leaving all source code intact, converting it into a first-party, locally managed skill.
+
+---
+
+## 3. Engineering Rigor & Clean Git Operations
+
+Synchronizing active development environments across operating systems involves subtle edge cases: temporary files, operating system clutter, and nested Git metadata.
+
+### 3.1 Asset-Level Diffs (`src/cmd/asset_diff.go`)
+
+Traditional Git wrappers often output opaque, multiline commit hashes. Axon parses underlying Git trees to summarize changes at the **Asset Level** during `axon sync` and `axon status`:
+
+```text
+$ axon sync
+[ Asset Diffs ]
+  + skills/postgres-diagnostics (new)
+  ~ workflows/pr-review         (modified)
+  - commands/legacy-test        (deleted)
+
+[ Sync Status ]
+  commit: 4a2b1c3 "axon: sync from dev-workstation"
+  rebase: up to date with origin/master
+  push:   synced to remote
+✓ All assets successfully synchronized.
+```
+
+`axon status` groups symlinks by asset category (Skills, Workflows, Commands, Rules) alongside vendor sync health, providing an instant diagnostic snapshot of your development environment.
+
+### 3.2 Non-Destructive Bootstrapping & Collision Protection
+
+Running `axon init` on a machine with existing skills protects your data at every step:
+- **MD5 Deduplication**: Identical files across tools are deduplicated, keeping a single canonical copy in the Hub.
+- **Conflict Isolation**: Files with matching names but differing contents are both preserved:
   ```
   skills/db-expert.md
   skills/db-expert.conflict-windsurf.md
   ```
-- **Automatic Backup Snapshots**: Before converting any non-empty directory into a symlink, Axon creates a timestamped archive under `~/.axon/backups/<target>_<timestamp>/`. If you ever run `axon unlink`, Axon removes the symlink and restores your original directory verbatim.
+- **Backup Verification**: Real directories are moved into `~/.axon/backups/<target>_<timestamp>/` before symlinks are established. Running `axon unlink` restores those backups verbatim.
 
-### 2.2 Deterministic Multi-Machine Sync (`axon sync`)
+### 3.3 Noise Immunity & Embedded `.git` Auto-Stripping
 
-Synchronizing Git repositories across active workstations often encounters friction: operating system metadata files (`.DS_Store`, `Thumbs.db`) pollute commits, and community skills installed via `git clone` introduce nested `.git` folders that break repository tracking.
+- **Exclusion Injection**: Before any staging operation, Axon writes dynamic exclusion rules to `.git/info/exclude` (filtering `.DS_Store`, `Thumbs.db`, `.tmp`, and IDE cache folders), keeping Git history clean without cluttering user `.gitignore` files.
+- **Submodule Prevention**: Skills downloaded via `git clone` frequently contain embedded `.git` folders. Axon automatically detects and strips nested `.git` folders before running `git add`, ensuring skills are tracked as transparent content rather than broken submodules.
 
-Axon automates these maintenance tasks before every Git operation:
-1. **Automated Exclusion Injection**: Axon writes dynamic exclusion patterns to `.git/info/exclude` prior to staging, preventing temporary files, editor caches (`.idea/`, `__pycache__/`), and OS artifacts from entering Git history.
-2. **Embedded `.git` Auto-Stripping**: When community skills are cloned directly into the Hub, they often include their own `.git` metadata. Axon automatically strips nested `.git` folders during sync so skill files are tracked cleanly as plain content rather than unresolvable submodules.
-3. **Rebase-Based Synchronization**: `axon sync` performs `git add` → `git commit` → `git pull --rebase` → `git push` in `read-write` mode, ensuring a linear and clean commit history across machines.
+### 3.4 Non-Destructive Forward-Commit Rollback (`axon rollback`)
 
-### 2.3 External Vendor Mirroring without Git Submodules (`axon vendor sync`)
-
-Managing third-party skills from community repositories (such as Anthropic's public skills repository or OpenAI's curated prompts) via Git submodules is notoriously fragile. Submodules complicate recursive clones and introduce detached HEAD states.
-
-Axon introduces **Vendor Mirroring** via Git sparse-checkout:
-
-```yaml
-# ~/.axon/axon.yaml
-vendors:
-  - name: skill-creator
-    repo: https://github.com/anthropics/skills.git
-    subdir: skills/skill-creator
-    dest: skills/skill-creator
-    ref: main
-  - name: openai-docs
-    repo: https://github.com/openai/skills.git
-    subdir: skills/.curated/openai-docs
-    dest: skills/openai-docs
-    ref: main
-```
-
-When you execute `axon vendor sync`:
-1. Axon clones or updates the external repository in an isolated cache directory (`~/.axon/cache/vendors/`).
-2. It executes a sparse-checkout targeting only the declared `subdir`.
-3. It mirrors plain files into the Hub destination without any Git metadata.
-4. Upstream commit SHAs are tracked locally; if upstream hasn't changed, redundant downloads are skipped.
-
-### 2.4 Forward-Commit Rollback (`axon rollback`)
-
-When an experimental prompt or automated agent modification degrades a skill's behavior, reverting the change shouldn't require complex Git operations.
-
-Axon provides granular rollback for individual skills or the entire Hub:
+When an experimental prompt update or automated agent edit degrades a skill, developers need a reliable way to revert:
 
 ```bash
-# Inspect recent revision history for a specific skill
+# Browse recent commit history for a specific skill
 axon status db-tuning
 
-# Revert a single skill to its previous commit
+# Revert a single skill to the previous revision
 axon rollback db-tuning
 
-# Revert a skill to a specific Git commit SHA
-axon rollback db-tuning --revision a1b2c3d
+# Revert a skill to an explicit Git commit SHA
+axon rollback db-tuning --revision 7c2a1b0
 ```
 
-Crucially, `axon rollback` **never rewrites Git history**. It calculates the inverted patch and creates a new forward commit. This design guarantees that subsequent `axon sync` invocations safely propagate the reversion to all other machines without causing divergence or push rejections.
+`axon rollback` **never rewrites history**. It generates an inverted patch and records a new forward commit. Subsequent `axon sync` commands propagate the revert cleanly across your cluster without push rejections or detached HEADs.
 
 ---
 
-## 3. Security Auditing & Environment Diagnostics
+## 4. Security Auditing & Diagnostics
 
-As AI skills increasingly incorporate executable shell scripts, Python helpers, and terminal execution directives, unvetted skills pose real security risks.
+Because modern agent skills often bundle executable scripts (`.sh`, `.py`, `.js`), unvetted prompts and community skills present genuine security attack surfaces.
 
-### 3.1 AI-Powered Security Audit (`axon audit`)
+### 4.1 AI-Powered Security Auditing (`axon audit`)
 
-Axon includes a built-in static and LLM-assisted security scanner designed to evaluate skills before they are shared or executed:
+Axon includes a static analysis and LLM-assisted security engine to audit skills before execution:
 
 ```bash
 # Scan the entire Hub
 axon audit
 
-# Scan a specific skill
-axon audit web-search
+# Scan a single skill with cached results
+axon audit custom-scraper
 
 # Interactive redaction mode
 axon audit --fix
 ```
 
 ```text
-=== Security Audit: custom-web-scraper ===
+=== Security Audit: custom-scraper ===
 
   Scanning 3 file(s)...
 
   SECURITY AUDIT REPORT
   ===============================================
-  Target: custom-web-scraper    Files: 3
+  Target: custom-scraper    Files: 3
   -----------------------------------------------
   RED FLAGS FOUND: 2
 
@@ -198,40 +284,31 @@ axon audit --fix
   ===============================================
 ```
 
-The audit engine scans for:
-- **Hardcoded Secrets**: API keys, private certificates, and personal tokens.
-- **Command Injection Vectors**: Dangerous calls like `eval`, `sh -c`, and unescaped variable expansions.
-- **Data Exfiltration**: Unexpected outbound network requests (`curl`, `nc`, `wget`) targeting sensitive files like `~/.ssh` or environment variables.
+In interactive fix mode (`--fix`), developers can cycle through findings to `[r]`edact secrets, `[d]`elete offending lines, or `[s]`kip reviewed items.
 
-In interactive fix mode (`--fix`), developers can review each finding and choose to `[r]`edact with placeholders, `[d]`elete the offending line, or `[s]`kip false positives.
+### 4.2 Comprehensive Environment Preflight (`axon doctor`)
 
-### 3.2 Pre-Flight Diagnostics (`axon doctor`)
-
-Agent skills frequently depend on underlying system binaries (`node`, `python3`, `uv`, `bash`) or specific package modules.
-
-Running `axon doctor` performs a comprehensive pre-flight verification:
+Agent skills frequently depend on host binaries and runtimes. Running `axon doctor` performs a pre-flight health check across your environment:
 
 ```bash
 axon doctor
 ```
 
-It validates:
-- Git binary version and configuration health
-- Hub repository integrity and branch tracking
-- Symlink validity across all 20+ supported AI tools
-- Filesystem write permissions for all target directories
-- Live availability of required system binaries declared in skill metadata (`requires.bins`)
-- Node.js and Python runtime packages declared by active skills
-
-If a dependency is missing, Axon pinpoints the exact skill requiring it and provides the corresponding installation command.
+It verifies:
+- Git binary version compatibility ($\ge 2.28$)
+- Hub repository integrity and branch attachment
+- Symlink validity across all configured targets
+- Filesystem write permissions for all target paths
+- Live availability of required system binaries (`python3`, `node`, `uv`, `bash`) declared in skill metadata (`requires.bins`)
+- npm and Python package dependencies declared by active skills
 
 ---
 
-## 4. Quick Start: Getting Started with Axon
+## 5. Getting Started
 
 Axon is packaged as a single standalone Go binary with zero external runtime dependencies beyond standard `git`.
 
-### Step 1: Install Axon
+### Step 1: Installation
 
 **Homebrew (macOS / Linux):**
 ```bash
@@ -239,38 +316,38 @@ brew install kamusis/tap/axon-cli
 ```
 
 **Direct Binary (Linux / macOS / Windows):**
-Download the precompiled binary for your architecture from the [GitHub Releases](https://github.com/kamusis/axon-cli/releases) page and place it in your `$PATH` (e.g., `/usr/local/bin` or `~/.local/bin`).
+Download the precompiled binary for your architecture from the [GitHub Releases](https://github.com/kamusis/axon-cli/releases) page and place `axon` in your `$PATH`.
 
-### Step 2: Initialize Your Hub
+### Step 2: Initialize the Hub
 
-Choose between three initialization modes:
+Choose the setup mode that fits your setup:
 
 ```bash
-# Mode A: Initialize a local-only Hub (add a remote repository later)
+# Mode A: Local-only Hub (add a remote repository later)
 axon init
 
-# Mode B: Initialize and link to your personal skills Git repository (Recommended)
+# Mode B: Personal Git repository (Recommended)
 axon init git@github.com:your-username/my-skills-hub.git
 
-# Mode C: Initialize as a read-only consumer of the public community Hub
+# Mode C: Curated read-only community baseline
 axon init --upstream
 ```
 
 ### Step 3: Link Your AI Tools
 
-Inspect your installed AI editors and create symlinks:
+Inspect installed AI editors and create symlinks:
 
 ```bash
-# Inspect installed tools and candidates
+# Inspect detected editors and link candidates
 axon status
 
 # Link all detected AI tools to the Hub
 axon link
 ```
 
-### Step 4: Synchronize
+### Step 4: Synchronize Across Machines
 
-Whenever you create or edit skills, commit and push changes across all your machines with:
+Whenever you create, update, or vendor skills:
 
 ```bash
 axon sync
@@ -278,18 +355,19 @@ axon sync
 
 ---
 
-## 5. Summary & Roadmap
+## 6. Summary
 
-As agentic software engineering evolves, the skills, rules, and workflows we write for our AI assistants are becoming core intellectual property. Treating them as transient, unversioned local files in disparate editor folders leads to friction, security vulnerabilities, and context drift.
+As agentic software engineering matures, the skills, workflows, and rules we author for our AI assistants are becoming core developer assets. Managing them as transient, unversioned local files in disconnected editor directories creates configuration drift, maintenance overhead, and security blind spots.
 
-By unifying configuration around a Git-backed Hub-and-Spoke architecture, Axon allows developers to:
-- Write a skill once and make it instantly available in **Claude Code, Windsurf, Cursor, Antigravity, Codex, Roo Code, and Qoder**.
-- Maintain unified system instructions (`global_rules.md`) across every tool.
-- Keep laptops, workstations, and remote development clusters in continuous synchronization.
-- Audit external and internal skills for security risks before execution.
+With a Git-backed Hub-and-Spoke architecture, Axon provides:
+- **Instant Consistency**: Write or update a skill once, and use it immediately across **Claude Code, Windsurf, Cursor, Antigravity, Gemini, Codex, Roo Code, and Qoder**.
+- **Complete Vendor Lifecycle**: Add, check, list, sync, and eject third-party community skills with in-tree provenance and dirty destination protection.
+- **Asset-Level Observability**: Track changes as semantic skill units rather than raw commit hashes.
+- **Cluster Synchronization**: Keep laptops, workstations, and remote dev servers synchronized with safe, rebase-backed Git operations.
+- **Embedded Security**: Audit skills for hardcoded credentials and dangerous execution patterns before execution.
 
 ---
 
-> **Ready to streamline your multi-agent coding setup?**  
+> **Ready to unify your multi-agent coding environment?**  
 > Explore the project on GitHub: [kamusis/axon-cli](https://github.com/kamusis/axon-cli)  
-> Discover curated, community-tested skills: [kamusis/axon-hub](https://github.com/kamusis/axon-hub)
+> Discover curated community skills: [kamusis/axon-hub](https://github.com/kamusis/axon-hub)
