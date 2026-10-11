@@ -118,7 +118,7 @@ Managing external skills using traditional Git submodules introduces fragile det
 
 Axon solves this with a **complete vendor management lifecycle** coupled with **in-tree provenance tracking**.
 
-### 2.1 The Hub Vendor Manifest (`axon.vendors.yaml`)
+### The Hub Vendor Manifest (`axon.vendors.yaml`)
 
 Vendors are declared in `axon.vendors.yaml` located at the root of the Hub Git repository:
 
@@ -140,7 +140,7 @@ vendors:
 
 Because `axon.vendors.yaml` is version-controlled inside the Hub repo, running `axon sync` across your laptop and workstation ensures all machines stay aligned on the exact same vendor declarations.
 
-### 2.2 Declarative Lifecycle Operations
+### Declarative Lifecycle Operations
 
 Axon provides a dedicated suite of subcommands to manage the complete lifecycle of third-party assets:
 
@@ -171,7 +171,7 @@ anthropic-customer-support  skills/customer-support  v0.2.0  synced (4c1b9e22)  
 diagram-design              skills/diagram-design    main    missing dest        github.com/cathrynlavery/diagram-design
 ```
 
-### 2.3 In-Tree Provenance (`.axon-vendor.yaml`)
+### In-Tree Provenance (`.axon-vendor.yaml`)
 
 When Axon mirrors an external vendor, it writes a lightweight metadata file directly into the destination directory:
 
@@ -188,7 +188,7 @@ This delivers two major advantages:
 1. **Self-Describing Lineage**: Commands like `axon list` automatically render `[vendor]` badges, and `axon inspect <skill>` displays upstream origin, commit hash, and sync timestamp.
 2. **Deterministic Skipping**: When running `axon vendor sync`, Axon compares the upstream commit SHA against the in-tree `.axon-vendor.yaml`. If upstream has not changed, redundant downloads and disk writes are completely bypassed.
 
-### 2.4 Safety Guards: Concurrency Locks & Dirty Destination Protection
+### Safety Guards: Concurrency Locks & Dirty Destination Protection
 
 To protect developer workflows in multi-terminal environments, Axon incorporates critical safeguards:
 
@@ -202,7 +202,7 @@ To protect developer workflows in multi-terminal environments, Axon incorporates
 
 Synchronizing active development environments across operating systems involves subtle edge cases: temporary files, operating system clutter, and nested Git metadata.
 
-### 3.1 Asset-Level Diffs (`src/cmd/asset_diff.go`)
+### Asset-Level Diffs (`src/cmd/asset_diff.go`)
 
 Traditional Git wrappers often output opaque, multiline commit hashes. Axon parses underlying Git trees to summarize changes at the **Asset Level** during `axon sync` and `axon status`:
 
@@ -222,7 +222,7 @@ $ axon sync
 
 `axon status` groups symlinks by asset category (Skills, Workflows, Commands, Rules) alongside vendor sync health, providing an instant diagnostic snapshot of your development environment.
 
-### 3.2 Non-Destructive Bootstrapping & Collision Protection
+### Non-Destructive Bootstrapping & Collision Protection
 
 Running `axon init` on a machine with existing skills protects your data at every step:
 - **MD5 Deduplication**: Identical files across tools are deduplicated, keeping a single canonical copy in the Hub.
@@ -233,12 +233,12 @@ Running `axon init` on a machine with existing skills protects your data at ever
   ```
 - **Backup Verification**: Real directories are moved into `~/.axon/backups/<target>_<timestamp>/` before symlinks are established. Running `axon unlink` restores those backups verbatim.
 
-### 3.3 Noise Immunity & Embedded `.git` Auto-Stripping
+### Noise Immunity & Embedded `.git` Auto-Stripping
 
 - **Exclusion Injection**: Before any staging operation, Axon writes dynamic exclusion rules to `.git/info/exclude` (filtering `.DS_Store`, `Thumbs.db`, `.tmp`, and IDE cache folders), keeping Git history clean without cluttering user `.gitignore` files.
 - **Submodule Prevention**: Skills downloaded via `git clone` frequently contain embedded `.git` folders. Axon automatically detects and strips nested `.git` folders before running `git add`, ensuring skills are tracked as transparent content rather than broken submodules.
 
-### 3.4 Non-Destructive Forward-Commit Rollback (`axon rollback`)
+### Non-Destructive Forward-Commit Rollback (`axon rollback`)
 
 When an experimental prompt update or automated agent edit degrades a skill, developers need a reliable way to revert:
 
@@ -261,7 +261,7 @@ axon rollback db-tuning --revision 7c2a1b0
 
 Because modern agent skills often bundle executable scripts (`.sh`, `.py`, `.js`), unvetted prompts and community skills present genuine security attack surfaces.
 
-### 4.1 AI-Powered Security Auditing (`axon audit`)
+### AI-Powered Security Auditing (`axon audit`)
 
 Axon includes a static analysis and LLM-assisted security engine to audit skills before execution:
 
@@ -308,7 +308,7 @@ axon audit --fix
 
 In interactive fix mode (`--fix`), developers can cycle through findings to `[r]`edact secrets, `[d]`elete offending lines, or `[s]`kip reviewed items.
 
-### 4.2 Comprehensive Environment Preflight (`axon doctor`)
+### Comprehensive Environment Preflight (`axon doctor`)
 
 Agent skills frequently depend on host binaries and runtimes. Running `axon doctor` performs a pre-flight health check across your environment:
 
