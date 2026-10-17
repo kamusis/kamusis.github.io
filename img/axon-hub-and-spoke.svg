@@ -1,0 +1,306 @@
+<svg viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="axon-redesign-title axon-redesign-desc">
+  <title id="axon-redesign-title">Axon Central Hub and Spoke Architecture</title>
+  <desc id="axon-redesign-desc">Comprehensive radial architecture diagram illustrating the central Axon Hub synchronizing skills, workflows, commands, and rules bidirectionally with a remote Git repository and fanning out via native symlinks to modern AI coding agents including Claude Code, Cursor, Devin, Antigravity, Codex, Qoder, and custom agents.</desc>
+
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap');
+      .txt-sans { font-family: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .txt-mono { font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
+    </style>
+
+    <pattern id="arch-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="0.9" fill="rgba(15, 23, 42, 0.07)"/>
+    </pattern>
+
+    <linearGradient id="antigravity-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4285F4"/>
+      <stop offset="35%" stop-color="#8B5CF6"/>
+      <stop offset="70%" stop-color="#EA4335"/>
+      <stop offset="100%" stop-color="#FBBC04"/>
+    </linearGradient>
+
+    <marker id="m-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#64748b"/>
+    </marker>
+    <marker id="m-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#f59e0b"/>
+    </marker>
+    <marker id="m-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#3b82f6"/>
+    </marker>
+  </defs>
+
+  <!-- Background with subtle dot grid -->
+  <rect width="1000" height="700" fill="#f8fafc"/>
+  <rect width="1000" height="700" fill="url(#arch-grid)"/>
+
+  <!-- ================= TOP: Remote Git Repository ================= -->
+  <g transform="translate(350, 24)">
+    <rect width="300" height="76" rx="10" fill="#ffffff" stroke="rgba(15, 23, 42, 0.16)" stroke-width="1.2"/>
+    <!-- GitHub Official Logo Badge -->
+    <g transform="translate(18, 18)">
+      <rect width="40" height="40" rx="8" fill="#0f172a"/>
+      <svg x="8" y="8" width="24" height="24" viewBox="0 0 24 24" fill="#ffffff">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 0c6.63 0 12 5.276 12 11.79-.001 5.067-3.29 9.567-8.175 11.187-.6.118-.825-.25-.825-.56 0-.398.015-1.665.015-3.242 0-1.105-.375-1.813-.81-2.181 2.67-.295 5.475-1.297 5.475-5.822 0-1.297-.465-2.344-1.23-3.169.12-.295.54-1.503-.12-3.125 0 0-1.005-.324-3.3 1.209a11.32 11.32 0 00-3-.398c-1.02 0-2.04.133-3 .398-2.295-1.518-3.3-1.209-3.3-1.209-.66 1.622-.24 2.83-.12 3.125-.765.825-1.23 1.887-1.23 3.169 0 4.51 2.79 5.527 5.46 5.822-.345.294-.66.81-.765 1.577-.69.31-2.415.81-3.495-.973-.225-.354-.9-1.223-1.845-1.209-1.005.015-.405.56.015.781.51.28 1.095 1.327 1.23 1.666.24.663 1.02 1.93 4.035 1.385 0 .988.015 1.916.015 2.196 0 .31-.225.664-.825.56C3.303 21.374-.003 16.867 0 11.791 0 5.276 5.37 0 12 0z"/>
+      </svg>
+    </g>
+    <text x="70" y="34" fill="#0f172a" font-size="13" font-weight="700" class="txt-sans">Remote Git Repository</text>
+    <text x="70" y="50" fill="#64748b" font-size="8.5" class="txt-mono">GitHub · GitLab · Self-Hosted Origin</text>
+    <text x="70" y="64" fill="#94a3b8" font-size="8" class="txt-mono">axon-hub.git (main branch)</text>
+  </g>
+
+  <!-- ================= PIPE: Remote &lt;-&gt; Axon Hub ================= -->
+  <!-- Vertical bidirectional line -->
+  <path d="M 500,100 V 256" stroke="#0f172a" stroke-width="1.6" stroke-dasharray="4,3"/>
+  <!-- Bidirectional arrowheads -->
+  <polygon points="500,102 496,110 504,110" fill="#0f172a"/>
+  <polygon points="500,254 496,246 504,246" fill="#0f172a"/>
+
+  <!-- Sync Pill -->
+  <g transform="translate(425, 148)">
+    <rect width="150" height="24" rx="12" fill="#0f172a"/>
+    <text x="75" y="15" fill="#ffffff" font-size="9.5" font-weight="700" class="txt-mono" text-anchor="middle">axon sync</text>
+  </g>
+  <!-- Diff Sub-Pill -->
+  <g transform="translate(390, 180)">
+    <rect width="220" height="18" rx="4" fill="#ffffff" stroke="rgba(15, 23, 42, 0.12)" stroke-width="0.8"/>
+    <text x="110" y="12" fill="#64748b" font-size="7.5" font-weight="600" class="txt-mono" text-anchor="middle">asset diffs: +skills/ ~workflows/ -rules/</text>
+  </g>
+
+  <!-- ================= RADIAL SPOKE CONNECTORS ================= -->
+  <!-- Top-Left Spoke (to Claude Code) -->
+  <path d="M 360,285 L 240,185" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <rect x="270" y="220" width="56" height="15" rx="3" fill="#ffffff" stroke="rgba(15, 23, 42, 0.1)" stroke-width="0.6"/>
+  <text x="298" y="230" fill="#64748b" font-size="7" font-weight="600" class="txt-mono" text-anchor="middle">symlink</text>
+
+  <!-- Mid-Left Spoke (to Devin) -->
+  <path d="M 330,365 L 220,365" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <rect x="245" y="357" width="56" height="15" rx="3" fill="#ffffff" stroke="rgba(15, 23, 42, 0.1)" stroke-width="0.6"/>
+  <text x="273" y="367" fill="#64748b" font-size="7" font-weight="600" class="txt-mono" text-anchor="middle">symlink</text>
+
+  <!-- Bottom-Left Spoke (to Antigravity) -->
+  <path d="M 360,455 L 240,555" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <rect x="270" y="495" width="56" height="15" rx="3" fill="#ffffff" stroke="rgba(15, 23, 42, 0.1)" stroke-width="0.6"/>
+  <text x="298" y="505" fill="#64748b" font-size="7" font-weight="600" class="txt-mono" text-anchor="middle">symlink</text>
+
+  <!-- Bottom Mid-Left Spoke (to Codex) -->
+  <path d="M 430,480 L 370,580" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <rect x="372" y="520" width="56" height="15" rx="3" fill="#ffffff" stroke="rgba(15, 23, 42, 0.1)" stroke-width="0.6"/>
+  <text x="400" y="530" fill="#64748b" font-size="7" font-weight="600" class="txt-mono" text-anchor="middle">symlink</text>
+
+  <!-- Bottom Mid-Right Spoke (to Roo Code) -->
+  <path d="M 570,480 L 630,580" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <rect x="572" y="520" width="56" height="15" rx="3" fill="#ffffff" stroke="rgba(15, 23, 42, 0.1)" stroke-width="0.6"/>
+  <text x="600" y="530" fill="#64748b" font-size="7" font-weight="600" class="txt-mono" text-anchor="middle">symlink</text>
+
+  <!-- Bottom-Right Spoke (to Any Custom Agent - ACCENT) -->
+  <path d="M 640,455 L 760,555" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="4,2"/>
+  <rect x="674" y="495" width="56" height="15" rx="3" fill="#ffffff" stroke="#f59e0b" stroke-width="0.8"/>
+  <text x="702" y="505" fill="#b45309" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">symlink</text>
+
+  <!-- Mid-Right Spoke (to Qoder) -->
+  <path d="M 670,365 L 780,365" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <rect x="698" y="357" width="56" height="15" rx="3" fill="#ffffff" stroke="rgba(15, 23, 42, 0.1)" stroke-width="0.6"/>
+  <text x="726" y="367" fill="#64748b" font-size="7" font-weight="600" class="txt-mono" text-anchor="middle">symlink</text>
+
+  <!-- Top-Right Spoke (to Cursor) -->
+  <path d="M 640,285 L 760,185" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <rect x="674" y="220" width="56" height="15" rx="3" fill="#ffffff" stroke="rgba(15, 23, 42, 0.1)" stroke-width="0.6"/>
+  <text x="702" y="230" fill="#64748b" font-size="7" font-weight="600" class="txt-mono" text-anchor="middle">symlink</text>
+
+
+  <!-- ================= CENTER: AXON HUB ================= -->
+  <g transform="translate(330, 260)">
+    <!-- Outer authoritative card -->
+    <rect width="340" height="220" rx="16" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+    
+    <!-- Header Strip -->
+    <g transform="translate(20, 20)">
+      <!-- Git Branch Monogram -->
+      <circle cx="12" cy="8" r="3" fill="#0f172a"/>
+      <circle cx="6" cy="18" r="3" fill="#0f172a"/>
+      <circle cx="18" cy="18" r="3" fill="#0f172a"/>
+      <path d="M12 11v4M12 13h6" stroke="#0f172a" stroke-width="1.6"/>
+      
+      <text x="32" y="16" fill="#0f172a" font-size="16" font-weight="700" class="txt-mono">~/.axon/repo/</text>
+    </g>
+    
+    <text x="52" y="58" fill="#64748b" font-size="7.5" font-weight="600" class="txt-mono" letter-spacing="0.1em">CENTRAL HUB · SINGLE SOURCE OF TRUTH</text>
+    <path d="M 20,68 H 320" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+
+    <!-- 4 Canonical Asset Categories (Grid) -->
+    <!-- 1. skills/ -->
+    <g transform="translate(20, 78)">
+      <rect width="144" height="42" rx="6" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+      <text x="12" y="18" fill="#0f172a" font-size="10" font-weight="700" class="txt-mono">📁 skills/</text>
+      <text x="12" y="32" fill="#64748b" font-size="7.5" class="txt-sans">Modular agent abilities</text>
+    </g>
+    <!-- 2. workflows/ -->
+    <g transform="translate(176, 78)">
+      <rect width="144" height="42" rx="6" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+      <text x="12" y="18" fill="#0f172a" font-size="10" font-weight="700" class="txt-mono">📁 workflows/</text>
+      <text x="12" y="32" fill="#64748b" font-size="7.5" class="txt-sans">Multi-step execution SOPs</text>
+    </g>
+    <!-- 3. commands/ -->
+    <g transform="translate(20, 128)">
+      <rect width="144" height="42" rx="6" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+      <text x="12" y="18" fill="#0f172a" font-size="10" font-weight="700" class="txt-mono">📁 commands/</text>
+      <text x="12" y="32" fill="#64748b" font-size="7.5" class="txt-sans">Executable CLI scripts</text>
+    </g>
+    <!-- 4. rules/ -->
+    <g transform="translate(176, 128)">
+      <rect width="144" height="42" rx="6" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+      <text x="12" y="18" fill="#0f172a" font-size="10" font-weight="700" class="txt-mono">📁 rules/</text>
+      <text x="12" y="32" fill="#64748b" font-size="7.5" class="txt-sans">System &amp; safety guardrails</text>
+    </g>
+
+    <!-- Manifest & Governance Bar -->
+    <g transform="translate(20, 180)">
+      <rect width="300" height="26" rx="4" fill="rgba(15, 23, 42, 0.03)" stroke="rgba(15, 23, 42, 0.08)" stroke-width="0.8"/>
+      <text x="12" y="16" fill="#475569" font-size="8" font-weight="600" class="txt-mono">axon.vendors.yaml</text>
+      <text x="145" y="16" fill="#94a3b8" font-size="8" class="txt-mono">·</text>
+      <text x="160" y="16" fill="#475569" font-size="8" font-weight="600" class="txt-mono">global_rules.md</text>
+      <text x="288" y="16" fill="#10b981" font-size="7.5" font-weight="700" class="txt-mono" text-anchor="end">READY</text>
+    </g>
+  </g>
+
+
+  <!-- ================= 8 PERIMETER SPOKES ================= -->
+
+  <!-- SPOKE 1: Claude Code (Top-Left) -->
+  <g transform="translate(40, 110)">
+    <rect width="200" height="76" rx="8" fill="#ffffff" stroke="rgba(15, 23, 42, 0.16)" stroke-width="1.2"/>
+    <!-- Claude Code Official Pixel Icon -->
+    <g transform="translate(14, 14)">
+      <rect width="24" height="24" rx="5" fill="#fdf2ee"/>
+      <svg x="3" y="3" width="18" height="18" viewBox="0 0 24 24" fill="#D97757">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M20.998 10.949H24v3.102h-3v3.028h-1.487V20H18v-2.921h-1.487V20H15v-2.921H9V20H7.488v-2.921H6V20H4.487v-2.921H3V14.05H0V10.95h3V5h17.998v5.949zM6 10.949h1.488V8.102H6v2.847zm10.51 0H18V8.102h-1.49v2.847z"/>
+      </svg>
+    </g>
+    <text x="46" y="24" fill="#0f172a" font-size="12" font-weight="700" class="txt-sans">Claude Code</text>
+    <rect x="135" y="14" width="52" height="14" rx="2" fill="rgba(217, 119, 87, 0.12)"/>
+    <text x="161" y="24" fill="#D97757" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">ANTHROPIC</text>
+    <text x="14" y="49" fill="#64748b" font-size="8.5" class="txt-mono">~/.claude/skills/</text>
+    <text x="14" y="63" fill="#64748b" font-size="8.5" class="txt-mono">~/.claude/CLAUDE.md</text>
+  </g>
+
+  <!-- SPOKE 2: Devin (Mid-Left) [Cognition AI] -->
+  <g transform="translate(20, 325)">
+    <rect width="200" height="76" rx="8" fill="#ffffff" stroke="rgba(15, 23, 42, 0.16)" stroke-width="1.2"/>
+    <!-- Devin Official Geometric Hex Icon -->
+    <g transform="translate(14, 14)">
+      <rect width="24" height="24" rx="5" fill="#0f172a"/>
+      <svg x="3" y="3" width="18" height="18" viewBox="0 0 425 425" fill="#10B981">
+        <path d="M70 159.333V91.3471C70 88.3592 71.594 85.5983 74.1816 84.1044L133.043 50.1205C135.631 48.6265 138.819 48.6265 141.407 50.1205L200.269 84.1044C202.856 85.5983 204.45 88.3592 204.45 91.3471V126.068C204.708 137.606 210.806 148.734 221.531 154.926C232.256 161.117 244.942 160.834 255.063 155.289L285.132 137.929C287.719 136.435 290.907 136.435 293.495 137.929L352.357 171.913C354.944 173.406 356.538 176.167 356.538 179.155V247.123C356.538 250.111 354.944 252.872 352.357 254.366L293.495 288.35C290.907 289.844 287.719 289.844 285.132 288.35L255.306 271.13C245.146 265.456 232.344 265.117 221.534 271.358C210.809 277.55 204.711 288.678 204.453 300.215V334.926C204.453 337.914 202.859 340.675 200.271 342.169L141.41 376.153C138.822 377.647 135.634 377.647 133.046 376.153L74.1845 342.169C71.5969 340.675 70.0028 337.914 70.0028 334.926V266.959C70.0029 263.971 71.5969 261.21 74.1845 259.716L133.046 225.732C135.634 224.238 138.822 224.238 141.41 225.732L171.547 243.132C181.656 248.638 194.306 248.906 205.005 242.729C215.815 236.488 221.922 225.231 222.088 213.595C221.83 202.057 215.732 189.737 205.008 183.545C194.283 177.353 181.597 177.636 171.476 183.181L141.269 200.72C138.67 202.229 135.461 202.228 132.864 200.716L74.1576 166.562C71.5835 165.065 70 162.311 70 159.333Z"/>
+      </svg>
+    </g>
+    <text x="46" y="24" fill="#0f172a" font-size="12" font-weight="700" class="txt-sans">Devin</text>
+    <rect x="130" y="14" width="58" height="14" rx="2" fill="rgba(16, 185, 129, 0.1)"/>
+    <text x="159" y="24" fill="#059669" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">COGNITION</text>
+    <text x="14" y="49" fill="#64748b" font-size="8.5" class="txt-mono">~/.devin/skills/</text>
+    <text x="14" y="63" fill="#64748b" font-size="8.5" class="txt-mono">~/.devin/custom-tools/</text>
+  </g>
+
+  <!-- SPOKE 3: Antigravity (Bottom-Left) [Google DeepMind] -->
+  <g transform="translate(40, 540)">
+    <rect width="200" height="76" rx="8" fill="#ffffff" stroke="rgba(15, 23, 42, 0.16)" stroke-width="1.2"/>
+    <!-- Antigravity Official Portal Icon -->
+    <g transform="translate(14, 14)">
+      <rect width="24" height="24" rx="5" fill="#f8fafc"/>
+      <svg x="3" y="3" width="18" height="18" viewBox="0 0 24 24" fill-rule="evenodd">
+        <path d="M21.751 22.607c1.34 1.005 3.35.335 1.508-1.508C17.73 15.74 18.904 1 12.037 1 5.17 1 6.342 15.74.815 21.1c-2.01 2.009.167 2.511 1.507 1.506 5.192-3.517 4.857-9.714 9.715-9.714 4.857 0 4.522 6.197 9.714 9.715z" fill="url(#antigravity-grad)"/>
+      </svg>
+    </g>
+    <text x="46" y="24" fill="#0f172a" font-size="12" font-weight="700" class="txt-sans">Antigravity</text>
+    <rect x="132" y="14" width="55" height="14" rx="2" fill="rgba(66, 133, 244, 0.1)"/>
+    <text x="159" y="24" fill="#2563eb" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">DEEPMIND</text>
+    <text x="14" y="49" fill="#64748b" font-size="8.5" class="txt-mono">~/.gemini/config/</text>
+    <text x="14" y="63" fill="#64748b" font-size="8.5" class="txt-mono">├── skills/ &amp; workflows/</text>
+  </g>
+
+  <!-- SPOKE 4: Codex (Bottom Mid-Left) [OpenAI] -->
+  <g transform="translate(260, 580)">
+    <rect width="180" height="76" rx="8" fill="#ffffff" stroke="rgba(15, 23, 42, 0.16)" stroke-width="1.2"/>
+    <!-- Codex Official Rosette Icon -->
+    <g transform="translate(14, 14)">
+      <rect width="24" height="24" rx="5" fill="#f0fdf4"/>
+      <svg x="3" y="3" width="18" height="18" viewBox="0 0 24 24" fill-rule="evenodd">
+        <path clip-rule="evenodd" d="M8.086.457a6.105 6.105 0 013.046-.415c1.333.153 2.521.72 3.564 1.7a.117.117 0 00.107.029c1.408-.346 2.762-.224 4.061.366l.063.03.154.076c1.357.703 2.33 1.77 2.918 3.198.278.679.418 1.388.421 2.126a5.655 5.655 0 01-.18 1.631.167.167 0 00.04.155 5.982 5.982 0 011.578 2.891c.385 1.901-.01 3.615-1.183 5.14l-.182.22a6.063 6.063 0 01-2.934 1.851.162.162 0 00-.108.102c-.255.736-.511 1.364-.987 1.992-1.199 1.582-2.962 2.462-4.948 2.451-1.583-.008-2.986-.587-4.21-1.736a.145.145 0 00-.14-.032c-.518.167-1.04.191-1.604.185a5.924 5.924 0 01-2.595-.622 6.058 6.058 0 01-2.146-1.781c-.203-.269-.404-.522-.551-.821a7.74 7.74 0 01-.495-1.283 6.11 6.11 0 01-.017-3.064.166.166 0 00.008-.074.115.115 0 00-.037-.064 5.958 5.958 0 01-1.38-2.202 5.196 5.196 0 01-.333-1.589 6.915 6.915 0 01.188-2.132c.45-1.484 1.309-2.648 2.577-3.493.282-.188.55-.334.802-.438.286-.12.573-.22.861-.304a.129.129 0 00.087-.087A6.016 6.016 0 015.635 2.31C6.315 1.464 7.132.846 8.086.457zm-.804 7.85a.848.848 0 00-1.473.842l1.694 2.965-1.688 2.848a.849.849 0 001.46.864l1.94-3.272a.849.849 0 00.007-.854l-1.94-3.393zm5.446 6.24a.849.849 0 000 1.695h4.848a.849.849 0 000-1.696h-4.848z" fill="#10a37f"/>
+      </svg>
+    </g>
+    <text x="46" y="24" fill="#0f172a" font-size="12" font-weight="700" class="txt-sans">Codex</text>
+    <rect x="122" y="14" width="46" height="14" rx="2" fill="rgba(16, 163, 127, 0.1)"/>
+    <text x="145" y="24" fill="#10a37f" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">OPENAI</text>
+    <text x="14" y="49" fill="#64748b" font-size="8.5" class="txt-mono">~/.codex/skills/</text>
+    <text x="14" y="63" fill="#64748b" font-size="8.5" class="txt-mono">~/.codex/instructions</text>
+  </g>
+
+  <!-- SPOKE 5: Roo Code (Bottom Mid-Right) [Open Source] -->
+  <g transform="translate(560, 580)">
+    <rect width="180" height="76" rx="8" fill="#ffffff" stroke="rgba(15, 23, 42, 0.16)" stroke-width="1.2"/>
+    <!-- Roo Code Official Kangaroo Icon -->
+    <g transform="translate(14, 14)">
+      <rect width="24" height="24" rx="5" fill="#fff7ed"/>
+      <svg x="3" y="3" width="18" height="18" viewBox="0 0 24 24" fill-rule="evenodd" fill="#ea580c">
+        <path d="M20.113 5.5l-.442 1.557a.157.157 0 01-.196.106l-7.414-2.157a.16.16 0 00-.143.028l-7.342 5.74a.159.159 0 01-.074.032l-4.37.656a.154.154 0 00-.132.162l.02.245c.005.078.071.14.152.141l5.074.128.058.002 3.75-1.953a.16.16 0 01.164.01l2.657 1.847a.152.152 0 01.066.125l-.023 2.45c0 .032.01.063.028.089l3.737 5.227c.03.04.077.065.129.065h1.182a.153.153 0 00.14-.224l-2.664-4.919a.15.15 0 01.005-.152l1.389-2.169a.156.156 0 01.062-.055l4.965-2.456a.16.16 0 01.158.01l1.418.921a.16.16 0 00.087.026h1.289c.125 0 .2-.136.13-.237l-3.578-5.29c-.074-.109-.246-.082-.282.044z"/>
+      </svg>
+    </g>
+    <text x="46" y="24" fill="#0f172a" font-size="12" font-weight="700" class="txt-sans">Roo Code</text>
+    <rect x="125" y="14" width="42" height="14" rx="2" fill="rgba(234, 88, 12, 0.1)"/>
+    <text x="146" y="24" fill="#ea580c" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">OPEN</text>
+    <text x="14" y="49" fill="#64748b" font-size="8.5" class="txt-mono">~/.roo/skills/</text>
+    <text x="14" y="63" fill="#64748b" font-size="8.5" class="txt-mono">~/.roo/custom-modes/</text>
+  </g>
+
+  <!-- SPOKE 6: Any Custom AI Agent (Bottom-Right) [HERO HIGHLIGHT CARD] -->
+  <g transform="translate(760, 540)">
+    <rect width="200" height="76" rx="8" fill="rgba(245, 158, 11, 0.05)" stroke="#f59e0b" stroke-width="1.6"/>
+    <!-- Star / Extensible Spark Icon -->
+    <g transform="translate(14, 14)">
+      <rect width="24" height="24" rx="5" fill="#fef3c7"/>
+      <path d="M12 4l2.5 5.5L20 12l-5.5 2.5L12 20l-2.5-5.5L4 12l5.5-2.5z" fill="#f59e0b"/>
+    </g>
+    <text x="46" y="24" fill="#b45309" font-size="12" font-weight="700" class="txt-sans">Any Custom Agent</text>
+    <rect x="122" y="14" width="65" height="14" rx="2" fill="#ffffff" stroke="#f59e0b" stroke-width="0.8"/>
+    <text x="154" y="24" fill="#b45309" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">100% AGNOSTIC</text>
+    <text x="14" y="49" fill="#0f172a" font-size="8.5" font-weight="500" class="txt-mono">~/.myagent/skills/</text>
+    <text x="14" y="63" fill="#b45309" font-size="8" font-weight="600" class="txt-mono">Defined in axon.yaml</text>
+  </g>
+
+  <!-- SPOKE 7: Qoder (Mid-Right) -->
+  <g transform="translate(780, 325)">
+    <rect width="200" height="76" rx="8" fill="#ffffff" stroke="rgba(15, 23, 42, 0.16)" stroke-width="1.2"/>
+    <!-- Qoder Official Ribbon Icon -->
+    <g transform="translate(14, 14)">
+      <rect width="24" height="24" rx="5" fill="#eff6ff"/>
+      <svg x="3" y="3" width="18" height="18" viewBox="0 0 24 24">
+        <path d="M23.376 14.458v-4.056c0-2.304-1.003-4.154-2.748-5.075L11.612.574l-.046.086-.045.086c1.68.886 2.644 2.673 2.644 4.902v4.056a7.928 7.928 0 01-.014.454l-.005.061c-.005.081-.01.164-.018.245a4.897 4.897 0 01-.011.1l-.01.076c-.008.068-.015.135-.025.203l-.018.113-.01.058a9.99 9.99 0 01-.098.513l-.007.03a7.209 7.209 0 01-.074.294l-.024.086c-.027.099-.056.197-.087.296l-.027.085a9.592 9.592 0 01-.111.323l-.033.085-.018.046c-.032.082-.064.166-.098.248-.019.048-.04.096-.061.145l-.007.017a6 6 0 01-.084.187c-.024.056-.05.11-.077.165-.03.061-.058.122-.089.182a9.423 9.423 0 01-.176.332c-.03.056-.062.111-.094.167-.031.053-.062.108-.095.16-.033.055-.066.11-.101.164-.033.053-.065.104-.1.155-.034.055-.07.107-.111.169l-.099.144a15.193 15.193 0 01-.34.457c-.04.05-.08.102-.121.151l-.107.128-.007.008a6.987 6.987 0 01-.262.298l-.149.16-.116.12a9.562 9.562 0 01-.204.198l-.03.03-.072.069a9.05 9.05 0 01-.263.235l-.025.022-.029.026-.042.035a11.7 11.7 0 01-.22.18l-.07.055-.018.013a8.904 8.904 0 01-.194.146c-.029.02-.057.042-.086.063a7.7 7.7 0 01-.22.152l-.057.04a8.865 8.865 0 01-.293.185l-.062.037a10.424 10.424 0 01-.307.173l-.037.02-.196.103-.108.052-.012.006a6.196 6.196 0 01-.315.143c-.065.028-.13.054-.196.08l-.035.014-.086.034c-.07.026-.143.05-.215.075l-.039.014-.064.023a8.056 8.056 0 01-.323.097l-.63.173a7.285 7.285 0 01-.33.08l-.07.015c-.053.012-.104.023-.157.032l-.065.011-.085.015a2.332 2.332 0 01-.194.027l-.085.01a4.715 4.715 0 01-.16.018l-.034.003a4.861 4.861 0 01-.246.016h-.033a2.714 2.714 0 01-.155.005h-.106a3.384 3.384 0 01-.225-.007H4.86l-.15-.012-.066-.006a5.586 5.586 0 01-.187-.02l-.04-.005a5.14 5.14 0 01-.219-.035l-.054-.01a6.943 6.943 0 01-.347-.082l-.03-.008-.038-.01a5.034 5.034 0 01-.269-.086l-.063-.023a4.216 4.216 0 01-.188-.073l-.071-.031-.016-.007a4.959 4.959 0 01-.16-.074l-.026-.013a.164.164 0 00-.014-.007l-.671-.351.486.486h.016l8.995 4.742.093.048.03.014.02.01c.056.026.111.052.169.076l.016.008.073.032.195.076.022.008a.718.718 0 01.03.012l.014.004a4.693 4.693 0 00.323.1l.027.007c.073.02.147.038.22.055l.018.004.027.006.066.013.088.016c.075.014.15.026.226.038l.042.004c.064.009.128.016.193.022l.126.012.06.003.05.002.098.005c.046.002.094.002.14.003h.12c.05 0 .1-.002.161-.005h.033l.07-.004a6.17 6.17 0 00.184-.014l.033-.003a.753.753 0 00.058-.005l.108-.012.081-.01.08-.01.129-.021.082-.014.071-.012c.054-.01.107-.021.16-.033l.066-.013.059-.013c.096-.022.192-.046.287-.073l.63-.172a7.354 7.354 0 00.397-.122l.04-.015c.075-.025.149-.051.222-.078.032-.011.062-.024.093-.037l.03-.012c.067-.027.135-.054.2-.082l.128-.056.195-.09.021-.01.102-.05c.068-.034.135-.069.202-.105l.037-.02.073-.038c.08-.044.16-.092.24-.139l.026-.015a8.086 8.086 0 00.322-.2l.065-.045 1.98.902a1.748 1.748 0 002.472-1.59v-7.33l.004.004z" fill="#2ADB5C"/>
+        <path d="M11.617.576a3.904 3.904 0 00-.093-.047c-.016-.009-.033-.016-.05-.024a5.854 5.854 0 00-.166-.077l-.09-.04a4.094 4.094 0 00-.194-.074c-.017-.006-.035-.015-.053-.02l-.013-.005a5.18 5.18 0 00-.277-.088l-.07-.019a4.034 4.034 0 00-.219-.053c-.015-.003-.03-.008-.044-.012L10.253.1l-.057-.011a5.177 5.177 0 00-.225-.036L9.928.047a5.972 5.972 0 00-.191-.022L9.669.02a1.33 1.33 0 00-.058-.005L9.515.009a4.058 4.058 0 00-.111-.005C9.354 0 9.304 0 9.254 0h-.109c-.052 0-.106.004-.16.004L8.884.01A5.32 5.32 0 008.7.022l-.083.006h-.008c-.05.005-.1.013-.15.019l-.12.014c-.056.008-.112.018-.169.028-.037.006-.074.011-.11.018a7.054 7.054 0 00-.572.133l-.63.172c-.111.031-.22.064-.33.1-.037.011-.072.025-.108.037a12.91 12.91 0 00-.345.126c-.067.027-.133.054-.2.083l-.128.055a11.916 11.916 0 00-.318.15 7.376 7.376 0 00-.311.163c-.082.045-.16.092-.24.14a9.424 9.424 0 00-.35.218l-.016.01-.06.04a9.242 9.242 0 00-.51.37 12.54 12.54 0 00-.315.254l-.043.034-.01.007-.045.041c-.09.078-.18.158-.268.24l-.106.101c-.07.067-.139.135-.207.204l-.056.054-.063.067-.153.164-.12.133-.148.17c-.024.03-.049.057-.073.086l-.043.053a5.96 5.96 0 00-.123.155l-.118.151c-.04.053-.08.106-.118.16l-.075.101-.038.056-.107.155-.11.164a9.91 9.91 0 00-.168.265c-.012.02-.023.043-.037.063a12.43 12.43 0 00-.192.335l-.09.168c-.019.034-.04.07-.057.105-.011.022-.02.043-.032.065l-.092.188-.08.167a19.15 19.15 0 00-.083.192c-.017.038-.035.076-.05.115-.008.016-.014.034-.021.051-.035.083-.067.167-.1.253l-.051.134c-.04.11-.077.22-.113.33l-.02.057c0 .002 0 .005-.002.007l-.008.026c-.032.1-.06.2-.09.301l-.023.089c-.027.1-.052.2-.075.301l-.007.03a7.63 7.63 0 00-.057.267l-.008.048c-.015.074-.026.148-.038.223L.082 8.4c-.011.078-.02.156-.029.234-.006.051-.013.103-.017.154a6.57 6.57 0 00-.02.26c-.003.044-.007.086-.009.13-.004.128-.007.257-.007.386v4.056c0 1.478.42 2.741 1.138 3.692A4.75 4.75 0 002.73 18.67l9.015 4.753c-1.656-.874-2.728-2.685-2.73-5.051v-4.056c0-.13.004-.26.01-.39.002-.043.006-.085.01-.128.005-.088.01-.174.019-.261l.017-.155c.01-.077.018-.155.029-.234l.026-.164c.013-.074.025-.15.039-.223.02-.105.04-.21.064-.313l.008-.031c.023-.1.048-.201.075-.301l.023-.088c.028-.1.058-.202.09-.302l.008-.025.021-.063c.036-.11.073-.22.113-.33l.052-.134c.031-.085.065-.169.1-.253.022-.056.047-.111.07-.166a13.856 13.856 0 01.164-.358c.03-.063.06-.126.092-.188l.088-.172a9.22 9.22 0 01.187-.338l.096-.164c.034-.057.069-.112.104-.168l.1-.159a10.49 10.49 0 01.567-.786l.123-.155.116-.139c.05-.057.098-.115.148-.171a14.092 14.092 0 01.272-.297 9.706 9.706 0 01.432-.425c.088-.083.177-.163.268-.241l.054-.048a10.08 10.08 0 01.553-.435l.092-.068c.075-.053.15-.105.226-.156.019-.013.038-.028.06-.04a9.18 9.18 0 01.362-.227c.08-.047.16-.094.241-.139l.11-.058a7.643 7.643 0 01.521-.256l.126-.056a7.509 7.509 0 01.546-.208l.107-.037c.11-.036.22-.069.33-.1l.63-.172c.095-.026.191-.05.287-.072l.097-.02c.062-.014.125-.029.187-.04l.114-.018c.055-.01.11-.02.166-.028.04-.006.08-.01.12-.014.053-.007.105-.014.157-.019l.083-.006c.061-.005.123-.01.184-.013.034-.003.067-.003.101-.004l.16-.006h.11a3.187 3.187 0 01.261.008l.153.01.067.007c.064.006.128.013.192.022l.043.005a5.232 5.232 0 01.281.047l.141.03c.073.016.146.035.218.053l.07.019c.094.026.187.055.278.087l.067.025a4.326 4.326 0 01.449.19l.143.072L11.617.576z" fill="#2563EB"/>
+      </svg>
+    </g>
+    <text x="46" y="24" fill="#0f172a" font-size="12" font-weight="700" class="txt-sans">Qoder</text>
+    <rect x="135" y="14" width="52" height="14" rx="2" fill="rgba(37, 99, 235, 0.1)"/>
+    <text x="161" y="24" fill="#2563eb" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">QODERWORK</text>
+    <text x="14" y="49" fill="#64748b" font-size="8.5" class="txt-mono">~/.qoder/skills/</text>
+    <text x="14" y="63" fill="#64748b" font-size="8.5" class="txt-mono">~/.qoder/rules/</text>
+  </g>
+
+  <!-- SPOKE 8: Cursor (Top-Right) -->
+  <g transform="translate(760, 110)">
+    <rect width="200" height="76" rx="8" fill="#ffffff" stroke="rgba(15, 23, 42, 0.16)" stroke-width="1.2"/>
+    <!-- Cursor Official Faceted Icon -->
+    <g transform="translate(14, 14)">
+      <rect width="24" height="24" rx="5" fill="#0f172a"/>
+      <svg x="3" y="3" width="18" height="18" viewBox="0 0 24 24" fill-rule="evenodd" fill="#ffffff">
+        <path d="M22.106 5.68L12.5.135a.998.998 0 00-.998 0L1.893 5.68a.84.84 0 00-.419.726v11.186c0 .3.16.577.42.727l9.607 5.547a.999.999 0 00.998 0l9.608-5.547a.84.84 0 00.42-.727V6.407a.84.84 0 00-.42-.726zm-.603 1.176L12.228 22.92c-.063.108-.228.064-.228-.061V12.34a.59.59 0 00-.295-.51l-9.11-5.26c-.107-.062-.063-.228.062-.228h18.55c.264 0 .428.286.296.514z"/>
+      </svg>
+    </g>
+    <text x="46" y="24" fill="#0f172a" font-size="12" font-weight="700" class="txt-sans">Cursor</text>
+    <rect x="132" y="14" width="55" height="14" rx="2" fill="rgba(15, 23, 42, 0.08)"/>
+    <text x="159" y="24" fill="#0f172a" font-size="7" font-weight="700" class="txt-mono" text-anchor="middle">ANYSPHERE</text>
+    <text x="14" y="49" fill="#64748b" font-size="8.5" class="txt-mono">~/.cursor/rules/</text>
+    <text x="14" y="63" fill="#64748b" font-size="8.5" class="txt-mono">~/.cursor/skills/</text>
+  </g>
+
+</svg>

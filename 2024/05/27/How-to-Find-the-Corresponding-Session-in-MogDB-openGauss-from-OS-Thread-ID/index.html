@@ -1,0 +1,799 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/favicon.ico">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  
+    <meta name="description" content="Diagnostic NeedsWhen the MogDB database consumes a significant amount of system resources, such as nearly 100% CPU usage, how can we determine which session(s) in the database are using these resource">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to Find the Corresponding Session in MogDB&#x2F;openGauss from OS Thread ID">
+<meta property="og:url" content="https://www.kamusis.me/2024/05/27/How-to-Find-the-Corresponding-Session-in-MogDB-openGauss-from-OS-Thread-ID/">
+<meta property="og:site_name" content="Kamus&#39; Notes">
+<meta property="og:description" content="Diagnostic NeedsWhen the MogDB database consumes a significant amount of system resources, such as nearly 100% CPU usage, how can we determine which session(s) in the database are using these resource">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2022/05/30/HmitAhrOMNaX9WB.png">
+<meta property="article:published_time" content="2024-05-27T06:55:48.000Z">
+<meta property="article:modified_time" content="2026-10-17T10:08:14.945Z">
+<meta property="article:author" content="Kamus">
+<meta property="article:tag" content="MogDB">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2022/05/30/HmitAhrOMNaX9WB.png">
+  
+  
+  
+  <title>How to Find the Corresponding Session in MogDB/openGauss from OS Thread ID - Kamus&#39; Notes</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.kamusis.me","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":25,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h2,h3,h4,h5","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 48vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Kamus&#39; Notes</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Home</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>Archives</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Tags</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>About</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Search</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Light"
+               data-label-dark="Dark">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dark</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/banner-autumn.webp') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.28)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">How to Find the Corresponding Session in MogDB/openGauss from OS Thread ID</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-05-27 15:55" pubdate>
+          2024-05-27
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          5.9k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          50 min read
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">How to Find the Corresponding Session in MogDB/openGauss from OS Thread ID</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="Diagnostic-Needs"><a href="#Diagnostic-Needs" class="headerlink" title="Diagnostic Needs"></a>Diagnostic Needs</h3><p>When the MogDB database consumes a significant amount of system resources, such as nearly 100% CPU usage, how can we determine which session(s) in the database are using these resources?</p>
+<p>In Oracle databases, diagnosing such issues typically involves associating <code>v$session</code>, <code>v$process</code>, and the OS process ID found using the <code>top</code> or <code>ps</code> commands. However, MogDB uses a thread model, and only one process ID is visible at the OS level. So, how do we pinpoint the problem?</p>
+<p>Since MogDB uses a thread model, unlike PostgreSQL’s process model, checking network port access with the <code>lsof</code> command at the OS level will show multiple user sessions connected, but only the process ID will be displayed in the PID column, not the thread.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">lsof -i 4 -a -p `pgrep -u omm3 mogdb`</span><br>COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME<br>mogdb   12027   omm3    8u  IPv4 20313752      0t0  TCP *:biimenu (LISTEN)<br>mogdb   12027   omm3    9u  IPv4 20313753      0t0  TCP *:18001 (LISTEN)<br>mogdb   12027   omm3  325u  IPv4 28320946      0t0  TCP mogdb-kernel-0004:biimenu-&gt;softbank060132034173.bbtec.net:45206 (ESTABLISHED)<br>mogdb   12027   omm3  330u  IPv4 28316174      0t0  TCP mogdb-kernel-0004:biimenu-&gt;softbank060132034173.bbtec.net:45208 (ESTABLISHED)<br>mogdb   12027   omm3  336u  IPv4 28302815      0t0  TCP mogdb-kernel-0004:biimenu-&gt;softbank060132034173.bbtec.net:45210 (ESTABLISHED)<br>mogdb   12027   omm3  340u  IPv4 28323140      0t0  TCP mogdb-kernel-0004:biimenu-&gt;softbank060132034173.bbtec.net:45212 (ESTABLISHED)<br>mogdb   12027   omm3  360u  IPv4 28323141      0t0  TCP mogdb-kernel-0004:biimenu-&gt;softbank060132034173.bbtec.net:45214 (ESTABLISHED)<br>mogdb   12027   omm3  375u  IPv4 28305050      0t0  TCP mogdb-kernel-0004:biimenu-&gt;softbank060132034173.bbtec.net:45216 (ESTABLISHED)<br></code></pre></td></tr></table></figure>
+
+<h3 id="How-to-Get-Thread-ID"><a href="#How-to-Get-Thread-ID" class="headerlink" title="How to Get Thread ID"></a>How to Get Thread ID</h3><p>You can use <code>htop</code>. After opening <code>htop</code>, press F5 to display the process tree. The first PID is the process ID, and each line under the tree structure shows the corresponding thread ID for that process.</p>
+<p><img src="https://s2.loli.net/2022/05/30/HmitAhrOMNaX9WB.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>You can also use the <code>ps</code> command. The <code>-L</code> parameter displays threads, and the <code>-o</code> parameter specifies the columns of interest.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">ps -Lp `pgrep -u omm3 mogdb` -o %cpu,tid,pid,ppid,cmd,<span class="hljs-built_in">comm</span></span><br><span class="hljs-meta prompt_">%</span><span class="language-bash">CPU   TID   PID  PPID CMD                         COMMAND</span><br> 0.0 17847 17847     1 /opt/mogdb3/app/bin/mogdb - mogdb<br> 0.0 17848 17847     1 /opt/mogdb3/app/bin/mogdb - jemalloc_bg_thd<br> 0.0 17854 17847     1 /opt/mogdb3/app/bin/mogdb - mogdb<br> 0.0 17855 17847     1 /opt/mogdb3/app/bin/mogdb - syslogger<br> 0.0 17856 17847     1 /opt/mogdb3/app/bin/mogdb - reaper<br> 0.0 17857 17847     1 /opt/mogdb3/app/bin/mogdb - jemalloc_bg_thd<br> 0.0 17858 17847     1 /opt/mogdb3/app/bin/mogdb - jemalloc_bg_thd<br> 0.0 17860 17847     1 /opt/mogdb3/app/bin/mogdb - jemalloc_bg_thd<br> 0.0 17884 17847     1 /opt/mogdb3/app/bin/mogdb - checkpointer<br> 0.0 17885 17847     1 /opt/mogdb3/app/bin/mogdb - Spbgwriter<br> 0.1 17886 17847     1 /opt/mogdb3/app/bin/mogdb - pagewriter<br> 0.0 17887 17847     1 /opt/mogdb3/app/bin/mogdb - pagewriter<br> 0.0 17888 17847     1 /opt/mogdb3/app/bin/mogdb - pagewriter<br> 0.0 17889 17847     1 /opt/mogdb3/app/bin/mogdb - pagewriter<br> 0.0 17890 17847     1 /opt/mogdb3/app/bin/mogdb - pagewriter<br> 0.8 17891 17847     1 /opt/mogdb3/app/bin/mogdb - WALwriter<br> 0.0 17892 17847     1 /opt/mogdb3/app/bin/mogdb - WALwriteraux<br> 0.0 17893 17847     1 /opt/mogdb3/app/bin/mogdb - AVClauncher<br> 0.0 17894 17847     1 /opt/mogdb3/app/bin/mogdb - Jobscheduler<br> 0.0 17895 17847     1 /opt/mogdb3/app/bin/mogdb - asyncundolaunch<br> 0.0 17896 17847     1 /opt/mogdb3/app/bin/mogdb - globalstats<br> 0.0 17897 17847     1 /opt/mogdb3/app/bin/mogdb - applylauncher<br> 0.0 17898 17847     1 /opt/mogdb3/app/bin/mogdb - statscollector<br> 0.0 17899 17847     1 /opt/mogdb3/app/bin/mogdb - snapshotworker<br> 0.1 17900 17847     1 /opt/mogdb3/app/bin/mogdb - TrackStmtWorker<br> 0.0 17901 17847     1 /opt/mogdb3/app/bin/mogdb - 2pccleaner<br> 0.0 17902 17847     1 /opt/mogdb3/app/bin/mogdb - faultmonitor<br> 0.0 17904 17847     1 /opt/mogdb3/app/bin/mogdb - undorecycler<br> 0.0 18372 17847     1 /opt/mogdb3/app/bin/mogdb - worker<br> 0.0 18373 17847     1 /opt/mogdb3/app/bin/mogdb - worker<br> 0.0 18374 17847     1 /opt/mogdb3/app/bin/mogdb - worker<br> 0.0 18375 17847     1 /opt/mogdb3/app/bin/mogdb - worker<br> 0.0 18376 17847     1 /opt/mogdb3/app/bin/mogdb - worker<br> 0.0 18377 17847     1 /opt/mogdb3/app/bin/mogdb - worker<br> 0.0 18378 17847     1 /opt/mogdb3/app/bin/mogdb - worker<br> 0.0 18379 17847     1 /opt/mogdb3/app/bin/mogdb - worker<br> 0.0 18380 17847     1 /opt/mogdb3/app/bin/mogdb - worker<br> 0.0 18381 17847     1 /opt/mogdb3/app/bin/mogdb - worker<br> 0.0 18382 17847     1 /opt/mogdb3/app/bin/mogdb - worker<br> 0.0 18454 17847     1 /opt/mogdb3/app/bin/mogdb - worker<br> 0.0 19475 17847     1 /opt/mogdb3/app/bin/mogdb - worker<br> 0.0 19480 17847     1 /opt/mogdb3/app/bin/mogdb - worker<br> 0.0 29529 17847     1 /opt/mogdb3/app/bin/mogdb - worker<br> 0.0 30999 17847     1 /opt/mogdb3/app/bin/mogdb - worker<br></code></pre></td></tr></table></figure>
+
+<p>The rows in the <code>comm</code> column that display as “worker” are backend processes of user sessions in the database. Typically, user sessions that consume high CPU can be filtered to show only user sessions using the <code>grep</code> command.</p>
+<h3 id="How-to-Map-OS-Thread-ID-to-Database-Session"><a href="#How-to-Map-OS-Thread-ID-to-Database-Session" class="headerlink" title="How to Map OS Thread ID to Database Session"></a>How to Map OS Thread ID to Database Session</h3><p>Suppose on this server, the thread with ID 18372 is consuming a lot of CPU. In MogDB, you can query the <code>pg_os_threads</code> view to find the session ID corresponding to this thread.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql">MogDB<span class="hljs-operator">=</span># <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> pg_os_threads <span class="hljs-keyword">where</span> lwpid<span class="hljs-operator">=</span><span class="hljs-number">18372</span>;<br><br>node_name <span class="hljs-operator">|</span> pid              <span class="hljs-operator">|</span> lwpid <span class="hljs-operator">|</span> thread_name <span class="hljs-operator">|</span> creation_time<br><span class="hljs-comment">----------+------------------+-------+-------------+------------------------------</span><br>dn_6001   <span class="hljs-operator">|</span> <span class="hljs-number">140545137571584</span>  <span class="hljs-operator">|</span> <span class="hljs-number">18372</span> <span class="hljs-operator">|</span> dn_6001     <span class="hljs-operator">|</span> <span class="hljs-number">2022</span><span class="hljs-number">-05</span><span class="hljs-number">-30</span> <span class="hljs-number">19</span>:<span class="hljs-number">54</span>:<span class="hljs-number">42.459129</span><span class="hljs-operator">+</span><span class="hljs-number">08</span><br>(<span class="hljs-number">1</span> <span class="hljs-type">row</span>)<br></code></pre></td></tr></table></figure>
+
+<p>The <code>pg_os_threads</code> view records the relationship between lightweight thread IDs and session IDs. The <code>lwpid</code> column is the OS thread ID, and the <code>pid</code> column is the database session ID. For detailed information, refer to the MogDB documentation on <code>PG_OS_THREADS</code>.</p>
+<p>If you have <code>monadmin</code> privileges, you can also query the <code>os_threads</code> view in the <code>dbe_perf</code> schema, which provides the same information.</p>
+<p>After finding the database session ID, you can perform various actions, such as querying the <code>dbe_perf.session_stat_activity</code> view to get the application name, client IP address, and the SQL query being executed by that session.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql">MogDB<span class="hljs-operator">=</span># <span class="hljs-keyword">select</span> application_name, client_addr, query <span class="hljs-keyword">from</span> dbe_perf.session_stat_activity <span class="hljs-keyword">where</span> pid<span class="hljs-operator">=</span><span class="hljs-number">140545137571584</span>;<br><br>application_name <span class="hljs-operator">|</span> client_addr <span class="hljs-operator">|</span> query<br><span class="hljs-comment">-----------------+-------------+---------------------------------------------</span><br>dn_6001          <span class="hljs-operator">|</span> <span class="hljs-number">172.16</span><span class="hljs-number">.0</span><span class="hljs-number">.176</span><span class="hljs-operator">|</span> <span class="hljs-keyword">SELECT</span> cfg_value <span class="hljs-keyword">FROM</span> bmsql_config <span class="hljs-keyword">WHERE</span> cfg_name <span class="hljs-operator">=</span> $<span class="hljs-number">1</span><br>(<span class="hljs-number">1</span> <span class="hljs-type">row</span>)<br></code></pre></td></tr></table></figure>
+
+<p>You can also query the <code>dbe_perf.thread_wait_status</code> view to get the current wait event of the session. Note that this view contains the <code>lwtid</code> field, which directly corresponds to the thread ID.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql">MogDB<span class="hljs-operator">=</span># <span class="hljs-keyword">select</span> lwtid, wait_status, wait_event <span class="hljs-keyword">from</span> dbe_perf.thread_wait_status <span class="hljs-keyword">where</span> sessionid<span class="hljs-operator">=</span><span class="hljs-number">140545137571584</span>;<br><br>lwtid <span class="hljs-operator">|</span> wait_status <span class="hljs-operator">|</span> wait_event<br><span class="hljs-comment">------+-------------+-----------</span><br><span class="hljs-number">18372</span> <span class="hljs-operator">|</span> wait cmd    <span class="hljs-operator">|</span> wait cmd<br>(<span class="hljs-number">1</span> <span class="hljs-type">row</span>)<br></code></pre></td></tr></table></figure>
+
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/MogDB/" class="print-no-link">#MogDB</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>How to Find the Corresponding Session in MogDB/openGauss from OS Thread ID</div>
+      <div>https://www.kamusis.me/2024/05/27/How-to-Find-the-Corresponding-Session-in-MogDB-openGauss-from-OS-Thread-ID/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Kamus</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>May 27, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - Non-commercial">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - Share-alike">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/05/27/How-to-build-blog-site-by-using-Hexo-in-Windows-WSL-and-deploy-to-GitHub-Pages/" title="How to build blog site by using Hexo in Windows WSL and deploy to GitHub Pages">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">How to build blog site by using Hexo in Windows WSL and deploy to GitHub Pages</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/05/27/MogDB-ASH-Unveiling-the-Active-Session-History-for-Powerful-Database-Performance-Tuning/" title="MogDB ASH: Unveiling the Active Session History for Powerful Database Performance Tuning">
+                        <span class="hidden-mobile">MogDB ASH: Unveiling the Active Session History for Powerful Database Performance Tuning</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

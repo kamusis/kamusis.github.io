@@ -1,0 +1,960 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/favicon.ico">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  
+    <meta name="description" content="As developers incorporate AI into their daily workflows, their toolchains rarely converge on a single client. An engineer might rely on Claude Code for fast terminal-driven tasks, Devin or Cursor for">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Axon: The Hub-and-Spoke Skill Manager for Multi-Agent and Multi-Machine AI Coding">
+<meta property="og:url" content="https://www.kamusis.me/2026/10/11/Axon-The-Hub-and-Spoke-Skill-Manager-for-Multi-Agent-and-Multi-Machine-AI-Coding/">
+<meta property="og:site_name" content="Kamus&#39; Notes">
+<meta property="og:description" content="As developers incorporate AI into their daily workflows, their toolchains rarely converge on a single client. An engineer might rely on Claude Code for fast terminal-driven tasks, Devin or Cursor for">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.kamusis.me/img/axon-hub-and-spoke.svg">
+<meta property="og:image" content="https://www.kamusis.me/img/axon-vendor-lifecycle.svg">
+<meta property="og:image" content="https://www.kamusis.me/img/axon-rollback-mechanism.svg">
+<meta property="og:image" content="https://www.kamusis.me/img/axon-security-pipeline.svg">
+<meta property="article:published_time" content="2026-10-11T11:55:00.000Z">
+<meta property="article:modified_time" content="2026-10-17T10:08:14.943Z">
+<meta property="article:author" content="Kamus">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Architecture">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="Skill">
+<meta property="article:tag" content="CLI">
+<meta property="article:tag" content="Developer-Tools">
+<meta property="article:tag" content="Claude">
+<meta property="article:tag" content="Devin">
+<meta property="article:tag" content="Cursor">
+<meta property="article:tag" content="Open-Source">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.kamusis.me/img/axon-hub-and-spoke.svg">
+  
+  
+  
+  <title>Axon: The Hub-and-Spoke Skill Manager for Multi-Agent and Multi-Machine AI Coding - Kamus&#39; Notes</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.kamusis.me","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":25,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h2,h3,h4,h5","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 48vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Kamus&#39; Notes</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Home</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>Archives</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Tags</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>About</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Search</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Light"
+               data-label-dark="Dark">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dark</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/banner-autumn.webp') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.28)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Axon: The Hub-and-Spoke Skill Manager for Multi-Agent and Multi-Machine AI Coding</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-10-11 20:55" pubdate>
+          2026-10-11
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          14k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          120 min read
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Axon: The Hub-and-Spoke Skill Manager for Multi-Agent and Multi-Machine AI Coding</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>As developers incorporate AI into their daily workflows, their toolchains rarely converge on a single client. An engineer might rely on <strong>Claude Code</strong> for fast terminal-driven tasks, <strong>Devin</strong> or <strong>Cursor</strong> for multi-file code editing, <strong>Antigravity</strong> for deep architectural analysis, and specialized CLI agents for database administration or infrastructure tasks.</p>
+<p>Furthermore, modern engineering workflows are distributed across heterogeneous machines: a MacBook for travel, a high-performance workstation for local builds, and remote Linux servers or WSL clusters for production-like execution.</p>
+<p>While utilizing multiple AI coding assistants maximizes flexibility, it introduces a severe operational friction: <strong>configuration fragmentation and skill drift</strong>.</p>
+<p>Every AI coding environment defines its own proprietary configuration directory:</p>
+<ul>
+<li>Claude Code reads from <code>~/.claude/skills/</code>, <code>~/.claude/commands/</code>, <code>~/.claude/rules/</code>, and <code>~/.claude/CLAUDE.md</code></li>
+<li>Devin reads from <code>~/.codeium/windsurf/skills/</code>, <code>global_workflows/</code>, and <code>memories/global_rules.md</code></li>
+<li>Antigravity reads from <code>~/.gemini/config/skills/</code>, <code>global_workflows/</code>, and global rule configurations</li>
+<li>OpenAI Codex reads from <code>~/.codex/skills/</code> and <code>~/.codex/AGENTS.md</code></li>
+<li>Roo Code, Cursor, Trae, Qoder, and Kiro maintain similar bespoke directories</li>
+</ul>
+<p>When you engineer an effective debugging skill, slash command, or prompt rule in one editor, those improvements remain locked in that tool’s directory. Over time, prompt definitions diverge across machines, community skills fall out of date, and unversioned secrets risk leaking into local files.</p>
+<p>To solve this fragmentation, we built **<a target="_blank" rel="noopener" href="https://github.com/kamusis/axon-cli">Axon</a>**—an open-source, Git-backed, hub-and-spoke skill manager written in Go.</p>
+<hr>
+<h2 id="1-Architectural-Foundation-The-Hub-and-Spoke-Model"><a href="#1-Architectural-Foundation-The-Hub-and-Spoke-Model" class="headerlink" title="1. Architectural Foundation: The Hub-and-Spoke Model"></a>1. Architectural Foundation: The Hub-and-Spoke Model</h2><p>Instead of treating each AI editor as an isolated island, Axon decouples skill storage from editor consumption through a <strong>Hub-and-Spoke</strong> architecture.</p>
+<p class="text-center" style="margin: 2rem 0;">
+  <img src="/img/axon-hub-and-spoke.svg" srcset="/img/loading.gif" lazyload alt="Axon Hub-and-Spoke Architecture" style="width: 100%; max-width: 1000px; height: auto; border-radius: 12px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);" />
+</p>
+
+<h3 id="Core-Components"><a href="#Core-Components" class="headerlink" title="Core Components"></a>Core Components</h3><ol>
+<li><strong>The Hub (<code>~/.axon/repo/</code>)</strong>: A canonical, local Git repository that stores all skills, reusable workflows, slash commands, rules, and global instructions. It serves as the single source of truth across all tools.</li>
+<li><strong>The Spokes (Filesystem Symlinks)</strong>: Rather than duplicating files or running background file-sync daemons, Axon establishes filesystem symlinks from each tool’s expected configuration directory directly into subdirectories of the Hub.</li>
+<li><strong>Hub Manifest (<code>axon.vendors.yaml</code>)</strong>: An in-tree specification inside the Hub repository declaring external third-party skill repositories, automatically shared across machines via Git.</li>
+<li><strong>The Remote Repository</strong>: A private or public Git repository configured as the Hub’s upstream origin, enabling cross-machine synchronization.</li>
+</ol>
+<h3 id="Directory-Targets-vs-File-Targets"><a href="#Directory-Targets-vs-File-Targets" class="headerlink" title="Directory Targets vs. File Targets"></a>Directory Targets vs. File Targets</h3><p>Axon handles two distinct integration patterns natively:</p>
+<ol>
+<li><strong>Directory Targets</strong>: Maps entire categories (<code>skills</code>, <code>workflows</code>, <code>commands</code>, <code>rules</code>) directly to editor directories (e.g., <code>~/.claude/skills</code> $\rightarrow$ <code>Hub/skills</code>).</li>
+<li><strong>File Targets</strong>: Fans out a single central rulebook (<code>global_rules.md</code>) to multiple tool-specific filenames:<ul>
+<li><code>~/.claude/CLAUDE.md</code> $\rightarrow$ <code>Hub/global_rules.md</code></li>
+<li><code>~/.codex/AGENTS.md</code> $\rightarrow$ <code>Hub/global_rules.md</code></li>
+<li><code>~/.codeium/windsurf/memories/global_rules.md</code> $\rightarrow$ <code>Hub/global_rules.md</code></li>
+</ul>
+</li>
+</ol>
+<h3 id="100-Agent-Agnostic-Starter-Templates-vs-Arbitrary-Custom-Agents"><a href="#100-Agent-Agnostic-Starter-Templates-vs-Arbitrary-Custom-Agents" class="headerlink" title="100% Agent-Agnostic: Starter Templates vs. Arbitrary Custom Agents"></a>100% Agent-Agnostic: Starter Templates vs. Arbitrary Custom Agents</h3><p>A common misconception is that Axon only works with a fixed list of mainstream tools. In reality, <strong>Axon is completely agent-agnostic</strong>.</p>
+<p>The out-of-the-box configurations generated during <code>axon init</code> (such as Claude Code, Devin, Cursor, Antigravity, Roo Code) are simply <strong>convenient starter templates</strong>. Axon can synchronize skills, rules, and workflows for <strong>any AI agent, CLI utility, or proprietary internal tool</strong> you use.</p>
+<p>Adding support for any custom agent requires only a quick entry in <code>~/.axon/axon.yaml</code>:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">targets:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">custom-db-agent</span><br>    <span class="hljs-attr">source:</span> <span class="hljs-string">skills</span>                      <span class="hljs-comment"># Hub category: skills, workflows, commands, or rules</span><br>    <span class="hljs-attr">destination:</span> <span class="hljs-string">~/.db-agent/skills</span>     <span class="hljs-comment"># Absolute path where your agent expects skills</span><br>    <span class="hljs-attr">type:</span> <span class="hljs-string">directory</span>                     <span class="hljs-comment"># directory or file</span><br><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">custom-agent-rules</span><br>    <span class="hljs-attr">source:</span> <span class="hljs-string">global_rules.md</span>             <span class="hljs-comment"># Canonical single source of truth</span><br>    <span class="hljs-attr">destination:</span> <span class="hljs-string">~/.db-agent/RULES.md</span>   <span class="hljs-comment"># Agent-specific prompt / system instruction file</span><br>    <span class="hljs-attr">type:</span> <span class="hljs-string">file</span><br></code></pre></td></tr></table></figure>
+
+<p>Running <code>axon link custom-db-agent</code> immediately bridges the new tool to your central Hub. Whether you use commercially available tools or proprietary in-house AI agents, Axon treats them all uniformly.</p>
+<h3 id="Zero-Latency-Consistency-without-Daemon-Overhead"><a href="#Zero-Latency-Consistency-without-Daemon-Overhead" class="headerlink" title="Zero-Latency Consistency without Daemon Overhead"></a>Zero-Latency Consistency without Daemon Overhead</h3><p>Background file-syncing services often introduce race conditions, file-locking contention, and high CPU usage. By relying on native filesystem symlinks:</p>
+<ul>
+<li><strong>Zero Latency</strong>: When an AI agent modifies a skill in any tool, the canonical file in <code>~/.axon/repo/skills/</code> updates immediately.</li>
+<li><strong>Immediate Cross-Tool Visibility</strong>: All connected agents and editors—whether standard tools or proprietary in-house bots—read the updated content on their next access.</li>
+<li><strong>Zero Background Resource Cost</strong>: No daemon threads, polling loops, or memory overhead.</li>
+</ul>
+<hr>
+<h2 id="2-External-Skill-Lifecycle-In-Tree-Provenance"><a href="#2-External-Skill-Lifecycle-In-Tree-Provenance" class="headerlink" title="2. External Skill Lifecycle &amp; In-Tree Provenance"></a>2. External Skill Lifecycle &amp; In-Tree Provenance</h2><p>In multi-agent environments, engineers frequently import skills from external GitHub repositories—such as Anthropic’s public skills, curated OpenAI prompts, or specialized community utilities.</p>
+<p>Managing external skills using traditional Git submodules introduces fragile detached HEAD states and recursive clone hurdles. Conversely, manually copying files loses all upstream lineage. </p>
+<p>Axon solves this with a <strong>complete vendor management lifecycle</strong> coupled with <strong>in-tree provenance tracking</strong>.</p>
+<p class="text-center" style="margin: 2rem 0;">
+  <img src="/img/axon-vendor-lifecycle.svg" srcset="/img/loading.gif" lazyload alt="Axon Vendor Skill Lifecycle and Provenance" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);" />
+</p>
+
+<h3 id="The-Hub-Vendor-Manifest-axon-vendors-yaml"><a href="#The-Hub-Vendor-Manifest-axon-vendors-yaml" class="headerlink" title="The Hub Vendor Manifest (axon.vendors.yaml)"></a>The Hub Vendor Manifest (<code>axon.vendors.yaml</code>)</h3><p>Vendors are declared in <code>axon.vendors.yaml</code> located at the root of the Hub Git repository:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># ~/.axon/repo/axon.vendors.yaml</span><br><span class="hljs-attr">version:</span> <span class="hljs-number">1</span><br><span class="hljs-attr">vendors:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">book-to-skill</span><br>    <span class="hljs-attr">repo:</span> <span class="hljs-string">https://github.com/virgiliojr94/book-to-skill.git</span><br>    <span class="hljs-attr">subdir:</span> <span class="hljs-string">.</span><br>    <span class="hljs-attr">dest:</span> <span class="hljs-string">skills/book-to-skill</span><br>    <span class="hljs-attr">ref:</span> <span class="hljs-string">master</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">anthropic-customer-support</span><br>    <span class="hljs-attr">repo:</span> <span class="hljs-string">https://github.com/anthropics/anthropic-quickstarts.git</span><br>    <span class="hljs-attr">subdir:</span> <span class="hljs-string">computer-use-demo</span><br>    <span class="hljs-attr">dest:</span> <span class="hljs-string">skills/customer-support</span><br>    <span class="hljs-attr">ref:</span> <span class="hljs-string">v0.2.0</span><br></code></pre></td></tr></table></figure>
+
+<p>Because <code>axon.vendors.yaml</code> is version-controlled inside the Hub repo, running <code>axon sync</code> across your laptop and workstation ensures all machines stay aligned on the exact same vendor declarations.</p>
+<h3 id="Declarative-Lifecycle-Operations"><a href="#Declarative-Lifecycle-Operations" class="headerlink" title="Declarative Lifecycle Operations"></a>Declarative Lifecycle Operations</h3><p>Axon provides a dedicated suite of subcommands to manage the complete lifecycle of third-party assets:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 1. Add an external vendor (with optional subdir, ref, and destination)</span><br>axon vendor add https://github.com/anthropics/skills.git skills/skill-creator \<br>  --subdir skills/skill-creator \<br>  --ref main<br><br><span class="hljs-comment"># 2. Inspect configured vendors and their local sync health (offline)</span><br>axon vendor list<br><br><span class="hljs-comment"># 3. Check for upstream updates across all vendors without altering local disk</span><br>axon vendor check<br><br><span class="hljs-comment"># 4. Mirror files via sparse-checkout into the Hub</span><br>axon vendor <span class="hljs-built_in">sync</span><br><br><span class="hljs-comment"># 5. Eject a vendored skill to manage it as first-party code</span><br>axon vendor eject skills/skill-creator<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">$ axon vendor list<br>NAME                        DEST                     REF     STATUS              REPO<br>book-to-skill               skills/book-to-skill     master  synced (7d2a8f10)   github.com/virgiliojr94/book-to-skill<br>anthropic-customer-support  skills/customer-support  v0.2.0  synced (4c1b9e22)   github.com/anthropics/anthropic-quickstarts<br>diagram-design              skills/diagram-design    main    missing dest        github.com/cathrynlavery/diagram-design<br></code></pre></td></tr></table></figure>
+
+<h3 id="In-Tree-Provenance-axon-vendor-yaml"><a href="#In-Tree-Provenance-axon-vendor-yaml" class="headerlink" title="In-Tree Provenance (.axon-vendor.yaml)"></a>In-Tree Provenance (<code>.axon-vendor.yaml</code>)</h3><p>When Axon mirrors an external vendor, it writes a lightweight metadata file directly into the destination directory:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># ~/.axon/repo/skills/book-to-skill/.axon-vendor.yaml</span><br><span class="hljs-attr">repo:</span> <span class="hljs-string">https://github.com/virgiliojr94/book-to-skill.git</span><br><span class="hljs-attr">ref:</span> <span class="hljs-string">master</span><br><span class="hljs-attr">commit:</span> <span class="hljs-string">7d2a8f103b4c1a2d3e4f5a6b7c8d9e0f1a2b3c4d</span><br><span class="hljs-attr">subdir:</span> <span class="hljs-string">.</span><br><span class="hljs-attr">synced_at:</span> <span class="hljs-number">2026-10-11T12:00:00Z</span><br></code></pre></td></tr></table></figure>
+
+<p>This delivers two major advantages:</p>
+<ol>
+<li><strong>Self-Describing Lineage</strong>: Commands like <code>axon list</code> automatically render <code>[vendor]</code> badges, and <code>axon inspect &lt;skill&gt;</code> displays upstream origin, commit hash, and sync timestamp.</li>
+<li><strong>Deterministic Skipping</strong>: When running <code>axon vendor sync</code>, Axon compares the upstream commit SHA against the in-tree <code>.axon-vendor.yaml</code>. If upstream has not changed, redundant downloads and disk writes are completely bypassed.</li>
+</ol>
+<h3 id="Safety-Guards-Concurrency-Locks-Dirty-Destination-Protection"><a href="#Safety-Guards-Concurrency-Locks-Dirty-Destination-Protection" class="headerlink" title="Safety Guards: Concurrency Locks &amp; Dirty Destination Protection"></a>Safety Guards: Concurrency Locks &amp; Dirty Destination Protection</h3><p>To protect developer workflows in multi-terminal environments, Axon incorporates critical safeguards:</p>
+<ul>
+<li><strong>Dirty Destination Guard</strong>: If you make uncommitted manual modifications inside a vendored directory, <code>axon vendor sync</code> halts immediately with an actionable warning. It refuses to overwrite local modifications unless explicitly commanded with <code>--force</code>.</li>
+<li><strong>Concurrency Locking</strong>: Axon implements inter-process file locking (<code>src/internal/vendor/lock.go</code>) on both the vendor cache (<code>~/.axon/cache/vendors</code>) and the Hub repo during sync operations, preventing race conditions or corruptions from parallel terminal runs.</li>
+<li><strong>Clean Ejection (<code>axon vendor eject</code>)</strong>: If you need to heavily customize an imported community skill, <code>axon vendor eject &lt;dest&gt;</code> strips <code>.axon-vendor.yaml</code> and removes the manifest entry while leaving all source code intact, converting it into a first-party, locally managed skill.</li>
+</ul>
+<hr>
+<h2 id="3-Engineering-Rigor-Clean-Git-Operations"><a href="#3-Engineering-Rigor-Clean-Git-Operations" class="headerlink" title="3. Engineering Rigor &amp; Clean Git Operations"></a>3. Engineering Rigor &amp; Clean Git Operations</h2><p>Synchronizing active development environments across operating systems involves subtle edge cases: temporary files, operating system clutter, and nested Git metadata.</p>
+<h3 id="Asset-Level-Diffs-src-cmd-asset-diff-go"><a href="#Asset-Level-Diffs-src-cmd-asset-diff-go" class="headerlink" title="Asset-Level Diffs (src/cmd/asset_diff.go)"></a>Asset-Level Diffs (<code>src/cmd/asset_diff.go</code>)</h3><p>Traditional Git wrappers often output opaque, multiline commit hashes. Axon parses underlying Git trees to summarize changes at the <strong>Asset Level</strong> during <code>axon sync</code> and <code>axon status</code>:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs text">$ axon sync<br>[ Asset Diffs ]<br>  + skills/postgres-diagnostics (new)<br>  ~ workflows/pr-review         (modified)<br>  - commands/legacy-test        (deleted)<br><br>[ Sync Status ]<br>  commit: 4a2b1c3 &quot;axon: sync from dev-workstation&quot;<br>  rebase: up to date with origin/master<br>  push:   synced to remote<br>✓ All assets successfully synchronized.<br></code></pre></td></tr></table></figure>
+
+<p><code>axon status</code> groups symlinks by asset category (Skills, Workflows, Commands, Rules) alongside vendor sync health, providing an instant diagnostic snapshot of your development environment.</p>
+<h3 id="Non-Destructive-Bootstrapping-Collision-Protection"><a href="#Non-Destructive-Bootstrapping-Collision-Protection" class="headerlink" title="Non-Destructive Bootstrapping &amp; Collision Protection"></a>Non-Destructive Bootstrapping &amp; Collision Protection</h3><p>Running <code>axon init</code> on a machine with existing skills protects your data at every step:</p>
+<ul>
+<li><strong>MD5 Deduplication</strong>: Identical files across tools are deduplicated, keeping a single canonical copy in the Hub.</li>
+<li><strong>Conflict Isolation</strong>: Files with matching names but differing contents are both preserved:<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">skills/db-expert.md<br>skills/db-expert.<span class="hljs-keyword">conflict</span>-devin.md<br></code></pre></td></tr></table></figure></li>
+<li><strong>Backup Verification</strong>: Real directories are moved into <code>~/.axon/backups/&lt;target&gt;_&lt;timestamp&gt;/</code> before symlinks are established. Running <code>axon unlink</code> restores those backups verbatim.</li>
+</ul>
+<h3 id="Noise-Immunity-Embedded-git-Auto-Stripping"><a href="#Noise-Immunity-Embedded-git-Auto-Stripping" class="headerlink" title="Noise Immunity &amp; Embedded .git Auto-Stripping"></a>Noise Immunity &amp; Embedded <code>.git</code> Auto-Stripping</h3><ul>
+<li><strong>Exclusion Injection</strong>: Before any staging operation, Axon writes dynamic exclusion rules to <code>.git/info/exclude</code> (filtering <code>.DS_Store</code>, <code>Thumbs.db</code>, <code>.tmp</code>, and IDE cache folders), keeping Git history clean without cluttering user <code>.gitignore</code> files.</li>
+<li><strong>Submodule Prevention</strong>: Skills downloaded via <code>git clone</code> frequently contain embedded <code>.git</code> folders. Axon automatically detects and strips nested <code>.git</code> folders before running <code>git add</code>, ensuring skills are tracked as transparent content rather than broken submodules.</li>
+</ul>
+<h3 id="Non-Destructive-Forward-Commit-Rollback-axon-rollback"><a href="#Non-Destructive-Forward-Commit-Rollback-axon-rollback" class="headerlink" title="Non-Destructive Forward-Commit Rollback (axon rollback)"></a>Non-Destructive Forward-Commit Rollback (<code>axon rollback</code>)</h3><p>When an experimental prompt update or automated agent edit degrades a skill, traditional <code>git reset --hard</code> creates catastrophic cluster drift by rewriting history and dropping commits. Axon replaces this with <strong>surgical forward-commit rollbacks</strong>:</p>
+<p class="text-center" style="margin: 2rem 0;">
+  <img src="/img/axon-rollback-mechanism.svg" srcset="/img/loading.gif" lazyload alt="Axon Non-Destructive Rollback Mechanism" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);" />
+</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># Browse recent commit history for a specific skill</span><br>axon status db-tuning<br><br><span class="hljs-comment"># Revert a single skill to the previous revision</span><br>axon rollback db-tuning<br><br><span class="hljs-comment"># Revert a skill to an explicit Git commit SHA</span><br>axon rollback db-tuning --revision 7c2a1b0<br></code></pre></td></tr></table></figure>
+
+<p>By extracting the historical snapshot of only the targeted asset directory and recording a new forward commit ($C_4$), peer assets remain untouched and subsequent <code>axon sync</code> runs across all cluster nodes fast-forward cleanly without conflict.</p>
+<hr>
+<h2 id="4-Security-Auditing-Diagnostics"><a href="#4-Security-Auditing-Diagnostics" class="headerlink" title="4. Security Auditing &amp; Diagnostics"></a>4. Security Auditing &amp; Diagnostics</h2><h3 id="AI-Powered-Security-Auditing-axon-audit"><a href="#AI-Powered-Security-Auditing-axon-audit" class="headerlink" title="AI-Powered Security Auditing (axon audit)"></a>AI-Powered Security Auditing (<code>axon audit</code>)</h3><p>Because modern agent skills often bundle executable scripts (<code>.sh</code>, <code>.py</code>, <code>.js</code>), unvetted community packages present genuine security attack surfaces. Axon implements a <strong>two-stage audit pipeline</strong> that combines deterministic static pattern scanning with LLM contextual reasoning:</p>
+<p class="text-center" style="margin: 2rem 0;">
+  <img src="/img/axon-security-pipeline.svg" srcset="/img/loading.gif" lazyload alt="Axon Two-Stage Security Audit Pipeline" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);" />
+</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># Scan the entire Hub</span><br>axon audit<br><br><span class="hljs-comment"># Scan a single skill with cached results</span><br>axon audit custom-scraper<br><br><span class="hljs-comment"># Interactive redaction mode</span><br>axon audit --fix<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs text">=== Security Audit: custom-scraper ===<br><br>  Scanning 3 file(s)...<br><br>  SECURITY AUDIT REPORT<br>  ===============================================<br>  Target: custom-scraper    Files: 3<br>  -----------------------------------------------<br>  RED FLAGS FOUND: 2<br><br>  • [EXTREME]  (L14) scripts/extract.sh<br>    Use of eval with untrusted input can lead to command injection.<br>    &quot;eval &quot;$UNTRUSTED_QUERY&quot; &gt;/dev/null || true&quot;<br><br>  • [HIGH]     (L8) scripts/fetch.py<br>    Hardcoded API credential detected<br>    &quot;api_key=&quot;sk-live-9876543210abcdef9876543210abcdef&quot;&quot;<br><br>  -----------------------------------------------<br>  PERMISSIONS REQUIRED (estimated):<br>  • File Reads  : ~/.ssh/id_rsa<br>  • Network     : https://api.external-endpoint.com<br>  • Commands    : curl, eval, python3<br>  -----------------------------------------------<br>  RISK LEVEL: EXTREME<br>  VERDICT   : [DO NOT RUN]<br>  ===============================================<br></code></pre></td></tr></table></figure>
+
+<p>In interactive fix mode (<code>--fix</code>), developers can cycle through findings to <code>[r]</code>edact secrets, <code>[d]</code>elete offending lines, or <code>[s]</code>kip reviewed items.</p>
+<h3 id="Comprehensive-Environment-Preflight-axon-doctor"><a href="#Comprehensive-Environment-Preflight-axon-doctor" class="headerlink" title="Comprehensive Environment Preflight (axon doctor)"></a>Comprehensive Environment Preflight (<code>axon doctor</code>)</h3><p>Agent skills frequently depend on host binaries and runtimes. Running <code>axon doctor</code> performs a pre-flight health check across your environment:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">axon doctor<br></code></pre></td></tr></table></figure>
+
+<p>It verifies:</p>
+<ul>
+<li>Git binary version compatibility ($\ge 2.28$)</li>
+<li>Hub repository integrity and branch attachment</li>
+<li>Symlink validity across all configured targets</li>
+<li>Filesystem write permissions for all target paths</li>
+<li>Live availability of required system binaries (<code>python3</code>, <code>node</code>, <code>uv</code>, <code>bash</code>) declared in skill metadata (<code>requires.bins</code>)</li>
+<li>npm and Python package dependencies declared by active skills</li>
+</ul>
+<hr>
+<h2 id="5-Getting-Started"><a href="#5-Getting-Started" class="headerlink" title="5. Getting Started"></a>5. Getting Started</h2><p>Axon is packaged as a single standalone Go binary with zero external runtime dependencies beyond standard <code>git</code>.</p>
+<h3 id="Step-1-Installation"><a href="#Step-1-Installation" class="headerlink" title="Step 1: Installation"></a>Step 1: Installation</h3><p><strong>Homebrew (macOS &#x2F; Linux):</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">brew install kamusis/tap/axon-cli<br></code></pre></td></tr></table></figure>
+
+<p><strong>Direct Binary (Linux &#x2F; macOS &#x2F; Windows):</strong><br>Download the precompiled binary for your architecture from the <a target="_blank" rel="noopener" href="https://github.com/kamusis/axon-cli/releases">GitHub Releases</a> page and place <code>axon</code> in your <code>$PATH</code>.</p>
+<h3 id="Step-2-Initialize-the-Hub"><a href="#Step-2-Initialize-the-Hub" class="headerlink" title="Step 2: Initialize the Hub"></a>Step 2: Initialize the Hub</h3><p>Choose the setup mode that fits your setup:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># Mode A: Local-only Hub (add a remote repository later)</span><br>axon init<br><br><span class="hljs-comment"># Mode B: Personal Git repository (Recommended)</span><br>axon init git@github.com:your-username/my-skills-hub.git<br><br><span class="hljs-comment"># Mode C: Curated read-only community baseline</span><br>axon init --upstream<br></code></pre></td></tr></table></figure>
+
+<h3 id="Step-3-Link-Your-AI-Tools"><a href="#Step-3-Link-Your-AI-Tools" class="headerlink" title="Step 3: Link Your AI Tools"></a>Step 3: Link Your AI Tools</h3><p>Inspect installed AI editors and create symlinks:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># Inspect detected editors and link candidates</span><br>axon status<br><br><span class="hljs-comment"># Link all detected AI tools to the Hub</span><br>axon <span class="hljs-built_in">link</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="Step-4-Synchronize-Across-Machines"><a href="#Step-4-Synchronize-Across-Machines" class="headerlink" title="Step 4: Synchronize Across Machines"></a>Step 4: Synchronize Across Machines</h3><p>Whenever you create, update, or vendor skills:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">axon <span class="hljs-built_in">sync</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="6-Summary"><a href="#6-Summary" class="headerlink" title="6. Summary"></a>6. Summary</h2><p>As agentic software engineering matures, the skills, workflows, and rules we author for our AI assistants are becoming core developer assets. Managing them as transient, unversioned local files in disconnected editor directories creates configuration drift, maintenance overhead, and security blind spots.</p>
+<p>With a Git-backed Hub-and-Spoke architecture, Axon provides:</p>
+<ul>
+<li><strong>Instant Consistency</strong>: Author or update a skill, command, or prompt rule once, and have it immediately active across every AI agent and editor in your workflow—whether mainstream clients or bespoke in-house assistants.</li>
+<li><strong>Universal Extensibility</strong>: Completely agent-agnostic architecture where adding any new AI client, CLI assistant, or custom daemon is as simple as defining a path in <code>axon.yaml</code>.</li>
+<li><strong>Complete Vendor Lifecycle</strong>: Add, check, list, sync, and eject third-party community skills with in-tree provenance and dirty destination protection.</li>
+<li><strong>Asset-Level Observability</strong>: Track changes as semantic skill units rather than raw commit hashes.</li>
+<li><strong>Cluster Synchronization</strong>: Keep laptops, workstations, and remote dev servers synchronized with safe, rebase-backed Git operations.</li>
+<li><strong>Embedded Security</strong>: Audit skills for hardcoded credentials and dangerous execution patterns before execution.</li>
+</ul>
+<hr>
+<blockquote>
+<p><strong>Ready to unify your multi-agent coding environment?</strong><br>Explore the project on GitHub: <a target="_blank" rel="noopener" href="https://github.com/kamusis/axon-cli">kamusis&#x2F;axon-cli</a><br>Discover curated community skills: <a target="_blank" rel="noopener" href="https://github.com/kamusis/axon-hub">kamusis&#x2F;axon-hub</a></p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/AI/" class="print-no-link">#AI</a>
+      
+        <a href="/tags/Architecture/" class="print-no-link">#Architecture</a>
+      
+        <a href="/tags/Agent/" class="print-no-link">#Agent</a>
+      
+        <a href="/tags/Skill/" class="print-no-link">#Skill</a>
+      
+        <a href="/tags/CLI/" class="print-no-link">#CLI</a>
+      
+        <a href="/tags/Developer-Tools/" class="print-no-link">#Developer-Tools</a>
+      
+        <a href="/tags/Claude/" class="print-no-link">#Claude</a>
+      
+        <a href="/tags/Devin/" class="print-no-link">#Devin</a>
+      
+        <a href="/tags/Cursor/" class="print-no-link">#Cursor</a>
+      
+        <a href="/tags/Open-Source/" class="print-no-link">#Open-Source</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Axon: The Hub-and-Spoke Skill Manager for Multi-Agent and Multi-Machine AI Coding</div>
+      <div>https://www.kamusis.me/2026/10/11/Axon-The-Hub-and-Spoke-Skill-Manager-for-Multi-Agent-and-Multi-Machine-AI-Coding/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Kamus</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>October 11, 2026</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - Non-commercial">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - Share-alike">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/10/17/A-Twelve-Year-Old-Oracle-Mystery-REA-and-the-End-of-the-Software-License-Era/" title="A Twelve-Year-Old Oracle Mystery, REA, and the End of the Software License Era">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">A Twelve-Year-Old Oracle Mystery, REA, and the End of the Software License Era</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/09/19/Configuring-Claude-Code-and-Claude-Desktop-to-Use-Gemini-via-Antigravity-Manager/" title="Configuring Claude Code and Claude Desktop to Use Gemini via Antigravity Manager">
+                        <span class="hidden-mobile">Configuring Claude Code and Claude Desktop to Use Gemini via Antigravity Manager</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

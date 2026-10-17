@@ -1,0 +1,165 @@
+<svg viewBox="0 0 960 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="axon-vendor-title axon-vendor-desc" class="axon-diagram">
+<title id="axon-vendor-title">Axon Vendor Skill Lifecycle and Provenance</title>
+<desc id="axon-vendor-desc">Lifecycle diagram illustrating how Axon declares external skills in axon.vendors.yaml, mirrors them into the Hub with in-tree provenance, protects uncommitted local edits via Dirty Destination Guards, and allows clean ejection to first-party code.</desc>
+
+<defs>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap');
+
+.axon-diagram {
+--dia-bg: #f8fafc;
+--dia-paper: #ffffff;
+--dia-ink: #0f172a;
+--dia-muted: #64748b;
+--dia-soft: #94a3b8;
+--dia-border: rgba(15, 23, 42, 0.08);
+--dia-border-strong: rgba(15, 23, 42, 0.16);
+--dia-accent: #f59e0b;
+--dia-accent-dark: #d97706;
+--dia-accent-tint: rgba(245, 158, 11, 0.06);
+--dia-link: #3b82f6;
+--dia-link-tint: rgba(59, 130, 246, 0.06);
+--dia-success: #10b981;
+--dia-success-tint: rgba(16, 185, 129, 0.06);
+--dia-danger: #ef4444;
+--dia-danger-tint: rgba(239, 68, 68, 0.06);
+--dia-dot: rgba(15, 23, 42, 0.07);
+width: 100%;
+height: auto;
+display: block;
+background: var(--dia-bg);
+}
+
+.dia-font-sans { font-family: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.dia-font-mono { font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+@media (prefers-color-scheme: dark) {
+.axon-diagram {
+--dia-bg: #090d16;
+--dia-paper: #111827;
+--dia-ink: #f1f5f9;
+--dia-muted: #94a3b8;
+--dia-soft: #64748b;
+--dia-border: rgba(255, 255, 255, 0.08);
+--dia-border-strong: rgba(255, 255, 255, 0.16);
+--dia-accent: #fbbf24;
+--dia-accent-dark: #f59e0b;
+--dia-accent-tint: rgba(251, 191, 36, 0.1);
+--dia-link: #60a5fa;
+--dia-link-tint: rgba(96, 165, 250, 0.1);
+--dia-success: #34d399;
+--dia-success-tint: rgba(52, 211, 153, 0.1);
+--dia-danger: #f87171;
+--dia-danger-tint: rgba(248, 113, 113, 0.1);
+--dia-dot: rgba(255, 255, 255, 0.05);
+}
+}
+</style>
+
+<pattern id="dotgrid-vendor" width="20" height="20" patternUnits="userSpaceOnUse">
+<circle cx="2" cy="2" r="1" fill="var(--dia-dot)"/>
+</pattern>
+
+<marker id="arr-m" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+<polygon points="0 0, 8 3, 0 6" fill="var(--dia-muted)"/>
+</marker>
+<marker id="arr-acc" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+<polygon points="0 0, 8 3, 0 6" fill="var(--dia-accent)"/>
+</marker>
+<marker id="arr-suc" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+<polygon points="0 0, 8 3, 0 6" fill="var(--dia-success)"/>
+</marker>
+<marker id="arr-dan" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+<polygon points="0 0, 8 3, 0 6" fill="var(--dia-danger)"/>
+</marker>
+</defs>
+
+<!-- Background -->
+<rect width="100%" height="100%" fill="var(--dia-bg)"/>
+<rect width="100%" height="100%" fill="url(#dotgrid-vendor)"/>
+
+<g transform="translate(30, 24)">
+<!-- Step 1: Upstream Manifest & Check -->
+<g transform="translate(0, 0)">
+  <rect width="260" height="96" rx="8" fill="var(--dia-paper)" stroke="var(--dia-border-strong)" stroke-width="1.2"/>
+  <rect x="12" y="12" width="70" height="18" rx="3" fill="var(--dia-link-tint)" stroke="var(--dia-link)" stroke-width="0.8"/>
+  <text x="47" y="24" fill="var(--dia-link)" font-size="8.5" font-weight="600" class="dia-font-mono" text-anchor="middle">UPSTREAM</text>
+  <text x="12" y="48" fill="var(--dia-ink)" font-size="13" font-weight="600" class="dia-font-sans">1. Declare &amp; Inspect</text>
+  <text x="12" y="66" fill="var(--dia-muted)" font-size="9" class="dia-font-mono">axon.vendors.yaml</text>
+  <text x="12" y="80" fill="var(--dia-soft)" font-size="8.5" class="dia-font-sans">axon vendor check (zero disk touch)</text>
+</g>
+
+<!-- Connector 1 -> 2 -->
+<path d="M 260,48 H 320" stroke="var(--dia-muted)" stroke-width="1.2" marker-end="url(#arr-m)"/>
+<rect x="268" y="32" width="44" height="14" rx="2" fill="var(--dia-paper)"/>
+<text x="290" y="42" fill="var(--dia-muted)" font-size="7.5" font-weight="600" class="dia-font-mono" text-anchor="middle">SYNC</text>
+
+<!-- Step 2: Cache & Sparse-Checkout Mirror -->
+<g transform="translate(320, 0)">
+  <rect width="280" height="96" rx="8" fill="var(--dia-paper)" stroke="var(--dia-border-strong)" stroke-width="1.2"/>
+  <rect x="12" y="12" width="80" height="18" rx="3" fill="var(--dia-accent-tint)" stroke="var(--dia-accent)" stroke-width="0.8"/>
+  <text x="52" y="24" fill="var(--dia-accent-dark)" font-size="8.5" font-weight="600" class="dia-font-mono" text-anchor="middle">MIRRORING</text>
+  <text x="12" y="48" fill="var(--dia-ink)" font-size="13" font-weight="600" class="dia-font-sans">2. Mirror &amp; Provenance</text>
+  <text x="12" y="66" fill="var(--dia-muted)" font-size="9" class="dia-font-mono">sparse-checkout → ~/.axon/cache</text>
+  <text x="12" y="80" fill="var(--dia-soft)" font-size="8.5" class="dia-font-sans">Inter-process lock &amp; strip .git</text>
+</g>
+
+<!-- Connector 2 -> 3 -->
+<path d="M 600,48 H 660" stroke="var(--dia-accent)" stroke-width="1.2" marker-end="url(#arr-acc)"/>
+<rect x="608" y="32" width="44" height="14" rx="2" fill="var(--dia-paper)"/>
+<text x="630" y="42" fill="var(--dia-accent-dark)" font-size="7.5" font-weight="600" class="dia-font-mono" text-anchor="middle">WRITE</text>
+
+<!-- Step 3: In-Tree Provenance in Hub -->
+<g transform="translate(660, 0)">
+  <rect width="240" height="96" rx="8" fill="var(--dia-paper)" stroke="var(--dia-accent)" stroke-width="1.4"/>
+  <rect x="12" y="12" width="88" height="18" rx="3" fill="var(--dia-accent-tint)"/>
+  <text x="56" y="24" fill="var(--dia-accent-dark)" font-size="8.5" font-weight="600" class="dia-font-mono" text-anchor="middle">IN-TREE RECORD</text>
+  <text x="12" y="48" fill="var(--dia-ink)" font-size="13" font-weight="600" class="dia-font-sans">3. .axon-vendor.yaml</text>
+  <text x="12" y="66" fill="var(--dia-muted)" font-size="9" class="dia-font-mono">commit: 7d2a8f103b4...</text>
+  <text x="12" y="80" fill="var(--dia-soft)" font-size="8.5" class="dia-font-sans">Self-describing upstream lineage</text>
+</g>
+
+<!-- Downward Orthogonal Distribution from Hub -->
+<path d="M 780,96 V 156" fill="none" stroke="var(--dia-muted)" stroke-width="1.2"/>
+<path d="M 780,156 H 130" fill="none" stroke="var(--dia-muted)" stroke-width="1.2"/>
+<path d="M 130,156 V 196" fill="none" stroke="var(--dia-success)" stroke-width="1.2" marker-end="url(#arr-suc)"/>
+<path d="M 450,156 V 196" fill="none" stroke="var(--dia-danger)" stroke-width="1.2" marker-end="url(#arr-dan)"/>
+<path d="M 780,156 V 196" fill="none" stroke="var(--dia-muted)" stroke-width="1.2" marker-end="url(#arr-m)"/>
+
+<!-- Branch A: Clean State (Determinism) -->
+<g transform="translate(10, 200)">
+  <rect width="250" height="140" rx="8" fill="var(--dia-paper)" stroke="var(--dia-border-strong)" stroke-width="1.2"/>
+  <rect x="12" y="12" width="76" height="18" rx="3" fill="var(--dia-success-tint)" stroke="var(--dia-success)" stroke-width="0.8"/>
+  <text x="50" y="24" fill="var(--dia-success)" font-size="8" font-weight="600" class="dia-font-mono" text-anchor="middle">CLEAN STATE</text>
+  <text x="12" y="48" fill="var(--dia-ink)" font-size="12" font-weight="600" class="dia-font-sans">Upstream Sync / Skip</text>
+  <text x="12" y="68" fill="var(--dia-muted)" font-size="8.5" class="dia-font-sans">If commit matches:</text>
+  <text x="12" y="82" fill="var(--dia-soft)" font-size="8" class="dia-font-mono">→ Skip download deterministically</text>
+  <text x="12" y="100" fill="var(--dia-muted)" font-size="8.5" class="dia-font-sans">If upstream updated:</text>
+  <text x="12" y="114" fill="var(--dia-success)" font-size="8" font-weight="600" class="dia-font-mono">→ Fast-forward Hub mirror smoothly</text>
+</g>
+
+<!-- Branch B: Dirty Destination Guard -->
+<g transform="translate(325, 200)">
+  <rect width="250" height="140" rx="8" fill="var(--dia-danger-tint)" stroke="var(--dia-danger)" stroke-width="1.4"/>
+  <rect x="12" y="12" width="86" height="18" rx="3" fill="var(--dia-paper)" stroke="var(--dia-danger)" stroke-width="0.8"/>
+  <text x="55" y="24" fill="var(--dia-danger)" font-size="8" font-weight="600" class="dia-font-mono" text-anchor="middle">DIRTY GUARD</text>
+  <text x="12" y="48" fill="var(--dia-danger)" font-size="12" font-weight="600" class="dia-font-sans">Local Modifications</text>
+  <text x="12" y="68" fill="var(--dia-ink)" font-size="8.5" class="dia-font-sans">Uncommitted changes in destination:</text>
+  <text x="12" y="86" fill="var(--dia-danger)" font-size="8.5" font-weight="600" class="dia-font-mono">⚠ HALT &amp; REFUSE OVERWRITE</text>
+  <text x="12" y="106" fill="var(--dia-muted)" font-size="8" class="dia-font-sans">Requires explicit override:</text>
+  <text x="12" y="120" fill="var(--dia-ink)" font-size="8" class="dia-font-mono">axon vendor sync --force</text>
+</g>
+
+<!-- Branch C: Clean Ejection -->
+<g transform="translate(650, 200)">
+  <rect width="250" height="140" rx="8" fill="var(--dia-paper)" stroke="var(--dia-border-strong)" stroke-width="1.2"/>
+  <rect x="12" y="12" width="84" height="18" rx="3" fill="var(--dia-link-tint)" stroke="var(--dia-link)" stroke-width="0.8"/>
+  <text x="54" y="24" fill="var(--dia-link)" font-size="8" font-weight="600" class="dia-font-mono" text-anchor="middle">EJECT LIFECYCLE</text>
+  <text x="12" y="48" fill="var(--dia-ink)" font-size="12" font-weight="600" class="dia-font-sans">First-Party Conversion</text>
+  <text x="12" y="68" fill="var(--dia-muted)" font-size="8.5" class="dia-font-sans">When extensive forks are needed:</text>
+  <text x="12" y="84" fill="var(--dia-link)" font-size="8.5" class="dia-font-mono">axon vendor eject &lt;dest&gt;</text>
+  <text x="12" y="104" fill="var(--dia-soft)" font-size="8" class="dia-font-sans">• Strips .axon-vendor.yaml</text>
+  <text x="12" y="118" fill="var(--dia-soft)" font-size="8" class="dia-font-sans">• Promotes to native first-party skill</text>
+</g>
+</g>
+</svg>

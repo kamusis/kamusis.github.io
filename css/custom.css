@@ -1,0 +1,667 @@
+/* --------------------------------------------------------------------------
+   Kamus' Notes — Refined Typography & Atmospheric Visual System
+   Design Philosophy: Restraint, breath, quiet authority, sans bold-bloat
+   -------------------------------------------------------------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+html {
+  min-height: 100%;
+  background-color: #f9fafb;
+}
+
+body {
+  min-height: 100vh;
+  height: auto !important;
+  font-family: var(--font-sans) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  color: #334155;
+  background-color: #f9fafb;
+}
+
+main {
+  min-height: 100%;
+  background-color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   1. 导航栏与菜单交互 (Warm Beacon Lantern Accent, No Blue Clashing)
+   -------------------------------------------------------------------------- */
+.navbar-brand {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 1.15rem;
+  letter-spacing: -0.015em;
+  color: #ffffff !important;
+  opacity: 0.96;
+  transition: opacity 0.2s ease;
+}
+
+.navbar-brand:hover {
+  opacity: 1;
+}
+
+.navbar .nav-item .nav-link {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 0.92rem;
+  letter-spacing: 0.015em;
+  color: rgba(255, 255, 255, 0.92) !important;
+  padding: 0.4rem 0.85rem !important;
+  border-radius: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  margin: 0 0.15rem;
+}
+
+/* 彻底告别与背景撞色的默认青蓝色，取灯塔琥珀暖光金，与四时冷暖天空形成极高雅互补 */
+.navbar .nav-item .nav-link:hover,
+.navbar .nav-item .nav-link:focus {
+  color: #fef08a !important;
+  background-color: rgba(255, 255, 255, 0.16);
+  text-shadow: 0 0 12px rgba(251, 191, 36, 0.45);
+  transform: translateY(-1px);
+}
+
+/* 导航栏右侧图标按钮 (搜索与暗黑模式切换) 统一交互 */
+.navbar #modalSearchLink,
+.navbar #color-toggle-btn {
+  color: rgba(255, 255, 255, 0.92) !important;
+  transition: all 0.2s ease;
+}
+
+.navbar #modalSearchLink:hover,
+.navbar #color-toggle-btn:hover {
+  color: #fef08a !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. 页头与标语 (Atmospheric Hero, Stately Scale & No Loud Shadows)
+   -------------------------------------------------------------------------- */
+.banner .h2 {
+  font-family: var(--font-sans);
+  font-weight: 450;
+  letter-spacing: -0.015em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* 首页专属 Hero 布局：主站名 + 优雅比例的副标题 */
+#banner .banner-text:has([data-typed-text]) {
+  max-width: 920px;
+  width: 90%;
+  padding: 2.5rem 2rem;
+  border-radius: 20px;
+  background: radial-gradient(ellipse at center, rgba(15, 23, 42, 0.45) 0%, rgba(15, 23, 42, 0) 78%);
+}
+
+#banner .banner-text:has([data-typed-text]) .h2::before {
+  content: "Kamus' Notes";
+  display: block;
+  font-family: var(--font-sans);
+  font-size: clamp(2.4rem, 4.8vw, 3.8rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin-bottom: 1.1rem;
+  line-height: 1.15;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
+}
+
+#banner .banner-text:has([data-typed-text]) #subtitle,
+#banner .banner-text:has([data-typed-text]) .typed-cursor {
+  font-size: clamp(1.1rem, 1.8vw, 1.35rem) !important;
+  font-weight: 350;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.94);
+  line-height: 1.6;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+}
+
+/* 文章内页的页头标题保持从容自然比例 */
+.banner .post-content #subtitle,
+.banner:not(:has([data-typed-text])) #subtitle {
+  font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+  font-weight: 550;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+
+/* --------------------------------------------------------------------------
+   3. 标题去粗化与尺度层次 (Typographic Hierarchy Without Brute-force Bold)
+   -------------------------------------------------------------------------- */
+h1, h2, h3, h4, h5, h6,
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4 {
+  font-family: var(--font-sans);
+  color: #0f172a;
+}
+
+/* 主文章标题：从容自持，不过度加黑加粗 */
+.markdown-body h1, .post-title {
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  line-height: 1.35;
+}
+
+/* 二级小结标题：以字号与边距立层级，字重仅取 550 */
+.markdown-body h2 {
+  font-weight: 550;
+  font-size: 1.55rem;
+  letter-spacing: -0.018em;
+  border-bottom: none;
+  margin-top: 2.2em;
+  margin-bottom: 0.9em;
+  padding-bottom: 0;
+}
+
+/* 三级标题：以 500 Medium 承接，温润细腻 */
+.markdown-body h3 {
+  font-weight: 500;
+  font-size: 1.25rem;
+  letter-spacing: -0.012em;
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+}
+
+.markdown-body h4 {
+  font-weight: 500;
+  font-size: 1.05rem;
+  letter-spacing: -0.008em;
+}
+
+/* 核心优化：Markdown 中的加粗文字弱化黑度，避免满屏“黑斑块”破坏视线流动 */
+.markdown-body strong,
+.markdown-body b {
+  font-weight: 550 !important;
+  color: #0f172a;
+}
+
+/* --------------------------------------------------------------------------
+   4. 正文排版与阅读呼吸感
+   -------------------------------------------------------------------------- */
+.markdown-body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.88;
+  letter-spacing: -0.002em;
+  color: #334155;
+}
+
+.markdown-body p {
+  margin-top: 0;
+  margin-bottom: 1.5em;
+}
+
+/* 引用块设计：极简细线 + 低饱和素雅底色，去除浮夸彩色厚边 */
+.markdown-body blockquote {
+  border-left: 2px solid #cbd5e1;
+  background-color: #f8fafc;
+  color: #475569;
+  padding: 14px 20px;
+  margin: 1.8em 0;
+  border-radius: 0 6px 6px 0;
+  font-style: normal;
+}
+
+.markdown-body blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   5. 去除 SaaS 模版感的纸实质卡片与漫反射微光阴影
+   -------------------------------------------------------------------------- */
+#board {
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.015), 0 16px 40px -8px rgba(0, 0, 0, 0.035);
+  background-color: #ffffff;
+}
+
+/* 首页文章条目 */
+.index-card {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  padding-top: 1.8rem;
+  padding-bottom: 1.8rem;
+}
+
+.index-card:last-child {
+  border-bottom: none;
+}
+
+.index-header {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 1.28rem;
+  letter-spacing: -0.014em;
+  color: #1e293b;
+  transition: color 0.2s ease;
+}
+
+.index-header:hover {
+  color: #2563eb;
+}
+
+.index-excerpt {
+  color: #64748b;
+  font-size: 0.94rem;
+  line-height: 1.75;
+  font-weight: 400;
+  margin-top: 0.6rem;
+}
+
+/* 文章元数据（日期、分类等） */
+.post-meta, .index-info {
+  font-size: 0.84rem;
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+/* --------------------------------------------------------------------------
+   6. 精致代码块 (JetBrains Mono 沉静排版)
+   -------------------------------------------------------------------------- */
+pre, code, .markdown-body pre, .markdown-body code, .highlight {
+  font-family: var(--font-mono) !important;
+}
+
+.markdown-body code:not([class*="language-"]) {
+  font-size: 86%;
+  font-weight: 400;
+  background-color: #f1f5f9;
+  color: #334155;
+  padding: 0.18em 0.42em;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+/* --------------------------------------------------------------------------
+   7. 暗黑模式优雅适配 (Deep Slate, No Harsh High-Contrast)
+   -------------------------------------------------------------------------- */
+html[data-user-color-scheme='dark'],
+[data-user-color-scheme='dark'],
+[data-user-color-scheme='dark'] body,
+[data-user-color-scheme='dark'] main {
+  background-color: #0b1120 !important;
+  color: #cbd5e1;
+}
+
+[data-user-color-scheme='dark'] .container-fluid,
+[data-user-color-scheme='dark'] .side-col,
+[data-user-color-scheme='dark'] #board-ctn {
+  background-color: transparent !important;
+}
+
+/* 兼容系统暗色偏好（用户未手动点击切换模式时） */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-user-color-scheme='light']),
+  :root:not([data-user-color-scheme='light']) html,
+  :root:not([data-user-color-scheme='light']) body,
+  :root:not([data-user-color-scheme='light']) main {
+    background-color: #0b1120 !important;
+    color: #cbd5e1;
+  }
+
+  :root:not([data-user-color-scheme='light']) .container-fluid,
+  :root:not([data-user-color-scheme='light']) .side-col,
+  :root:not([data-user-color-scheme='light']) #board-ctn {
+    background-color: transparent !important;
+  }
+
+  :root:not([data-user-color-scheme='light']) #board {
+    background-color: #111827;
+    border-color: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  }
+
+  :root:not([data-user-color-scheme='light']) .markdown-body {
+    color: #cbd5e1;
+  }
+
+  :root:not([data-user-color-scheme='light']) h1,
+  :root:not([data-user-color-scheme='light']) h2,
+  :root:not([data-user-color-scheme='light']) h3,
+  :root:not([data-user-color-scheme='light']) h4,
+  :root:not([data-user-color-scheme='light']) .markdown-body h1,
+  :root:not([data-user-color-scheme='light']) .markdown-body h2,
+  :root:not([data-user-color-scheme='light']) .markdown-body h3,
+  :root:not([data-user-color-scheme='light']) .index-header {
+    color: #f1f5f9;
+  }
+
+  :root:not([data-user-color-scheme='light']) .markdown-body strong,
+  :root:not([data-user-color-scheme='light']) .markdown-body b {
+    color: #f8fafc;
+  }
+
+  :root:not([data-user-color-scheme='light']) .markdown-body blockquote {
+    background-color: #1e293b;
+    border-left-color: #475569;
+    color: #94a3b8;
+  }
+
+  :root:not([data-user-color-scheme='light']) .markdown-body code:not([class*="language-"]) {
+    background-color: #1e293b;
+    color: #e2e8f0;
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+}
+
+[data-user-color-scheme='dark'] #board {
+  background-color: #111827;
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+}
+
+[data-user-color-scheme='dark'] .markdown-body {
+  color: #cbd5e1;
+}
+
+[data-user-color-scheme='dark'] h1,
+[data-user-color-scheme='dark'] h2,
+[data-user-color-scheme='dark'] h3,
+[data-user-color-scheme='dark'] h4,
+[data-user-color-scheme='dark'] .markdown-body h1,
+[data-user-color-scheme='dark'] .markdown-body h2,
+[data-user-color-scheme='dark'] .markdown-body h3,
+[data-user-color-scheme='dark'] .index-header {
+  color: #f1f5f9;
+}
+
+[data-user-color-scheme='dark'] .markdown-body strong,
+[data-user-color-scheme='dark'] .markdown-body b {
+  color: #f8fafc;
+}
+
+[data-user-color-scheme='dark'] .markdown-body blockquote {
+  background-color: #1e293b;
+  border-left-color: #475569;
+  color: #94a3b8;
+}
+
+[data-user-color-scheme='dark'] .markdown-body code:not([class*="language-"]) {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+/* --------------------------------------------------------------------------
+   8. 关于页个人名片卡片 (About Profile Card Polish)
+   -------------------------------------------------------------------------- */
+.about-avatar {
+  position: relative;
+  margin-top: -55px;
+  margin-bottom: 0.5rem;
+}
+
+.about-avatar img {
+  width: 108px !important;
+  height: 108px !important;
+  border-radius: 50% !important;
+  border: 4px solid #ffffff !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+  object-fit: cover !important;
+  background-color: #ffffff !important;
+}
+
+.about-info .about-name {
+  font-family: var(--font-sans);
+  font-size: 1.65rem;
+  font-weight: 550;
+  color: #0f172a;
+  letter-spacing: -0.018em;
+  margin-top: 0.8rem;
+}
+
+.about-info .about-intro {
+  font-family: var(--font-sans);
+  font-size: 0.98rem;
+  font-weight: 400;
+  color: #64748b;
+  margin-top: 0.35rem;
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.01em;
+}
+
+.about-icons a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  margin: 0 0.4rem;
+  color: #64748b;
+  background-color: #f1f5f9;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.about-icons a:hover {
+  color: #ffffff;
+  background-color: #2563eb;
+  transform: translateY(-2px);
+}
+
+[data-user-color-scheme='dark'] .about-avatar img {
+  border-color: #1e293b !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-user-color-scheme='dark'] .about-info .about-name {
+  color: #f1f5f9;
+}
+
+[data-user-color-scheme='dark'] .about-info .about-intro {
+  color: #94a3b8;
+}
+
+[data-user-color-scheme='dark'] .about-icons a {
+  background-color: #1e293b;
+  color: #94a3b8;
+}
+
+[data-user-color-scheme='dark'] .about-icons a:hover {
+  background-color: #3b82f6;
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   9. 方案 A：现代工程导轨树目录 (Modern Guide Rail TOC — Vercel / Tailwind Style)
+   -------------------------------------------------------------------------- */
+/* 1. 彻底拔除错位折叠小箭头与占位符，消灭所有横向锯齿和错位 */
+.toc-toggle,
+.toc-toggle-placeholder {
+  display: none !important;
+}
+
+/* 2. 侧边栏与目录容器定位 */
+.sidebar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 5rem;
+  padding-top: 1.5rem !important;
+}
+
+#toc {
+  width: 100%;
+}
+
+.toc-header {
+  font-family: var(--font-sans);
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+[data-user-color-scheme='dark'] .toc-header {
+  color: #64748b;
+}
+
+/* 3. 极细贯通导轨线 (1.5px Track) */
+.toc-body {
+  max-height: 80vh;
+  overflow-y: auto;
+  padding-left: 2px;
+}
+
+.toc-body > ol.tocbot-list {
+  border-left: 1.5px solid rgba(0, 0, 0, 0.08);
+  padding-left: 0.85rem !important;
+  margin: 0 !important;
+  position: relative;
+}
+
+[data-user-color-scheme='dark'] .toc-body > ol.tocbot-list {
+  border-left-color: rgba(255, 255, 255, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-user-color-scheme='light']) .toc-body > ol.tocbot-list {
+    border-left-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* 4. 条目容器与严格悬挂对齐 */
+.toc-list-item {
+  display: block !important;
+  position: relative;
+  -webkit-line-clamp: unset !important;
+  overflow: visible !important;
+  margin-bottom: 0.4rem;
+  padding: 0 !important;
+}
+
+/* 消除原主题粗糙悬空的 ::before 黄色断线 */
+.toc-list-item::before,
+.toc-list-item.is-active-li::before {
+  display: none !important;
+}
+
+/* 5. 链接文字：紧凑、精致、防换行撕裂 */
+.tocbot-link {
+  display: block !important;
+  word-break: break-word;
+  line-height: 1.45 !important;
+  padding: 0.12rem 0 !important;
+  text-decoration: none !important;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-line-clamp: unset !important;
+}
+
+/* 主章节 (H2)：500 Medium，沉静主色 */
+.tocbot-link.node-name--H2 {
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #475569;
+}
+
+[data-user-color-scheme='dark'] .tocbot-link.node-name--H2 {
+  color: #cbd5e1;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-user-color-scheme='light']) .tocbot-link.node-name--H2 {
+    color: #cbd5e1;
+  }
+}
+
+/* 子章节 (H3 / H4)：更小字号、稍浅次级色 */
+.tocbot-link.node-name--H3,
+.tocbot-link.node-name--H4 {
+  font-size: 0.76rem !important;
+  font-weight: 400 !important;
+  color: #64748b;
+  line-height: 1.4 !important;
+}
+
+[data-user-color-scheme='dark'] .tocbot-link.node-name--H3,
+[data-user-color-scheme='dark'] .tocbot-link.node-name--H4 {
+  color: #94a3b8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-user-color-scheme='light']) .tocbot-link.node-name--H3,
+  :root:not([data-user-color-scheme='light']) .tocbot-link.node-name--H4 {
+    color: #94a3b8;
+  }
+}
+
+/* 嵌套子目录缩进与细辅导线 */
+.tocbot-list ol {
+  padding-left: 0.85rem !important;
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.35rem !important;
+  list-style: none !important;
+  border-left: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-user-color-scheme='dark'] .tocbot-list ol {
+  border-left-color: rgba(255, 255, 255, 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-user-color-scheme='light']) .tocbot-list ol {
+    border-left-color: rgba(255, 255, 255, 0.06);
+  }
+}
+
+/* 6. 悬停与活跃态：温润琥珀微光与导轨贴线指示条 */
+.tocbot-link:hover {
+  color: #d97706 !important;
+}
+
+[data-user-color-scheme='dark'] .tocbot-link:hover {
+  color: #fde047 !important;
+}
+
+/* 顶层 H2 活跃态导轨滑块指示条 */
+.toc-body > ol.tocbot-list > li.toc-list-item.is-active-li > a.tocbot-link {
+  color: #d97706 !important;
+  font-weight: 600 !important;
+}
+
+.toc-body > ol.tocbot-list > li.toc-list-item.is-active-li::after {
+  content: "";
+  position: absolute;
+  left: -0.85rem;
+  top: 0.15rem;
+  bottom: 0.15rem;
+  width: 2px;
+  background-color: #f59e0b;
+  border-radius: 2px;
+}
+
+[data-user-color-scheme='dark'] .toc-body > ol.tocbot-list > li.toc-list-item.is-active-li > a.tocbot-link {
+  color: #fbbf24 !important;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.25);
+}
+
+[data-user-color-scheme='dark'] .toc-body > ol.tocbot-list > li.toc-list-item.is-active-li::after {
+  background-color: #fbbf24;
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.45);
+}
+
+/* 子级 H3 活跃态 */
+.tocbot-active-link {
+  font-weight: 550 !important;
+  color: #d97706 !important;
+}
+
+[data-user-color-scheme='dark'] .tocbot-active-link {
+  color: #fbbf24 !important;
+}
+
+

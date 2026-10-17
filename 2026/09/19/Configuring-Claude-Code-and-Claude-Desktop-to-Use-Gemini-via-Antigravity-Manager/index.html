@@ -1,0 +1,909 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/favicon.ico">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  
+    <meta name="description" content="As large language models rapidly evolve, developers often subscribe to different model ecosystems for distinct strengths—such as combining a Google AI Ultra subscription with the refined developer exp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Configuring Claude Code and Claude Desktop to Use Gemini via Antigravity Manager">
+<meta property="og:url" content="https://www.kamusis.me/2026/09/19/Configuring-Claude-Code-and-Claude-Desktop-to-Use-Gemini-via-Antigravity-Manager/">
+<meta property="og:site_name" content="Kamus&#39; Notes">
+<meta property="og:description" content="As large language models rapidly evolve, developers often subscribe to different model ecosystems for distinct strengths—such as combining a Google AI Ultra subscription with the refined developer exp">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://files.seeusercontent.com/2026/09/19/x9yD/architecture_flowchart.png">
+<meta property="article:published_time" content="2026-09-19T10:15:00.000Z">
+<meta property="article:modified_time" content="2026-10-17T10:08:14.944Z">
+<meta property="article:author" content="Kamus">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="Gemini">
+<meta property="article:tag" content="Claude">
+<meta property="article:tag" content="Antigravity">
+<meta property="article:tag" content="Proxy">
+<meta property="article:tag" content="Windows">
+<meta property="article:tag" content="macOS">
+<meta property="article:tag" content="AI-Tools">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://files.seeusercontent.com/2026/09/19/x9yD/architecture_flowchart.png">
+  
+  
+  
+  <title>Configuring Claude Code and Claude Desktop to Use Gemini via Antigravity Manager - Kamus&#39; Notes</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.kamusis.me","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":25,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h2,h3,h4,h5","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 48vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Kamus&#39; Notes</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Home</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>Archives</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Tags</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>About</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Search</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Light"
+               data-label-dark="Dark">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dark</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/banner-autumn.webp') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.28)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Configuring Claude Code and Claude Desktop to Use Gemini via Antigravity Manager</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-09-19 19:15" pubdate>
+          2026-09-19
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          9.5k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          80 min read
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Configuring Claude Code and Claude Desktop to Use Gemini via Antigravity Manager</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>As large language models rapidly evolve, developers often subscribe to different model ecosystems for distinct strengths—such as combining a Google AI Ultra subscription with the refined developer experience of Anthropic’s <strong>Claude Code CLI</strong> and <strong>Claude Desktop App</strong>.</p>
+<p>However, integrating Claude-native clients with Google Gemini or Vertex AI backends presents two immediate challenges: protocol mismatch (Claude clients speak Anthropic Messages API, while Gemini speaks Google’s native API) and strict client-side validation (Claude Desktop blocks non-loopback HTTP and rejects non-<code>claude-*</code> model identifiers).</p>
+<p>This guide walks through configuring <strong>Claude Code CLI</strong> and <strong>Claude Desktop App</strong> on <strong>Windows</strong> and <strong>macOS</strong> to seamlessly route through <strong>Antigravity Manager</strong>, an account-pooling reverse proxy running on a local server&#x2F;NAS, backed by <strong>Gemini 3.8 Flash</strong>.</p>
+<hr>
+<h2 id="1-What-is-Antigravity-Manager"><a href="#1-What-is-Antigravity-Manager" class="headerlink" title="1. What is Antigravity Manager?"></a>1. What is Antigravity Manager?</h2><p><strong>Antigravity Manager</strong> (community Docker image <code>lbjlaq/antigravity-manager</code>, powered by <code>antigravity-tools</code>) is an account-pooling and protocol-translation gateway tailored for Google Antigravity, Google AI Ultra, and Vertex AI backends.</p>
+<h3 id="Key-Capabilities"><a href="#Key-Capabilities" class="headerlink" title="Key Capabilities"></a>Key Capabilities</h3><ol>
+<li><strong>Multi-Account &amp; Quota Pooling</strong>: Centrally aggregates multiple Google accounts (including Google AI Ultra&#x2F;One subscriptions, OAuth sessions, and Vertex AI service credentials). It handles automatic session keep-alive, quota distribution, and seamless failover.</li>
+<li><strong>Standardized Protocol Bridge</strong>: Translates Google backend responses into industry-standard <strong>Anthropic Messages API (<code>/v1/messages</code>)</strong> and <strong>OpenAI API (<code>/v1/chat/completions</code>)</strong> formats. This allows any client built exclusively for Claude or OpenAI to consume Gemini models without code modifications.</li>
+<li><strong>Dynamic Model Aliasing (<code>custom_mapping</code>)</strong>: Allows wildcard routing rules at the gateway level. Incoming requests for <code>claude*</code> or <code>claude-3-7-sonnet</code> can be dynamically mapped to <code>gemini-3.8-flash-high</code>, cleanly bypassing client-side model validation and mitigating upstream rate limits (HTTP 429).</li>
+<li><strong>Web Administration Console</strong>: Provides a built-in web dashboard (default port <code>8045</code>) to inspect health metrics, monitor query logs, configure model aliases, and set gateway access tokens.</li>
+</ol>
+<blockquote>
+<p>[!NOTE]<br><strong>Understanding the Gateway API Key</strong><br>Google does not provide an “Anthropic API Key” for your Google account. In this setup, the API key entered into Claude Code or Claude Desktop is a <strong>self-configured proxy token</strong> (<code>proxy.api_key</code> in Antigravity Manager). It protects your gateway from unauthorized local network access.</p>
+</blockquote>
+<hr>
+<h2 id="2-Architecture-Core-Constraints"><a href="#2-Architecture-Core-Constraints" class="headerlink" title="2. Architecture &amp; Core Constraints"></a>2. Architecture &amp; Core Constraints</h2><p><img src="https://files.seeusercontent.com/2026/09/19/x9yD/architecture_flowchart.png" srcset="/img/loading.gif" lazyload alt="Architecture &amp; Data Flow"></p>
+<h3 id="Essential-Constraints-to-Know"><a href="#Essential-Constraints-to-Know" class="headerlink" title="Essential Constraints to Know"></a>Essential Constraints to Know</h3><ol>
+<li><strong>Network Constraint</strong>: Claude Desktop enforces a strict origin policy: <code>baseUrl: must use https (or http on loopback)</code>. Supplying a plain LAN IP address (such as <code>http://192.168.68.55:8045</code>) will be rejected by client validation. Forwarding to the local loopback (<code>http://127.0.0.1:8045</code>) satisfies this requirement.</li>
+<li><strong>Model Identifier Constraint</strong>: Claude Desktop uses a hardcoded regex pattern requiring all model routes to begin with <code>claude-*</code> or <code>anthropic/claude-*</code>. Manually entering custom model names like <code>gemini-3.8-flash-high</code> triggers validation warnings and disables the “Apply Changes” button. Transparent routing must instead be handled by the proxy’s <code>custom_mapping</code>.</li>
+</ol>
+<hr>
+<h2 id="3-Step-1-Gateway-Network-Configuration"><a href="#3-Step-1-Gateway-Network-Configuration" class="headerlink" title="3. Step 1: Gateway &amp; Network Configuration"></a>3. Step 1: Gateway &amp; Network Configuration</h2><h3 id="3-1-Configure-Model-Mapping-on-the-Gateway"><a href="#3-1-Configure-Model-Mapping-on-the-Gateway" class="headerlink" title="3.1 Configure Model Mapping on the Gateway"></a>3.1 Configure Model Mapping on the Gateway</h3><p>To allow Claude clients requesting <code>claude</code> or <code>claude-3-7-sonnet</code> to be automatically served by Gemini 3.8 Flash without quota exhaustion, set up mapping rules on your server.</p>
+<p><strong>Configuration file path</strong>: <code>/home/&lt;user&gt;/.antigravity_tools/gui_config.json</code></p>
+<p>Add or update the <code>custom_mapping</code> section under <code>proxy</code>:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;proxy&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;custom_mapping&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;claude*&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;gemini-3.8-flash-high&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;claude&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;gemini-3.8-flash-high&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;claude-3-5-sonnet-*&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;gemini-3.8-flash-high&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;claude-3-7-sonnet-*&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;gemini-3.8-flash-high&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;claude-3-opus-*&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;gemini-3.8-flash-high&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;claude-opus-4-*&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;gemini-3.8-flash-high&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;claude-sonnet*&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;gemini-3.8-flash-high&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;claude-haiku-*&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;gemini-3.8-flash-high&quot;</span><br>    <span class="hljs-punctuation">&#125;</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>Restart the container to apply the changes:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo docker restart antigravity-manager<br></code></pre></td></tr></table></figure>
+<p><em>(Alternatively, navigate to <code>http://&lt;SERVER_IP&gt;:8045</code> in your browser and update the mapping via <strong>Proxy Settings</strong> → <strong>Custom Model Mapping</strong>.)</em></p>
+<hr>
+<h3 id="3-2-Retrieve-Your-Gateway-API-Key"><a href="#3-2-Retrieve-Your-Gateway-API-Key" class="headerlink" title="3.2 Retrieve Your Gateway API Key"></a>3.2 Retrieve Your Gateway API Key</h3><p>Your clients require an authorization key (<code>&lt;ANTIGRAVITY_MANAGER_API_KEY&gt;</code>) to authenticate against Antigravity Manager:</p>
+<ul>
+<li><strong>Via Web UI</strong>: Open <code>http://&lt;SERVER_IP&gt;:8045</code>, go to <strong>Proxy Settings</strong>, and copy or set the <strong>API Key &#x2F; Access Token</strong>.</li>
+<li><strong>Via Configuration File</strong>: Inspect the <code>&quot;api_key&quot;</code> property inside <code>gui_config.json</code>:<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;proxy&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;api_key&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;your_custom_proxy_key_here&quot;</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h3 id="3-3-Set-Up-Local-Loopback-Port-Forwarding"><a href="#3-3-Set-Up-Local-Loopback-Port-Forwarding" class="headerlink" title="3.3 Set Up Local Loopback Port Forwarding"></a>3.3 Set Up Local Loopback Port Forwarding</h3><p>Forward port <code>8045</code> on your server to <code>127.0.0.1:8045</code> on your local workstation.</p>
+<h4 id="Windows-Native-Portproxy-Persistent-Across-Reboots"><a href="#Windows-Native-Portproxy-Persistent-Across-Reboots" class="headerlink" title="Windows (Native Portproxy, Persistent Across Reboots)"></a>Windows (Native Portproxy, Persistent Across Reboots)</h4><p>Open <strong>PowerShell as Administrator</strong> and execute:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">netsh interface portproxy add v4tov4 listenport=<span class="hljs-number">8045</span> listenaddress=<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span> connectport=<span class="hljs-number">8045</span> connectaddress=<span class="hljs-number">192.168</span>.<span class="hljs-number">68.55</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>Verify connection</strong>:<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs powershell">netsh interface portproxy show all<br><span class="hljs-built_in">Test-NetConnection</span> <span class="hljs-literal">-ComputerName</span> <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span> <span class="hljs-literal">-Port</span> <span class="hljs-number">8045</span><br></code></pre></td></tr></table></figure></li>
+<li><strong>Remove rule (if needed later)</strong>:<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">netsh interface portproxy delete v4tov4 listenport=<span class="hljs-number">8045</span> listenaddress=<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="macOS-SSH-Local-Tunnel"><a href="#macOS-SSH-Local-Tunnel" class="headerlink" title="macOS (SSH Local Tunnel)"></a>macOS (SSH Local Tunnel)</h4><ul>
+<li><strong>Interactive Session</strong>:<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh -N -L 8045:127.0.0.1:8045 &lt;server_ssh_host&gt;<br></code></pre></td></tr></table></figure></li>
+<li><strong>Background Daemon (LaunchAgent)</strong>:<br>Create <code>~/Library/LaunchAgents/com.user.antigravity-tunnel.plist</code>:<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">plist</span> <span class="hljs-keyword">PUBLIC</span> <span class="hljs-string">&quot;-//Apple//DTD PLIST 1.0//EN&quot;</span> <span class="hljs-string">&quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">plist</span> <span class="hljs-attr">version</span>=<span class="hljs-string">&quot;1.0&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dict</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">key</span>&gt;</span>Label<span class="hljs-tag">&lt;/<span class="hljs-name">key</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>com.user.antigravity-tunnel<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">key</span>&gt;</span>ProgramArguments<span class="hljs-tag">&lt;/<span class="hljs-name">key</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">array</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>/usr/bin/ssh<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>-N<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>-L<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>8045:127.0.0.1:8045<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">server_ssh_host</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">array</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">key</span>&gt;</span>RunAtLoad<span class="hljs-tag">&lt;/<span class="hljs-name">key</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">true</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">key</span>&gt;</span>KeepAlive<span class="hljs-tag">&lt;/<span class="hljs-name">key</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">true</span>/&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dict</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">plist</span>&gt;</span><br></code></pre></td></tr></table></figure>
+Load and start the service:<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">launchctl load ~/Library/LaunchAgents/com.user.antigravity-tunnel.plist<br></code></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h2 id="4-Configuring-Claude-Code-CLI"><a href="#4-Configuring-Claude-Code-CLI" class="headerlink" title="4. Configuring Claude Code CLI"></a>4. Configuring Claude Code CLI</h2><blockquote>
+<p>[!WARNING]<br>Claude Code prioritizes its <code>settings.json</code> environment block over current shell environment variables. Setting temporary shell exports (<code>export ANTHROPIC_BASE_URL=...</code>) will be overridden by the config file. Modify the file directly.</p>
+</blockquote>
+<h3 id="4-1-Configuration-File-Setup"><a href="#4-1-Configuration-File-Setup" class="headerlink" title="4.1 Configuration File Setup"></a>4.1 Configuration File Setup</h3><ul>
+<li><strong>Windows</strong>: <code>C:\Users\&lt;YourUsername&gt;\.claude\settings.json</code></li>
+<li><strong>macOS &#x2F; Linux</strong>: <code>~/.claude/settings.json</code></li>
+</ul>
+<p>Update the <code>env</code> section (replacing <code>&lt;ANTIGRAVITY_MANAGER_API_KEY&gt;</code> with your gateway key):</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;env&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;ANTHROPIC_BASE_URL&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;http://127.0.0.1:8045&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;ANTHROPIC_AUTH_TOKEN&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;&lt;ANTIGRAVITY_MANAGER_API_KEY&gt;&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;ANTHROPIC_MODEL&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;gemini-3.8-flash-high&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;ANTHROPIC_DEFAULT_SONNET_MODEL&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;gemini-3.8-flash-high&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;ANTHROPIC_DEFAULT_OPUS_MODEL&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;gemini-3.8-flash-high&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;ANTHROPIC_DEFAULT_HAIKU_MODEL&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;gemini-3.8-flash-high&quot;</span><br>  <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;permissions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;defaultMode&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;bypassPermissions&quot;</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p><em>(Note: If a standalone <code>&quot;model&quot;: &quot;sonnet[1m]&quot;</code> line exists at the root of <code>settings.json</code>, delete it so <code>ANTHROPIC_MODEL</code> within <code>env</code> handles routing.)</em></p>
+<h3 id="4-2-Verification-Test"><a href="#4-2-Verification-Test" class="headerlink" title="4.2 Verification Test"></a>4.2 Verification Test</h3><p>Run a quick probe command in any terminal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">claude -p <span class="hljs-string">&quot;Say &#x27;Hello from Gemini 3.8 Flash&#x27;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>Expected output</strong>:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">Hello from Gemini 3.8 Flash<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-Configuring-Claude-Desktop-App"><a href="#5-Configuring-Claude-Desktop-App" class="headerlink" title="5. Configuring Claude Desktop App"></a>5. Configuring Claude Desktop App</h2><h3 id="5-1-Third-Party-Inference-Setup"><a href="#5-1-Third-Party-Inference-Setup" class="headerlink" title="5.1 Third-Party Inference Setup"></a>5.1 Third-Party Inference Setup</h3><ol>
+<li>Open Claude Desktop, open <strong>Settings</strong> → <strong>Configure third-party inference</strong>.</li>
+<li>Select <strong>Gateway</strong> in the top dropdown.</li>
+<li>Under <strong>GATEWAY CREDENTIALS</strong>:<ul>
+<li><strong>Gateway base URL</strong>: <code>http://127.0.0.1:8045</code> <em>(do not append <code>/v1</code>)</em></li>
+<li><strong>Gateway API key</strong>: <code>&lt;ANTIGRAVITY_MANAGER_API_KEY&gt;</code></li>
+<li><strong>Gateway auth scheme</strong>: <code>bearer</code></li>
+<li><strong>Custom inference headers</strong>: Leave empty</li>
+<li><strong>Credential kind</strong>: <code>Static API key</code></li>
+</ul>
+</li>
+<li>Under <strong>MODELS</strong>:<ul>
+<li><strong>Model discovery</strong>: <strong>Enable (turn on)</strong>. The proxy natively implements <code>GET /v1/models</code>. Enabling this lets the client automatically discover <code>claude-*</code> model aliases.</li>
+<li><strong>Model list</strong>: <strong>Keep completely empty</strong> (if you manually added custom entries previously, remove them using the <code>×</code> icon).</li>
+</ul>
+</li>
+</ol>
+<h3 id="5-2-Bypassing-UI-Validation"><a href="#5-2-Bypassing-UI-Validation" class="headerlink" title="5.2 Bypassing UI Validation"></a>5.2 Bypassing UI Validation</h3><p>Entering custom non-Anthropic model names manually causes Claude Desktop to display a validation error:</p>
+<blockquote>
+<p><code>Doesn&#39;t look like an Anthropic model: expected a gateway model route referencing an Anthropic model...</code></p>
+</blockquote>
+<p>This locks the <strong>Apply Changes</strong> button. Keeping the model list empty and relying on Model Discovery allows the gateway’s <code>custom_mapping</code> to handle transparent rewrites behind the scenes.</p>
+<p>Click <strong>Test connection</strong> followed by <strong>Test model discovery</strong>, and then click <strong>Apply Changes</strong>.</p>
+<h3 id="5-3-Starting-a-Chat"><a href="#5-3-Starting-a-Chat" class="headerlink" title="5.3 Starting a Chat"></a>5.3 Starting a Chat</h3><p>Start a new chat in Claude Desktop. Keep the default model selected (or pick any Sonnet variant). All queries will now route seamlessly through Antigravity Manager to Gemini 3.8 Flash.</p>
+<hr>
+<h2 id="6-Troubleshooting-FAQ"><a href="#6-Troubleshooting-FAQ" class="headerlink" title="6. Troubleshooting &amp; FAQ"></a>6. Troubleshooting &amp; FAQ</h2><h3 id="Q1-Error-Model-discovery-—-Invalid-custom3p-managed-config-baseUrl-must-use-https-or-http-on-loopback"><a href="#Q1-Error-Model-discovery-—-Invalid-custom3p-managed-config-baseUrl-must-use-https-or-http-on-loopback" class="headerlink" title="Q1: Error: Model discovery — Invalid custom3p managed config: baseUrl: must use https (or http on loopback)"></a>Q1: Error: <code>Model discovery — Invalid custom3p managed config: baseUrl: must use https (or http on loopback)</code></h3><ul>
+<li><strong>Cause</strong>: The Base URL was configured with a LAN IP (e.g., <code>http://192.168.68.55:8045</code>). Claude Desktop enforces HTTPS for non-loopback addresses.</li>
+<li><strong>Fix</strong>: Use local port forwarding and configure the client with <code>http://127.0.0.1:8045</code>.</li>
+</ul>
+<h3 id="Q2-Chat-shows-Model-overloaded-·-Retrying-2-10-·-15s"><a href="#Q2-Chat-shows-Model-overloaded-·-Retrying-2-10-·-15s" class="headerlink" title="Q2: Chat shows Model overloaded · Retrying (2/10) · 15s"></a>Q2: Chat shows <code>Model overloaded · Retrying (2/10) · 15s</code></h3><ul>
+<li><strong>Cause</strong>: Requests to default Claude models hit rate limits (HTTP 429) on Anthropic accounts.</li>
+<li><strong>Fix</strong>: Ensure <code>custom_mapping</code> in the server’s <code>gui_config.json</code> maps <code>&quot;claude*&quot;: &quot;gemini-3.8-flash-high&quot;</code>, and restart the Docker container.</li>
+</ul>
+<h3 id="Q3-Claude-Code-CLI-returns-Failed-to-authenticate-API-Error-401-Invalid-API-Key"><a href="#Q3-Claude-Code-CLI-returns-Failed-to-authenticate-API-Error-401-Invalid-API-Key" class="headerlink" title="Q3: Claude Code CLI returns Failed to authenticate. API Error: 401 Invalid API Key"></a>Q3: Claude Code CLI returns <code>Failed to authenticate. API Error: 401 Invalid API Key</code></h3><ul>
+<li><strong>Cause</strong>: The value in <code>ANTHROPIC_AUTH_TOKEN</code> does not match the <code>proxy.api_key</code> configured in Antigravity Manager, or stale credentials remained in <code>~/.claude/settings.json</code>.</li>
+<li><strong>Fix</strong>: Verify <code>proxy.api_key</code> in <code>gui_config.json</code> and ensure <code>settings.json</code> matches exactly.</li>
+</ul>
+<h3 id="Q4-Connection-drops-after-rebooting-Windows"><a href="#Q4-Connection-drops-after-rebooting-Windows" class="headerlink" title="Q4: Connection drops after rebooting Windows"></a>Q4: Connection drops after rebooting Windows</h3><ul>
+<li><strong>Checks</strong>:<ol>
+<li>Confirm the Windows <code>iphlpsvc</code> (IP Helper) service is running.</li>
+<li>Run <code>netsh interface portproxy show all</code> in an elevated terminal to verify the forwarding rule is intact.</li>
+<li>Ensure the server’s LAN IP address has not changed due to DHCP lease renewal.</li>
+</ol>
+</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/LLM/" class="print-no-link">#LLM</a>
+      
+        <a href="/tags/Gemini/" class="print-no-link">#Gemini</a>
+      
+        <a href="/tags/Claude/" class="print-no-link">#Claude</a>
+      
+        <a href="/tags/Antigravity/" class="print-no-link">#Antigravity</a>
+      
+        <a href="/tags/Proxy/" class="print-no-link">#Proxy</a>
+      
+        <a href="/tags/Windows/" class="print-no-link">#Windows</a>
+      
+        <a href="/tags/macOS/" class="print-no-link">#macOS</a>
+      
+        <a href="/tags/AI-Tools/" class="print-no-link">#AI-Tools</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Configuring Claude Code and Claude Desktop to Use Gemini via Antigravity Manager</div>
+      <div>https://www.kamusis.me/2026/09/19/Configuring-Claude-Code-and-Claude-Desktop-to-Use-Gemini-via-Antigravity-Manager/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Kamus</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>September 19, 2026</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - Non-commercial">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - Share-alike">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/10/11/Axon-The-Hub-and-Spoke-Skill-Manager-for-Multi-Agent-and-Multi-Machine-AI-Coding/" title="Axon: The Hub-and-Spoke Skill Manager for Multi-Agent and Multi-Machine AI Coding">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Axon: The Hub-and-Spoke Skill Manager for Multi-Agent and Multi-Machine AI Coding</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/09/07/Bring-the-Legendary-grill-me-Skill-into-Mopheus/" title="Bringing the Legendary &#34;grill-me&#34; Skill into Mopheus: Teaching AI Agents Self-Questioning and Adversarial Review">
+                        <span class="hidden-mobile">Bringing the Legendary &#34;grill-me&#34; Skill into Mopheus: Teaching AI Agents Self-Questioning and Adversarial Review</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

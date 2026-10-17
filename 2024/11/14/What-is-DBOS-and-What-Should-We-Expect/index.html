@@ -1,0 +1,919 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/favicon.ico">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  
+    <meta name="description" content="IntroductionThe computing world is witnessing a paradigm shift in how we think about operating systems. A team of researchers has proposed DBOS (Database-Oriented Operating System), a radical reimagin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="What is DBOS and What Should We Expect">
+<meta property="og:url" content="https://www.kamusis.me/2024/11/14/What-is-DBOS-and-What-Should-We-Expect/">
+<meta property="og:site_name" content="Kamus&#39; Notes">
+<meta property="og:description" content="IntroductionThe computing world is witnessing a paradigm shift in how we think about operating systems. A team of researchers has proposed DBOS (Database-Oriented Operating System), a radical reimagin">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-11-14T03:38:12.000Z">
+<meta property="article:modified_time" content="2026-10-17T10:08:14.947Z">
+<meta property="article:author" content="Kamus">
+<meta property="article:tag" content="PostgreSQL">
+<meta property="article:tag" content="Database">
+<meta property="article:tag" content="DBOS">
+<meta property="article:tag" content="Operating System">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>What is DBOS and What Should We Expect - Kamus&#39; Notes</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.kamusis.me","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":25,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h2,h3,h4,h5","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 48vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Kamus&#39; Notes</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Home</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>Archives</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Tags</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>About</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Search</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Light"
+               data-label-dark="Dark">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dark</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/banner-autumn.webp') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.28)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">What is DBOS and What Should We Expect</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-11-14 12:38" pubdate>
+          2024-11-14
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          6.8k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          57 min read
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">What is DBOS and What Should We Expect</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>The computing world is witnessing a paradigm shift in how we think about operating systems. A team of researchers has proposed DBOS (Database-Oriented Operating System), a radical reimagining of operating system architecture that puts data management at its core. But what exactly is DBOS, and why should we care?</p>
+<h2 id="What-is-DBOS"><a href="#What-is-DBOS" class="headerlink" title="What is DBOS?"></a>What is DBOS?</h2><p>DBOS is a novel operating system architecture that treats data management as its primary concern rather than traditional OS functions like process management and I&#x2F;O. The key insight behind DBOS is that modern applications are increasingly data-centric, yet our operating systems still follow designs from the 1970s that prioritize computation over data management.</p>
+<p>Instead of treating databases as just another application, DBOS makes database technology the fundamental building block of the operating system itself. This means core OS functions like process scheduling, resource management, and system monitoring are implemented using database principles and technologies.</p>
+<h2 id="Who-is-behind-DBOS"><a href="#Who-is-behind-DBOS" class="headerlink" title="Who is behind DBOS?"></a>Who is behind DBOS?</h2><p>DBOS is a collaborative research project involving almost twenty researchers across multiple institutions including MIT, Stanford, UW-Madison, Google, VMware, and other organizations. The project is notably led by database pioneer Michael Stonebraker, who is an ACM Turing Award winner (2014) and Professor Emeritus at UC Berkeley, currently affiliated with MIT.</p>
+<p>Key institutions and researchers involved include:</p>
+<ul>
+<li>MIT: Michael Stonebraker, Michael Cafarella, Çağatay Demiralp, and others</li>
+<li>Stanford: Matei Zaharia, Christos Kozyrakis, and others</li>
+<li>UW-Madison: Xiangyao Yu</li>
+<li>Industry partners: Researchers from Google, VMware, and other organizations</li>
+</ul>
+<p>The people behind DBOS can be found at <a target="_blank" rel="noopener" href="https://dbos-project.github.io/">DBOS Project</a>.</p>
+<h2 id="Ultimate-Goal"><a href="#Ultimate-Goal" class="headerlink" title="Ultimate Goal"></a>Ultimate Goal</h2><p>The ultimate goal of DBOS is to create an operating system that is data-centric and data-driven, the OS is on top of a DBMS, not like today’s DBMS on top of the OS.<br>ALL system data should reside in the DBMS.</p>
+<ul>
+<li>Replace the “everything is a file” mantra with “everything is a table”</li>
+<li>All system state and metadata stored in relational tables</li>
+<li>All changes to OS state should be through database transactions</li>
+<li>DBMS provides All functions that a DBMS can do, for example, files are blobs and tables in the DBMS.</li>
+<li>SQL-based interface for both application and system data access</li>
+<li>To achieve very high performance, the DBMS must leverage sophisticated caching and parallelization strategies and compile repetitive queries into machine code.</li>
+</ul>
+<h2 id="Benefits"><a href="#Benefits" class="headerlink" title="Benefits"></a>Benefits</h2><ol>
+<li>Strong Security and Privacy</li>
+</ol>
+<ul>
+<li>Native GDPR compliance through data-centric design</li>
+<li>Attribute-based access control (ABAC)</li>
+<li>Complete audit trails and data lineage</li>
+<li>Privacy by design through unified data management</li>
+<li>Fine-grained access control at the data level</li>
+<li>Enhanced monitoring and threat detection</li>
+<li>Simplified compliance with regulatory requirements</li>
+<li>Built-in data encryption and protection mechanisms</li>
+</ul>
+<ol start="2">
+<li>Enhanced Performance and Efficiency</li>
+</ol>
+<ul>
+<li>Optimized resource allocation through database-driven scheduling</li>
+<li>Reduced data movement and copying</li>
+<li>Better cache utilization through database techniques</li>
+<li>Intelligent workload management</li>
+<li>Advanced query optimization for system operations</li>
+<li>Improved resource utilization through data-aware decisions</li>
+<li>Reduced system overhead through unified architecture</li>
+<li>Better support for modern hardware architectures</li>
+</ul>
+<ol start="3">
+<li>Improved Observability and Management</li>
+</ol>
+<ul>
+<li>Comprehensive system-wide monitoring</li>
+<li>Real-time analytics on system performance</li>
+<li>Easy troubleshooting through SQL queries</li>
+<li>Better capacity planning capabilities</li>
+<li>Unified logging and debugging interface</li>
+<li>Historical analysis of system behavior</li>
+<li>Predictive maintenance capabilities</li>
+<li>Simplified system administration</li>
+</ul>
+<ol start="4">
+<li>Advanced Application Support</li>
+</ol>
+<ul>
+<li>Native support for distributed applications</li>
+<li>Better handling of microservices architecture</li>
+<li>Simplified state management</li>
+<li>Enhanced support for modern cloud applications</li>
+<li>Built-in support for data-intensive applications</li>
+<li>Improved consistency guarantees</li>
+<li>Better transaction management</li>
+<li>Simplified development of distributed systems</li>
+</ul>
+<h2 id="Technical-Implementation"><a href="#Technical-Implementation" class="headerlink" title="Technical Implementation"></a>Technical Implementation</h2><p>DBOS proposes implementing core OS functions using database principles:</p>
+<ul>
+<li>Process Management: Processes and their states managed as database tables</li>
+<li>Resource Scheduling: SQL queries and ML for intelligent scheduling decisions</li>
+<li>System Monitoring: Metrics collection and analysis through database queries</li>
+<li>Security: Access control and auditing via database mechanisms</li>
+<li>Storage: File system metadata stored in relational tables</li>
+<li>Networking: Network state and routing managed through database abstractions</li>
+</ul>
+<h2 id="What-Should-We-Expect"><a href="#What-Should-We-Expect" class="headerlink" title="What Should We Expect?"></a>What Should We Expect?</h2><h3 id="Near-term-Impact"><a href="#Near-term-Impact" class="headerlink" title="Near-term Impact"></a>Near-term Impact</h3><ul>
+<li>Proof of Concept: The researchers are working on demonstrating DBOS’s capabilities through specific use cases like log processing and accelerator management.</li>
+<li>Performance Improvements: Early implementations might show significant improvements in data-intensive workloads.</li>
+<li>Development Tools: New tools and frameworks that leverage DBOS’s database-centric approach.</li>
+</ul>
+<h3 id="Long-term-Possibilities"><a href="#Long-term-Possibilities" class="headerlink" title="Long-term Possibilities"></a>Long-term Possibilities</h3><p>Cloud Native Integration: DBOS could become particularly relevant for cloud computing environments where data management is crucial.</p>
+<ul>
+<li>AI&#x2F;ML Operations: Better support for AI and machine learning workloads through intelligent resource management.</li>
+<li>Privacy-First Computing: A new standard for building privacy-compliant systems from the ground up.</li>
+</ul>
+<h3 id="Challenges-Ahead"><a href="#Challenges-Ahead" class="headerlink" title="Challenges Ahead"></a>Challenges Ahead</h3><p>Several technical and practical challenges need to be addressed:</p>
+<ol>
+<li>Performance</li>
+</ol>
+<ul>
+<li>Minimizing database overhead for system operations</li>
+<li>Optimizing query performance for real-time OS operations</li>
+<li>Efficient handling of high-frequency system events</li>
+</ul>
+<ol start="2">
+<li>Compatibility</li>
+</ol>
+<ul>
+<li>Supporting existing applications and system calls</li>
+<li>Maintaining POSIX compliance where needed</li>
+<li>Migration path for legacy systems</li>
+</ul>
+<ol start="3">
+<li>Distributed Systems</li>
+</ol>
+<ul>
+<li>Maintaining consistency across distributed nodes</li>
+<li>Handling network partitions and failures</li>
+<li>Scaling database operations across clusters</li>
+</ul>
+<ol start="4">
+<li>Adoption</li>
+</ol>
+<ul>
+<li>Convincing stakeholders to adopt radical architectural changes</li>
+<li>Training developers in the new paradigm</li>
+<li>Building an ecosystem of compatible tools and applications</li>
+</ul>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>DBOS represents a bold reimagining of operating system design for the data-centric world. While it’s still in its early stages, the potential benefits for security, privacy, and developer productivity make it an exciting project to watch. As data continues to grow in importance, DBOS’s approach might prove to be prescient.<br>The success of DBOS will largely depend on how well it can demonstrate its advantages in real-world scenarios and whether it can overcome the inherent challenges of introducing such a fundamental change to system architecture. For developers, system administrators, and anyone interested in the future of computing, DBOS is definitely worth keeping an eye on.<br>Whether DBOS becomes the next evolution in operating systems or remains an interesting academic exercise, its ideas about putting data management at the center of system design will likely influence future OS development.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ol>
+<li><p>M. Stonebraker et al., “DBOS: A DBMS-oriented Operating System,” <em>Proceedings of the VLDB Endowment</em>, Vol. 15, No. 1, 2021.<br><a target="_blank" rel="noopener" href="https://www.vldb.org/pvldb/vol15/p21-stonebraker.pdf">https://www.vldb.org/pvldb/vol15/p21-stonebraker.pdf</a></p>
+</li>
+<li><p>DBOS Project Official Website, MIT CSAIL and Stanford University.<br><a target="_blank" rel="noopener" href="https://dbos-project.github.io/">https://dbos-project.github.io/</a></p>
+</li>
+<li><p>X. Yu et al., “A Case for Building Operating Systems with Database Technology,” <em>Proceedings of the 12th Conference on Innovative Data Systems Research (CIDR ‘22)</em>, 2022.<br><a target="_blank" rel="noopener" href="https://www.cidrdb.org/cidr2022/papers/p82-yu.pdf">https://www.cidrdb.org/cidr2022/papers/p82-yu.pdf</a></p>
+</li>
+<li><p>DBOS Research Group Publications.<br><a target="_blank" rel="noopener" href="https://dbos-project.github.io/papers/">https://dbos-project.github.io/papers/</a></p>
+</li>
+</ol>
+<p>These references provide detailed technical information about DBOS’s architecture, implementation, and potential impact on the future of operating systems. The papers discuss various aspects from system design to performance evaluation, security considerations, and practical applications.</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/PostgreSQL/" class="print-no-link">#PostgreSQL</a>
+      
+        <a href="/tags/Database/" class="print-no-link">#Database</a>
+      
+        <a href="/tags/DBOS/" class="print-no-link">#DBOS</a>
+      
+        <a href="/tags/Operating-System/" class="print-no-link">#Operating System</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>What is DBOS and What Should We Expect</div>
+      <div>https://www.kamusis.me/2024/11/14/What-is-DBOS-and-What-Should-We-Expect/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Kamus</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>November 14, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - Non-commercial">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - Share-alike">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/12/12/How-to-Generate-a-VSIX-File-from-VS-Code-Extension-Source-Code/" title="How to Generate a VSIX File from VS Code Extension Source Code">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">How to Generate a VSIX File from VS Code Extension Source Code</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/08/21/Some-Misconceptions-About-Database-Performance-Application-Concurrent-Requests-Database-Connections-and-Database-Connection-Pools/" title="Some Misconceptions About Database Performance - Application Concurrent Requests, Database Connections, and Database Connection Pools">
+                        <span class="hidden-mobile">Some Misconceptions About Database Performance - Application Concurrent Requests, Database Connections, and Database Connection Pools</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

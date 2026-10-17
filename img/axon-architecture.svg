@@ -1,0 +1,272 @@
+<svg viewBox="0 0 960 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="axon-arch-title axon-arch-desc" class="axon-architecture-diagram">
+<title id="axon-arch-title">Axon Hub-and-Spoke Architecture</title>
+<desc id="axon-arch-desc">Architectural diagram illustrating how Axon synchronizes AI skills, workflows, commands, and rules from a central Git Hub to multiple AI coding tools via native filesystem symlinks.</desc>
+
+<defs>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap');
+
+.axon-architecture-diagram {
+--dia-bg: #f8fafc;
+--dia-paper: #ffffff;
+--dia-ink: #0f172a;
+--dia-muted: #64748b;
+--dia-soft: #94a3b8;
+--dia-border: rgba(15, 23, 42, 0.08);
+--dia-border-strong: rgba(15, 23, 42, 0.16);
+--dia-accent: #f59e0b;
+--dia-accent-dark: #d97706;
+--dia-accent-tint: rgba(245, 158, 11, 0.06);
+--dia-link: #3b82f6;
+--dia-link-tint: rgba(59, 130, 246, 0.06);
+--dia-dot: rgba(15, 23, 42, 0.07);
+width: 100%;
+height: auto;
+display: block;
+border-radius: 12px;
+box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+}
+
+[data-user-color-scheme='dark'] .axon-architecture-diagram {
+--dia-bg: #0b1120;
+--dia-paper: #111827;
+--dia-ink: #f8fafc;
+--dia-muted: #94a3b8;
+--dia-soft: #64748b;
+--dia-border: rgba(255, 255, 255, 0.08);
+--dia-border-strong: rgba(255, 255, 255, 0.18);
+--dia-accent: #fbbf24;
+--dia-accent-dark: #f59e0b;
+--dia-accent-tint: rgba(251, 191, 36, 0.08);
+--dia-link: #60a5fa;
+--dia-link-tint: rgba(96, 165, 250, 0.08);
+--dia-dot: rgba(255, 255, 255, 0.06);
+box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.35);
+}
+
+@media (prefers-color-scheme: dark) {
+:root:not([data-user-color-scheme='light']) .axon-architecture-diagram {
+--dia-bg: #0b1120;
+--dia-paper: #111827;
+--dia-ink: #f8fafc;
+--dia-muted: #94a3b8;
+--dia-soft: #64748b;
+--dia-border: rgba(255, 255, 255, 0.08);
+--dia-border-strong: rgba(255, 255, 255, 0.18);
+--dia-accent: #fbbf24;
+--dia-accent-dark: #f59e0b;
+--dia-accent-tint: rgba(251, 191, 36, 0.08);
+--dia-link: #60a5fa;
+--dia-link-tint: rgba(96, 165, 250, 0.08);
+--dia-dot: rgba(255, 255, 255, 0.06);
+}
+}
+
+.dia-font-sans { font-family: 'Geist', system-ui, -apple-system, sans-serif; }
+.dia-font-mono { font-family: 'Geist Mono', ui-monospace, monospace; }
+</style>
+
+<pattern id="axon-grid-dots" width="20" height="20" patternUnits="userSpaceOnUse">
+<circle cx="2" cy="2" r="1" fill="var(--dia-dot)"/>
+</pattern>
+
+<marker id="arrow-sync-up" markerWidth="8" markerHeight="6" refX="1" refY="3" orient="auto">
+<polygon points="8 0, 0 3, 8 6" fill="var(--dia-accent)"/>
+</marker>
+<marker id="arrow-sync-down" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+<polygon points="0 0, 8 3, 0 6" fill="var(--dia-accent)"/>
+</marker>
+<marker id="arrow-spoke-down" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+<polygon points="0 0, 7 2.5, 0 5" fill="var(--dia-link)"/>
+</marker>
+</defs>
+
+<!-- 1. Background Frame -->
+<rect width="960" height="520" rx="12" fill="var(--dia-bg)" stroke="var(--dia-border-strong)" stroke-width="1.2"/>
+<rect width="960" height="520" rx="12" fill="url(#axon-grid-dots)"/>
+
+<!-- ==================== TIER 1: REMOTE GIT REPO ==================== -->
+<g id="tier-remote">
+<rect x="230" y="24" width="500" height="66" rx="8"
+fill="var(--dia-paper)" stroke="var(--dia-link)" stroke-width="1.4"/>
+
+<rect x="246" y="34" width="86" height="15" rx="3" fill="var(--dia-link-tint)"/>
+<text x="289" y="44" fill="var(--dia-link)" font-size="7.5" font-weight="600"
+class="dia-font-mono" text-anchor="middle" letter-spacing="0.12em">REMOTE ORIGIN</text>
+
+<text x="340" y="45" fill="var(--dia-muted)" font-size="9" class="dia-font-mono">GitHub / GitLab / Self-Hosted Git</text>
+
+<text x="480" y="70" fill="var(--dia-ink)" font-size="14" font-weight="600"
+class="dia-font-sans" text-anchor="middle">Central Skills Repository (Cloud Distribution Hub)</text>
+</g>
+
+<!-- ==================== SYNC CONNECTORS (TIER 1 -> TIER 2) ==================== -->
+<g id="sync-pipe">
+<!-- Connecting sync line -->
+<line x1="480" y1="90" x2="480" y2="148"
+stroke="var(--dia-accent)" stroke-width="1.6" stroke-dasharray="5,3"
+marker-start="url(#arrow-sync-up)" marker-end="url(#arrow-sync-down)"/>
+
+<!-- Pill badge over sync line -->
+<rect x="330" y="103" width="300" height="30" rx="15"
+fill="var(--dia-paper)" stroke="var(--dia-accent)" stroke-width="1.2"/>
+
+<text x="480" y="117" fill="var(--dia-accent-dark)" font-size="9.5" font-weight="600"
+class="dia-font-mono" text-anchor="middle" letter-spacing="0.04em">axon sync (git pull --rebase &amp; push)</text>
+<text x="480" y="128" fill="var(--dia-muted)" font-size="7.5"
+class="dia-font-mono" text-anchor="middle">Asset Diffs: + skills/  ~ workflows/  - commands/</text>
+</g>
+
+<!-- ==================== TIER 2: AXON HUB CONTAINER ==================== -->
+<g id="tier-hub">
+<!-- Zone bounding box -->
+<rect x="40" y="148" width="880" height="202" rx="10"
+fill="var(--dia-accent-tint)" stroke="var(--dia-accent)" stroke-width="1.6"/>
+
+<!-- Eyebrow label on container border -->
+<rect x="64" y="139" width="250" height="18" rx="4"
+fill="var(--dia-paper)" stroke="var(--dia-accent)" stroke-width="1"/>
+<circle cx="76" cy="148" r="3.5" fill="var(--dia-accent)"/>
+<text x="194" y="152" fill="var(--dia-accent-dark)" font-size="9" font-weight="600"
+class="dia-font-mono" text-anchor="middle" letter-spacing="0.08em">AXON HUB · ~/.axon/repo/</text>
+
+<!-- Subtitle on top right -->
+<text x="896" y="165" fill="var(--dia-soft)" font-size="8.5" class="dia-font-mono" text-anchor="end">Single Source of Truth · Git-Backed</text>
+
+<!-- Manifest Strip (axon.vendors.yaml) -->
+<rect x="60" y="172" width="840" height="32" rx="6"
+fill="var(--dia-paper)" stroke="var(--dia-border-strong)" stroke-width="1"/>
+
+<rect x="74" y="180" width="128" height="16" rx="3" fill="var(--dia-accent-tint)"/>
+<text x="138" y="191" fill="var(--dia-accent-dark)" font-size="8.5" font-weight="600"
+class="dia-font-mono" text-anchor="middle">axon.vendors.yaml</text>
+
+<text x="214" y="192" fill="var(--dia-muted)" font-size="10" class="dia-font-sans">
+Declarative Vendor Manifest &amp; Provenance <tspan fill="var(--dia-soft)" font-size="9">(Anthropic, OpenAI, Community Repos via sparse-checkout)</tspan>
+</text>
+
+<!-- Four Hub Category Cards -->
+<!-- Card 1: skills/ -->
+<g transform="translate(60, 214)">
+<rect width="198" height="66" rx="6" fill="var(--dia-paper)" stroke="var(--dia-border)" stroke-width="1"/>
+<rect x="12" y="10" width="46" height="15" rx="3" fill="var(--dia-border)"/>
+<text x="35" y="20" fill="var(--dia-ink)" font-size="8.5" font-weight="600" class="dia-font-mono" text-anchor="middle">skills/</text>
+<text x="66" y="21" fill="var(--dia-soft)" font-size="8" class="dia-font-mono">[+110]</text>
+<text x="12" y="40" fill="var(--dia-ink)" font-size="10" font-weight="500" class="dia-font-sans">Agent Skills</text>
+<text x="12" y="54" fill="var(--dia-muted)" font-size="8.5" class="dia-font-mono">db-tuning/ · web-search/</text>
+</g>
+
+<!-- Card 2: workflows/ -->
+<g transform="translate(274, 214)">
+<rect width="198" height="66" rx="6" fill="var(--dia-paper)" stroke="var(--dia-border)" stroke-width="1"/>
+<rect x="12" y="10" width="68" height="15" rx="3" fill="var(--dia-border)"/>
+<text x="46" y="20" fill="var(--dia-ink)" font-size="8.5" font-weight="600" class="dia-font-mono" text-anchor="middle">workflows/</text>
+<text x="12" y="40" fill="var(--dia-ink)" font-size="10" font-weight="500" class="dia-font-sans">Multi-step Chains</text>
+<text x="12" y="54" fill="var(--dia-muted)" font-size="8.5" class="dia-font-mono">code-review.md · deploy.md</text>
+</g>
+
+<!-- Card 3: commands/ -->
+<g transform="translate(488, 214)">
+<rect width="198" height="66" rx="6" fill="var(--dia-paper)" stroke="var(--dia-border)" stroke-width="1"/>
+<rect x="12" y="10" width="68" height="15" rx="3" fill="var(--dia-border)"/>
+<text x="46" y="20" fill="var(--dia-ink)" font-size="8.5" font-weight="600" class="dia-font-mono" text-anchor="middle">commands/</text>
+<text x="12" y="40" fill="var(--dia-ink)" font-size="10" font-weight="500" class="dia-font-sans">Executable Scripts</text>
+<text x="12" y="54" fill="var(--dia-muted)" font-size="8.5" class="dia-font-mono">mop · git-pr-creator</text>
+</g>
+
+<!-- Card 4: rules/ -->
+<g transform="translate(702, 214)">
+<rect width="198" height="66" rx="6" fill="var(--dia-paper)" stroke="var(--dia-border)" stroke-width="1"/>
+<rect x="12" y="10" width="46" height="15" rx="3" fill="var(--dia-border)"/>
+<text x="35" y="20" fill="var(--dia-ink)" font-size="8.5" font-weight="600" class="dia-font-mono" text-anchor="middle">rules/</text>
+<text x="12" y="40" fill="var(--dia-ink)" font-size="10" font-weight="500" class="dia-font-sans">Modular Rules</text>
+<text x="12" y="54" fill="var(--dia-muted)" font-size="8.5" class="dia-font-mono">coding.md · security.md</text>
+</g>
+
+<!-- Global Rules Single File Bar -->
+<rect x="60" y="292" width="840" height="42" rx="6"
+fill="var(--dia-paper)" stroke="var(--dia-border-strong)" stroke-width="1"/>
+
+<rect x="74" y="303" width="108" height="18" rx="3" fill="var(--dia-border)"/>
+<text x="128" y="315" fill="var(--dia-ink)" font-size="9" font-weight="600"
+class="dia-font-mono" text-anchor="middle">global_rules.md</text>
+
+<text x="194" y="316" fill="var(--dia-muted)" font-size="10" class="dia-font-sans">
+Unified System Rulebook <tspan fill="var(--dia-soft)" font-size="9">(Fanned out to CLAUDE.md, AGENTS.md, .windsurfrules via file-level targets)</tspan>
+</text>
+</g>
+
+<!-- ==================== SPOKE CONNECTORS (TIER 2 -> TIER 3) ==================== -->
+<g id="spoke-connectors">
+<!-- Spoke 1 (Claude Code) -->
+<path d="M 159,350 V 396" fill="none" stroke="var(--dia-link)" stroke-width="1.4" marker-end="url(#arrow-spoke-down)"/>
+<rect x="134" y="364" width="50" height="15" rx="3" fill="var(--dia-paper)" stroke="var(--dia-border)"/>
+<text x="159" y="374" fill="var(--dia-link)" font-size="7.5" font-weight="600" class="dia-font-mono" text-anchor="middle">symlink</text>
+
+<!-- Spoke 2 (Devin) -->
+<path d="M 373,350 V 396" fill="none" stroke="var(--dia-link)" stroke-width="1.4" marker-end="url(#arrow-spoke-down)"/>
+<rect x="348" y="364" width="50" height="15" rx="3" fill="var(--dia-paper)" stroke="var(--dia-border)"/>
+<text x="373" y="374" fill="var(--dia-link)" font-size="7.5" font-weight="600" class="dia-font-mono" text-anchor="middle">symlink</text>
+
+<!-- Spoke 3 (Antigravity) -->
+<path d="M 587,350 V 396" fill="none" stroke="var(--dia-link)" stroke-width="1.4" marker-end="url(#arrow-spoke-down)"/>
+<rect x="562" y="364" width="50" height="15" rx="3" fill="var(--dia-paper)" stroke="var(--dia-border)"/>
+<text x="587" y="374" fill="var(--dia-link)" font-size="7.5" font-weight="600" class="dia-font-mono" text-anchor="middle">symlink</text>
+
+<!-- Spoke 4 (Any Custom Agent) -->
+<path d="M 801,350 V 396" fill="none" stroke="var(--dia-accent)" stroke-width="1.6" marker-end="url(#arrow-sync-down)"/>
+<rect x="765" y="364" width="72" height="15" rx="3" fill="var(--dia-paper)" stroke="var(--dia-accent)" stroke-width="1"/>
+<text x="801" y="374" fill="var(--dia-accent-dark)" font-size="7.5" font-weight="600" class="dia-font-mono" text-anchor="middle">extensible</text>
+</g>
+
+<!-- ==================== TIER 3: AI AGENTS & SPOKES ==================== -->
+<g id="tier-spokes">
+<!-- Spoke 1: Claude Code -->
+<g transform="translate(60, 402)">
+<rect width="198" height="96" rx="8" fill="var(--dia-paper)" stroke="var(--dia-border-strong)" stroke-width="1.2"/>
+<text x="14" y="24" fill="var(--dia-ink)" font-size="12" font-weight="600" class="dia-font-sans">Claude Code</text>
+<rect x="110" y="14" width="76" height="13" rx="2" fill="var(--dia-border)"/>
+<text x="148" y="23" fill="var(--dia-muted)" font-size="7" class="dia-font-mono" text-anchor="middle">CLI AGENT</text>
+<path d="M 14,34 H 184" stroke="var(--dia-border)" stroke-width="0.8"/>
+<text x="14" y="50" fill="var(--dia-muted)" font-size="8.5" class="dia-font-mono">~/.claude/skills/</text>
+<text x="14" y="65" fill="var(--dia-muted)" font-size="8.5" class="dia-font-mono">~/.claude/commands/</text>
+<text x="14" y="80" fill="var(--dia-soft)" font-size="8" class="dia-font-mono">CLAUDE.md &amp; rules/</text>
+</g>
+
+<!-- Spoke 2: Devin -->
+<g transform="translate(274, 402)">
+<rect width="198" height="96" rx="8" fill="var(--dia-paper)" stroke="var(--dia-border-strong)" stroke-width="1.2"/>
+<text x="14" y="24" fill="var(--dia-ink)" font-size="12" font-weight="600" class="dia-font-sans">Devin</text>
+<rect x="116" y="14" width="70" height="13" rx="2" fill="var(--dia-border)"/>
+<text x="151" y="23" fill="var(--dia-muted)" font-size="7" class="dia-font-mono" text-anchor="middle">AGENTIC IDE</text>
+<path d="M 14,34 H 184" stroke="var(--dia-border)" stroke-width="0.8"/>
+<text x="14" y="50" fill="var(--dia-muted)" font-size="8.5" class="dia-font-mono">~/.codeium/windsurf/</text>
+<text x="14" y="65" fill="var(--dia-muted)" font-size="8.5" class="dia-font-mono">├── skills/</text>
+<text x="14" y="80" fill="var(--dia-soft)" font-size="8" class="dia-font-mono">└── global_workflows/</text>
+</g>
+
+<!-- Spoke 3: Antigravity -->
+<g transform="translate(488, 402)">
+<rect width="198" height="96" rx="8" fill="var(--dia-paper)" stroke="var(--dia-border-strong)" stroke-width="1.2"/>
+<text x="14" y="24" fill="var(--dia-ink)" font-size="12" font-weight="600" class="dia-font-sans">Antigravity</text>
+<rect x="110" y="14" width="76" height="13" rx="2" fill="var(--dia-border)"/>
+<text x="148" y="23" fill="var(--dia-muted)" font-size="7" class="dia-font-mono" text-anchor="middle">DEEP CODING</text>
+<path d="M 14,34 H 184" stroke="var(--dia-border)" stroke-width="0.8"/>
+<text x="14" y="50" fill="var(--dia-muted)" font-size="8.5" class="dia-font-mono">~/.gemini/config/</text>
+<text x="14" y="65" fill="var(--dia-muted)" font-size="8.5" class="dia-font-mono">├── skills/</text>
+<text x="14" y="80" fill="var(--dia-soft)" font-size="8" class="dia-font-mono">└── workflows/</text>
+</g>
+
+<!-- Spoke 4: Any Custom Agent (FOCAL HIGHLIGHT) -->
+<g transform="translate(702, 402)">
+<rect width="198" height="96" rx="8" fill="var(--dia-accent-tint)" stroke="var(--dia-accent)" stroke-width="1.6"/>
+<text x="14" y="24" fill="var(--dia-accent-dark)" font-size="12" font-weight="700" class="dia-font-sans">Any Custom Agent</text>
+<rect x="124" y="14" width="62" height="13" rx="2" fill="var(--dia-paper)" stroke="var(--dia-accent)" stroke-width="0.8"/>
+<text x="155" y="23" fill="var(--dia-accent-dark)" font-size="7" font-weight="600" class="dia-font-mono" text-anchor="middle">AGNOSTIC</text>
+<path d="M 14,34 H 184" stroke="var(--dia-accent)" stroke-width="0.8" stroke-dasharray="3,2"/>
+<text x="14" y="50" fill="var(--dia-ink)" font-size="8.5" font-weight="500" class="dia-font-mono">~/.myagent/skills/</text>
+<text x="14" y="65" fill="var(--dia-ink)" font-size="8.5" font-weight="500" class="dia-font-mono">~/.myagent/RULES.md</text>
+<text x="14" y="80" fill="var(--dia-accent-dark)" font-size="8" font-weight="600" class="dia-font-mono">Define in axon.yaml</text>
+</g>
+</g>
+</svg>

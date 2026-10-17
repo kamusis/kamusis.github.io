@@ -1,0 +1,813 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/favicon.ico">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  
+    <meta name="description" content="Let’s start with a chart from a database stress test result.  In the chart above, the X-axis represents the number of concurrent connections, and the Y-axis represents the TPS (Transactions Per Second">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Some Misconceptions About Database Performance - Application Concurrent Requests, Database Connections, and Database Connection Pools">
+<meta property="og:url" content="https://www.kamusis.me/2024/08/21/Some-Misconceptions-About-Database-Performance-Application-Concurrent-Requests-Database-Connections-and-Database-Connection-Pools/">
+<meta property="og:site_name" content="Kamus&#39; Notes">
+<meta property="og:description" content="Let’s start with a chart from a database stress test result.  In the chart above, the X-axis represents the number of concurrent connections, and the Y-axis represents the TPS (Transactions Per Second">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2024/08/21/Ra2u1Q9cJNpOlUm.png">
+<meta property="article:published_time" content="2024-08-21T08:44:47.000Z">
+<meta property="article:modified_time" content="2026-10-17T10:08:14.947Z">
+<meta property="article:author" content="Kamus">
+<meta property="article:tag" content="PostgreSQL">
+<meta property="article:tag" content="Database">
+<meta property="article:tag" content="Performance">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2024/08/21/Ra2u1Q9cJNpOlUm.png">
+  
+  
+  
+  <title>Some Misconceptions About Database Performance - Application Concurrent Requests, Database Connections, and Database Connection Pools - Kamus&#39; Notes</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.kamusis.me","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":25,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h2,h3,h4,h5","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 48vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Kamus&#39; Notes</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Home</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>Archives</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Tags</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>About</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Search</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Light"
+               data-label-dark="Dark">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dark</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/banner-autumn.webp') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.28)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Some Misconceptions About Database Performance - Application Concurrent Requests, Database Connections, and Database Connection Pools</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-08-21 17:44" pubdate>
+          2024-08-21
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          8k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          67 min read
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Some Misconceptions About Database Performance - Application Concurrent Requests, Database Connections, and Database Connection Pools</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Let’s start with a chart from a database stress test result.</p>
+<p><img src="https://s2.loli.net/2024/08/21/Ra2u1Q9cJNpOlUm.png" srcset="/img/loading.gif" lazyload alt="1724216413686"></p>
+<p>In the chart above, the X-axis represents the number of concurrent connections, and the Y-axis represents the TPS (Transactions Per Second) provided by the database. The stress testing tool used is pgbench, and the database is a single instance of PostgreSQL 16. TPS_PGDirect represents the TPS when pgbench directly sends the load to PostgreSQL, while TPS_PGBouncer represents the TPS when pgbench sends the load to the PGBouncer database connection pool.</p>
+<p>We can clearly see that when the number of connections exceeds 256, the TPS begins to gradually decline when the load is sent directly to the database. When the number of connections eventually rises to over 8000, the database is almost at a standstill. However, when using PGBouncer, the TPS remains stable and excellent, with the database consistently providing high TPS regardless of the number of connections.</p>
+<p>Many people might conclude from this chart that if the concurrent connections increase beyond a certain threshold, PostgreSQL becomes inadequate, and PGBouncer must be used to improve performance.</p>
+<p>Some users may attempt to conduct various hardware environment combination tests to derive a reference threshold number to guide at what pressure PostgreSQL can cope, and once it exceeds a certain pressure, PGBouncer should be enabled.</p>
+<p>So, is this conclusion correct? And does testing out a threshold number have real guiding significance?</p>
+<h2 id="Understanding-Concurrent-Performance"><a href="#Understanding-Concurrent-Performance" class="headerlink" title="Understanding Concurrent Performance"></a>Understanding Concurrent Performance</h2><p>To determine how many concurrent business requests a database can handle, we should focus on the Y-axis from the test chart above, rather than the X-axis. The Y-axis TPS represents the number of transactions the database can process per second, while the X-axis connection count is merely the database connection number we configured ourselves (which can be simply understood as the max_connections parameter value). We can observe that at 256 connections, the direct database stress test with pgbench allows the database to provide over 50,000 TPS, which is actually almost the highest number in the entire stress test (WITHOUT PGBouncer). Subsequent tests using PGBouncer, this number was not significantly exceeded. Therefore, PGBouncer is not a weapon to improve database performance.</p>
+<p>What is performance? Performance means: for a determined business transaction pressure (how much work a business transaction needs to handle, such as how much CPU, memory, and IO it consumes), the more transactions the database can execute, the higher the performance. In the chart above, this is represented by the Y-axis TPS (Transactions Per Second).</p>
+<p>For example, suppose a user request (Application Request) requires executing 5 transactions from start to finish, and assume these transactions consume similar amounts of time (even if there are differences, we can always get the average transaction runtime in a system). In this case, 50,000 TPS means the database can handle 10,000 user requests per second, which can be simply understood as handling 10,000 concurrent users. If TPS rises to 100,000, the database can handle 20,000 concurrent users; if TPS drops to 10,000, it can only handle 2,000 concurrent users. This is a simple calculation logic, and in this description, we did not mention anything about database connections (User Connections).</p>
+<p>So why does it seem like PGBouncer improves performance when the number of connections continues to increase? Because in this situation, PGBouncer acts as a limiter on database connections, reducing the extra overhead caused by the database&#x2F;operating system handling too many connections, allowing the database and operating system to focus on processing the business requests sent from each connection, and enabling user requests exceeding the connection limit to share database connections. What PGBouncer does is: if your restaurant can only provide 10 tables, then I only allow 10 tables of guests to enter, and other guests have to wait outside.</p>
+<p>However, why should we let 100 tables of guests rush into the restaurant all at once? Without PGBouncer, can’t we control allowing only 10 tables of guests to enter? In modern applications, application-side connection pools are more commonly used, such as connection pools in various middleware software (Weblogic, WebSphere, Tomcat, etc.) or dedicated JDBC connection pools like HikariCP.</p>
+<p>Exceeding the number of connections that can be handled is unnecessary. When the database is already at its peak processing capacity, having more connections will not improve overall processing capability; instead, it will slow down the entire database.</p>
+<p>To summarize the meaning of the chart above more straightforwardly: when the total number of database connections is at 256, the database reaches its peak processing capacity, and direct database connections can provide 50,000 TPS without any connection pool. If 50,000 TPS cannot meet the application’s concurrent performance requirements, increasing the number of connections will not help. But if connections are increased (wrongly, without any other control), a layer of connection pool like PGBouncer can be added as a connection pool buffer to keep performance stable at around 50,000 TPS.</p>
+<p>So, do we have any reason to arbitrarily increase the number of connections? No. What we need to do is: allow the database to open only the number of connections within its processing capacity and enable these connections to be shared by more user requests. When the restaurant size is fixed, the higher the turnover rate, the higher the restaurant’s daily revenue.</p>
+<h2 id="How-to-Ask-Questions-About-Performance"><a href="#How-to-Ask-Questions-About-Performance" class="headerlink" title="How to Ask Questions About Performance"></a>How to Ask Questions About Performance</h2><p>Instead of asking: how can we ensure the database provides sufficient TPS with 4000 connections, we should ask: how can we ensure the database provides 50,000 TPS.</p>
+<p>Because the number of connections is not a performance metric, it is merely a parameter configuration option.</p>
+<p>In the example above, a connection count of 4000 or 8000 is not a fixed value, nor is it an optimized value. We cannot try to do more additional database optimizations on an unoptimized, modifiable parameter setting, as this may lead to a reversal of priorities. If we can already provide maximum processing capacity with 256 fully loaded database connections, why optimize a database with more than 256 connections? We should ensure the database always runs at full capacity with a maximum of 256 connections.</p>
+<p>Now, our question about performance can be more specific. Suppose we have multiple sets of database servers with different configurations; what should the fully loaded connection count be for each set to achieve optimal processing capacity?</p>
+<p>This requires testing. However, we will ultimately find that this fully loaded connection count is usually related only to the database server’s hardware resources, such as the number of CPU cores, CPU speed, memory size, storage speed, and the bandwidth and latency between storage and host.</p>
+<h2 id="Is-Database-Application-Performance-Only-Related-to-Hardware-Resources"><a href="#Is-Database-Application-Performance-Only-Related-to-Hardware-Resources" class="headerlink" title="Is Database Application Performance Only Related to Hardware Resources?"></a>Is Database Application Performance Only Related to Hardware Resources?</h2><p>Of course not. Concurrent performance (P) &#x3D; Hardware processing capability (H) &#x2F; Business transaction pressure (T).</p>
+<p>As mentioned earlier, the performance metric TPS is for a “determined business transaction pressure,” meaning a determined T value.</p>
+<p>When the T value is determined, we can only improve the H value to further enhance the P value. Conversely, there is naturally another optimization approach: reducing the T value. There are various ways to reduce the T value, such as adding necessary indexes, rewriting SQL, using partitioned tables, etc. The optimization plan should be formulated based on where the T value is consumed most, which is another topic.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>To answer the two initial questions:</p>
+<ol>
+<li>If concurrent connections increase beyond a certain threshold, PostgreSQL becomes inadequate, and PGBouncer must be used to improve performance. Is this conclusion correct?</li>
+</ol>
+<p>If we must create more connections to the database than the hardware processing capacity for certain hardware resources, using PGBouncer can stabilize performance. However, we have no reason to create more connections than the hardware processing capacity. We have various means to control the maximum number of connections the database can open, and various middleware solutions can provide connection pools. From this perspective, PGBouncer does not improve database performance; it merely reduces concurrency conflicts, doing what any connection pool software can do.</p>
+<ol start="2">
+<li>Is it meaningful to attempt various hardware environment combination tests to derive a reference threshold number to guide at what pressure PostgreSQL can cope, and once it exceeds a certain pressure, PGBouncer should be enabled?</li>
+</ol>
+<p>It has some significance, but simple stress tests like pgbench are not enough to guide real applications. Concurrent performance (P) &#x3D; Hardware processing capability (H) &#x2F; Business transaction pressure (T). Testing in a determined hardware environment means the H value is fixed, so we should focus on T during testing. The T value provided by pgbench is a very simple transaction pressure (only four tables, simple CRUD operations), and the P value tested under this pressure can only be used as a reference. To guide application deployment, typical transaction pressure of the application itself must be abstracted for testing to have guiding significance.</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/PostgreSQL/" class="print-no-link">#PostgreSQL</a>
+      
+        <a href="/tags/Database/" class="print-no-link">#Database</a>
+      
+        <a href="/tags/Performance/" class="print-no-link">#Performance</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Some Misconceptions About Database Performance - Application Concurrent Requests, Database Connections, and Database Connection Pools</div>
+      <div>https://www.kamusis.me/2024/08/21/Some-Misconceptions-About-Database-Performance-Application-Concurrent-Requests-Database-Connections-and-Database-Connection-Pools/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Kamus</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>August 21, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - Non-commercial">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - Share-alike">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/11/14/What-is-DBOS-and-What-Should-We-Expect/" title="What is DBOS and What Should We Expect">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">What is DBOS and What Should We Expect</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/06/15/Flashback-Features-in-MogDB/" title="Flashback Features in MogDB">
+                        <span class="hidden-mobile">Flashback Features in MogDB</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

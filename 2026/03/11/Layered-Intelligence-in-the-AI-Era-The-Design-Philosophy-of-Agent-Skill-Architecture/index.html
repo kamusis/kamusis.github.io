@@ -1,0 +1,949 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/favicon.ico">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  
+    <meta name="description" content="Layered Intelligence in the AI Era: The Design Philosophy of Agent-Skill ArchitectureIntroduction: A Database Operations ScenarioIt’s 3:00 AM, and a production database alert goes off. The Traditional">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Layered Intelligence in the AI Era: The Design Philosophy of Agent-Skill Architecture">
+<meta property="og:url" content="https://www.kamusis.me/2026/03/11/Layered-Intelligence-in-the-AI-Era-The-Design-Philosophy-of-Agent-Skill-Architecture/">
+<meta property="og:site_name" content="Kamus&#39; Notes">
+<meta property="og:description" content="Layered Intelligence in the AI Era: The Design Philosophy of Agent-Skill ArchitectureIntroduction: A Database Operations ScenarioIt’s 3:00 AM, and a production database alert goes off. The Traditional">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://files.seeusercontent.com/2026/03/11/0jNv/file_86-f59f2f6b-ddd4-44a2-8b2d-.jpg">
+<meta property="og:image" content="https://files.seeusercontent.com/2026/03/11/wOi9/vscode_picgo_1773216717119.png">
+<meta property="article:published_time" content="2026-03-11T07:06:12.000Z">
+<meta property="article:modified_time" content="2026-10-17T10:08:14.945Z">
+<meta property="article:author" content="Kamus">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Architecture">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="Skill">
+<meta property="article:tag" content="Database">
+<meta property="article:tag" content="Operations">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://files.seeusercontent.com/2026/03/11/0jNv/file_86-f59f2f6b-ddd4-44a2-8b2d-.jpg">
+  
+  
+  
+  <title>Layered Intelligence in the AI Era: The Design Philosophy of Agent-Skill Architecture - Kamus&#39; Notes</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.kamusis.me","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":25,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h2,h3,h4,h5","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 48vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Kamus&#39; Notes</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Home</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>Archives</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Tags</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>About</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Search</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Light"
+               data-label-dark="Dark">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dark</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/banner-autumn.webp') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.28)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Layered Intelligence in the AI Era: The Design Philosophy of Agent-Skill Architecture</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-03-11 16:06" pubdate>
+          2026-03-11
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          10k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          85 min read
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Layered Intelligence in the AI Era: The Design Philosophy of Agent-Skill Architecture</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Layered-Intelligence-in-the-AI-Era-The-Design-Philosophy-of-Agent-Skill-Architecture"><a href="#Layered-Intelligence-in-the-AI-Era-The-Design-Philosophy-of-Agent-Skill-Architecture" class="headerlink" title="Layered Intelligence in the AI Era: The Design Philosophy of Agent-Skill Architecture"></a>Layered Intelligence in the AI Era: The Design Philosophy of Agent-Skill Architecture</h1><h2 id="Introduction-A-Database-Operations-Scenario"><a href="#Introduction-A-Database-Operations-Scenario" class="headerlink" title="Introduction: A Database Operations Scenario"></a>Introduction: A Database Operations Scenario</h2><p>It’s 3:00 AM, and a production database alert goes off.</p>
+<p><strong>The Traditional Approach</strong> (Status Quo):</p>
+<ol>
+<li>The On-call DBA is woken up by a phone call.</li>
+<li>VPN connection → Jump Server → Production Server.</li>
+<li>Manually execute 10+ diagnostic SQL queries.</li>
+<li>Stare at dense query results in a terminal window.</li>
+<li>Rely on intuition to identify the problem, perhaps digging through documentation or historical tickets.</li>
+<li>Organize the data and write a diagnostic report.</li>
+<li><strong>Total elapsed time: 30-60 minutes</strong>, while praying for no human error.</li>
+</ol>
+<p><strong>With a Generic AI Assistant</strong> (An incremental improvement):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">&gt; ChatGPT, <span class="hljs-built_in">help</span> me analyze the performance issues on this database.<br>&gt; [Paste a mountain of SQL query results]<br><br><span class="hljs-comment"># AI Reply: Based on the information provided, it might be...</span><br><span class="hljs-comment"># But the AI doesn&#x27;t know which SQL to execute next.</span><br><span class="hljs-comment"># It can&#x27;t connect directly to the database.</span><br><span class="hljs-comment"># And it can&#x27;t analyze multiple dimensions in parallel.</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>The Agent-Skill Architecture</strong> (Our solution):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">&gt; Background: Start yashandb-ops agent, check <span class="hljs-string">&#x27;dev-kamus&#x27;</span> database space usage.<br>&gt; Also, start a yashandb-ops agent to check database <span class="hljs-built_in">wait</span> events.<br><br><span class="hljs-comment"># 2 minutes later, two complete diagnostic reports are presented simultaneously.</span><br><span class="hljs-comment"># Including: data analysis, root cause diagnosis, optimization suggestions, and executable SQL.</span><br></code></pre></td></tr></table></figure>
+
+<p>This isn’t science fiction; it’s a real-world scenario we just verified. Reducing the time from 30 minutes to 2 minutes, from serial to parallel, and from manual judgment to intelligent analysis—behind it all is a meticulously designed <strong>Agent-Skill Layered Architecture</strong>.</p>
+<h2 id="I-The-Three-Eras-of-Operations"><a href="#I-The-Three-Eras-of-Operations" class="headerlink" title="I. The Three Eras of Operations"></a>I. The Three Eras of Operations</h2><h3 id="1-1-The-Traditional-Era-Manual-Scripts-Manually-Coded-Products"><a href="#1-1-The-Traditional-Era-Manual-Scripts-Manually-Coded-Products" class="headerlink" title="1.1 The Traditional Era: Manual + Scripts + Manually Coded Products"></a>1.1 The Traditional Era: Manual + Scripts + Manually Coded Products</h3><p>Most enterprises today use mature operations products, yet we still consider this the “Traditional Era.” Moving from manual commands to scripts and UIs is progress, but the capability behind these products remains <strong>manually engineered</strong>, not <strong>autonomously understood and invoked by machines</strong>.</p>
+<p>Let’s look at the evolution: Purely manual → Scripting → Operations Products.</p>
+<p><strong>The DBA’s Manual Workflow</strong>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># DBA hand-cranked workflow</span><br>$ ssh dba@prod-db-server<br>$ sqlplus / as sysdba<br><br>SQL&gt; -- Check tablespaces<br>SQL&gt; SELECT tablespace_name, ...<br>     -- 50 lines of SQL<br><br>SQL&gt; -- Check <span class="hljs-built_in">wait</span> events<br>SQL&gt; SELECT wait_class, event, ...<br>     -- Another 50 lines of SQL<br><span class="hljs-comment"># Then manually organize data in Excel, write reports...</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>The Scripting Attempt</strong>:<br>Scripts solved repetition but introduced new problems:</p>
+<ul>
+<li><strong>Lack of Intelligence</strong>: Rigid execution without the ability to adjust based on results.</li>
+<li><strong>Maintenance Hell</strong>: SQL logic scattered across various script files.</li>
+<li><strong>Unreadable Results</strong>: Output is raw text and requires manual interpretation.</li>
+<li><strong>Zero Interaction</strong>: Cannot drill down based on initial findings.</li>
+</ul>
+<p>Platform like <code>pgAdmin</code>, <code>Oracle Enterprise Manager</code>, or <code>Prometheus + Grafana</code> encapsulate scripts into a friendlier UI, but the core remains: experts <strong>hard-code the logic line by line</strong>.</p>
+<p>In essence, the traditional paradigm is:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">if Metric A &gt; Threshold:<br>    Alert<br>elif Metric B is abnormal:<br>    Show predefined dashboard<br>else:<br>    Wait for human judgment<br></code></pre></td></tr></table></figure>
+
+<p>These systems handle only what the designer anticipated. They can “display” but not “understand”; “alert” but not “diagnose”.</p>
+<p><strong>The Divide</strong>: The difference between the traditional era and the AI era isn’t “whether you have automated products,” but rather <strong>“is the capability hard-coded, or is it encapsulated into a Skill that an Agent can invoke dynamically?”</strong></p>
+<h3 id="1-2-The-Generic-AI-Assistant-Era-Intelligent-but-Not-Professional"><a href="#1-2-The-Generic-AI-Assistant-Era-Intelligent-but-Not-Professional" class="headerlink" title="1.2 The Generic AI Assistant Era: Intelligent, but Not Professional"></a>1.2 The Generic AI Assistant Era: Intelligent, but Not Professional</h3><p>ChatGPT and Claude give DBAs hope, but practical issues remain:</p>
+<ul>
+<li><strong>No Active Execution</strong>: AI acts as “advanced documentation,” requiring humans to run SQL and paste results.</li>
+<li><strong>Context Pollution</strong>: Long query results fill the context window, causing the AI to lose the thread.</li>
+<li><strong>Lack of Domain Depth</strong>: Generic AI knows “what” things are but lacks specific diagnostic SQLs and expert optimization experience.</li>
+<li><strong>Serial Execution</strong>: Cannot handle multiple dimensions (space, performance, locks) simultaneously in a single chat thread.</li>
+</ul>
+<p><strong>The RAG Limitation</strong>: Many look to RAG (Retrieval-Augmented Generation) as the final answer. While RAG increases knowledge density, it solves <strong>Knowledge Retrieval</strong>, not <strong>Execution and Orchestration</strong>. RAG is a vital component, but not the ultimate architecture. It moves AI from “generic answers” to “documented answers,” but not yet to “task completion.”</p>
+<h3 id="1-3-The-Agent-Skill-Architecture-Era-Professional-Intelligent-Parallel"><a href="#1-3-The-Agent-Skill-Architecture-Era-Professional-Intelligent-Parallel" class="headerlink" title="1.3 The Agent-Skill Architecture Era: Professional + Intelligent + Parallel"></a>1.3 The Agent-Skill Architecture Era: Professional + Intelligent + Parallel</h3><p>This is the architecture we are introducing. Here is a comparison:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Dimension</th>
+<th align="left">Traditional Ops</th>
+<th align="left">Generic AI Assistant</th>
+<th align="left">Agent-Skill Architecture</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Execution</strong></td>
+<td align="left">Manual</td>
+<td align="left">AI Guided, Human Executed</td>
+<td align="left">AI Auto-Executed</td>
+</tr>
+<tr>
+<td align="left"><strong>Knowledge Depth</strong></td>
+<td align="left">Individual Experience</td>
+<td align="left">Generic Knowledge</td>
+<td align="left">Domain Expert Level</td>
+</tr>
+<tr>
+<td align="left"><strong>Parallelism</strong></td>
+<td align="left">None (one pair of hands)</td>
+<td align="left">None (Serial chat)</td>
+<td align="left">Native Support</td>
+</tr>
+<tr>
+<td align="left"><strong>Response Speed</strong></td>
+<td align="left">30-60 minutes</td>
+<td align="left">15-30 minutes</td>
+<td align="left">2-5 minutes</td>
+</tr>
+<tr>
+<td align="left"><strong>Consistency</strong></td>
+<td align="left">Varies by person</td>
+<td align="left">Decent</td>
+<td align="left">Fully Consistent</td>
+</tr>
+<tr>
+<td align="left"><strong>Error Rate</strong></td>
+<td align="left">Medium (Fatigue&#x2F;Skill)</td>
+<td align="left">Medium (Understanding)</td>
+<td align="left">Low (Standardized Flow)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="II-The-Architecture-Dilemma-of-Generic-Assistants"><a href="#II-The-Architecture-Dilemma-of-Generic-Assistants" class="headerlink" title="II. The Architecture Dilemma of Generic Assistants"></a>II. The Architecture Dilemma of Generic Assistants</h2><p>The problem isn’t just “intelligence.” It’s that the monolithic architecture of generic assistants isn’t designed for professional task execution. It mixes understanding, reasoning, knowledge calling, and tool use into a single flow. Professional database ops requires multi-step diagnosis and dynamic decision-making that a single chat thread can’t reliably handle.</p>
+<hr>
+<h2 id="III-Agent-Skill-Architecture-Layered-Intelligence"><a href="#III-Agent-Skill-Architecture-Layered-Intelligence" class="headerlink" title="III. Agent-Skill Architecture: Layered Intelligence"></a>III. Agent-Skill Architecture: Layered Intelligence</h2><p>Our solution is a three-layer architecture:</p>
+<p><img src="https://files.seeusercontent.com/2026/03/11/0jNv/file_86-f59f2f6b-ddd4-44a2-8b2d-.jpg" srcset="/img/loading.gif" lazyload alt="Multi-Agent Orchestration Architecture"></p>
+<h3 id="3-1-Layer-1-The-Orchestrator"><a href="#3-1-Layer-1-The-Orchestrator" class="headerlink" title="3.1 Layer 1: The Orchestrator"></a>3.1 Layer 1: The Orchestrator</h3><p><strong>Responsibility</strong>: Understand user intent, decompose complex tasks, and route them to the appropriate executors.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">OrchestratorAgent</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    Orchestrator: Responsible for task understanding and distribution.</span><br><span class="hljs-string">    Contains no specific implementation, only intelligent routing.</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">route_task</span>(<span class="hljs-params">self, user_request</span>):<br>        <span class="hljs-comment"># Intent identification</span><br>        intent = self.understand_intent(user_request)<br><br>        <span class="hljs-comment"># Task decomposition</span><br>        <span class="hljs-keyword">if</span> intent.is_complex():<br>            subtasks = self.decompose(intent)<br>            <span class="hljs-comment"># Parallel distribution</span><br>            <span class="hljs-keyword">return</span> self.dispatch_parallel(subtasks)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-comment"># Single task routing</span><br>            <span class="hljs-keyword">return</span> self.dispatch_single(intent)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">dispatch_parallel</span>(<span class="hljs-params">self, subtasks</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;Start multiple Agents in parallel&quot;&quot;&quot;</span><br>        agents = []<br>        <span class="hljs-keyword">for</span> task <span class="hljs-keyword">in</span> subtasks:<br>            agent = self.create_agent(<br>                <span class="hljs-built_in">type</span>=task.agent_type,<br>                prompt=task.description,<br>                run_in_background=<span class="hljs-literal">True</span><br>            )<br>            agents.append(agent)<br>        <span class="hljs-keyword">return</span> agents<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-2-Layer-2-Specialized-Agent"><a href="#3-2-Layer-2-Specialized-Agent" class="headerlink" title="3.2 Layer 2: Specialized Agent"></a>3.2 Layer 2: Specialized Agent</h3><p><strong>Responsibility</strong>: Execute tasks within a specific domain by calling the relevant Skills.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">YashanDBOpsAgent</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    YashanDB Ops Agent.</span><br><span class="hljs-string">    Analyzes intent and selects the right Skill.</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        self.skills = &#123;<br>            <span class="hljs-string">&#x27;space&#x27;</span>: YashanDBSpaceSkill(),<br>            <span class="hljs-string">&#x27;wait_events&#x27;</span>: YashanDBWaitEventsSkill(),<br>            <span class="hljs-string">&#x27;locks&#x27;</span>: YashanDBLocksSkill(),<br>            <span class="hljs-string">&#x27;health&#x27;</span>: YashanDBHealthSkill(),<br>            <span class="hljs-comment"># ... more skills</span><br>        &#125;<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">execute</span>(<span class="hljs-params">self, task_description</span>):<br>        intent = self.analyze_intent(task_description)<br>        skill_name = self.select_skill(intent)<br>        skill = self.skills[skill_name]<br>        params = self.extract_parameters(task_description)<br>        <span class="hljs-keyword">return</span> skill.execute(**params)<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-3-Layer-3-Skill"><a href="#3-3-Layer-3-Skill" class="headerlink" title="3.3 Layer 3: Skill"></a>3.3 Layer 3: Skill</h3><p><strong>Responsibility</strong>: Encapsulate specific professional knowledge and execution logic.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">YashanDBSpaceSkill</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    Database Space Analysis Skill.</span><br><span class="hljs-string">    Encapsulates diagnostic logic and expertise.</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">execute</span>(<span class="hljs-params">self, db_connection</span>):<br>        report = SpaceReport()<br>        <span class="hljs-comment"># 1. Analyze tablespace usage (Professional SQL queries)</span><br>        <span class="hljs-comment"># 2. Check datafile and autoextend status</span><br>        <span class="hljs-comment"># 3. Analyze large segments (Top N)</span><br>        <span class="hljs-comment"># 4. Detect fragmented tables</span><br>        <span class="hljs-comment"># 5. Generate intelligent recommendations with SQL</span><br>        <span class="hljs-keyword">return</span> report<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="IV-Architectural-Advantages-Why-This-Design"><a href="#IV-Architectural-Advantages-Why-This-Design" class="headerlink" title="IV. Architectural Advantages: Why This Design?"></a>IV. Architectural Advantages: Why This Design?</h2><h3 id="4-1-Separation-of-Concerns"><a href="#4-1-Separation-of-Concerns" class="headerlink" title="4.1 Separation of Concerns"></a>4.1 Separation of Concerns</h3><p>Every layer does one thing. Orchestrator routes, Agent calls, and Skill executes professional diagnosis logic.</p>
+<h3 id="4-2-Parallel-Execution"><a href="#4-2-Parallel-Execution" class="headerlink" title="4.2 Parallel Execution"></a>4.2 Parallel Execution</h3><p>In real tests:</p>
+<ul>
+<li>Space check: 99s</li>
+<li>Wait event analysis: 110s</li>
+<li><strong>Parallel Total: 110s</strong> (vs 209s for sequential)</li>
+</ul>
+<h3 id="4-3-Context-Isolation-and-Depth"><a href="#4-3-Context-Isolation-and-Depth" class="headerlink" title="4.3 Context Isolation and Depth"></a>4.3 Context Isolation and Depth</h3><p>Each Skill has its own context window. The “Space Skill” window is not polluted by lock data or general coding knowledge, keeping the AI focused on expert database metrics.</p>
+<h3 id="4-4-Extensibility-and-Evolution"><a href="#4-4-Extensibility-and-Evolution" class="headerlink" title="4.4 Extensibility and Evolution"></a>4.4 Extensibility and Evolution</h3><p>Adding new functionality takes three simple steps:</p>
+<ol>
+<li>Create a new Skill (e.g., <code>IndexAdvisorSkill</code>).</li>
+<li>Register it to the Agent.</li>
+<li>Update Orchestrator routing (often automatic).</li>
+</ol>
+<hr>
+<h2 id="V-AI-Era-Design-Philosophy"><a href="#V-AI-Era-Design-Philosophy" class="headerlink" title="V. AI Era Design Philosophy"></a>V. AI Era Design Philosophy</h2><h3 id="5-1-From-“General”-to-“Precise”"><a href="#5-1-From-“General”-to-“Precise”" class="headerlink" title="5.1 From “General” to “Precise”"></a>5.1 From “General” to “Precise”</h3><p>Traditional software seeks “monolithic” apps. AI era needs modular intelligence.</p>
+<h3 id="5-2-Conway’s-Law-in-AI-Architecture"><a href="#5-2-Conway’s-Law-in-AI-Architecture" class="headerlink" title="5.2 Conway’s Law in AI Architecture"></a>5.2 Conway’s Law in AI Architecture</h3><p>Melvin Conway stated that systems reflect organization structure. In AI:<br>Expert Mindset → Skill Modules → Agent Boundaries → Orchestrator Routing.<br>Our system mirrors the DBA’s specialized mindset: Space, Performance, Locks.</p>
+<h3 id="5-3-Unix-Philosophy-Reborn"><a href="#5-3-Unix-Philosophy-Reborn" class="headerlink" title="5.3 Unix Philosophy Reborn"></a>5.3 Unix Philosophy Reborn</h3><ol>
+<li><strong>Do one thing well</strong> (Specialized skills).</li>
+<li><strong>Design for composition</strong> (Agents combine skills).<br>Every Skill is like a Unix command—focused and reusable.</li>
+</ol>
+<hr>
+<h2 id="VI-Real-World-Case-Database-Diagnosis-in-Two-Minutes"><a href="#VI-Real-World-Case-Database-Diagnosis-in-Two-Minutes" class="headerlink" title="VI. Real-World Case: Database Diagnosis in Two Minutes"></a>VI. Real-World Case: Database Diagnosis in Two Minutes</h2><h3 id="6-1-User-Input"><a href="#6-1-User-Input" class="headerlink" title="6.1 User Input"></a>6.1 User Input</h3><p>“Start yashandb-ops agents in background to check space and wait events on dev-kamus.”</p>
+<h3 id="6-2-Orchestrator-Processing"><a href="#6-2-Orchestrator-Processing" class="headerlink" title="6.2 Orchestrator Processing"></a>6.2 Orchestrator Processing</h3><p>It identifies <code>intent_1</code> (space) and <code>intent_2</code> (wait events) and dispatches them to parallel background agents.</p>
+<h3 id="6-3-Agent-Skill-Execution"><a href="#6-3-Agent-Skill-Execution" class="headerlink" title="6.3 Agent &amp; Skill Execution"></a>6.3 Agent &amp; Skill Execution</h3><p><code>Agent 1</code> calls the <code>SpaceSkill</code>. It queries tablespace usage, file status, large objects, and fragmentation. It then synthesizes these into a structured <code>SpaceReport</code>. <code>Agent 2</code> does the same for wait events simultaneously.</p>
+<h3 id="6-4-Result-Presentation"><a href="#6-4-Result-Presentation" class="headerlink" title="6.4 Result Presentation"></a>6.4 Result Presentation</h3><p>110 seconds later, the user receives structured reports with warnings (e.g., SYSTEM tablespace at 80.1%) and actionable SQL recommendations.</p>
+<hr>
+<h2 id="VII-Design-Principles-Best-Practices"><a href="#VII-Design-Principles-Best-Practices" class="headerlink" title="VII. Design Principles &amp; Best Practices"></a>VII. Design Principles &amp; Best Practices</h2><h3 id="7-1-Skill-Design-Principles"><a href="#7-1-Skill-Design-Principles" class="headerlink" title="7.1 Skill Design Principles"></a>7.1 Skill Design Principles</h3><ol>
+<li><strong>Single Responsibility (SRP)</strong>: Avoid “God Skills”.</li>
+<li><strong>Interface Consistency</strong>:<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">BaseSkill</span>(<span class="hljs-title class_ inherited__">ABC</span>):<br><span class="hljs-meta">    @abstractmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">execute</span>(<span class="hljs-params">self, **params</span>) -&gt; Report:<br>        <span class="hljs-string">&quot;&quot;&quot;Execute and return structured report&quot;&quot;&quot;</span><br>        <span class="hljs-keyword">pass</span><br></code></pre></td></tr></table></figure></li>
+<li><strong>Knowledge Encapsulation</strong>: Encapsulate <strong>Declarative</strong> (SQL), <strong>Procedural</strong> (Flows), and <strong>Empirical</strong> (Best practices) knowledge.</li>
+</ol>
+<h3 id="7-2-Agent-Design-Principles"><a href="#7-2-Agent-Design-Principles" class="headerlink" title="7.2 Agent Design Principles"></a>7.2 Agent Design Principles</h3><ol>
+<li><strong>Domain Focus</strong>: One agent per database type (PostgreSQL vs MySQL).</li>
+<li><strong>Statelessness</strong>: Let Skills or external storage manage state.</li>
+</ol>
+<h3 id="7-3-Orchestrator-Design-Principles"><a href="#7-3-Orchestrator-Design-Principles" class="headerlink" title="7.3 Orchestrator Design Principles"></a>7.3 Orchestrator Design Principles</h3><ol>
+<li><strong>Intelligent Routing</strong>: Understand dependencies and automate parallelism.</li>
+<li><strong>Graceful Fallback</strong>: Downgrade from specialized agents to generic handlers or human escalation if an agent fails.</li>
+</ol>
+<hr>
+<h2 id="VIII-Future-Outlook-Self-Evolving-Systems"><a href="#VIII-Future-Outlook-Self-Evolving-Systems" class="headerlink" title="VIII. Future Outlook: Self-Evolving Systems"></a>VIII. Future Outlook: Self-Evolving Systems</h2><h3 id="8-1-Auto-Generation-of-Skills"><a href="#8-1-Auto-Generation-of-Skills" class="headerlink" title="8.1 Auto-Generation of Skills"></a>8.1 Auto-Generation of Skills</h3><p>The Orchestrator could generate a new <code>DeadlockDetectionSkill</code> on the fly by processing documentation and existing lock knowledge.</p>
+<h3 id="8-2-Collaborative-Agent-Networks"><a href="#8-2-Collaborative-Agent-Networks" class="headerlink" title="8.2 Collaborative Agent Networks"></a>8.2 Collaborative Agent Networks</h3><p>Agents interacting to share context.</p>
+<p><img src="https://files.seeusercontent.com/2026/03/11/wOi9/vscode_picgo_1773216717119.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<h3 id="8-3-Continuous-Knowledge-Accumulation"><a href="#8-3-Continuous-Knowledge-Accumulation" class="headerlink" title="8.3 Continuous Knowledge Accumulation"></a>8.3 Continuous Knowledge Accumulation</h3><p>Every execution is a learning opportunity.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">EvolvingSkill</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">execute</span>(<span class="hljs-params">self, **params</span>):<br>        result = self.core_logic(**params)<br>        self.log_execution(params, result)<br>        feedback = self.collect_feedback(result)<br>        <span class="hljs-keyword">if</span> feedback.is_positive():<br>            self.knowledge_base.reinforce(params, result)<br>        <span class="hljs-keyword">return</span> result<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="IX-Conclusion-Architecture-as-Philosophy"><a href="#IX-Conclusion-Architecture-as-Philosophy" class="headerlink" title="IX. Conclusion: Architecture as Philosophy"></a>IX. Conclusion: Architecture as Philosophy</h2><p>The Agent-Skill architecture is about <strong>Divide and Conquer</strong>, <strong>Professionalism</strong>, and <strong>Compositional Innovation</strong>. It ensures AI is deeper, faster, more isolated, and ready to evolve.</p>
+<p><strong>Tech Stack</strong>: Claude 4.6 (Sonnet) + Agent SDK + yashandb-cli + Python</p>
+<hr>
+<p><em>Interested in AI architecture? Follow my blog at kamusis.me for more deep dives.</em></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/AI/" class="print-no-link">#AI</a>
+      
+        <a href="/tags/Architecture/" class="print-no-link">#Architecture</a>
+      
+        <a href="/tags/Agent/" class="print-no-link">#Agent</a>
+      
+        <a href="/tags/Skill/" class="print-no-link">#Skill</a>
+      
+        <a href="/tags/Database/" class="print-no-link">#Database</a>
+      
+        <a href="/tags/Operations/" class="print-no-link">#Operations</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Layered Intelligence in the AI Era: The Design Philosophy of Agent-Skill Architecture</div>
+      <div>https://www.kamusis.me/2026/03/11/Layered-Intelligence-in-the-AI-Era-The-Design-Philosophy-of-Agent-Skill-Architecture/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Kamus</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>March 11, 2026</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - Non-commercial">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - Share-alike">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/09/07/Why-Mopheus-Truly-Unifies-Dev-and-Ops/" title="Why Mopheus Truly Unifies Dev and Ops: Moving from Fragmented Toolchains to an AIDevOps Agent Workspace">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Why Mopheus Truly Unifies Dev and Ops: Moving from Fragmented Toolchains to an AIDevOps Agent Workspace</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/02/22/Built-in-Multi-Agent-Grok-4-2-0-When-LLMs-Learn-Self-Play-and-Real-Time-Evolution/" title="Built-in Multi-Agent Grok 4.2.0: When LLMs Learn Self-Play and Real-Time Evolution">
+                        <span class="hidden-mobile">Built-in Multi-Agent Grok 4.2.0: When LLMs Learn Self-Play and Real-Time Evolution</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

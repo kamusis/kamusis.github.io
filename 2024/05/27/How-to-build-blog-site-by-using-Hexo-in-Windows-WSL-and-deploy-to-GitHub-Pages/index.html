@@ -1,0 +1,824 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/favicon.ico">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kamus">
+  <meta name="keywords" content="AI, LLM, openGauss, MogDB, databases, macOS, Windows, Docker, Linux, cloud-native">
+  
+    <meta name="description" content="Why use WSLUsing Windows Subsystem for Linux (WSL) instead of relying solely on Windows can offer several advantages, particularly for developers and IT professionals. WSL allows users to run a GNU&amp;#x">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to build blog site by using Hexo in Windows WSL and deploy to GitHub Pages">
+<meta property="og:url" content="https://www.kamusis.me/2024/05/27/How-to-build-blog-site-by-using-Hexo-in-Windows-WSL-and-deploy-to-GitHub-Pages/">
+<meta property="og:site_name" content="Kamus&#39; Notes">
+<meta property="og:description" content="Why use WSLUsing Windows Subsystem for Linux (WSL) instead of relying solely on Windows can offer several advantages, particularly for developers and IT professionals. WSL allows users to run a GNU&amp;#x">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-05-27T07:10:17.000Z">
+<meta property="article:modified_time" content="2026-10-17T10:08:14.945Z">
+<meta property="article:author" content="Kamus">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="Github Pages">
+<meta property="article:tag" content="WSL">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>How to build blog site by using Hexo in Windows WSL and deploy to GitHub Pages - Kamus&#39; Notes</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.kamusis.me","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":25,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h2,h3,h4,h5","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Kamus' Notes" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 48vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Kamus&#39; Notes</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Home</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>Archives</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Tags</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>About</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Search</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Light"
+               data-label-dark="Dark">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dark</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/banner-autumn.webp') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.28)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">How to build blog site by using Hexo in Windows WSL and deploy to GitHub Pages</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-05-27 16:10" pubdate>
+          2024-05-27
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          5.1k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          43 min read
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">How to build blog site by using Hexo in Windows WSL and deploy to GitHub Pages</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Why-use-WSL"><a href="#Why-use-WSL" class="headerlink" title="Why use WSL"></a>Why use WSL</h2><p>Using Windows Subsystem for Linux (WSL) instead of relying solely on Windows can offer several advantages, particularly for developers and IT professionals. WSL allows users to run a GNU&#x2F;Linux environment directly on Windows, without the overhead of a traditional virtual machine or dual-boot setup. This enables seamless access to a wide range of Linux tools and utilities, which are often preferred for development tasks, scripting, and system administration. Additionally, WSL provides a more consistent and familiar environment for those accustomed to Unix-based systems, facilitating smoother workflows and integration with cloud-based services. By leveraging WSL, professionals can enjoy the best of both worlds: the robust software ecosystem of Windows and the powerful command-line capabilities of Linux.</p>
+<h2 id="Why-use-Hexo"><a href="#Why-use-Hexo" class="headerlink" title="Why use Hexo"></a>Why use Hexo</h2><p>Hexo offers several advantages over WordPress, particularly for developers and tech-savvy users. As a static site generator, Hexo provides faster load times and improved security since it does not rely on a database or server-side processing, which are common vulnerabilities in WordPress. Additionally, Hexo allows for greater customization through its use of Markdown and extensive plugin ecosystem, enabling users to tailor their sites to specific needs without the overhead of a complex content management system. Furthermore, Hexo’s deployment process is streamlined, often integrating seamlessly with version control systems like Git, making it an excellent choice for those who prioritize efficiency and performance in their web development projects.</p>
+<h2 id="Why-use-Github-Pages"><a href="#Why-use-Github-Pages" class="headerlink" title="Why use Github Pages"></a>Why use Github Pages</h2><p>Using GitHub Pages instead of a traditional hosting server offers several distinct advantages. Firstly, GitHub Pages provides a seamless integration with GitHub repositories, enabling automatic deployment of websites directly from your codebase. This integration ensures that updates and changes to your site are effortlessly managed through version control, promoting a streamlined workflow. Additionally, GitHub Pages is cost-effective, offering free hosting with custom domain support, which can significantly reduce overhead costs for personal projects or small businesses. The platform also boasts robust security features, leveraging GitHub’s infrastructure to protect your site from common vulnerabilities. Furthermore, the simplicity and ease of use make GitHub Pages an attractive option for developers who want to focus on writing code rather than managing server configurations and maintenance. Overall, GitHub Pages combines efficiency, cost savings, and security, making it an excellent choice for hosting static websites and project documentation.</p>
+<h2 id="GO"><a href="#GO" class="headerlink" title="GO!"></a>GO!</h2><h3 id="Assume-already-has-a-WSL-environment-running"><a href="#Assume-already-has-a-WSL-environment-running" class="headerlink" title="Assume already has a WSL environment running"></a>Assume already has a WSL environment running</h3><p>If not, refer to “<a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/windows/wsl/install">How to install Linux on Windows with WSL</a>“.</p>
+<p>To say we are running WSL distro - Ubuntu 22.04</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs routeros">$ cat /etc/os-release<br><span class="hljs-attribute">PRETTY_NAME</span>=<span class="hljs-string">&quot;Ubuntu 22.04.4 LTS&quot;</span><br><span class="hljs-attribute">NAME</span>=<span class="hljs-string">&quot;Ubuntu&quot;</span><br><span class="hljs-attribute">VERSION_ID</span>=<span class="hljs-string">&quot;22.04&quot;</span><br><span class="hljs-attribute">VERSION</span>=<span class="hljs-string">&quot;22.04.4 LTS (Jammy Jellyfish)&quot;</span><br><span class="hljs-attribute">VERSION_CODENAME</span>=jammy<br><span class="hljs-attribute">ID</span>=ubuntu<br><span class="hljs-attribute">ID_LIKE</span>=debian<br><span class="hljs-attribute">HOME_URL</span>=<span class="hljs-string">&quot;https://www.ubuntu.com/&quot;</span><br><span class="hljs-attribute">SUPPORT_URL</span>=<span class="hljs-string">&quot;https://help.ubuntu.com/&quot;</span><br><span class="hljs-attribute">BUG_REPORT_URL</span>=<span class="hljs-string">&quot;https://bugs.launchpad.net/ubuntu/&quot;</span><br><span class="hljs-attribute">PRIVACY_POLICY_URL</span>=<span class="hljs-string">&quot;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&quot;</span><br><span class="hljs-attribute">UBUNTU_CODENAME</span>=jammy<br></code></pre></td></tr></table></figure>
+
+<h3 id="Install-Node-js"><a href="#Install-Node-js" class="headerlink" title="Install Node.js"></a>Install Node.js</h3><p>Since Hexo is written by Node.js, nodejs must be installed.</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake">sudo apt update<br>sudo apt <span class="hljs-keyword">install</span> nodejs npm<br></code></pre></td></tr></table></figure>
+
+<h3 id="Install-GIT"><a href="#Install-GIT" class="headerlink" title="Install GIT"></a>Install GIT</h3><p>Since Hexo uses Git to publish pages on GitHub, Git must be installed.</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">sudo apt <span class="hljs-keyword">install</span> git<br></code></pre></td></tr></table></figure>
+
+<h3 id="Install-Hexo"><a href="#Install-Hexo" class="headerlink" title="Install Hexo"></a>Install Hexo</h3><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs avrasm">sudo npm install -g hexo-<span class="hljs-keyword">cli</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="Init-Hexo-project"><a href="#Init-Hexo-project" class="headerlink" title="Init Hexo project"></a>Init Hexo project</h3><p>Our goal is to deploy the static HTML file generated by Hexo to GitHub Pages. To achieve this, we need to create a repository named “[username].github.io” on GitHub. Therefore, we will initialize this directory directly using Hexo.  Note: Be sure to replace [username] with your actual GitHub username.</p>
+ <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs csharp">hexo <span class="hljs-keyword">init</span> kamusis.github.io<br></code></pre></td></tr></table></figure>
+
+<h3 id="Create-Github-pages"><a href="#Create-Github-pages" class="headerlink" title="Create Github pages"></a>Create Github pages</h3><p>Creating GitHub Pages is very simple, reference: <a target="_blank" rel="noopener" href="https://pages.github.com/">https://pages.github.com/</a></p>
+<h3 id="Connecting-to-Github-with-SSH"><a href="#Connecting-to-Github-with-SSH" class="headerlink" title="Connecting to Github with SSH"></a>Connecting to Github with SSH</h3><p>Reference: <a target="_blank" rel="noopener" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh">https://docs.github.com/en/authentication/connecting-to-github-with-ssh</a></p>
+<p>Basically, generate a key using the ssh-keygen command and upload the public key to the GitHub.</p>
+<p>Once the SSH connection is established, use the following command to verify it:</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ada">$ ssh -T git@github.com<br>Hi kamusis! You<span class="hljs-symbol">&#x27;ve</span> successfully authenticated, but GitHub does <span class="hljs-keyword">not</span> provide shell <span class="hljs-keyword">access</span>.<br></code></pre></td></tr></table></figure>
+
+<h3 id="Set-URL-for-your-new-blog"><a href="#Set-URL-for-your-new-blog" class="headerlink" title="Set URL for your new blog"></a>Set URL for your new blog</h3><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs clean">$ vi _config.yml<br><br>~~~~~~~~~~~~~~~~~~ _config.yml ~~~~~~~~~~~~~~~~~~<br># URL<br>## Set your site url here. For example, <span class="hljs-keyword">if</span> you use GitHub Page, set url <span class="hljs-keyword">as</span> <span class="hljs-string">&#x27;https://username.github.io/project&#x27;</span><br>url: http:<span class="hljs-comment">//kamusis.github.io</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="Set-Git-information-to-let-hexo-can-push-contents-into-Github-Pages"><a href="#Set-Git-information-to-let-hexo-can-push-contents-into-Github-Pages" class="headerlink" title="Set Git information to let hexo can push contents into Github Pages"></a>Set Git information to let hexo can push contents into Github Pages</h3><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs dts">$ npm install hexo-deployer-git --save<br>$ vi _config.yml<br><br>~~~~~~~~~~~~~~~~~~ _config.yml ~~~~~~~~~~~~~~~~~~<br><span class="hljs-meta"># Deployment</span><br><span class="hljs-meta">## Docs: https:<span class="hljs-comment">//hexo.io/docs/one-command-deployment</span></span><br><span class="hljs-symbol">deploy:</span><br><span class="hljs-symbol">  type:</span> git<br><span class="hljs-symbol">  repo:</span> git@github.com:kamusis/kamusis.github.io.git<br><span class="hljs-symbol">  branch:</span> master<br></code></pre></td></tr></table></figure>
+
+<h3 id="Generate-the-site-and-push-to-Github-pages"><a href="#Generate-the-site-and-push-to-Github-pages" class="headerlink" title="Generate the site and push to Github pages"></a>Generate the site and push to Github pages</h3><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs crystal"><span class="hljs-variable">$ </span>hexo clean<br><span class="hljs-variable">$ </span>hexo deploy<br></code></pre></td></tr></table></figure>
+
+<p>Assuming everything has been set up correctly, you can now view a hello-world article on a website by navigating to https:&#x2F;&#x2F;[username].github.io.</p>
+<h3 id="Write-your-articles-and-publish"><a href="#Write-your-articles-and-publish" class="headerlink" title="Write your articles and publish"></a>Write your articles and publish</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs actionscript">hexo <span class="hljs-keyword">new</span> <span class="hljs-string">&quot;My first post&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>A markdown file will automatically be created and placed in the source&#x2F;_posts directory. It can then be edited and saved using your preferred text or markdown editor.</p>
+<p>Of course, you can also clean up the initial hello-world article.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">rm</span> <span class="hljs-built_in">source</span>/_posts/hello-world.md<br></code></pre></td></tr></table></figure>
+
+<p>Publish the articles.</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs crystal"><span class="hljs-variable">$ </span>hexo clean<br><span class="hljs-variable">$ </span>hexo deploy<br></code></pre></td></tr></table></figure>
+
+
+
+<p>Reference:</p>
+<p><a target="_blank" rel="noopener" href="https://hexo.io/docs/github-pages#One-command-deployment">https://hexo.io/docs/github-pages#One-command-deployment</a></p>
+<p><a target="_blank" rel="noopener" href="https://gist.github.com/btfak/18938572f5df000ebe06fbd1872e4e39">https://gist.github.com/btfak/18938572f5df000ebe06fbd1872e4e39</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Hexo/" class="print-no-link">#Hexo</a>
+      
+        <a href="/tags/Github-Pages/" class="print-no-link">#Github Pages</a>
+      
+        <a href="/tags/WSL/" class="print-no-link">#WSL</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>How to build blog site by using Hexo in Windows WSL and deploy to GitHub Pages</div>
+      <div>https://www.kamusis.me/2024/05/27/How-to-build-blog-site-by-using-Hexo-in-Windows-WSL-and-deploy-to-GitHub-Pages/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Kamus</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>May 27, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - Non-commercial">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - Share-alike">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/05/30/Ensuring-Data-Integrity-How-Major-Databases-Handle-Partial-Writes-and-Atomic-Operations/" title="Ensuring Data Integrity: How Major Databases Handle Partial Writes and Atomic Operations">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Ensuring Data Integrity: How Major Databases Handle Partial Writes and Atomic Operations</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/05/27/How-to-Find-the-Corresponding-Session-in-MogDB-openGauss-from-OS-Thread-ID/" title="How to Find the Corresponding Session in MogDB/openGauss from OS Thread ID">
+                        <span class="hidden-mobile">How to Find the Corresponding Session in MogDB/openGauss from OS Thread ID</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
