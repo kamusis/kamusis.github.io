@@ -113,11 +113,13 @@ Historically, reverse engineering was an arcane craft practiced by a tiny priest
 
 Put frontier reasoning models (like Gemini 4 Argon) together with automated binary reconstruction toolchains (like REA), and three conclusions about the future of the software industry become almost inescapable:
 
-### Conclusion 1: Nearly All Future Software Will Be AI-Generated
+**Conclusion 1: Nearly All Future Software Will Be AI-Generated**
+
 When people said "AI will write all code" a year or two ago, they usually pictured autocomplete on steroids or vibe-coding a greenfield web app from a prompt.
 Today, AI is no longer limited to **forward generation** from scratch—it has unlocked **reverse absorption**. Decades of human engineering wisdom, edge-case handling, and protocol tricks locked inside closed-source binaries, desktop clients, and kernel drivers are no longer opaque walls. Coding agents can extract verifiable design evidence from existing binaries, understand the underlying mechanics, and synthesize clean, modern, well-tested implementations in any target stack. **The entire corpus of shipped software has become an open textbook for AI.**
 
-### Conclusion 2: The Business of Selling Pure "Feature Licenses" Is Dead
+**Conclusion 2: The Business of Selling Pure "Feature Licenses" Is Dead**
+
 For forty years, the most lucrative business model in enterprise and commercial software was simple: **compile source code into proprietary binaries, and charge per-CPU or per-seat license fees.**
 
 That entire model rested on one assumption: **replicating complex software features required prohibitive R&D time and capital.** Because it would take a competitor 200 engineers and two years of trial and error to clone your product, customers paid the license tax.
@@ -127,28 +129,16 @@ When frontier LLMs + REA collapse the cost of reverse engineering and clean-room
 * Within days—or hours—an agent-empowered team or open-source community can deconstruct the workflow and ship a free, feature-equivalent alternative.
 * **"We have proprietary code that others cannot figure out how to write" is no longer a defensible pricing moat.** Standalone utility software, thin middleware wrappers, and static feature-license vendors will see their license premiums compressed to zero.
 
-### Conclusion 3: How Will Software Vendors Survive and Compete?
+**Conclusion 3: How Will Software Vendors Survive and Compete?**
 
 If source code is no longer a moat and compiled binaries no longer hide secrets, where does durable enterprise value live?
 
 The software companies that thrive in the coming decade will build their moats across four dimensions that `npx rea-agents` can never decompile:
 
-#### 1. Proprietary Context and Data Gravity
-REA can dissect every binary instruction, UI component, and algorithm in your client app, **but it cannot decompile the customer's live organizational context, historical decision trails, domain knowledge graph, and distilled long-term agent memory.**
-Software is evolving from a stateless "feature executor" into a living organizational brain where people, agents, and teams collaborate. You can clone an application's code overnight, but you cannot clone years of accumulated workflow state, permission topology, and contextual memory.
-
-#### 2. Managed Runtimes, Real-Time Network Effects, and Orchestration
-A standalone local binary is trivial to replicate because 100% of its value sits on the user's disk.
-When software becomes a **real-time orchestration network** connecting human members, heterogeneous AI agents, enterprise communication channels, and elastic cloud sandboxes, the client binary is merely a thin ticket to the network. The true moat lies in multi-tenant state synchronization, hybrid local/cloud runtime scheduling, security boundaries, and live ecosystem integrations.
-
-#### 3. Deterministic Accountability, Trust, and SLAs
-Consider Oracle ASMFD again. Today, an engineer with Gemini and REA can understand every line of `oracleafd.ko` in ten minutes and generate an equivalent Linux kernel module to filter block I/O.
-**Yet no bank CIO on earth would run their core payment database on a kernel module "vibe-reconstructed by an AI last night."**
-When enterprises pay mission-critical infrastructure vendors, they are not paying for a few hundred kilobytes of C code—they are paying for **battle-tested determinism across thousands of hardware combinations, regulatory compliance, and a legally binding SLA that guarantees accountability when things go wrong at 3:00 AM.** AI can replicate code instantly; it cannot replicate institutional trust or legal liability.
-
-#### 4. Product Taste and Velocity of Evolution
-Reverse engineering can only ever copy **yesterday's snapshot**.
-While copycats are busy using REA to reconstruct last week's release, category leaders with sharp product taste, deep empathy for real user pain points, and AI-native engineering velocity have already shipped the next paradigm.
+1. **Proprietary Context and Data Gravity**: REA can dissect every binary instruction, UI component, and algorithm in your client app, **but it cannot decompile the customer's live organizational context, historical decision trails, domain knowledge graph, and distilled long-term agent memory.** Software is evolving from a stateless "feature executor" into a living organizational brain where people, agents, and teams collaborate. You can clone an application's code overnight, but you cannot clone years of accumulated workflow state, permission topology, and contextual memory.
+2. **Managed Runtimes, Real-Time Network Effects, and Orchestration**: A standalone local binary is trivial to replicate because 100% of its value sits on the user's disk. When software becomes a **real-time orchestration network** connecting human members, heterogeneous AI agents, enterprise communication channels, and elastic cloud sandboxes, the client binary is merely a thin ticket to the network. The true moat lies in multi-tenant state synchronization, hybrid local/cloud runtime scheduling, security boundaries, and live ecosystem integrations.
+3. **Deterministic Accountability, Trust, and SLAs**: Consider Oracle ASMFD again. Today, an engineer with Gemini and REA can understand every line of `oracleafd.ko` in ten minutes and generate an equivalent Linux kernel module to filter block I/O. **Yet no bank CIO on earth would run their core payment database on a kernel module "vibe-reconstructed by an AI last night."** When enterprises pay mission-critical infrastructure vendors, they are not paying for a few hundred kilobytes of C code—they are paying for **battle-tested determinism across thousands of hardware combinations, regulatory compliance, and a legally binding SLA that guarantees accountability when things go wrong at 3:00 AM.** AI can replicate code instantly; it cannot replicate institutional trust or legal liability.
+4. **Product Taste and Velocity of Evolution**: Reverse engineering can only ever copy **yesterday's snapshot**. While copycats are busy using REA to reconstruct last week's release, category leaders with sharp product taste, deep empathy for real user pain points, and AI-native engineering velocity have already shipped the next paradigm.
 
 ---
 
